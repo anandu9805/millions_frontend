@@ -48,7 +48,7 @@ flutter:
   assets:
       - images/millionlogo.png
       - images/million final logo with out millions.png
-      - images/sample-mp4-file.mp4
+      - images/whiteicon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/vedios.dart';
+
 import '../widgets/photos.dart';
 
 class Screen5 extends StatefulWidget {
@@ -12,7 +12,7 @@ class _Screen5State extends State<Screen5> {
 
   @override
   Widget build(BuildContext context) {
-    var ifphotos=false;
+    var ifphotos=true;
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
@@ -83,11 +83,11 @@ class _Screen5State extends State<Screen5> {
             height: (h) * 1 / 8.5,
           ),
           Container(
-            color: Colors.black,
-            height: (h) - ((h) * (1 / 8)) - ((h) * (1 / 8.5)),
+            color: Colors.white,
+            height: (h) - ((h) * (1 / 8)) - ((h) * (1 / 10.16)),
             child: ListView.builder(
               itemBuilder: (context, index) {
-                return ifphotos?Photos():Vedios();
+                return Photos();
               },
               scrollDirection: Axis.vertical,
               itemCount: 5,

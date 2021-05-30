@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "390087033584",
+    "project_id": "millions-video",
+    "storage_bucket": "millions-video.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390087033584:android:f9bed79aa4f8f380877835",
+        "android_client_info": {
+          "package_name": "com.android.millions"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "390087033584-c4p573uog3u0aflas3l5a6cjgn5tojdp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.millions",
+            "certificate_hash": "ae3f703032b542aa43737a65faf84c411a094713"
+          }
+        },
+        {
+          "client_id": "390087033584-9kdjqrbr36davjglf36kplq7kok7q7ra.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcXTi9dDxbIKamKPGTKZOt3ddIuuqGBLU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "390087033584-9kdjqrbr36davjglf36kplq7kok7q7ra.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
