@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class UploadPage extends StatefulWidget {
   @override
   _UploadPageState createState() => _UploadPageState();
@@ -33,53 +32,43 @@ class _UploadPageState extends State<UploadPage> {
             children: [
               Row(
                 mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: IconButton(
-                          onPressed: () {
-                            print('Iconbutton Pressed');
-                          },
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.black,
-                            size: 30,
-                          ),
-                          iconSize: 30,
-                        ),
+                  IconButton(
+                    onPressed: () {
+                      print('Iconbutton Pressed');
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                      size: 30,
+                    ),
+                    iconSize: 30,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(200, 0, 0, 0),
+                    child: IconButton(
+                      onPressed: () {
+                        print('IconButtn Pressed');
+                      },
+                      icon: Icon(
+                        Icons.search,
+                        color: Colors.black,
+                        size: 30,
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(200, 0, 0, 0),
-                        child: IconButton(
-                          onPressed: () {
-                            print('IconButtn Pressed');
-                          },
-                          icon: Icon(
-                            Icons.search,
-                            color: Colors.black,
-                            size: 30,
-                          ),
-                          iconSize: 30,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                        child: Container(
-                          width: 35,
-                          height: 35,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                          ),
-                          child: Image.network(
-                            'https://image.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg',
-                          ),
-                        ),
-                      ),
-                    ],
+                      iconSize: 30,
+                    ),
+                  ),
+                  Container(
+                    width: 35,
+                    height: 35,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: Image.network(
+                      'https://image.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg',
+                    ),
                   ),
                 ],
               ),
@@ -100,39 +89,36 @@ class _UploadPageState extends State<UploadPage> {
                   color: Color(0xFFF5F5F5),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20, 30, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
-                              child: Image.network(
-                                'https://image.flaticon.com/icons/png/512/262/262530.png',
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
+                            Image.network(
+                              'https://image.flaticon.com/icons/png/512/262/262530.png',
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
                             ),
                           ],
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 0, 20),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
-                              child: Text(
-                                'Upload',
-                                textAlign: TextAlign.start,
-                                style: GoogleFonts.ubuntu(
-                                  color: Colors.purple,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 30,
-                                ),
+                            Text(
+                              'Upload',
+                              textAlign: TextAlign.start,
+                              style: GoogleFonts.ubuntu(
+                                color: Colors.purple,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 30,
                               ),
                             ),
                           ],
