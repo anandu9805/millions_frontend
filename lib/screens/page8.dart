@@ -53,8 +53,8 @@ class _Page8State extends State<Page8> {
               Padding(
                 padding: EdgeInsets.fromLTRB(5, 0, 20, 0),
                 child: Container(
-                  width: 35,
-                  height: 35,
+                  width: MediaQuery.of(context).size.width * 0.1,
+                  height: MediaQuery.of(context).size.width * 0.1,
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -105,8 +105,8 @@ class _Page8State extends State<Page8> {
                                     Padding(
                                       padding: EdgeInsets.fromLTRB(0, 35, 0, 0),
                                       child: Container(
-                                        width: 80,
-                                        height: 80,
+                                        width: MediaQuery.of(context).size.width * 0.2,
+                                        height: MediaQuery.of(context).size.width * 0.2,
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
@@ -236,8 +236,8 @@ class _Page8State extends State<Page8> {
                           ),
                           child: Image.network(
                             'https://image.freepik.com/free-vector/organic-flat-abstract-music-youtube-thumbnail_23-2148918556.jpg',
-                            width: 100,
-                            height: 100,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: MediaQuery.of(context).size.width * 0.8,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -295,90 +295,6 @@ class _Page8State extends State<Page8> {
                     ),
                   ),
                 ),
-
-/*
-
-                
-                 Padding(
-                  padding: EdgeInsets.fromLTRB(20, 20, 25, 20),
-                  child: Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    color: Colors.white,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFEEEEE),
-                          ),
-                          child: Image.network(
-                            'https://image.freepik.com/free-vector/organic-flat-abstract-music-youtube-thumbnail_23-2148918556.jpg',
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
-                              child: Text(
-                                'Former Child Actros Who Ended Up Being',
-                                textAlign: TextAlign.start,
-                                style: GoogleFonts.ubuntu(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(5, 0, 15, 0),
-                                    child: Text(
-                                      'Looper',
-                                      style: GoogleFonts.ubuntu(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    '12 Minutes Ago',
-                                    style: GoogleFonts.ubuntu(
-                                      color: Color(0xFF464444),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-
-*/
-
-
               ],
             ),
           )

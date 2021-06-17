@@ -71,7 +71,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: primary,
-                            width: 2,
+                            width : MediaQuery.of(context).size.width * 0.01,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -80,7 +80,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: primary, width: 2),
+                              BorderSide(color: primary, width : MediaQuery.of(context).size.width * 0.01),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -114,7 +114,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: primary,
-                            width: 2,
+                            width: MediaQuery.of(context).size.width * 0.01,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -123,7 +123,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: primary, width: 2),
+                              BorderSide(color: primary, width: MediaQuery.of(context).size.width * 0.01),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -157,7 +157,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: primary,
-                            width: 2,
+                            width : MediaQuery.of(context).size.width * 0.01,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -166,7 +166,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: primary, width: 2),
+                              BorderSide(color: primary, width : MediaQuery.of(context).size.width * 0.01),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -200,7 +200,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: primary,
-                              width: 2,
+                              width : MediaQuery.of(context).size.width * 0.01,
                             ),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4.0),
@@ -209,7 +209,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide:
-                                BorderSide(color: primary, width: 2),
+                                BorderSide(color: primary, width : MediaQuery.of(context).size.width * 0.01),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),

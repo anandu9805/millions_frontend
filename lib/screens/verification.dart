@@ -89,9 +89,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                       ),
                     ),
                   ),
-                  style: TextStyle(
-                    fontFamily: 'Ununtu',
-                  ),
+                  style: GoogleFonts.ubuntu(),
                 ),
               ),
               Padding(

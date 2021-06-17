@@ -49,8 +49,8 @@ class _CreatePageState extends State<CreatePage> {
                   ),
                 ),
                 Container(
-                  width: 35,
-                  height: 35,
+                  width: MediaQuery.of(context).size.width * 0.1,
+                  height: MediaQuery.of(context).size.width * 0.1,
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,

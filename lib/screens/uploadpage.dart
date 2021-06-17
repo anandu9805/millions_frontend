@@ -61,8 +61,8 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                   ),
                   Container(
-                    width: 35,
-                    height: 35,
+                    width: MediaQuery.of(context).size.width * 0.1,
+                    height: MediaQuery.of(context).size.width * 0.1,
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -100,15 +100,15 @@ class _UploadPageState extends State<UploadPage> {
                           children: [
                             Image.network(
                               'https://image.flaticon.com/icons/png/512/262/262530.png',
-                              width: 100,
-                              height: 100,
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              height: MediaQuery.of(context).size.width * 0.3,
                               fit: BoxFit.cover,
                             ),
                           ],
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
