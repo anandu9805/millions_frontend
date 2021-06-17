@@ -9,8 +9,8 @@ class UploadPage extends StatefulWidget {
 }
 
 class _UploadPageState extends State<UploadPage> {
-  late TextEditingController decsiptionController;
-  late TextEditingController titleController;
+  TextEditingController decsiptionController;
+  TextEditingController titleController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override

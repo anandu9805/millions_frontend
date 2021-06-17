@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:millions/screens/view_video.dart';
 
 class Photos extends StatefulWidget {
   @override
@@ -13,8 +14,17 @@ class _PhotosState extends State<Photos> {
       child: Column(
         children: <Widget>[
           Padding(
-              padding: EdgeInsets.only(top: 40, left: 20, right: 20),
-              child: Image.asset('images/millionlogo.png')),
+            padding: EdgeInsets.only(top: 40, left: 20, right: 20),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ViewVideo()),
+                );
+              },
+              child: Image.asset('images/millionlogo.png'),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
             child: ListTile(

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
-import './screens/screen11.dart';
-import './screens/screen5.dart';
-import './screens/screen1.dart';
-import './screens/screen9.dart';
+import 'package:millions/screens/complete_profile.dart';
+import 'package:millions/screens/user_profile.dart';
+import 'package:millions/screens/view_video.dart';
 import './screens/screen14.dart';
 
 void main() {
@@ -18,15 +16,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
-
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-     // home: Screen11(),
-      home: Screen14(),
-
+      // home: Screen11(),
+      home: UserProfile(),
     );
   }
 }
-

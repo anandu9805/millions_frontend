@@ -59,12 +59,6 @@ linked_*.ds
 unlinked.ds
 unlinked_spec.ds
 
-# build files
-build/f872507f30e2ff2523f0f1d19160266e.cache.dill.track.dill
-build/last_build_run.json
-build/video_player
-build/app
-build/5b0b80967f6147e46cf681a7f06cfd04
 
 # Android related
 **/android/**/gradle-wrapper.jar
