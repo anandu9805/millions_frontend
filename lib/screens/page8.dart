@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/constants/colors.dart';
 
 class Page8 extends StatefulWidget {
   @override
@@ -184,7 +185,7 @@ class _Page8State extends State<Page8> {
                         child: Text(
                           'Videos',
                           style: GoogleFonts.ubuntu(
-                            color: Colors.purple,
+                            color: primary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

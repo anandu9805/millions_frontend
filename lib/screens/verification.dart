@@ -1,6 +1,7 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:millions/constants/colors.dart';
 
 class PaymentVerifcationPage extends StatefulWidget {
   @override
@@ -69,7 +70,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.purple,
+                        color: primary,
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.only(
@@ -79,7 +80,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.purple,
+                        color: primary,
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.only(
@@ -108,7 +109,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                     Text(
                       'terms and conditions',
                       style: GoogleFonts.ubuntu(
-                        color: Colors.purple,
+                        color: primary,
                         fontSize: 10,
                       ),
                     )

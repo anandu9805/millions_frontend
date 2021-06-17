@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/constants/colors.dart';
 
 class UploadPage extends StatefulWidget {
   @override
@@ -116,7 +117,7 @@ class _UploadPageState extends State<UploadPage> {
                               'Upload',
                               textAlign: TextAlign.start,
                               style: GoogleFonts.ubuntu(
-                                color: Colors.purple,
+                                color: primary,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 30,
                               ),
@@ -142,7 +143,7 @@ class _UploadPageState extends State<UploadPage> {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.purple,
+                        color: primary,
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.only(
@@ -152,7 +153,7 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.purple,
+                        color: primary,
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.only(
@@ -188,7 +189,7 @@ class _UploadPageState extends State<UploadPage> {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.purple,
+                        color: primary,
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.only(
@@ -198,7 +199,7 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.purple,
+                        color: primary,
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.only(

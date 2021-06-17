@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:millions/constants/colors.dart';
 
 class OTPPageWidget extends StatefulWidget {
   //OTPPageWidget({Key key}) : super(key: key);
@@ -69,7 +70,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                             fontWeight: FontWeight.w500),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.purple,
+                            color: primary,
                             width: 2,
                           ),
                           borderRadius: const BorderRadius.only(
@@ -79,7 +80,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.purple, width: 2),
+                              BorderSide(color: primary, width: 2),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -112,7 +113,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                             fontWeight: FontWeight.w500),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.purple,
+                            color: primary,
                             width: 2,
                           ),
                           borderRadius: const BorderRadius.only(
@@ -122,7 +123,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.purple, width: 2),
+                              BorderSide(color: primary, width: 2),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -155,7 +156,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                             fontWeight: FontWeight.w500),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.purple,
+                            color: primary,
                             width: 2,
                           ),
                           borderRadius: const BorderRadius.only(
@@ -165,7 +166,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.purple, width: 2),
+                              BorderSide(color: primary, width: 2),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -198,7 +199,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                               fontWeight: FontWeight.w500),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                              color: Colors.purple,
+                              color: primary,
                               width: 2,
                             ),
                             borderRadius: const BorderRadius.only(
@@ -208,7 +209,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide:
-                                BorderSide(color: Colors.purple, width: 2),
+                                BorderSide(color: primary, width: 2),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
