@@ -66,8 +66,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         hintText: '0',
                         hintStyle: GoogleFonts.ubuntu(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: primary,
@@ -89,8 +89,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                       ),
                       style: GoogleFonts.ubuntu(
                         color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -109,8 +109,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         hintText: '0',
                         hintStyle: GoogleFonts.ubuntu(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: primary,
@@ -132,8 +132,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                       ),
                       style: GoogleFonts.ubuntu(
                         color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -152,8 +152,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         hintText: '0',
                         hintStyle: GoogleFonts.ubuntu(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: primary,
@@ -175,8 +175,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                       ),
                       style: GoogleFonts.ubuntu(
                         color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -195,8 +195,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           hintText: '0',
                           hintStyle: GoogleFonts.ubuntu(
                               color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500),
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: primary,
@@ -218,8 +218,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         style: GoogleFonts.ubuntu(
                           color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),

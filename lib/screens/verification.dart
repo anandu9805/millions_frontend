@@ -36,7 +36,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: Text(
-                        'Payment\nVerfication',
+                        'Payment\nVerification',
                         style: GoogleFonts.ubuntu(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -56,6 +56,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                       'Payment Verification Number',
                       style: GoogleFonts.ubuntu(
                         fontSize: 12,
+                         fontWeight: FontWeight.w600
                       ),
                     )
                   ],
@@ -102,13 +103,15 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                       'For more details refer',
                       style: GoogleFonts.ubuntu(
                         fontSize: 10,
+                        fontWeight: FontWeight.w600
                       ),
                     ),
                     Text(
-                      'terms and conditions',
+                      ' terms and service',
                       style: GoogleFonts.ubuntu(
                         color: primary,
                         fontSize: 10,
+                          fontWeight: FontWeight.w600
                       ),
                     )
                   ],

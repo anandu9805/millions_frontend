@@ -13,6 +13,7 @@ class _Page8State extends State<Page8> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       key: scaffoldKey,
       body: SafeArea(
           child: Column(
@@ -88,9 +89,9 @@ class _Page8State extends State<Page8> {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                  'https://image.freepik.com/free-photo/abstract-luxury-clear-yellow-wall-well-use-as-backdrop-background-layout_1258-207.jpg'),
-                                  fit: BoxFit.cover,
-                                  alignment: Alignment.topCenter,
+                                  'https://motionarray.imgix.net/preview-75634-8YcoQ8Fyf3_0000.jpg'),
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
                             ),
                           ),
                           child: Padding(
@@ -105,8 +106,12 @@ class _Page8State extends State<Page8> {
                                     Padding(
                                       padding: EdgeInsets.fromLTRB(0, 35, 0, 0),
                                       child: Container(
-                                        width: MediaQuery.of(context).size.width * 0.2,
-                                        height: MediaQuery.of(context).size.width * 0.2,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.2,
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.2,
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
@@ -122,7 +127,8 @@ class _Page8State extends State<Page8> {
                                   padding: EdgeInsets.fromLTRB(15, 40, 50, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
@@ -130,7 +136,9 @@ class _Page8State extends State<Page8> {
                                           Text(
                                             'Leslie Alexander',
                                             style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.w600,
+                                              fontSize: 20,
+                                              color : Colors.white,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ],
@@ -143,7 +151,10 @@ class _Page8State extends State<Page8> {
                                                 EdgeInsets.fromLTRB(0, 8, 0, 0),
                                             child: Text(
                                               '5M Followers',
-                                              style: GoogleFonts.ubuntu(),
+                                              style: GoogleFonts.ubuntu(
+                                                  color : Colors.white,
+                                                fontSize: 15,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -154,12 +165,26 @@ class _Page8State extends State<Page8> {
                                           Padding(
                                             padding:
                                                 EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                            child: RaisedButton(
-                                              color: Colors.white,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  fixedSize: Size(
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.3,
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.1),
+                                                  primary: Colors.white),
                                               onPressed: () {
                                                 print('Button Pressed');
                                               },
-                                              child: Text('Follow'),
+                                              child: Text(
+                                                'Follow',
+                                                style: GoogleFonts.ubuntu(
+                                                    color: Colors.black),
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -182,29 +207,38 @@ class _Page8State extends State<Page8> {
                     children: [
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: Text(
-                          'Videos',
-                          style: GoogleFonts.ubuntu(
-                            color: primary,
-                            fontWeight: FontWeight.w500,
+                        child: InkWell(
+                          onTap: () {},
+                          child: Text(
+                            'Videos',
+                            style: GoogleFonts.ubuntu(
+                              color: primary,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: Text(
-                          '30s',
-                          style: GoogleFonts.ubuntu(
-                            fontWeight: FontWeight.w500,
+                        child: InkWell(
+                          onTap: () {},
+                          child: Text(
+                            '30s',
+                            style: GoogleFonts.ubuntu(
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: Text(
-                          'Videos Photos',
-                          style: GoogleFonts.ubuntu(
-                            fontWeight: FontWeight.w500,
+                        child: InkWell(
+                          onTap: () {},
+                          child: Text(
+                            'Videos Photos',
+                            style: GoogleFonts.ubuntu(
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
