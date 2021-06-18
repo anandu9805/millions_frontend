@@ -32,16 +32,16 @@ class _ViewVideoState extends State<ViewVideo> {
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10, right: 20),
             child: InkWell(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.black,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Page8()),
-                    );
-                  },
-                ),
+              child: CircleAvatar(
+                backgroundColor: Colors.black,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Page8()),
+                );
+              },
+            ),
           )
         ],
       ),
@@ -147,7 +147,18 @@ class _ViewVideoState extends State<ViewVideo> {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(),
+                          InkWell(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.black,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Page8()),
+                              );
+                            },
+                          ),
                           SizedBox(width: 10),
                           Text("Cooper")
                         ],
@@ -181,11 +192,11 @@ class _ViewVideoState extends State<ViewVideo> {
               Row(
                 children: [Text("4456 Comments")],
               ),
-              SizedBox(height:10),
-             Comment(),
-             Comment(),
-             Comment(),
-             Comment()
+              SizedBox(height: 10),
+              Comment(),
+              Comment(),
+              Comment(),
+              Comment()
             ],
           ),
         ),
