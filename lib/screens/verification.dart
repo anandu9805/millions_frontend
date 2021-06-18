@@ -7,7 +7,7 @@ class PaymentVerifcationPage extends StatefulWidget {
 }
 
 class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
-  late TextEditingController textController;
+   TextEditingController textController;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
