@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:millions/constants/colors.dart';
+import 'package:millions/constants/size.dart';
 
 class UserProfile extends StatefulWidget {
   @override
@@ -37,47 +39,57 @@ class _UserProfileState extends State<UserProfile> {
       ),
       body: Column(
         children: [
-          Banner(
-            message: "20% off !!",
-            location: BannerLocation.bottomStart,
-            color: Colors.red,
-            child: Container(
-              color: Colors.green[100],
-              height: 300,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-                child: Column(
-                  children: <Widget>[
-                    Image.network(
-                        'https://media.geeksforgeeks.org/wp-content/cdn-uploads/20190806131525/forkPython.jpg'), //Image.network
-                    SizedBox(height: 10),
-                    Text(
-                      'GeeksforGeeks',
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold), //TextStyle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                height: DeviceSize(context).height * 0.3,
+                width: DeviceSize(context).width * 0.9,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  image: DecorationImage(
+                    image: AssetImage("images/millionlogo.png"),
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topCenter,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: DeviceSize(context).width * 0.13,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      height: 5,
-                    ), //SizedBox
-                    Text(
-                      'Fork Python Course',
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold), //TextStyle
-                    ), //Text
-                    SizedBox(height: 20),
-                    RaisedButton(
-                      child: Text('Register'),
-                      color: Colors.greenAccent[400],
-                      onPressed: () {},
-                    )
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Name',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          '5M Followers',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text("Edit"),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
         ],
       ),
