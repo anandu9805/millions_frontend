@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:millions/screens/login.dart';
 import 'package:millions/screens/otpPage.dart';
 
 class Screen1 extends StatefulWidget {
@@ -7,29 +8,10 @@ class Screen1 extends StatefulWidget {
 }
 
 class _Screen1State extends State<Screen1> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  
   @override
   void initState() {
     super.initState();
-
-    timer().then((status) {
-      if (status) {
-        //   _navigateToHome();
-        // } else {
-        _navigateToLogin();
-      }
-    });
-  }
-
-  Future<bool> timer() async {
-    await Future.delayed(Duration(milliseconds: 3000), () {});
-
-    return true;
-  }
-
-  void _navigateToLogin() {
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => OTPPageWidget()));
   }
 
   @override
@@ -70,12 +52,18 @@ class _Screen1State extends State<Screen1> {
                       width: MediaQuery.of(context).size.width / 1.5,
                     ),
                     FlatButton(
-                        onPressed: null,
-                        child: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 50,
-                        ))
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                      child: Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    )
                   ],
                 )
               ],
