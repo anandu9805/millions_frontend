@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/constants/colors.dart';
 
 class CreatePage extends StatefulWidget {
   @override
@@ -48,8 +49,8 @@ class _CreatePageState extends State<CreatePage> {
                   ),
                 ),
                 Container(
-                  width: 35,
-                  height: 35,
+                  width: MediaQuery.of(context).size.width * 0.1,
+                  height: MediaQuery.of(context).size.width * 0.1,
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -73,11 +74,13 @@ class _CreatePageState extends State<CreatePage> {
             Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Container(
-                margin: const EdgeInsets.all(15.0),
-                padding: const EdgeInsets.all(3.0),
+                height: MediaQuery.of(context).size.width * 0.5,
+                //margin: const EdgeInsets.all(15.0),
+                //padding: const EdgeInsets.all(3.0),
                 decoration:
-                    BoxDecoration(border: Border.all(color: Colors.purple)),
+                    BoxDecoration(border: Border.all(color: primary)),
                 child: Card(
+                  color: Color(0xffe8e8e8),
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   elevation: 0,
                   child: Column(
@@ -92,7 +95,7 @@ class _CreatePageState extends State<CreatePage> {
                               'Upload\nVideo',
                               style: GoogleFonts.ubuntu(
                                 fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
@@ -106,7 +109,8 @@ class _CreatePageState extends State<CreatePage> {
                             Text(
                               'Start',
                               style: GoogleFonts.ubuntu(
-                                color: Colors.purple,
+                                color:primary,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             Padding(
@@ -117,7 +121,7 @@ class _CreatePageState extends State<CreatePage> {
                                 },
                                 icon: Icon(
                                   Icons.arrow_forward,
-                                  color: Colors.purple,
+                                  color: primary,
                                   size: 30,
                                 ),
                                 iconSize: 30,
@@ -132,13 +136,15 @@ class _CreatePageState extends State<CreatePage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Container(
-                margin: const EdgeInsets.all(15.0),
-                padding: const EdgeInsets.all(3.0),
+                //margin: const EdgeInsets.all(15.0),
+                //padding: const EdgeInsets.all(3.0),
+                height: MediaQuery.of(context).size.width * 0.5,
                 decoration:
-                    BoxDecoration(border: Border.all(color: Colors.purple)),
+                    BoxDecoration(border: Border.all(color: primary)),
                 child: Card(
+                  color: Color(0xffe8e8e8),
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   elevation: 0,
                   child: Column(
@@ -150,10 +156,10 @@ class _CreatePageState extends State<CreatePage> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
-                              '30s\nVideos',
+                              '30s Videos',
                               style: GoogleFonts.ubuntu(
                                 fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
@@ -167,7 +173,8 @@ class _CreatePageState extends State<CreatePage> {
                             Text(
                               'Start',
                               style: GoogleFonts.ubuntu(
-                                color: Colors.purple,
+                                color: primary,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             Padding(
@@ -178,7 +185,7 @@ class _CreatePageState extends State<CreatePage> {
                                 },
                                 icon: Icon(
                                   Icons.arrow_forward,
-                                  color: Colors.purple,
+                                  color: primary,
                                   size: 30,
                                 ),
                                 iconSize: 30,

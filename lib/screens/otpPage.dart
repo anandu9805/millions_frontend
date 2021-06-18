@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:millions/constants/colors.dart';
 
 class OTPPageWidget extends StatefulWidget {
   //OTPPageWidget({Key key}) : super(key: key);
@@ -65,12 +66,12 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         hintText: '0',
                         hintStyle: GoogleFonts.ubuntu(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.purple,
-                            width: 2,
+                            color: primary,
+                            width : MediaQuery.of(context).size.width * 0.01,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -79,7 +80,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.purple, width: 2),
+                              BorderSide(color: primary, width : MediaQuery.of(context).size.width * 0.01),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -88,8 +89,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                       ),
                       style: GoogleFonts.ubuntu(
                         color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -108,12 +109,12 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         hintText: '0',
                         hintStyle: GoogleFonts.ubuntu(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.purple,
-                            width: 2,
+                            color: primary,
+                            width: MediaQuery.of(context).size.width * 0.01,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -122,7 +123,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.purple, width: 2),
+                              BorderSide(color: primary, width: MediaQuery.of(context).size.width * 0.01),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -131,8 +132,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                       ),
                       style: GoogleFonts.ubuntu(
                         color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -151,12 +152,12 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         hintText: '0',
                         hintStyle: GoogleFonts.ubuntu(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.purple,
-                            width: 2,
+                            color: primary,
+                            width : MediaQuery.of(context).size.width * 0.01,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -165,7 +166,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.purple, width: 2),
+                              BorderSide(color: primary, width : MediaQuery.of(context).size.width * 0.01),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -174,8 +175,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                       ),
                       style: GoogleFonts.ubuntu(
                         color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -194,12 +195,12 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           hintText: '0',
                           hintStyle: GoogleFonts.ubuntu(
                               color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500),
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                              color: Colors.purple,
-                              width: 2,
+                              color: primary,
+                              width : MediaQuery.of(context).size.width * 0.01,
                             ),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4.0),
@@ -208,7 +209,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide:
-                                BorderSide(color: Colors.purple, width: 2),
+                                BorderSide(color: primary, width : MediaQuery.of(context).size.width * 0.01),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
@@ -217,8 +218,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         ),
                         style: GoogleFonts.ubuntu(
                           color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),

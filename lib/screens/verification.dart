@@ -1,6 +1,7 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:millions/constants/colors.dart';
 
 class PaymentVerifcationPage extends StatefulWidget {
   @override
@@ -35,7 +36,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: Text(
-                        'Payment\nVerfication',
+                        'Payment\nVerification',
                         style: GoogleFonts.ubuntu(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -55,6 +56,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                       'Payment Verification Number',
                       style: GoogleFonts.ubuntu(
                         fontSize: 12,
+                         fontWeight: FontWeight.w600
                       ),
                     )
                   ],
@@ -69,7 +71,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.purple,
+                        color: primary,
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.only(
@@ -79,7 +81,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.purple,
+                        color: primary,
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.only(
@@ -88,9 +90,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                       ),
                     ),
                   ),
-                  style: TextStyle(
-                    fontFamily: 'Ununtu',
-                  ),
+                  style: GoogleFonts.ubuntu(),
                 ),
               ),
               Padding(
@@ -103,13 +103,15 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                       'For more details refer',
                       style: GoogleFonts.ubuntu(
                         fontSize: 10,
+                        fontWeight: FontWeight.w600
                       ),
                     ),
                     Text(
-                      'terms and conditions',
+                      ' terms and service',
                       style: GoogleFonts.ubuntu(
-                        color: Colors.purple,
+                        color: primary,
                         fontSize: 10,
+                          fontWeight: FontWeight.w600
                       ),
                     )
                   ],
