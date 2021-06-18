@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/screens/home.dart';
 
 class CreateProfile extends StatefulWidget {
   @override
@@ -86,7 +87,10 @@ class _CreateProfileState extends State<CreateProfile> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(primary)),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) => HomePage()));
+                    },
                     child: Text(
                       "Save",
                       style: TextStyle(fontSize: 15),

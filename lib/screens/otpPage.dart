@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/screens/complete_profile.dart';
 
 class OTPPageWidget extends StatefulWidget {
   //OTPPageWidget({Key key}) : super(key: key);
@@ -71,7 +72,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: primary,
-                            width : MediaQuery.of(context).size.width * 0.01,
+                            width: MediaQuery.of(context).size.width * 0.01,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -79,8 +80,9 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           ),
                         ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: primary, width : MediaQuery.of(context).size.width * 0.01),
+                          borderSide: BorderSide(
+                              color: primary,
+                              width: MediaQuery.of(context).size.width * 0.01),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -122,8 +124,9 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           ),
                         ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: primary, width: MediaQuery.of(context).size.width * 0.01),
+                          borderSide: BorderSide(
+                              color: primary,
+                              width: MediaQuery.of(context).size.width * 0.01),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -157,7 +160,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: primary,
-                            width : MediaQuery.of(context).size.width * 0.01,
+                            width: MediaQuery.of(context).size.width * 0.01,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -165,8 +168,9 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           ),
                         ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: primary, width : MediaQuery.of(context).size.width * 0.01),
+                          borderSide: BorderSide(
+                              color: primary,
+                              width: MediaQuery.of(context).size.width * 0.01),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
@@ -200,7 +204,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: primary,
-                              width : MediaQuery.of(context).size.width * 0.01,
+                              width: MediaQuery.of(context).size.width * 0.01,
                             ),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4.0),
@@ -208,8 +212,10 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                             ),
                           ),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: primary, width : MediaQuery.of(context).size.width * 0.01),
+                            borderSide: BorderSide(
+                                color: primary,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.01),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
@@ -224,6 +230,21 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         textAlign: TextAlign.center,
                       ),
                     ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: primary
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) => CreateProfile()));
+                    },
+                    child: Text("Submit"),
                   )
                 ],
               )

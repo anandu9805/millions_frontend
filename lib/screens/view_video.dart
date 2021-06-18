@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:millions/screens/page8.dart';
 import 'package:millions/widgets/comments.dart';
 
 class ViewVideo extends StatefulWidget {
@@ -30,9 +31,17 @@ class _ViewVideoState extends State<ViewVideo> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10, right: 20),
-            child: CircleAvatar(
-              backgroundColor: Colors.black,
-            ),
+            child: InkWell(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Page8()),
+                    );
+                  },
+                ),
           )
         ],
       ),

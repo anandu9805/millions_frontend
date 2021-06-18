@@ -12,6 +12,7 @@ class _Page8State extends State<Page8> {
 
   @override
   Widget build(BuildContext context) {
+    var w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       key: scaffoldKey,
@@ -41,7 +42,7 @@ class _Page8State extends State<Page8> {
                 padding: EdgeInsets.fromLTRB(200, 0, 5, 0),
                 child: IconButton(
                   onPressed: () {
-                    print('IconButton Pressed');
+                    Navigator.pop(context);
                   },
                   icon: Icon(
                     Icons.search,
@@ -108,7 +109,7 @@ class _Page8State extends State<Page8> {
                                       child: Container(
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.2,
+                                                0.18,
                                         height:
                                             MediaQuery.of(context).size.width *
                                                 0.2,
@@ -137,6 +138,7 @@ class _Page8State extends State<Page8> {
                                             'Leslie Alexander',
                                             style: GoogleFonts.ubuntu(
                                               fontSize: 20,
+                                            
                                               color : Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),

@@ -12,48 +12,12 @@ class _Screen9State extends State<Screen9> {
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          (h) * (1 / 13),
-        ),
-        child: AppBar(
-          leading: Container(
-            color: Colors.white,
-            width: w / 4,
-            child: Image.asset(
-              'images/million final logo with out millions.png',
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.centerRight,
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10, right: 10),
-              child: IconButton(
-                  icon: Icon(
-                    Icons.search_outlined,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    //go to search screen
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10, right: 20),
-              child: CircleAvatar(
-                backgroundColor: Colors.black,
-              ),
-            )
-          ],
-          backgroundColor: Colors.white,
-        ),
-      ),
-      body: Column(children: <Widget>[
+    return SingleChildScrollView(
+      child: Column(children: <Widget>[
         Row(children: <Widget>[
           Container(
             width: (w),
-            height: (h)/8,
+            height: h * 0.13,
             child: ListView.builder(
               itemBuilder: (context, index) {
                 return Row(children: [
@@ -64,15 +28,15 @@ class _Screen9State extends State<Screen9> {
                           top: 5,
                         ),
                         child: CircleAvatar(
-                          radius: 40,
+                          radius: w * 0.1,
                           child: ClipRRect(
                             child: Image.asset(
                               'images/millionlogo.png',
-                              width: 65,
-                              height: 65,
+                              width: w * 0.16,
+                              height: w * 0.16,
                               fit: BoxFit.cover,
                             ),
-                            borderRadius: BorderRadius.circular(40),
+                            borderRadius: BorderRadius.circular(w * 0.1),
                           ),
                           backgroundColor: Colors.white,
                         ),
@@ -91,7 +55,7 @@ class _Screen9State extends State<Screen9> {
           ),
         ]),
         Padding(
-          padding: const EdgeInsets.only(top:9, left: 5),
+          padding: const EdgeInsets.only(top: 9, left: 5),
           child: Align(
               alignment: Alignment.bottomLeft,
               child: Text(
@@ -104,7 +68,7 @@ class _Screen9State extends State<Screen9> {
           child: ListView.builder(
             itemBuilder: (context, index) {
               return Container(
-                child:Photos(),
+                child: Photos(),
               );
             },
             scrollDirection: Axis.vertical,

@@ -8,52 +8,14 @@ class Screen5 extends StatefulWidget {
 }
 
 class _Screen5State extends State<Screen5> {
-
-
   @override
   Widget build(BuildContext context) {
-    var ifphotos=true;
+    // var ifphotos = true;
     var h = MediaQuery.of(context).size.height;
-    var w = MediaQuery.of(context).size.width;
+    // var w = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          (h) * (1 / 13),
-        ),
-        child: AppBar(
-          leading: Container(
-            color: Colors.white,
-            width: w / 4,
-            child: Image.asset(
-              'images/million final logo with out millions.png',
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.centerRight,
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10, right: 10),
-              child: IconButton(
-                  icon: Icon(
-                    Icons.search_outlined,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    //go to search screen
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10, right: 20),
-              child: CircleAvatar(
-                backgroundColor: Colors.black,
-              ),
-            )
-          ],
-          backgroundColor: Colors.white,
-        ),
-      ),
-      body: Column(
+    return SingleChildScrollView(
+      child: Column(
         children: [
           Container(
             child: Column(

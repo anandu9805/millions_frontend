@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:millions/screens/page8.dart';
+import 'package:millions/screens/screen1.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       // home: Screen11(),
-      home: Page8(),
+      home: Screen1(),
     );
   }
 }
