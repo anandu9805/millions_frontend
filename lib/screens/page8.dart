@@ -11,17 +11,24 @@ class Page8 extends StatefulWidget {
 }
 
 class _Page8State extends State<Page8> {
+
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
   }
   //final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final _SearchDemoSearchDelegate _delegate = _SearchDemoSearchDelegate();
+
+  int _lastIntegerSelected;
+
+
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
+
       key: _drawerKey,
       drawer: Drawer(
         child: Column(
@@ -132,6 +139,9 @@ class _Page8State extends State<Page8> {
           backgroundColor: Colors.white,
         ),
       ),
+
+      resizeToAvoidBottomInset: false,
+
       backgroundColor: Colors.white,
      // key: scaffoldKey,
       body: SafeArea(
@@ -162,10 +172,24 @@ class _Page8State extends State<Page8> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(
-                    Icons.search,
+                  icon: IconButton(
+                    icon: Icon(
+                      Icons.search,
+                      size: 30,
+                    ),
                     color: Colors.black,
-                    size: 30,
+                    onPressed: () async {
+                      final int selected = await showSearch<int>(
+                        context: context,
+                        delegate: _delegate,
+                      );
+                      if (selected != null &&
+                          selected != _lastIntegerSelected) {
+                        setState(() {
+                          _lastIntegerSelected = selected;
+                        });
+                      }
+                    },
                   ),
                   iconSize: 30,
                 ),
@@ -245,8 +269,7 @@ class _Page8State extends State<Page8> {
                                             'Emma Watson',
                                             style: GoogleFonts.ubuntu(
                                               fontSize: 20,
-                                            
-                                              color : Colors.white,
+                                              color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -261,7 +284,7 @@ class _Page8State extends State<Page8> {
                                             child: Text(
                                               '16M Followers',
                                               style: GoogleFonts.ubuntu(
-                                                  color : Colors.white,
+                                                color: Colors.white,
                                                 fontSize: 15,
                                               ),
                                             ),
@@ -465,6 +488,160 @@ class _Page8State extends State<Page8> {
           )
         ],
       )),
+    );
+  }
+}
+
+class _SearchDemoSearchDelegate extends SearchDelegate<int> {
+  final List<String> _data = ["Item 1", "Item 2","Item 3", "Value 1", "Value 2", "Value 3"];
+     // List<int>.generate(100001, (int i) => i).reversed.toList();
+  final List<String> _history = <String>["Item 1", "Value 2"];
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      tooltip: 'Back',
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+        color: primary,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final Iterable<String> suggestions = query.isEmpty
+        ? _history
+        : _data.where((String i) => '$i'.startsWith(query));
+
+    return _SuggestionList(
+      query: query,
+      suggestions: suggestions.map<String>((String i) => '$i').toList(),
+      onSelected: (String suggestion) {
+        query = suggestion;
+        showResults(context);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final int searched = _data.indexOf(query);
+    if (searched == null || !_data.contains(query)) {
+      return Center(
+        child: Text(
+          'No results found for "$query"\n',
+          style: GoogleFonts.ubuntu(),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    return ListView(
+      children: <Widget>[
+        _ResultCard(
+          title: _data[searched],
+          index: searched,
+          searchDelegate: this,
+        ),
+      ],
+    );
+  }
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return <Widget>[
+      query.isEmpty
+          ? IconButton(
+              tooltip: 'Voice Search',
+              
+              icon: const Icon(Icons.mic, color: primary,),
+              onPressed: () {
+                query = 'TODO: implement voice input';
+              },
+            )
+          : IconButton(
+              tooltip: 'Clear',
+              icon: const Icon(Icons.clear, color: primary,),
+              onPressed: () {
+                query = '';
+                showSuggestions(context);
+              },
+            ),
+    ];
+  }
+}
+
+class _ResultCard extends StatelessWidget {
+  const _ResultCard({this.index, this.title, this.searchDelegate});
+
+  final int index;
+  final String title;
+  final SearchDelegate<int> searchDelegate;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return GestureDetector(
+      onTap: () {
+        searchDelegate.close(context, index);
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Text(title, style: GoogleFonts.ubuntu(),),
+              Text(
+                '$index',
+                style: GoogleFonts.ubuntu( textStyle: theme.textTheme.headline.copyWith(fontSize: 72.0)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SuggestionList extends StatelessWidget {
+  const _SuggestionList({this.suggestions, this.query, this.onSelected});
+
+  final List<String> suggestions;
+  final String query;
+  final ValueChanged<String> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (BuildContext context, int i) {
+        final String suggestion = suggestions[i];
+        return ListTile(
+          leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
+          title: RichText(
+            text: TextSpan(
+              text: suggestion.substring(0, query.length),
+              style:
+                 GoogleFonts.ubuntu(textStyle: theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),),
+              children: <TextSpan>[
+                TextSpan(
+                  text: suggestion.substring(query.length),
+                  style: GoogleFonts.ubuntu(textStyle: theme.textTheme.subhead),
+                ),
+              ],
+            ),
+          ),
+          onTap: () {
+            onSelected(suggestion);
+          },
+        );
+      },
     );
   }
 }

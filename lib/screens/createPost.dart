@@ -73,128 +73,134 @@ class _CreatePageState extends State<CreatePage> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Container(
-                height: MediaQuery.of(context).size.width * 0.5,
-                //margin: const EdgeInsets.all(15.0),
-                //padding: const EdgeInsets.all(3.0),
-                decoration:
-                    BoxDecoration(border: Border.all(color: primary)),
-                child: Card(
-                  color: Color(0xffe8e8e8),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  elevation: 0,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 30, 0, 20),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              'Upload\nVideo',
-                              style: GoogleFonts.ubuntu(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 0, 20),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              'Start',
-                              style: GoogleFonts.ubuntu(
-                                color:primary,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                              child: IconButton(
-                                onPressed: () {
-                                  print('Iconbutton pressed');
-                                },
-                                icon: Icon(
-                                  Icons.arrow_forward,
-                                  color: primary,
-                                  size: 30,
+              child: InkWell(
+                onTap: (){},
+                child: Container(
+                  height: MediaQuery.of(context).size.width * 0.5,
+                  //margin: const EdgeInsets.all(15.0),
+                  //padding: const EdgeInsets.all(3.0),
+                  decoration:
+                      BoxDecoration(border: Border.all(color: primary)),
+                  child: Card(
+                    color: Color(0xffe8e8e8),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    elevation: 0,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 30, 0, 20),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                'Upload\nVideo',
+                                style: GoogleFonts.ubuntu(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                iconSize: 30,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 20, 0, 20),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                'Start',
+                                style: GoogleFonts.ubuntu(
+                                  color:primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                child: IconButton(
+                                  onPressed: () {
+                                    print('Iconbutton pressed');
+                                  },
+                                  icon: Icon(
+                                    Icons.arrow_forward,
+                                    color: primary,
+                                    size: 30,
+                                  ),
+                                  iconSize: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-              child: Container(
-                //margin: const EdgeInsets.all(15.0),
-                //padding: const EdgeInsets.all(3.0),
-                height: MediaQuery.of(context).size.width * 0.5,
-                decoration:
-                    BoxDecoration(border: Border.all(color: primary)),
-                child: Card(
-                  color: Color(0xffe8e8e8),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  elevation: 0,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 30, 0, 20),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              '30s Videos',
-                              style: GoogleFonts.ubuntu(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 0, 20),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              'Start',
-                              style: GoogleFonts.ubuntu(
-                                color: primary,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                              child: IconButton(
-                                onPressed: () {
-                                  print('Iconbutton pressed');
-                                },
-                                icon: Icon(
-                                  Icons.arrow_forward,
-                                  color: primary,
-                                  size: 30,
+              child: InkWell(
+                onTap: (){},
+                child: Container(
+                  //margin: const EdgeInsets.all(15.0),
+                  //padding: const EdgeInsets.all(3.0),
+                  height: MediaQuery.of(context).size.width * 0.5,
+                  decoration:
+                      BoxDecoration(border: Border.all(color: primary)),
+                  child: Card(
+                    color: Color(0xffe8e8e8),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    elevation: 0,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 30, 0, 20),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                'Create \nPost',
+                                style: GoogleFonts.ubuntu(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                iconSize: 30,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 20, 0, 20),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                'Start',
+                                style: GoogleFonts.ubuntu(
+                                  color: primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                child: IconButton(
+                                  onPressed: () {
+                                    print('Iconbutton pressed');
+                                  },
+                                  icon: Icon(
+                                    Icons.arrow_forward,
+                                    color: primary,
+                                    size: 30,
+                                  ),
+                                  iconSize: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
