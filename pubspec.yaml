@@ -25,6 +25,8 @@ dependencies:
     sdk: flutter
   video_player: ^0.10.1
   google_fonts: ^2.1.0
+  country_picker: ^1.0.4
+  language_pickers: ^0.2.0+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
