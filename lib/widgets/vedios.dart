@@ -58,7 +58,7 @@ class _VediosState extends State<Vedios> {
             },
           ),
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Icon(_controller.value.isPlaying
               ? Icons.pause
               : Icons.play_arrow),

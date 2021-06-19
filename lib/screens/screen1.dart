@@ -1,31 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:millions/screens/login.dart';
+import 'package:millions/screens/otpPage.dart';
+import '../constants/colors.dart';
+class Screen1 extends StatefulWidget {
+  @override
+  _Screen1State createState() => _Screen1State();
+}
 
-class Screen1 extends StatelessWidget {
+class _Screen1State extends State<Screen1> {
+  
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Color(0xffa31545),
+      backgroundColor: primary,//Color(0xffa31545),
       body: Container(
         child: Row(
-          children:[ SizedBox(width:MediaQuery.of(context).size.width/20),Column(
-            children: <Widget>[
-              SizedBox(height: MediaQuery.of(context).size.height/10,),
-              Image.asset('images/whiteicon.png'),
-              SizedBox(height:150,),
-              Container(width:MediaQuery.of(context).size.width/1.5,
-                child: Text(
-            'Watch Stream Earn Anywhere Anytime ',
-                  style: TextStyle(fontWeight:FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 60,
-                  ),
-                  maxLines:5,
+          children: [
+            SizedBox(width: MediaQuery.of(context).size.width / 20),
+            Column(
+              children: <Widget>[
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 10,
                 ),
-              ),
-              SizedBox(height:40,),
-              Row(children:[SizedBox(width: MediaQuery.of(context).size.width/1.5,),FlatButton(onPressed: null, child:Icon(Icons.arrow_forward,color: Colors.white,size:50,))],)
-            ],
-          ),],
+                Row(crossAxisAlignment: CrossAxisAlignment.start,children:[Container(height: h/8,width:h/4,child: Image.asset('images/white millions logo with millions.png',height:40,width: 40,))],),
+                SizedBox(
+                  height: 40,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  child: Text(
+                    'Watch Stream Earn Anywhere Anytime ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 60,
+                    ),
+                    maxLines: 5,
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.5,
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                      child: Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ],
         ),
       ),
     );

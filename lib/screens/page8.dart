@@ -1,0 +1,470 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/constants/colors.dart';
+import 'package:millions/screens/verification.dart';
+import 'package:millions/screens/screen14.dart';
+import '../widgets/photos.dart';
+class Page8 extends StatefulWidget {
+  @override
+  _Page8State createState() => _Page8State();
+}
+
+class _Page8State extends State<Page8> {
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  void openDrawer() {
+    _drawerKey.currentState.openDrawer();
+  }
+  //final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
+    return Scaffold(
+      key: _drawerKey,
+      drawer: Drawer(
+        child: Column(
+          children: [
+            DrawerHeader(
+              child: Container(
+                  height: 142,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    "images/million logo with millions.png",
+                  )),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+              ),
+            ),
+            ListTile(
+              title: Text('Edit Profile'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Screen14()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Payment Verification'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PaymentVerifcationPage()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
+        ),
+      ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(
+          (h) * (1 / 13),
+        ),
+        child: AppBar(
+          leading: Container(
+            color: Colors.white,
+            width: w / 4,
+            child: InkWell(
+              child: Image.asset(
+                'images/million final logo with out millions.png',
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.centerRight,
+              ),
+              onTap: () {
+                openDrawer();
+              },
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(top: 10, right: 10),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.search_outlined,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    //go to search screen
+                  }),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, right: 20),
+              child: InkWell(
+                child: CircleAvatar(
+                  child: ClipRRect(
+                    child: Image.network(
+                      'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
+                      width: w * 0.3,
+                      height: w * 0.3,
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(w * 0.1),
+                  ),
+                  // backgroundColor: Colors.black,
+                ),
+
+              ),
+            )
+          ],
+          backgroundColor: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.white,
+     // key: scaffoldKey,
+      body: SafeArea(
+          child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+         /* Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: IconButton(
+                  onPressed: () {
+                    print('Iconbutton Pressed');
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  iconSize: 30,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(200, 0, 5, 0),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  iconSize: 30,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(5, 0, 20, 0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.1,
+                  height: MediaQuery.of(context).size.width * 0.1,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.network(
+                    'https://image.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg',
+                  ),
+                ),
+              ),
+            ],
+          ),*/
+          SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                  'https://motionarray.imgix.net/preview-75634-8YcoQ8Fyf3_0000.jpg'),
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                CircleAvatar(radius: 40,
+                                  child: ClipRRect(
+                                    child: Image.network(
+                                      'https://resize.indiatvnews.com/en/resize/newbucket/715_-/2021/02/emma-watson-1614303661.jpg',
+                                      width: w *1,
+                                      height: h * 1,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(w * 1),
+                                  ),
+                                  // backgroundColor: Colors.black,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(15, 40, 50, 0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Text(
+                                            'Emma Watson',
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 20,
+                                            
+                                              color : Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                            child: Text(
+                                              '16M Followers',
+                                              style: GoogleFonts.ubuntu(
+                                                  color : Colors.white,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                            child:
+                                            RaisedButton(    color: Colors.white,   onPressed: () {
+                                              print('Button Pressed');
+                                            },
+                                              child: Text(
+                                                'Following',
+                                                style: GoogleFonts.ubuntu(
+                                                    color: Colors.black),
+                                              ),),
+                                           /* ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  fixedSize: Size(
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.3,
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.1),
+                                                  primary: Colors.white),
+                                              onPressed: () {
+                                                print('Button Pressed');
+                                              },
+                                              child: Text(
+                                                'Follow',
+                                                style: GoogleFonts.ubuntu(
+                                                    color: Colors.black),
+                                              ),
+                                            ),*/
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(25, 20, 25, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Text(
+                            'Videos',
+                            style: GoogleFonts.ubuntu(
+                              color: primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20,),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Text(
+                            '30s',
+                            style: GoogleFonts.ubuntu(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ), SizedBox(width: 20,),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Text(
+                            'Posts',
+                            style: GoogleFonts.ubuntu(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ), SizedBox(width: 20,),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(25, 20, 0, 0),
+                  child: Text(
+                    'Recently Uploaded',
+                    style: GoogleFonts.ubuntu(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+
+                Container(
+                  color: Colors.white,
+                  height: (h)/1.9,
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return Photos(index);
+                    },
+                    scrollDirection: Axis.vertical,
+                    itemCount:4,
+                  ),
+                /*  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 20, 25, 20),
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFEEEEE),
+                            ),
+                            child: Image.network(
+                              'https://image.freepik.com/free-vector/organic-flat-abstract-music-youtube-thumbnail_23-2148918556.jpg',
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: MediaQuery.of(context).size.width * 0.8,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
+                                child: Text(
+                                  'Former Child Actros Who Ended Up Being',
+                                  textAlign: TextAlign.start,
+                                  style: GoogleFonts.ubuntu(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(5, 0, 15, 0),
+                                      child: Text(
+                                        'Looper',
+                                        style: GoogleFonts.ubuntu(
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Text(
+                                      '12 Minutes Ago',
+                                      style: GoogleFonts.ubuntu(
+                                        color: Color(0xFF464444),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),*/
+                ),
+              ],
+            ),
+          )
+        ],
+      )),
+    );
+  }
+}

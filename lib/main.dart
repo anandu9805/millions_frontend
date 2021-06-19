@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-
-import './screens/screen11.dart';
-import './screens/screen5.dart';
-import './screens/screen1.dart';
-import './screens/screen9.dart';
-import './screens/screen14.dart';
+import 'package:millions/screens/screen1.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,15 +13,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
-
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-     // home: Screen11(),
-      home: Screen14(),
-
+      // home: Screen11(),
+      home: Screen1(),
     );
   }
 }
-

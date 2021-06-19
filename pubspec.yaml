@@ -24,7 +24,9 @@ dependencies:
   flutter:
     sdk: flutter
   video_player: ^0.10.1
+
   google_fonts: ^1.1.2
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -50,6 +52,8 @@ flutter:
       - images/millionlogo.png
       - images/million final logo with out millions.png
       - images/whiteicon.png
+      - images/white millions logo with millions.png
+      - images/million logo with millions.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

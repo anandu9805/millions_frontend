@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import '../widgets/photos.dart';
+import '../model/story.dart';
 
 class Screen9 extends StatefulWidget {
   @override
@@ -8,52 +9,55 @@ class Screen9 extends StatefulWidget {
 }
 
 class _Screen9State extends State<Screen9> {
+  List<Story> story = [
+    Story(
+        'https://i.pinimg.com/736x/2a/75/85/2a7585448874aabcb1d20e6829574994.jpg',
+        'Christine'),
+    Story(
+        'https://media.thetab.com/blogs.dir/90/files/2018/08/portrait-face-woman-girl-female-bowl-person-people-human.jpg',
+        'Rose'),
+    Story(
+        'https://expertphotography.com/wp-content/uploads/2020/07/instagram-profile-picture-size-guide-3.jpg',
+        'Sam'),
+    Story(
+        'https://www.socialnetworkelite.com/hs-fs/hubfs/image2-17.jpg?width=1200&name=image2-17.jpg',
+        'Rahul'),
+    Story(
+        'https://i.pinimg.com/474x/10/ca/3e/10ca3ebf744ed949b4c598795f51803b.jpg',
+        'Shreya'),
+    Story(
+        'https://i.pinimg.com/originals/cd/d7/cd/cdd7cd49d5442e4246c4b0409b00eb39.jpg',
+        'Aishwarya'),
+    Story(
+        'https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg',
+        'Christiano'),
+    Story(
+        'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F20%2F2020%2F03%2Fana-dearmas-3.jpg',
+        'Anna Marry'),
+    Story(
+        'https://www.businessinsider.in/thumb/msid-65957298,width-600,resizemode-4,imgsize-74717/Kevin-Systrom-is-leaving-Instagram-heres-how-he-sold-the-app-to-Facebook-for-1-billion-and-built-it-into-a-global-phenomenon.jpg',
+        'Kevin'),
+    Story(
+        'https://static.toiimg.com/thumb/msid-81962007,width-1070,height-580,imgsize-47597,resizemode-75,overlay-toi_sw,pt-32,y_pad-40/photo.jpg',
+        'Shreyas'),
+    Story(
+        'https://c.ndtvimg.com/2020-03/bthb68ug_virat-kohli-afp_625x300_27_March_20.jpg',
+        'Virat'),
+    Story(
+        'https://pbs.twimg.com/profile_images/1149783043286228993/haGfGbe3.jpg',
+        'MSD'),
+  ];
+
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          (h) * (1 / 13),
-        ),
-        child: AppBar(
-          leading: Container(
-            color: Colors.white,
-            width: w / 4,
-            child: Image.asset(
-              'images/million final logo with out millions.png',
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.centerRight,
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10, right: 10),
-              child: IconButton(
-                  icon: Icon(
-                    Icons.search_outlined,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    //go to search screen
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10, right: 20),
-              child: CircleAvatar(
-                backgroundColor: Colors.black,
-              ),
-            )
-          ],
-          backgroundColor: Colors.white,
-        ),
-      ),
-      body: Column(children: <Widget>[
+    return SingleChildScrollView(
+      child: Column(children: <Widget>[
         Row(children: <Widget>[
           Container(
             width: (w),
-            height: (h)/8,
+            height: h * 0.13,
             child: ListView.builder(
               itemBuilder: (context, index) {
                 return Row(children: [
@@ -64,20 +68,20 @@ class _Screen9State extends State<Screen9> {
                           top: 5,
                         ),
                         child: CircleAvatar(
-                          radius: 40,
+                          radius: w * 0.1,
                           child: ClipRRect(
-                            child: Image.asset(
-                              'images/millionlogo.png',
-                              width: 65,
-                              height: 65,
+                            child: Image.network(
+                              story[index].url,
+                              width: w * 0.16,
+                              height: w * 0.16,
                               fit: BoxFit.cover,
                             ),
-                            borderRadius: BorderRadius.circular(40),
+                            borderRadius: BorderRadius.circular(w * 0.1),
                           ),
                           backgroundColor: Colors.white,
                         ),
                       ),
-                      Text('data')
+                      Text(story[index].name)
                     ],
                   ),
                   SizedBox(
@@ -86,12 +90,12 @@ class _Screen9State extends State<Screen9> {
                 ]);
               },
               scrollDirection: Axis.horizontal,
-              itemCount: 50,
+              itemCount:story.length,
             ),
           ),
         ]),
         Padding(
-          padding: const EdgeInsets.only(top:9, left: 5),
+          padding: const EdgeInsets.only(top: 9, left: 5),
           child: Align(
               alignment: Alignment.bottomLeft,
               child: Text(
@@ -104,11 +108,11 @@ class _Screen9State extends State<Screen9> {
           child: ListView.builder(
             itemBuilder: (context, index) {
               return Container(
-                child:Photos(),
+                child: Photos(index),
               );
             },
             scrollDirection: Axis.vertical,
-            itemCount: 50,
+            itemCount: 4,
           ),
         )
       ]),
