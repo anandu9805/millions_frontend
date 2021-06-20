@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../widgets/photos.dart';
 import '../model/story.dart';
 
@@ -57,7 +58,7 @@ class _Screen9State extends State<Screen9> {
         Row(children: <Widget>[
           Container(
             width: (w),
-            height: h * 0.13,
+            height: h * 0.16,
             child: ListView.builder(
               itemBuilder: (context, index) {
                 return Row(children: [
@@ -90,7 +91,7 @@ class _Screen9State extends State<Screen9> {
                 ]);
               },
               scrollDirection: Axis.horizontal,
-              itemCount:story.length,
+              itemCount: story.length,
             ),
           ),
         ]),
@@ -100,7 +101,7 @@ class _Screen9State extends State<Screen9> {
               alignment: Alignment.bottomLeft,
               child: Text(
                 'Follow',
-                style: TextStyle(fontSize: 25, color: Colors.black54),
+                style: GoogleFonts.ubuntu(fontSize: 25, color: Colors.black54),
               )),
         ),
         Container(

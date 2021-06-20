@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/screens/home.dart';
 
@@ -29,8 +30,8 @@ class _CreateProfileState extends State<CreateProfile> {
                   children: [
                     Text(
                       "Create Profile",
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.ubuntu(
+                          fontSize: 25, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -38,62 +39,234 @@ class _CreateProfileState extends State<CreateProfile> {
                 Column(
                   children: [
                     TextFormField(
+                      cursorColor: primary,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
                         labelText: 'Name',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
                       ),
                     ),
-                    SizedBox(height: 15),  TextFormField(
+                    SizedBox(height: 15),
+                    TextFormField(
+                      cursorColor: primary,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
                         labelText: 'Display Name/Channel Name',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 15),
                     TextFormField(
+                      cursorColor: primary,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
                         labelText: 'Email',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 15),
                     TextFormField(
+                      cursorColor: primary,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
                         labelText: 'Sex',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 15),
                     TextFormField(
+                      cursorColor: primary,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
                         labelText: 'Country',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
                       ),
                     ),
-
                     SizedBox(height: 15),
                     TextFormField(
+                      cursorColor: primary,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Place',
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'District',
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
                         labelText: 'State',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      cursorColor: primary,
+                      decoration: InputDecoration(
+                        labelText: 'District',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      cursorColor: primary,
+                      decoration: InputDecoration(
+                        labelText: 'Place',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
+
+
+
+                
                 SizedBox(height: 20),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -107,7 +280,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     },
                     child: Text(
                       "Save",
-                      style: TextStyle(fontSize: 15),
+                      style: GoogleFonts.ubuntu(fontSize: 15),
                     ),
                   ),
                 ),

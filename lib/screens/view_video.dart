@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/widgets/comments.dart';
 
@@ -47,184 +48,187 @@ class _ViewVideoState extends State<ViewVideo> {
                 ),
                 //backgroundColor: Colors.black,
               ),
-              onTap: () {
-
-              },
+              onTap: () {},
             ),
           )
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(children: [ Container(
-            width:double.infinity,
-            height: MediaQuery.of(context).size.height * 0.3,
-            child: Image.network(
-              'https://www.processmaker.com/wp-content/uploads/2019/02/f18e571b0c57a65564d6cc16acd77f83dc5e6519.jpg',
-              fit: BoxFit.fitWidth,
-            )),Padding(
-          padding: const EdgeInsets.all(16.0),
           child: Column(
-            children: [
-
-
-
-
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: Text(
-                      "Former Child Actors Who",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6.0, bottom: 6),
-                    child: Text(
-                      "5M Views 12 Minutes Ago",
-                      style: TextStyle(
-                          fontWeight: FontWeight.normal, fontSize: 12),
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.thumb_up),
+        children: [
+          Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Image.network(
+                'https://www.processmaker.com/wp-content/uploads/2019/02/f18e571b0c57a65564d6cc16acd77f83dc5e6519.jpg',
+                fit: BoxFit.fitWidth,
+              )),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: Text(
+                        "Former Child Actors Who",
+                        style: GoogleFonts.ubuntu(
+                            fontWeight: FontWeight.bold, fontSize: 18),
                       ),
-                      Text(
-                        "12M Likes",
-                        style: TextStyle(height: 0.3, fontSize: 10),
-                      )
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.share,
-                        ),
-                      ),
-                      Text(
-                        "Share",
-                        style: TextStyle(height: 0.3, fontSize: 10),
-                      )
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(
-                          onPressed: () {}, icon: Icon(Icons.bookmark_outline_sharp)),
-                      Text(
-                        "Save",
-                        style: TextStyle(height: 0.3, fontSize: 10),
-                      )
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(onPressed: () {}, icon: Icon(Icons.flag)),
-                      Text(
-                        "Report",
-                        style: TextStyle(height: 0.3, fontSize: 10),
-                      )
-                    ],
-                  )
-                ],
-              ),
-              Divider(
-                color: Colors.grey,
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          InkWell(
-                            child: CircleAvatar(
-                              child: ClipRRect(
-                                child: Image.network(
-                                  'https://resize.indiatvnews.com/en/resize/newbucket/715_-/2021/02/emma-watson-1614303661.jpg',
-                                  width: w *1,
-                                  height: h * 1,
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.circular(w * 1),
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Page8()),
-                              );
-                            },
-                          ),
-                          SizedBox(width: 10),
-                          Text("Emma Watson")
-                        ],
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      TextButton(
-                        onPressed: () {},
-                        child: Text("Following"),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              Divider(
-                color: Colors.grey,
-                height: 30,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 1 / 14,
-                width: double.infinity,
-                child: Text(
-                  'Add banner comes here',
-                  style: TextStyle(color: Colors.white),
+                    )
+                  ],
                 ),
-                color: Colors.black,
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [Text("4456 Comments")],
-              ),
-              SizedBox(height: 10),
-              Container(height: h/2,
-                child: ListView(children: [Comment(),
-                  Comment(),
-                  Comment(),
-                  Comment(),
-                  Comment(),
-                  Comment(),
-                  Comment(),
-                  Comment(),
-                  Comment(),
-                  Comment()],),
-              )
-
-            ],
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0, bottom: 6),
+                      child: Text(
+                        "5M Views 12 Minutes Ago",
+                        style: GoogleFonts.ubuntu(
+                            fontWeight: FontWeight.normal, fontSize: 12),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.thumb_up),
+                        ),
+                        Text(
+                          "12M Likes",
+                          style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.share,
+                          ),
+                        ),
+                        Text(
+                          "Share",
+                          style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.bookmark_outline_sharp)),
+                        Text(
+                          "Save",
+                          style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(onPressed: () {}, icon: Icon(Icons.flag)),
+                        Text(
+                          "Report",
+                          style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                Divider(
+                  color: Colors.grey,
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            InkWell(
+                              child: CircleAvatar(
+                                child: ClipRRect(
+                                  child: Image.network(
+                                    'https://resize.indiatvnews.com/en/resize/newbucket/715_-/2021/02/emma-watson-1614303661.jpg',
+                                    width: w * 1,
+                                    height: h * 1,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.circular(w * 1),
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Page8()),
+                                );
+                              },
+                            ),
+                            SizedBox(width: 10),
+                            Text("Emma Watson")
+                          ],
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        TextButton(
+                          onPressed: () {},
+                          child: Text("Following"),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                Divider(
+                  color: Colors.grey,
+                  height: 30,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 1 / 14,
+                  width: double.infinity,
+                  child: Text(
+                    'Add banner comes here',
+                    style: GoogleFonts.ubuntu(color: Colors.white),
+                  ),
+                  color: Colors.black,
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [Text("4456 Comments")],
+                ),
+                SizedBox(height: 10),
+                Container(
+                  height: h / 2,
+                  child: ListView(
+                    children: [
+                      Comment(),
+                      Comment(),
+                      Comment(),
+                      Comment(),
+                      Comment(),
+                      Comment(),
+                      Comment(),
+                      Comment(),
+                      Comment(),
+                      Comment()
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),],)
-      ),
+        ],
+      )),
     );
   }
 }

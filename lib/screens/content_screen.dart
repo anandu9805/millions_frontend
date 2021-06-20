@@ -48,7 +48,7 @@ class _ContentScreenState extends State<ContentScreen> {
       fit: StackFit.expand,
       children: [
         _chewieController != null &&
-                _chewieController.videoPlayerController.value.initialized
+                _chewieController.videoPlayerController.value.isInitialized
             ? GestureDetector(
                 onDoubleTap: () {
                   setState(() {

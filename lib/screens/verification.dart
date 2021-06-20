@@ -9,9 +9,7 @@ class PaymentVerifcationPage extends StatefulWidget {
 }
 
 class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
-
-   TextEditingController textController;
-
+  TextEditingController textController;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
@@ -57,9 +55,7 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                     Text(
                       'Payment Verification Number',
                       style: GoogleFonts.ubuntu(
-                        fontSize: 12,
-                         fontWeight: FontWeight.w600
-                      ),
+                          fontSize: 12, fontWeight: FontWeight.w600),
                     )
                   ],
                 ),
@@ -104,17 +100,14 @@ class _PaymentVerifcationPageState extends State<PaymentVerifcationPage> {
                     Text(
                       'For more details refer',
                       style: GoogleFonts.ubuntu(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600
-                      ),
+                          fontSize: 10, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       ' terms and service',
                       style: GoogleFonts.ubuntu(
-                        color: primary,
-                        fontSize: 10,
-                          fontWeight: FontWeight.w600
-                      ),
+                          color: primary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600),
                     )
                   ],
                 ),

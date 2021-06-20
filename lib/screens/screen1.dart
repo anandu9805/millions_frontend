@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/screens/login.dart';
-import 'package:millions/screens/otpPage.dart';
 import '../constants/colors.dart';
+
 class Screen1 extends StatefulWidget {
   @override
   _Screen1State createState() => _Screen1State();
 }
 
 class _Screen1State extends State<Screen1> {
-  
   @override
   void initState() {
     super.initState();
@@ -17,9 +17,9 @@ class _Screen1State extends State<Screen1> {
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
-    var w = MediaQuery.of(context).size.width;
+    //var w = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: primary,//Color(0xffa31545),
+      backgroundColor: primary, //Color(0xffa31545),
       body: Container(
         child: Row(
           children: [
@@ -29,18 +29,31 @@ class _Screen1State extends State<Screen1> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 10,
                 ),
-                Row(crossAxisAlignment: CrossAxisAlignment.start,children:[Container(height: h/8,width:h/4,child: Image.asset('images/white millions logo with millions.png',height:40,width: 40,))],),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                        height: h / 8,
+                        width: h / 4,
+                        child: Image.asset(
+                          'images/white millions logo with millions.png',
+                          height: 40,
+                          width: 40,
+                        ))
+                  ],
+                ),
                 SizedBox(
                   height: 40,
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width / 1.5,
                   child: Text(
-                    'Watch Stream Earn Anywhere Anytime ',
-                    style: TextStyle(
+                    'Watch, Stream, Earn, Anywhere, Anytime ',
+                    style: GoogleFonts.ubuntu(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 60,
+                      fontSize: 50,
                     ),
                     maxLines: 5,
                   ),
@@ -53,7 +66,7 @@ class _Screen1State extends State<Screen1> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 1.5,
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,

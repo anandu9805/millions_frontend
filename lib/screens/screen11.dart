@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/photos.dart';
 
@@ -15,7 +16,6 @@ class _Screen11State extends State<Screen11> {
     return SingleChildScrollView(
       child: Column(
         children: [
-
           Container(
             child: Padding(
               padding: const EdgeInsets.only(top: 12, left: 5),
@@ -23,7 +23,8 @@ class _Screen11State extends State<Screen11> {
                   alignment: Alignment.bottomLeft,
                   child: Text(
                     'Posts',
-                    style: TextStyle(fontSize: 25, color: Colors.black54),
+                    style:
+                        GoogleFonts.ubuntu(fontSize: 25, color: Colors.black54),
                   )),
             ),
           ),

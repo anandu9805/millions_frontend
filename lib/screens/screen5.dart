@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/photos.dart';
-
 
 class Screen5 extends StatefulWidget {
   @override
@@ -9,7 +9,6 @@ class Screen5 extends StatefulWidget {
 }
 
 class _Screen5State extends State<Screen5> {
-
   @override
   Widget build(BuildContext context) {
     // var ifphotos = true;
@@ -22,7 +21,7 @@ class _Screen5State extends State<Screen5> {
           Container(
             child: Column(
               children: [
-             /*  Container(
+                /*  Container(
                   height: (h) * 1 / 14,
                   width: double.infinity,
                   child: Text(
@@ -32,12 +31,13 @@ class _Screen5State extends State<Screen5> {
                   color: Colors.black,
                 ),*/
                 Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 5),
+                  padding: const EdgeInsets.only(top: 10, left: 10),
                   child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(
                         'Hello Anandu',
-                        style: TextStyle(fontSize: 25, color: Colors.black54),
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 20, color: Colors.black54),
                       )),
                 )
               ],
@@ -54,10 +54,9 @@ class _Screen5State extends State<Screen5> {
                 return Photos(index);
               },
               scrollDirection: Axis.vertical,
-              itemCount:4,
+              itemCount: 4,
             ),
           ),
-
         ],
       ),
     );

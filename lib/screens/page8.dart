@@ -5,30 +5,28 @@ import 'package:millions/constants/colors.dart';
 import 'package:millions/screens/verification.dart';
 import 'package:millions/screens/screen14.dart';
 import '../widgets/photos.dart';
+
 class Page8 extends StatefulWidget {
   @override
   _Page8State createState() => _Page8State();
 }
 
 class _Page8State extends State<Page8> {
-
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
   }
   //final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final _SearchDemoSearchDelegate _delegate = _SearchDemoSearchDelegate();
+  //final _SearchDemoSearchDelegate _delegate = _SearchDemoSearchDelegate();
 
-  int _lastIntegerSelected;
-
+  //int _lastIntegerSelected;
 
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
-
       key: _drawerKey,
       drawer: Drawer(
         child: Column(
@@ -58,7 +56,8 @@ class _Page8State extends State<Page8> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PaymentVerifcationPage()),
+                  MaterialPageRoute(
+                      builder: (context) => PaymentVerifcationPage()),
                 );
               },
             ),
@@ -132,7 +131,6 @@ class _Page8State extends State<Page8> {
                   ),
                   // backgroundColor: Colors.black,
                 ),
-
               ),
             )
           ],
@@ -143,12 +141,12 @@ class _Page8State extends State<Page8> {
       resizeToAvoidBottomInset: false,
 
       backgroundColor: Colors.white,
-     // key: scaffoldKey,
+      // key: scaffoldKey,
       body: SafeArea(
           child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-         /* Row(
+          /* Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -219,7 +217,7 @@ class _Page8State extends State<Page8> {
                   padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                   child: Container(
                     width: double.infinity,
-                    height: 200,
+                    height: 155,
                     decoration: BoxDecoration(),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -243,11 +241,12 @@ class _Page8State extends State<Page8> {
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CircleAvatar(radius: 40,
+                                CircleAvatar(
+                                  radius: 40,
                                   child: ClipRRect(
                                     child: Image.network(
                                       'https://resize.indiatvnews.com/en/resize/newbucket/715_-/2021/02/emma-watson-1614303661.jpg',
-                                      width: w *1,
+                                      width: w * 1,
                                       height: h * 1,
                                       fit: BoxFit.cover,
                                     ),
@@ -256,7 +255,7 @@ class _Page8State extends State<Page8> {
                                   // backgroundColor: Colors.black,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(15, 40, 50, 0),
+                                  padding: EdgeInsets.fromLTRB(15, 10, 50, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     crossAxisAlignment:
@@ -280,7 +279,7 @@ class _Page8State extends State<Page8> {
                                         children: [
                                           Padding(
                                             padding:
-                                                EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                EdgeInsets.fromLTRB(0, 4, 0, 0),
                                             child: Text(
                                               '16M Followers',
                                               style: GoogleFonts.ubuntu(
@@ -296,17 +295,21 @@ class _Page8State extends State<Page8> {
                                         children: [
                                           Padding(
                                             padding:
-                                                EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                            child:
-                                            RaisedButton(    color: Colors.white,   onPressed: () {
-                                              print('Button Pressed');
-                                            },
+                                                EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Colors.white,
+                                              ),
+                                              onPressed: () {
+                                                print('Button Pressed');
+                                              },
                                               child: Text(
                                                 'Following',
                                                 style: GoogleFonts.ubuntu(
                                                     color: Colors.black),
-                                              ),),
-                                           /* ElevatedButton(
+                                              ),
+                                            ),
+                                            /* ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                   fixedSize: Size(
                                                       MediaQuery.of(context)
@@ -359,7 +362,9 @@ class _Page8State extends State<Page8> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 20,),
+                      SizedBox(
+                        width: 20,
+                      ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child: InkWell(
@@ -371,7 +376,10 @@ class _Page8State extends State<Page8> {
                             ),
                           ),
                         ),
-                      ), SizedBox(width: 20,),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child: InkWell(
@@ -383,7 +391,10 @@ class _Page8State extends State<Page8> {
                             ),
                           ),
                         ),
-                      ), SizedBox(width: 20,),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
                     ],
                   ),
                 ),
@@ -396,18 +407,17 @@ class _Page8State extends State<Page8> {
                     ),
                   ),
                 ),
-
                 Container(
                   color: Colors.white,
-                  height: (h)/1.9,
+                  height: (h) / 1.9,
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       return Photos(index);
                     },
                     scrollDirection: Axis.vertical,
-                    itemCount:4,
+                    itemCount: 4,
                   ),
-                /*  Padding(
+                  /*  Padding(
                     padding: EdgeInsets.fromLTRB(20, 20, 25, 20),
                     child: Card(
                       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -492,156 +502,156 @@ class _Page8State extends State<Page8> {
   }
 }
 
-class _SearchDemoSearchDelegate extends SearchDelegate<int> {
-  final List<String> _data = ["Item 1", "Item 2","Item 3", "Value 1", "Value 2", "Value 3"];
-     // List<int>.generate(100001, (int i) => i).reversed.toList();
-  final List<String> _history = <String>["Item 1", "Value 2"];
+// class _SearchDemoSearchDelegate extends SearchDelegate<int> {
+//   final List<String> _data = ["Item 1", "Item 2","Item 3", "Value 1", "Value 2", "Value 3"];
+//      // List<int>.generate(100001, (int i) => i).reversed.toList();
+//   final List<String> _history = <String>["Item 1", "Value 2"];
 
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      tooltip: 'Back',
-      icon: AnimatedIcon(
-        icon: AnimatedIcons.menu_arrow,
-        progress: transitionAnimation,
-        color: primary,
-      ),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
+//   @override
+//   Widget buildLeading(BuildContext context) {
+//     return IconButton(
+//       tooltip: 'Back',
+//       icon: AnimatedIcon(
+//         icon: AnimatedIcons.menu_arrow,
+//         progress: transitionAnimation,
+//         color: primary,
+//       ),
+//       onPressed: () {
+//         close(context, null);
+//       },
+//     );
+//   }
 
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final Iterable<String> suggestions = query.isEmpty
-        ? _history
-        : _data.where((String i) => '$i'.startsWith(query));
+//   @override
+//   Widget buildSuggestions(BuildContext context) {
+//     final Iterable<String> suggestions = query.isEmpty
+//         ? _history
+//         : _data.where((String i) => '$i'.startsWith(query));
 
-    return _SuggestionList(
-      query: query,
-      suggestions: suggestions.map<String>((String i) => '$i').toList(),
-      onSelected: (String suggestion) {
-        query = suggestion;
-        showResults(context);
-      },
-    );
-  }
+//     return _SuggestionList(
+//       query: query,
+//       suggestions: suggestions.map<String>((String i) => '$i').toList(),
+//       onSelected: (String suggestion) {
+//         query = suggestion;
+//         showResults(context);
+//       },
+//     );
+//   }
 
-  @override
-  Widget buildResults(BuildContext context) {
-    final int searched = _data.indexOf(query);
-    if (searched == null || !_data.contains(query)) {
-      return Center(
-        child: Text(
-          'No results found for "$query"\n',
-          style: GoogleFonts.ubuntu(),
-          textAlign: TextAlign.center,
-        ),
-      );
-    }
+//   @override
+//   Widget buildResults(BuildContext context) {
+//     final int searched = _data.indexOf(query);
+//     if (searched == null || !_data.contains(query)) {
+//       return Center(
+//         child: Text(
+//           'No results found for "$query"\n',
+//           style: GoogleFonts.ubuntu(),
+//           textAlign: TextAlign.center,
+//         ),
+//       );
+//     }
 
-    return ListView(
-      children: <Widget>[
-        _ResultCard(
-          title: _data[searched],
-          index: searched,
-          searchDelegate: this,
-        ),
-      ],
-    );
-  }
+//     return ListView(
+//       children: <Widget>[
+//         _ResultCard(
+//           title: _data[searched],
+//           index: searched,
+//           searchDelegate: this,
+//         ),
+//       ],
+//     );
+//   }
 
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return <Widget>[
-      query.isEmpty
-          ? IconButton(
-              tooltip: 'Voice Search',
+//   @override
+//   List<Widget> buildActions(BuildContext context) {
+//     return <Widget>[
+//       query.isEmpty
+//           ? IconButton(
+//               tooltip: 'Voice Search',
               
-              icon: const Icon(Icons.mic, color: primary,),
-              onPressed: () {
-                query = 'TODO: implement voice input';
-              },
-            )
-          : IconButton(
-              tooltip: 'Clear',
-              icon: const Icon(Icons.clear, color: primary,),
-              onPressed: () {
-                query = '';
-                showSuggestions(context);
-              },
-            ),
-    ];
-  }
-}
+//               icon: const Icon(Icons.mic, color: primary,),
+//               onPressed: () {
+//                 query = 'TODO: implement voice input';
+//               },
+//             )
+//           : IconButton(
+//               tooltip: 'Clear',
+//               icon: const Icon(Icons.clear, color: primary,),
+//               onPressed: () {
+//                 query = '';
+//                 showSuggestions(context);
+//               },
+//             ),
+//     ];
+//   }
+// }
 
-class _ResultCard extends StatelessWidget {
-  const _ResultCard({this.index, this.title, this.searchDelegate});
+// class _ResultCard extends StatelessWidget {
+//   const _ResultCard({this.index, this.title, this.searchDelegate});
 
-  final int index;
-  final String title;
-  final SearchDelegate<int> searchDelegate;
+//   final int index;
+//   final String title;
+//   final SearchDelegate<int> searchDelegate;
 
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return GestureDetector(
-      onTap: () {
-        searchDelegate.close(context, index);
-      },
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Text(title, style: GoogleFonts.ubuntu(),),
-              Text(
-                '$index',
-                style: GoogleFonts.ubuntu( textStyle: theme.textTheme.headline.copyWith(fontSize: 72.0)),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final ThemeData theme = Theme.of(context);
+//     return GestureDetector(
+//       onTap: () {
+//         searchDelegate.close(context, index);
+//       },
+//       child: Card(
+//         child: Padding(
+//           padding: const EdgeInsets.all(8.0),
+//           child: Column(
+//             children: <Widget>[
+//               Text(title, style: GoogleFonts.ubuntu(),),
+//               Text(
+//                 '$index',
+//                 style: GoogleFonts.ubuntu( textStyle: theme.textTheme.headline.copyWith(fontSize: 72.0)),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-class _SuggestionList extends StatelessWidget {
-  const _SuggestionList({this.suggestions, this.query, this.onSelected});
+// class _SuggestionList extends StatelessWidget {
+//   const _SuggestionList({this.suggestions, this.query, this.onSelected});
 
-  final List<String> suggestions;
-  final String query;
-  final ValueChanged<String> onSelected;
+//   final List<String> suggestions;
+//   final String query;
+//   final ValueChanged<String> onSelected;
 
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (BuildContext context, int i) {
-        final String suggestion = suggestions[i];
-        return ListTile(
-          leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
-          title: RichText(
-            text: TextSpan(
-              text: suggestion.substring(0, query.length),
-              style:
-                 GoogleFonts.ubuntu(textStyle: theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),),
-              children: <TextSpan>[
-                TextSpan(
-                  text: suggestion.substring(query.length),
-                  style: GoogleFonts.ubuntu(textStyle: theme.textTheme.subhead),
-                ),
-              ],
-            ),
-          ),
-          onTap: () {
-            onSelected(suggestion);
-          },
-        );
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final ThemeData theme = Theme.of(context);
+//     return ListView.builder(
+//       itemCount: suggestions.length,
+//       itemBuilder: (BuildContext context, int i) {
+//         final String suggestion = suggestions[i];
+//         return ListTile(
+//           leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
+//           title: RichText(
+//             text: TextSpan(
+//               text: suggestion.substring(0, query.length),
+//               style:
+//                  GoogleFonts.ubuntu(textStyle: theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),),
+//               children: <TextSpan>[
+//                 TextSpan(
+//                   text: suggestion.substring(query.length),
+//                   style: GoogleFonts.ubuntu(textStyle: theme.textTheme.subhead),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           onTap: () {
+//             onSelected(suggestion);
+//           },
+//         );
+//       },
+//     );
+//   }
+// }

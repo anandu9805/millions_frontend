@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'otpPage.dart';
 
@@ -38,36 +39,77 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.white,
-                                padding: EdgeInsets.all(15)),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) =>OTPPageWidget()),
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.call,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.white, padding: EdgeInsets.all(15)),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OTPPageWidget()),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.arrow_circle_up,
+                              color: Colors.black,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Sign Up",
+                              style: GoogleFonts.ubuntu(
                                   color: Colors.black,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "Login",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 20),
-                                ),
-                              ],
-                            )))
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.white, padding: EdgeInsets.all(15)),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OTPPageWidget()),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.login,
+                              color: Colors.black,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Login",
+                              style: GoogleFonts.ubuntu(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 5),
@@ -79,7 +121,8 @@ class _LoginPageState extends State<LoginPage> {
                       Expanded(
                         child: Text(
                           "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard printer.",
-                          style: TextStyle(fontSize: 10,color: Colors.white),
+                          style: GoogleFonts.ubuntu(
+                              fontSize: 10, color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                       )

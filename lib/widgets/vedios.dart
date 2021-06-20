@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class Vedios extends StatefulWidget {
-
-
   @override
   _VediosState createState() => _VediosState();
 }
@@ -32,12 +30,8 @@ class _VediosState extends State<Vedios> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-
         Container(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
+          width: MediaQuery.of(context).size.width,
           height: 200,
           child: FutureBuilder(
             future: _initializeVideoPlayerFuture,
@@ -51,7 +45,6 @@ class _VediosState extends State<Vedios> {
                 );
               } else {
                 return Center(
-
                   child: CircularProgressIndicator(),
                 );
               }
@@ -59,9 +52,8 @@ class _VediosState extends State<Vedios> {
           ),
         ),
         ElevatedButton(
-          child: Icon(_controller.value.isPlaying
-              ? Icons.pause
-              : Icons.play_arrow),
+          child: Icon(
+              _controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
           onPressed: () {
             setState(() {
               if (_controller.value.isPlaying) {
@@ -72,7 +64,6 @@ class _VediosState extends State<Vedios> {
             });
           },
         ),
-
       ],
     );
   }

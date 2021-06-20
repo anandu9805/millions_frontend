@@ -108,7 +108,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                       //controller: otp2Controller,
                       obscureText: false,
                       decoration: InputDecoration(
-                       // hintText: '0',
+                        // hintText: '0',
                         hintStyle: GoogleFonts.ubuntu(
                             color: Colors.black,
                             fontSize: 25,
@@ -196,7 +196,7 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                         //controller: otp4Controller,
                         obscureText: false,
                         decoration: InputDecoration(
-                         // hintText: '0',
+                          // hintText: '0',
                           hintStyle: GoogleFonts.ubuntu(
                               color: Colors.black,
                               fontSize: 25,
@@ -233,19 +233,22 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                   ),
                 ],
               ),
-              SizedBox(height: 40,),
+              SizedBox(
+                height: 40,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: primary
-                    ),
+                    style: ElevatedButton.styleFrom(primary: primary),
                     onPressed: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (BuildContext context) => CreateProfile()));
                     },
-                    child: Text("Submit"),
+                    child: Text(
+                      "Submit",
+                      style: GoogleFonts.ubuntu(),
+                    ),
                   )
                 ],
               )
