@@ -30,8 +30,8 @@ class _Screen1State extends State<Screen1> {
                   height: MediaQuery.of(context).size.height / 10,
                 ),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  //mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
                         height: h / 8,
