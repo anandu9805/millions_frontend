@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:millions/constants/size.dart';
 import './content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -17,20 +18,24 @@ class Shorts extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          child: Stack(
-            children: [
-              //We need swiper for every content
-              Swiper(containerWidth: double.infinity,
-                itemBuilder: (BuildContext context, int index) {
-                  return ContentScreen(
-                    src: videos[index],
-                  );
-                },
-                itemCount: videos.length,
-                scrollDirection: Axis.vertical,
-              ),
-
-            ],
+          child: Positioned.fill(
+                      child: Stack(
+              children: [
+                //We need swiper for every content
+                Swiper(
+                  containerWidth: DeviceSize(context).width*0.5,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ContentScreen(
+                      src: videos[index],
+                    );
+                  },
+                  // autoplay: true,
+                  itemWidth:DeviceSize(context).width*0.5,
+                  itemCount: videos.length,
+                  scrollDirection: Axis.vertical,
+                ),
+              ],
+            ),
           ),
         ),
       ),

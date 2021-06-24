@@ -43,51 +43,61 @@ class _PhotosState extends State<Photos> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(4),
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 40, left: 20, right: 20),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ViewVideo()),
-                );
-              },
-              child: Image.network(content[Photos.index].url),
-            ),
+          Container(
+            child: Image.network(content[Photos.index].url),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
+            padding: EdgeInsets.only(right: 20),
             child: ListTile(
               dense: true,
-              contentPadding: EdgeInsets.only(top: 8),
               title: Text(
                 content[Photos.index].tagLine,
-                style: GoogleFonts.ubuntu(fontSize: 20),
+                style: GoogleFonts.ubuntu(
+                    fontSize: 15, fontWeight: FontWeight.w500, height: 1),
               ),
             ),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: 6, left: 20, right: 20),
+                padding: EdgeInsets.only(
+                  left: 16,
+                ),
                 child: Text(
                   content[Photos.index].userName,
                   style: GoogleFonts.ubuntu(
                       color: Colors.grey,
                       fontSize: 15,
+                      height: 0,
                       fontWeight: FontWeight.bold),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 6, left: 20, right: 20),
+                padding: EdgeInsets.only(right: 20),
                 child: Text(
-                  content[Photos.index].timeSinceUpload,
-                  style: GoogleFonts.ubuntu(color: Colors.grey, fontSize: 15),
+                  content[Photos.index].timeSinceUpload + ' Ago',
+                  style: GoogleFonts.ubuntu(
+                      color: Colors.grey, fontSize: 15, height: 0),
                 ),
               ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                SizedBox(width: 16),
+                Icon(Icons.favorite),
+                SizedBox(width: 16),
+                Icon(Icons.share),
+                SizedBox(width: 16),
+                Icon(Icons.send),
+              ],
+            ),
           )
         ],
       ),

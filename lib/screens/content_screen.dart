@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:millions/constants/colors.dart';
 import './like_icon.dart';
 import './options_screen.dart';
 import 'package:video_player/video_player.dart';
@@ -62,9 +63,10 @@ class _ContentScreenState extends State<ContentScreen> {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
+                  CircularProgressIndicator(
+                    color: primary,
+                  ),
                   SizedBox(height: 10),
-                  Text('Loading...')
                 ],
               ),
         if (_liked)
