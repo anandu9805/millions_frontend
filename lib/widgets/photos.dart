@@ -18,7 +18,7 @@ class _PhotosState extends State<Photos> {
   List<Content> content = [
     Content(
         'https://cdn.pixabay.com/photo/2014/02/27/16/10/tree-276014__340.jpg',
-        'Wonders of nature!!!!',
+        'The rumors and leaks were indeed true. Microsoft just officially announced #Windows11 at its big June 24 event as the next generation of Windows. Hitting general availability this holiday season, this is following up on over 5 years of updates to Windows 10. ',
         'Mkbhd',
         '10 minutes'),
     Content('https://cdn.explore-life.com/media/1401/conversions/facebook.jpg',
@@ -42,54 +42,102 @@ class _PhotosState extends State<Photos> {
 
   @override
   Widget build(BuildContext context) {
+    var w = MediaQuery.of(context).size.width;
+
     return Container(
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 40, left: 20, right: 20),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ViewVideo()),
-                );
-              },
-              child: Image.network(content[Photos.index].url),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: ListTile(
-              dense: true,
-              contentPadding: EdgeInsets.only(top: 8),
-              title: Text(
-                content[Photos.index].tagLine,
-                style: GoogleFonts.ubuntu(fontSize: 20),
-              ),
-            ),
-          ),
-          Row(
+      color: Colors.white30,
+      padding: EdgeInsets.all(4),
+      child: Card(
+        margin: EdgeInsets.all(1),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 6, left: 20, right: 20),
-                child: Text(
-                  content[Photos.index].userName,
-                  style: GoogleFonts.ubuntu(
-                      color: Colors.grey,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold),
+              Container(
+                child: Row(
+                  children: [
+                    Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(w * 0.1),
+                          child: CircleAvatar(
+                            child: Image.network(
+                              'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
+                              width: w * 0.3,
+                              height: w * 0.3,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width:5),
+
+                    Column(
+                      children: [
+                        Text(
+                          content[Photos.index].userName,
+                          style: GoogleFonts.ubuntu(
+                              color: Colors.grey,
+                              fontSize: 15,
+                              height: 1.2,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 6, left: 20, right: 20),
-                child: Text(
-                  content[Photos.index].timeSinceUpload,
-                  style: GoogleFonts.ubuntu(color: Colors.grey, fontSize: 15),
+              SizedBox(height: 5),
+              Container(child: Image.network(content[Photos.index].url)),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          width: w * 0.6,
+                          child: Text(
+                            content[Photos.index].tagLine,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                            style: GoogleFonts.ubuntu(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              height: 1.2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          content[Photos.index].timeSinceUpload + ' Ago',
+                          style: GoogleFonts.ubuntu(
+                              color: Colors.grey, fontSize: 15, height: 1.2),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
+              SizedBox(height: 5),
+              Row(
+                children: [
+                  // SizedBox(width: 16),
+                  Icon(Icons.favorite_border),
+                  SizedBox(width: 16),
+                  Icon(Icons.share_outlined),
+                  SizedBox(width: 16),
+                  Transform.rotate(
+                      angle: 5.5, child: Icon(Icons.send_outlined)),
+                ],
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
