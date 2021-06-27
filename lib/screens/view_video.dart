@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/widgets/comments.dart';
+import '../model/comment_model.dart';
 
 class ViewVideo extends StatefulWidget {
   @override
@@ -9,15 +10,69 @@ class ViewVideo extends StatefulWidget {
 }
 
 class _ViewVideoState extends State<ViewVideo> {
+
   @override
   Widget build(BuildContext context) {
+
+
+
     List comments = [
-      'Superb!!!!!',
-      'Coooollll',
-      'awesome.....',
-      'Good',
-      'Toooo goood!!!!'
+      Comment_Model(
+          0,
+          'https://i.pinimg.com/736x/2a/75/85/2a7585448874aabcb1d20e6829574994.jpg',
+          'Christine',
+          'super',
+          '2 hours',
+          '100 likes',
+          false),
+      Comment_Model(
+          1,
+          'https://media.thetab.com/blogs.dir/90/files/2018/08/portrait-face-woman-girl-female-bowl-person-people-human.jpg',
+          'Rose',
+          'too cooool',
+          '3 hours',
+          '300 likes',
+          false),
+      Comment_Model(
+          2,
+          'https://expertphotography.com/wp-content/uploads/2020/07/instagram-profile-picture-size-guide-3.jpg',
+          'Sam',
+          'nice',
+          '4 hours',
+          '5 likes',
+          false),
+      Comment_Model(
+          3,
+          'https://www.socialnetworkelite.com/hs-fs/hubfs/image2-17.jpg?width=1200&name=image2-17.jpg',
+          'Rahul',
+          'cooool',
+          '2 hours',
+          '20 likes',
+          false),
+      Comment_Model(
+          4,
+          'https://i.pinimg.com/474x/10/ca/3e/10ca3ebf744ed949b4c598795f51803b.jpg',
+          'Shreya',
+          'good',
+          '2 hours',
+          '30 likes',
+          false),
+      Comment_Model(
+          5,
+          'https://i.pinimg.com/originals/cd/d7/cd/cdd7cd49d5442e4246c4b0409b00eb39.jpg',
+          'Aishwarya',
+          'adipowli!!!!',
+          '4 hours',
+          '40 likes',
+          false),
     ];
+    void Like(int id) {
+
+      setState(() {
+        comments[id].liked = !comments[id].liked;
+        print(id);
+      });
+    }
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
@@ -221,7 +276,17 @@ class _ViewVideoState extends State<ViewVideo> {
                     child: ListView.builder(
                         itemCount: 5,
                         itemBuilder: (context, index) {
-                          return Comment(comments[index]);
+                          var i=comments.length - 1 - index;
+                          return Comment(
+                            Like,
+                            index,
+                              comments[i].url,
+                              comments[i].name,
+                              comments[i].comment_text,
+                              comments[i].time,
+                              comments[i].likes_number,
+                              comments[i].liked
+                          );
                         }),
                   )
                 )

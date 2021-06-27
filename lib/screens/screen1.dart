@@ -44,12 +44,12 @@ class _Screen1State extends State<Screen1> {
                   ],
                 ),
                 SizedBox(
-                  height: 40,
+                  height: h / 15,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width / 1.5,
+                  //width: MediaQuery.of(context).size.width / 1.5,
                   child: Text(
-                    'Watch, Stream, Earn, Anywhere, Anytime ',
+                    'Watch,\nStream,\nEarn,\nAnywhere,\nAnytime ',
                     style: GoogleFonts.ubuntu(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
