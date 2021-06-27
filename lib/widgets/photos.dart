@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:millions/screens/view_video.dart';
+import 'package:millions/constants/colors.dart';
+//import 'package:millions/screens/view_video.dart';
 import '../model/content.dart';
 
 class Photos extends StatefulWidget {
@@ -15,6 +16,8 @@ class Photos extends StatefulWidget {
 }
 
 class _PhotosState extends State<Photos> {
+  Color favIconColor = Colors.black;
+  IconData like = Icons.favorite_border;
   List<Content> content = [
     Content(
         'https://cdn.pixabay.com/photo/2014/02/27/16/10/tree-276014__340.jpg',
@@ -71,14 +74,13 @@ class _PhotosState extends State<Photos> {
                         ),
                       ],
                     ),
-                    SizedBox(width:5),
-
+                    SizedBox(width: 5),
                     Column(
                       children: [
                         Text(
                           content[Photos.index].userName,
                           style: GoogleFonts.ubuntu(
-                              color: Colors.grey,
+                              color: Colors.black,
                               fontSize: 15,
                               height: 1.2,
                               fontWeight: FontWeight.bold),
@@ -90,6 +92,7 @@ class _PhotosState extends State<Photos> {
               ),
               SizedBox(height: 5),
               Container(child: Image.network(content[Photos.index].url)),
+              SizedBox(height: 5),
               Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,7 +130,23 @@ class _PhotosState extends State<Photos> {
               Row(
                 children: [
                   // SizedBox(width: 16),
-                  Icon(Icons.favorite_border),
+                  InkWell(
+                    child: Icon(
+                      like,
+                      color: favIconColor,
+                    ),
+                    onDoubleTap: () {
+                      setState(() {
+                        if (favIconColor == Colors.black) {
+                          like= Icons.favorite;
+                          favIconColor = primary;
+                        } else {
+                          like=Icons.favorite_outline;
+                          favIconColor = Colors.black;
+                        }
+                      });
+                    },
+                  ),
                   SizedBox(width: 16),
                   Icon(Icons.share_outlined),
                   SizedBox(width: 16),
