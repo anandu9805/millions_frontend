@@ -3,7 +3,7 @@ import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/screens/view_video.dart';
 import '../model/content.dart';
-
+import '../screens/comment_screen.dart';
 class Photos extends StatefulWidget {
   static int index;
   Photos(int index) {
@@ -89,7 +89,27 @@ class _PhotosState extends State<Photos> {
                 ),
               ),
               SizedBox(height: 5),
-              Container(child: Image.network(content[Photos.index].url)),
+              Container(child: Image.network(content[Photos.index].url,fit:BoxFit.fill ,)),
+
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  // SizedBox(width: 16),
+                  Icon(Icons.favorite_border),
+                  SizedBox(width: 16),
+                  Icon(Icons.share_outlined),
+                  SizedBox(width: 16),
+                  Transform.rotate(
+                      angle: 5.5, child: Icon(Icons.send_outlined)),
+                  FlatButton(onPressed:(){          Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Comments()),
+                  );
+
+                  }, child:Text('View comments'))
+                ],
+              ),
+              SizedBox(height: 10),
               Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,7 +124,7 @@ class _PhotosState extends State<Photos> {
                             softWrap: false,
                             style: GoogleFonts.ubuntu(
                               fontSize: 15,
-                              fontWeight: FontWeight.w500,
+                            //  fontWeight: FontWeight.w500,
                               height: 1.2,
                             ),
                           ),
@@ -123,18 +143,6 @@ class _PhotosState extends State<Photos> {
                   ],
                 ),
               ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  // SizedBox(width: 16),
-                  Icon(Icons.favorite_border),
-                  SizedBox(width: 16),
-                  Icon(Icons.share_outlined),
-                  SizedBox(width: 16),
-                  Transform.rotate(
-                      angle: 5.5, child: Icon(Icons.send_outlined)),
-                ],
-              )
             ],
           ),
         ),

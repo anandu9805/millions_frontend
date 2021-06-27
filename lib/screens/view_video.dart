@@ -11,6 +11,13 @@ class ViewVideo extends StatefulWidget {
 class _ViewVideoState extends State<ViewVideo> {
   @override
   Widget build(BuildContext context) {
+    List comments = [
+      'Superb!!!!!',
+      'Coooollll',
+      'awesome.....',
+      'Good',
+      'Toooo goood!!!!'
+    ];
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
@@ -209,20 +216,14 @@ class _ViewVideoState extends State<ViewVideo> {
                 SizedBox(height: 10),
                 Container(
                   height: h / 2,
-                  child: ListView(
-                    children: [
-                      Comment(),
-                      Comment(),
-                      Comment(),
-                      Comment(),
-                      Comment(),
-                      Comment(),
-                      Comment(),
-                      Comment(),
-                      Comment(),
-                      Comment()
-                    ],
-                  ),
+                  child:      Container(
+                    height: h / 2,
+                    child: ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return Comment(comments[index]);
+                        }),
+                  )
                 )
               ],
             ),
