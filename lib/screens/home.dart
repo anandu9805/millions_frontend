@@ -172,6 +172,8 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: primary,
           type: BottomNavigationBarType.fixed,
           fixedColor: Colors.white,
+          selectedLabelStyle: GoogleFonts.ubuntu(),
+          unselectedLabelStyle: GoogleFonts.ubuntu(),
           elevation: 0,
           unselectedItemColor: Colors.white,
           selectedIconTheme: IconThemeData(color: Colors.white),

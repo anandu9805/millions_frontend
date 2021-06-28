@@ -112,7 +112,7 @@ class _PhotosState extends State<Photos> {
                       like,
                       color: favIconColor,
                     ),
-                    onTap: () {
+                    onDoubleTap: () {
                       setState(() {
                         if (favIconColor == Colors.black) {
                           like= Icons.favorite;
@@ -134,7 +134,7 @@ class _PhotosState extends State<Photos> {
                     MaterialPageRoute(builder: (context) => Comments()),
                   );
 
-                  }, child:Text('View comments'))
+                  }, child:Text('View comments', style: GoogleFonts.ubuntu(),),)
                 ],
               ),
               SizedBox(height: 10),
