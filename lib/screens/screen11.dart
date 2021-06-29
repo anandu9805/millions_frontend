@@ -11,6 +11,7 @@ class Screen11 extends StatefulWidget {
 class _Screen11State extends State<Screen11> {
   @override
   Widget build(BuildContext context) {
+
     var h = MediaQuery.of(context).size.height;
     // var w = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
@@ -28,16 +29,17 @@ class _Screen11State extends State<Screen11> {
                   )),
             ),
           ),
-          Container(
-            height: (h) - ((h) * (1 / 8)) - ((h) * (1 / 8.5)),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Photos(index);
-              },
-              scrollDirection: Axis.vertical,
-              itemCount: 5,
+           Container(
+              height: (h) - ((h) * (1 / 8)) - ((h) * (1 / 8.5)),
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return  Photos(index);
+                },
+                scrollDirection: Axis.vertical,
+                itemCount: 5,
+              ),
             ),
-          ),
+    
         ],
       ),
     );

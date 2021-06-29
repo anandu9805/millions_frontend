@@ -3,11 +3,15 @@ import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/screens/view_video.dart';
+import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
+
 //import 'package:millions/screens/view_video.dart';
 import '../model/content.dart';
 import '../screens/comment_screen.dart';
+
 class Photos extends StatefulWidget {
   int index;
+
   Photos(int index) {
     this.index = index;
   }
@@ -24,7 +28,7 @@ class _PhotosState extends State<Photos> {
   List<Content> content = [
     Content(
         'https://cdn.pixabay.com/photo/2014/02/27/16/10/tree-276014__340.jpg',
-        'The rumors and leaks were indeed true. Microsoft just officially announced #Windows11 at its big June 24 event as the next generation of Windows. Hitting general availability this holiday season, this is following up on over 5 years of updates to Windows 10. ',
+        'The rumors and leaks were indeed true. Microsoft just officially announced it..',
         'Mkbhd',
         '10 minutes'),
     Content('https://cdn.explore-life.com/media/1401/conversions/facebook.jpg',
@@ -49,6 +53,7 @@ class _PhotosState extends State<Photos> {
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
+    TransformationController pinch = new TransformationController();
 
     return Container(
       color: Colors.white30,
@@ -94,15 +99,27 @@ class _PhotosState extends State<Photos> {
                 ),
               ),
               SizedBox(height: 5),
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewVideo()),
+                    );
+                  },
+                  child:PinchZoomImage(
+                    image: ClipRRect(
 
-              InkWell(onTap: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>ViewVideo()),
-                );
-              },child: Container(child: Image.network(content[this.widget.index].url,fit:BoxFit.fill ,))),
+                      child:Image.network(
+    content[this.widget.index].url,
+    // fit: BoxFit.fill,
+    ),
+                    ),
+                    zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
+                    //hideStatusBarWhileZooming: true,
 
+                  ),
+
+                ),
               SizedBox(height: 10),
               Row(
                 children: [
@@ -115,10 +132,10 @@ class _PhotosState extends State<Photos> {
                     onDoubleTap: () {
                       setState(() {
                         if (favIconColor == Colors.black) {
-                          like= Icons.favorite;
+                          like = Icons.favorite;
                           favIconColor = primary;
                         } else {
-                          like=Icons.favorite_outline;
+                          like = Icons.favorite_outline;
                           favIconColor = Colors.black;
                         }
                       });
@@ -129,20 +146,35 @@ class _PhotosState extends State<Photos> {
                   SizedBox(width: 16),
                   Transform.rotate(
                       angle: 5.5, child: Icon(Icons.send_outlined)),
-                  FlatButton(onPressed:(){          Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Comments()),
-                  );
-
-                  }, child:Text('View comments', style: GoogleFonts.ubuntu(),),)
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Comments()),
+                      );
+                    },
+                    child: Text(
+                      'View comments',
+                      style: GoogleFonts.ubuntu(),
+                    ),
+                  )
                 ],
               ),
               SizedBox(height: 10),
-
-
-
-
-
+              Row(
+                children: [
+                  Text(
+                    content[this.widget.index].userName,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      child: Text(
+                    content[this.widget.index].tagLine,
+                  )),
+                ],
+              )
             ],
           ),
         ),

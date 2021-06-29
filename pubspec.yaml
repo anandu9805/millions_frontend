@@ -30,6 +30,7 @@ dependencies:
   google_fonts: ^2.1.0
   country_picker: ^2.0.5
   story: ^0.5.1
+  pinch_zoom_image_updated: ^0.2.6
 
 
 

@@ -7,7 +7,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.0"
+    version: "2.6.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -219,6 +219,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
+  pinch_zoom_image_updated:
+    dependency: "direct main"
+    description:
+      name: pinch_zoom_image_updated
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.6"
   platform:
     dependency: transitive
     description:
@@ -384,7 +391,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.4"
   xdg_directories:
     dependency: transitive
     description:
