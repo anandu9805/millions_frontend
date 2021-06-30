@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../constants/colors.dart';
+import 'package:millions/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../widgets/comments.dart';
-import '../model/comment_model.dart';
+import 'package:millions/widgets/comments.dart';
+import 'package:millions/model/comment_model.dart';
 
 class Comments extends StatefulWidget {
   @override

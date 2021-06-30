@@ -6,8 +6,8 @@ import 'package:millions/screens/screen11.dart';
 import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/screen5.dart';
 import 'package:millions/screens/screen9.dart';
-import 'package:millions/screens/shorts.dart';
 import 'package:millions/screens/verification.dart';
+import 'package:millions/screens/shorts.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 10, right: 20),
+                padding: const EdgeInsets.only(top: 10, right: 20, bottom:5),
                 child: InkWell(
                   child: CircleAvatar(
                     child: ClipRRect(
