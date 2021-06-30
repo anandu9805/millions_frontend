@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:millions/screens/view_video.dart';
 import '../model/content.dart';
 
 class Photos extends StatefulWidget {

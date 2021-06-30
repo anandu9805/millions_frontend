@@ -1,12 +1,79 @@
+// import 'package:flutter/material.dart';
+// import 'package:video_player/video_player.dart';
+
+// class Videos extends StatefulWidget {
+//   @override
+//   _VideosState createState() => _VideosState();
+// }
+
+// class _VideosState extends State<Videos> {
+//   VideoPlayerController _controller;
+//   Future<void> _initializeVideoPlayerFuture;
+
+//   @override
+//   void initState() {
+//     //_controller = VideoPlayerController.network("https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4");
+//     _controller = VideoPlayerController.asset("images/sample_video.mp4");
+//     _initializeVideoPlayerFuture = _controller.initialize();
+//     _controller.setLooping(true);
+//     _controller.setVolume(1.0);
+//     super.initState();
+//   }
+
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: <Widget>[
+//         Container(
+//           width: MediaQuery.of(context).size.width,
+//           height: 200,
+//           child: FutureBuilder(
+//             future: _initializeVideoPlayerFuture,
+//             builder: (context, snapshot) {
+//               if (snapshot.connectionState == ConnectionState.done) {
+//                 return Center(
+//                   child: AspectRatio(
+//                     aspectRatio: _controller.value.aspectRatio,
+//                     child: VideoPlayer(_controller),
+//                   ),
+//                 );
+//               } else {
+//                 return Center(
+//                   child: CircularProgressIndicator(),
+//                 );
+//               }
+//             },
+//           ),
+//         ),
+//         ElevatedButton(
+//           child: Icon(
+//               _controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
+//           onPressed: () {
+//             setState(() {
+//               if (_controller.value.isPlaying) {
+//                 _controller.pause();
+//               } else {
+//                 _controller.play();
+//               }
+//             });
+//           },
+//         ),
+//       ],
+//     );
+//   }
+// }
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:millions/constants/colors.dart';
 import 'package:millions/model/video.dart';
-import 'package:millions/screens/createPost.dart';
-import 'package:millions/screens/screen11.dart';
-import 'package:millions/screens/screen5.dart';
-import 'package:millions/screens/screen9.dart';
-import 'package:millions/screens/shorts.dart';
+import 'package:millions/screens/home.dart';
 import 'package:millions/screens/view_video.dart';
 import 'package:miniplayer/miniplayer.dart';
 
@@ -17,38 +84,39 @@ final miniPlayerControllerProvider =
   (ref) => MiniplayerController(),
 );
 
-class HomePage extends StatefulWidget {
+class NavScreen extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _NavScreenState createState() => _NavScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
- 
+class _NavScreenState extends State<NavScreen> {
   static const double _playerMinHeight = 60.0;
-  int page = 0;
-  final pages = [Screen5(), Shorts(), CreatePage(), Screen9(), Screen11()];
+
+  int _selectedIndex = 0;
+
+  final _screens = [
+    HomePage(),
+    const Scaffold(body: Center(child: Text('Explore'))),
+    const Scaffold(body: Center(child: Text('Add'))),
+    const Scaffold(body: Center(child: Text('Subscriptions'))),
+    const Scaffold(body: Center(child: Text('Library'))),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // var h = MediaQuery.of(context).size.height;
-    // var w = MediaQuery.of(context).size.width;
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-       
-
-        body: Consumer(builder: (context, watch, _) {
+    return Scaffold(
+      body: Consumer(
+        builder: (context, watch, _) {
           final selectedVideo = watch(selectedVideoProvider).state;
           final miniPlayerController =
               watch(miniPlayerControllerProvider).state;
           return Stack(
-            children: pages
+            children: _screens
                 .asMap()
                 .map((i, screen) => MapEntry(
                       i,
                       Offstage(
-                        offstage: page != i,
+                        offstage: _selectedIndex != i,
                         child: screen,
                       ),
                     ))
@@ -147,51 +215,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
           );
-        }),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: page,
-          // showUnselectedLabels: false,
-          backgroundColor: primary,
-          type: BottomNavigationBarType.fixed,
-          fixedColor: Colors.white,
-          onTap: (i) => setState(() => page = i),
-          elevation: 0,
-          selectedFontSize: 12.0,
-          unselectedFontSize: 10.0,
-          unselectedItemColor: Colors.white,
-          selectedIconTheme: IconThemeData(color: Colors.white),
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home_outlined,
-              ),
-              activeIcon: Icon(Icons.home),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.video_label_outlined),
-              activeIcon: Icon(Icons.video_label),
-              label: "30s",
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.add), label: "Post video"),
-            BottomNavigationBarItem(
-                backgroundColor: primary,
-                icon: Icon(Icons.subscriptions_outlined),
-                activeIcon: Icon(Icons.subscriptions),
-                label: "Follow"),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.photo_outlined,
-                ),
-                activeIcon: Icon(
-                  Icons.photo,
-                ),
-                label: "Posts"),
-          ],
-        ),
+        },
       ),
     );
   }
 }
-
-

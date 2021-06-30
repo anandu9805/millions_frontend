@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../widgets/photos.dart';
+import 'package:millions/widgets/sliver_appbar.dart';
+import 'package:millions/widgets/videoCard.dart';
+import 'package:millions/model/video.dart';
 
 class Screen5 extends StatefulWidget {
   @override
@@ -10,51 +10,24 @@ class Screen5 extends StatefulWidget {
 
 class _Screen5State extends State<Screen5> {
   @override
-  Widget build(BuildContext context) {
-    // var ifphotos = true;
-    var h = MediaQuery.of(context).size.height;
-    // var w = MediaQuery.of(context).size.width;
+   Widget build(BuildContext context) {
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            child: Column(
-              children: [
-                /*  Container(
-                  height: (h) * 1 / 14,
-                  width: double.infinity,
-                  child: Text(
-                    'Add banner comes here',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  color: Colors.black,
-                ),*/
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10),
-                  child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Hello Anandu',
-                        style: GoogleFonts.ubuntu(
-                            fontSize: 20, color: Colors.black54),
-                      )),
-                )
-              ],
-            ),
-            color: Colors.white,
-            width: double.infinity,
-            height: (h) * 1 / 20,
-          ),
-          Container(
-            color: Colors.white,
-            height: (h) - ((h) * (1 / 8)) - ((h) * (1 / 10.16)),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Photos(index);
-              },
-              scrollDirection: Axis.vertical,
-              itemCount: 4,
+    return Scaffold(
+        key: _drawerKey,
+      body: CustomScrollView(
+        slivers: [
+          CustomSliverAppBar(),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 60.0),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final video = videos[index];
+                  return VideoCard(video: video);
+                },
+                childCount: videos.length,
+              ),
             ),
           ),
         ],
