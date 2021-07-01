@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:millions/constants/size.dart';
-import './content_screen.dart';
+import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class Shorts extends StatelessWidget {
