@@ -75,7 +75,7 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                           ),
                           Text('Sign In With Google',
                               style: GoogleFonts.ubuntu(
-                                fontSize: 14,
+                                fontSize: 14, fontWeight: FontWeight.w400,
                               )),
                         ],
                       ),
