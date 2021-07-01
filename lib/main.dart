@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:millions/screens/home.dart';
 import 'package:flutter/services.dart';
 import 'package:millions/screens/screen1.dart';
 
