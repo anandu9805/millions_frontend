@@ -236,7 +236,7 @@ class _ViewVideoState extends State<ViewVideo> {
                               },
                             ),
                             SizedBox(width: 10),
-                            Text("Emma Watson")
+                            Text("Emma Watson", style:GoogleFonts.ubuntu())
                           ],
                         ),
                       ],
@@ -245,7 +245,7 @@ class _ViewVideoState extends State<ViewVideo> {
                       children: [
                         TextButton(
                           onPressed: () {},
-                          child: Text("Following"),
+                          child: Text("Following", style:GoogleFonts.ubuntu()),
                         )
                       ],
                     ),
@@ -266,7 +266,7 @@ class _ViewVideoState extends State<ViewVideo> {
                 ),
                 SizedBox(height: 10),
                 Row(
-                  children: [Text("4456 Comments")],
+                  children: [Text("4456 Comments", style:GoogleFonts.ubuntu())],
                 ),
                 SizedBox(height: 10),
                 Container(

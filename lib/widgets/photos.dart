@@ -100,26 +100,23 @@ class _PhotosState extends State<Photos> {
               ),
               SizedBox(height: 5),
               InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ViewVideo()),
-                    );
-                  },
-                  child:PinchZoomImage(
-                    image: ClipRRect(
-
-                      child:Image.network(
-    content[this.widget.index].url,
-    // fit: BoxFit.fill,
-    ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ViewVideo()),
+                  );
+                },
+                child: PinchZoomImage(
+                  image: ClipRRect(
+                    child: Image.network(
+                      content[this.widget.index].url,
+                      // fit: BoxFit.fill,
                     ),
-                    zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
-                    //hideStatusBarWhileZooming: true,
-
                   ),
-
+                  zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
+                  //hideStatusBarWhileZooming: true,
                 ),
+              ),
               SizedBox(height: 10),
               Row(
                 children: [
@@ -129,7 +126,7 @@ class _PhotosState extends State<Photos> {
                       like,
                       color: favIconColor,
                     ),
-                    onDoubleTap: () {
+                    onTap: () {
                       setState(() {
                         if (favIconColor == Colors.black) {
                           like = Icons.favorite;
@@ -164,14 +161,14 @@ class _PhotosState extends State<Photos> {
               Row(
                 children: [
                   Text(
-                    content[this.widget.index].userName,
+                    content[this.widget.index].userName, style : GoogleFonts.ubuntu(fontWeight: FontWeight.w600)
                   ),
                   SizedBox(
                     width: 10,
                   ),
                   Expanded(
                       child: Text(
-                    content[this.widget.index].tagLine,
+                    content[this.widget.index].tagLine, style: GoogleFonts.ubuntu(),
                   )),
                 ],
               )

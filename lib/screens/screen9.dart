@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:millions/screens/story.dart';
+import 'package:millions/screens/page8.dart';
 import '../widgets/photos.dart';
 import '../model/story.dart';
 
@@ -72,7 +72,7 @@ class _Screen9State extends State<Screen9> {
                         child: InkWell(
                           onTap: (){Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => StoryPage()),
+                          MaterialPageRoute(builder: (context) => Page8()),
                         );},
                           child: CircleAvatar(
                             radius: w * 0.1,
@@ -89,7 +89,7 @@ class _Screen9State extends State<Screen9> {
                           ),
                         ),
                       ),
-                      Text(story[index].name)
+                      Text(story[index].name, style:GoogleFonts.ubuntu())
                     ],
                   ),
                   SizedBox(

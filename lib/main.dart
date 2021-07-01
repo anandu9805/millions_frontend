@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:millions/model/story.dart';
 import 'package:millions/screens/home.dart';
-import 'package:millions/screens/screen1.dart';
-import 'package:millions/screens/story.dart';
 import 'package:flutter/services.dart';
+import 'package:millions/screens/screen1.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,8 +22,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+
        home: Screen1(),
      // home: HomePage(),
+
     );
   }
 }

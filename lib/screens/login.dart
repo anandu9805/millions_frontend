@@ -73,45 +73,45 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.white, padding: EdgeInsets.all(15)),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OTPPageWidget()),
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.login,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Login",
-                              style: GoogleFonts.ubuntu(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 20),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                //SizedBox(height: 10),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Container(
+                //       width: MediaQuery.of(context).size.width * 0.9,
+                //       child: ElevatedButton(
+                //         style: ElevatedButton.styleFrom(
+                //             primary: Colors.white, padding: EdgeInsets.all(15)),
+                //         onPressed: () {
+                //           Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //                 builder: (context) => OTPPageWidget()),
+                //           );
+                //         },
+                //         child: Row(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Icon(
+                //               Icons.login,
+                //               color: Colors.black,
+                //             ),
+                //             SizedBox(
+                //               width: 10,
+                //             ),
+                //             Text(
+                //               "Login",
+                //               style: GoogleFonts.ubuntu(
+                //                   color: Colors.black,
+                //                   fontWeight: FontWeight.w700,
+                //                   fontSize: 20),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 SizedBox(height: 5),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
