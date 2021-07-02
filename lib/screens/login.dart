@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
-import 'otpPage.dart';
+import 'package:millions/screens/googleSignIn.dart';
+import '../widgets/otpPage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => OTPPageWidget()),
+                                builder: (context) => GoogleSignIn()),
                           );
                         },
                         child: Row(

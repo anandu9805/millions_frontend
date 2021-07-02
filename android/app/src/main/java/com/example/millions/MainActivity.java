@@ -1,4 +1,4 @@
-package com.example.millions;
+package com.android.millions;
 
 import io.flutter.embedding.android.FlutterActivity;
 

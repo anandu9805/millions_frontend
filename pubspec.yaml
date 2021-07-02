@@ -34,9 +34,15 @@ dependencies:
   miniplayer: ^1.0.0+2
   story: ^0.5.1
   pinch_zoom_image_updated: ^0.2.6
+
+  #image_picker: ^0.8.1+3
+  image_picker: ^0.7.0
+
+  #firebase
+  firebase_core: ^1.3.0
+  firebase_auth: ^1.4.1
+  cloud_firestore: ^2.2.2
   
-
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -64,6 +70,7 @@ flutter:
       - images/whiteicon.png
       - images/white millions logo with millions.png
       - images/million logo with millions.png
+      - images/google.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

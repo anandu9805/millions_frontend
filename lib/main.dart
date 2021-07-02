@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:millions/screens/home.dart';
 import 'package:flutter/services.dart';
 import 'package:millions/screens/screen1.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  runApp(ProviderScope(child: MyApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -23,8 +24,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // home: Screen11(),
-      home: Screen1(),
+
+       home: Screen1(),
+     // home: HomePage(),
+
     );
   }
 }
