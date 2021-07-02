@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
  
   static const double _playerMinHeight = 60.0;
   int page = 0;
+  final pages = [Screen5(), Shorts(), CreatePage(), Screen9(), Screen11()];
 
   @override
   initState() {
