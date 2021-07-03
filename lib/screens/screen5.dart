@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:millions/widgets/sliver_appbar.dart';
-import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/model/video.dart';
+import 'package:millions/services/video-services.dart';
+import 'package:millions/widgets/videoCard.dart';
+
+import '../widgets/photos.dart';
 
 class Screen5 extends StatefulWidget {
   @override
@@ -10,25 +13,81 @@ class Screen5 extends StatefulWidget {
 
 class _Screen5State extends State<Screen5> {
   @override
-   Widget build(BuildContext context) {
-  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  Widget build(BuildContext context) {
+    // var ifphotos = true;
+    var h = MediaQuery.of(context).size.height;
+    // var w = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-        key: _drawerKey,
-      body: CustomScrollView(
-        slivers: [
-          CustomSliverAppBar(),
-          SliverPadding(
-            padding: const EdgeInsets.only(bottom: 60.0),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final video = videos[index];
-                  return VideoCard(video: video);
-                },
-                childCount: videos.length,
-              ),
+    return SingleChildScrollView(
+      // scrollDirection: Axis.vertical,
+      physics: ClampingScrollPhysics(),
+      child: Column(
+        children: [
+          Container(
+            child: Column(
+              children: [
+                Container(
+                  height: (h) * 1 / 14,
+                  width: double.infinity,
+                  child: Text(
+                    'Add banner comes here',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  color: Colors.black,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5, left: 5),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Hello Anandu',
+                        style: TextStyle(fontSize: 10, color: Colors.black54),
+                      )),
+                )
+              ],
             ),
+            color: Colors.white,
+            width: double.infinity,
+            height: (h) * 1 / 8.5,
+          ),
+          StreamBuilder(
+            stream: FirebaseFirestore.instance.collection('videos').snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return ListView(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  // List<Video> data =
+                  //     snapshot.data.docs;
+                  // Video data = snapshot.data.doc;
+                  children: snapshot.data.docs.map((doc) {
+                    Video videoItems = Video.fromMap(doc.data());
+                  // print(videoItems.category);
+
+                    // return ListTile(
+                    //   title: Text("${videoItems.category}"),
+
+                    // );
+                    return VideoCard(
+                      video: videoItems,
+                    );
+                  }).toList(),
+                );
+                // },
+                // scrollDirection: Axis.vertical,
+                // itemCount: snapshot.data.size,
+                // );
+              } else {
+                print(123);
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            },
+            // future: VideoServices.getAllVideos(),
           ),
         ],
       ),

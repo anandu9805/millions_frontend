@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/widgets/appbar_others.dart';
-import 'package:millions/screens/page8.dart';
+// import 'package:millions/screens/page8.dart';
 import '../widgets/photos.dart';
 import '../model/story.dart';
 
@@ -56,7 +56,7 @@ class _Screen9State extends State<Screen9> {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
-          body: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(children: <Widget>[
           AppBarOthers(),
           Row(children: <Widget>[
@@ -86,18 +86,18 @@ class _Screen9State extends State<Screen9> {
                             backgroundColor: Colors.white,
                           ),
                         ),
-                      ),
-                      Text(story[index].name, style:GoogleFonts.ubuntu())
-                    ],
-                  ),
-                  SizedBox(
-                    width: 5,
-                  )
-                ]);
-              },
-              scrollDirection: Axis.horizontal,
-              itemCount: story.length,
-            ),
+                        Text(story[index].name, style: GoogleFonts.ubuntu())
+                      ],
+                    ),
+                    SizedBox(
+                      width: 5,
+                    )
+                  ]);
+                },
+                scrollDirection: Axis.horizontal,
+                itemCount: story.length,
+              ),
+            )
           ]),
           Padding(
             padding: const EdgeInsets.only(top: 9, left: 5),
@@ -105,7 +105,8 @@ class _Screen9State extends State<Screen9> {
                 alignment: Alignment.bottomLeft,
                 child: Text(
                   'Follow',
-                  style: GoogleFonts.ubuntu(fontSize: 25, color: Colors.black54),
+                  style:
+                      GoogleFonts.ubuntu(fontSize: 25, color: Colors.black54),
                 )),
           ),
           Container(

@@ -30,9 +30,10 @@ class Comment extends StatelessWidget {
     var w = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        Row(
-            children: [
-              SizedBox(width: 10,),
+        Row(children: [
+          SizedBox(
+            width: 10,
+          ),
           CircleAvatar(
             radius: 15,
             child: ClipRRect(
@@ -46,7 +47,9 @@ class Comment extends StatelessWidget {
             ),
             // backgroundColor: Colors.black,
           ),
-SizedBox(width: 15,),
+          SizedBox(
+            width: 15,
+          ),
           Text(
             this.name,
             style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold),
@@ -81,7 +84,7 @@ SizedBox(width: 15,),
         Row(
           children: [
             SizedBox(
-              width:60,
+              width: 60,
             ),
             Text(this.time),
             SizedBox(
@@ -90,7 +93,9 @@ SizedBox(width: 15,),
             Text(this.likes_number)
           ],
         ),
-        SizedBox(height: 10,)
+        SizedBox(
+          height: 10,
+        )
       ],
     );
   }

@@ -1,22 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:millions/constants/colors.dart';
-import 'package:millions/model/video.dart';
+import 'package:millions/screens/complete_profile.dart';
 import 'package:millions/screens/createPost.dart';
+import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/screen11.dart';
+import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/screen5.dart';
 import 'package:millions/screens/screen9.dart';
 import 'package:millions/screens/shorts.dart';
-import 'package:millions/screens/view_video.dart';
-import 'package:miniplayer/miniplayer.dart';
-
-final selectedVideoProvider = StateProvider<Video>((ref) => null);
-
-final miniPlayerControllerProvider =
-    StateProvider.autoDispose<MiniplayerController>(
-  (ref) => MiniplayerController(),
-);
+// import 'package:millions/screens/uploadpage.dart';
+import 'package:millions/screens/user_profile.dart';
+import 'package:millions/screens/verification.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,22 +18,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
- 
-  static const double _playerMinHeight = 60.0;
-  int page = 0;
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  void openDrawer() {
+    _drawerKey.currentState.openDrawer();
+  }
+
   final pages = [Screen5(), Shorts(), CreatePage(), Screen9(), Screen11()];
+  int page = 0;
 
   @override
   initState() {
     super.initState();
-
-  //test-code
-   FirebaseFirestore.instance
-  .collection('short-ads')
-  .get()
-  .then((value) => print(value.size));
-  //testcode
-
   }
 
   @override
@@ -49,168 +38,143 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // var h = MediaQuery.of(context).size.height;
-    // var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       home: Scaffold(
-       
-
-        body: Consumer(builder: (context, watch, _) {
-          final selectedVideo = watch(selectedVideoProvider).state;
-          final miniPlayerController =
-              watch(miniPlayerControllerProvider).state;
-          return Stack(
-            children: pages
-                .asMap()
-                .map((i, screen) => MapEntry(
-                      i,
-                      Offstage(
-                        offstage: page != i,
-                        child: screen,
-                      ),
-                    ))
-                .values
-                .toList()
-                  ..add(
-                    Offstage(
-                      offstage: selectedVideo == null,
-                      child: Miniplayer(
-                        controller: miniPlayerController,
-                        minHeight: _playerMinHeight,
-                        maxHeight: MediaQuery.of(context).size.height,
-                        builder: (height, percentage) {
-                          if (selectedVideo == null)
-                            return const SizedBox.shrink();
-
-                          if (height <= _playerMinHeight + 50.0)
-                            return Container(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Image.network(
-                                        selectedVideo.thumbnailUrl,
-                                        height: _playerMinHeight - 4.0,
-                                        width: 120.0,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  selectedVideo.title,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .caption
-                                                      .copyWith(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                ),
-                                              ),
-                                              Flexible(
-                                                child: Text(
-                                                  selectedVideo.author.username,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .caption
-                                                      .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.play_arrow),
-                                        onPressed: () {},
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.close),
-                                        onPressed: () {
-                                          context
-                                              .read(selectedVideoProvider)
-                                              .state = null;
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  const LinearProgressIndicator(
-                                    value: 0.4,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.red,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          return VideoScreen();
-                        },
-                      ),
+        key: _drawerKey,
+        drawer: Drawer(
+          child: Column(
+            children: [
+              DrawerHeader(
+                child: Container(
+                    height: 142,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.asset(
+                      "images/million final logo with out millions.png",
+                    )),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                ),
+              ),
+              ListTile(
+                title: Text('Edit Profile'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Screen14()),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Payment Verification'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PaymentVerifcationPage()),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                },
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                },
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                },
+              ),
+            ],
+          ),
+        ),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(
+            (h) * (1 / 13),
+          ),
+          child: AppBar(
+            leading: Container(
+              color: Colors.white,
+              width: w / 4,
+              child: InkWell(
+                child: Image.asset(
+                  'images/million final logo with out millions.png',
+                  fit: BoxFit.fitWidth,
+                  alignment: Alignment.centerRight,
+                ),
+                onTap: () {
+                  openDrawer();
+                },
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10, right: 10),
+                child: IconButton(
+                    icon: Icon(
+                      Icons.search_outlined,
+                      color: Colors.black,
                     ),
+                    onPressed: () {
+                      //go to search screen
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, right: 20),
+                child: InkWell(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black,
                   ),
-          );
-        }),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Page8()),
+                    );
+                  },
+                ),
+              )
+            ],
+            backgroundColor: Colors.white,
+          ),
+        ),
+        body: pages[page],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: page,
-          // showUnselectedLabels: false,
+          showUnselectedLabels: false,
           backgroundColor: primary,
           type: BottomNavigationBarType.fixed,
           fixedColor: Colors.white,
-          onTap: (i) => setState(() => page = i),
           elevation: 0,
-          selectedFontSize: 12.0,
-          unselectedFontSize: 10.0,
           unselectedItemColor: Colors.white,
           selectedIconTheme: IconThemeData(color: Colors.white),
           items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home_outlined,
-              ),
-              activeIcon: Icon(Icons.home),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.video_label_outlined),
-              activeIcon: Icon(Icons.video_label),
-              label: "30s",
-            ),
+                icon: Icon(Icons.video_label), label: "30s"),
             BottomNavigationBarItem(icon: Icon(Icons.add), label: "Post video"),
             BottomNavigationBarItem(
-                backgroundColor: primary,
-                icon: Icon(Icons.subscriptions_outlined),
-                activeIcon: Icon(Icons.subscriptions),
-                label: "Follow"),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.photo_outlined,
-                ),
-                activeIcon: Icon(
-                  Icons.photo,
-                ),
-                label: "Posts"),
+                icon: Icon(Icons.subscriptions), label: "Follow"),
+            BottomNavigationBarItem(icon: Icon(Icons.photo), label: "Photos"),
           ],
+          onTap: (index) {
+            setState(() {
+              page = index;
+            });
+          },
         ),
       ),
     );
   }
 }
-
-
