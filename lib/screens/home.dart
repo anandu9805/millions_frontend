@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/screens/createPost.dart';
@@ -30,6 +31,14 @@ class _HomePageState extends State<HomePage> {
   @override
   initState() {
     super.initState();
+
+  //test-code
+   FirebaseFirestore.instance
+  .collection('short-ads')
+  .get()
+  .then((value) => print(value.size));
+  //testcode
+
   }
 
   @override
