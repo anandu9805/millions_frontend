@@ -4,9 +4,10 @@ import 'package:millions/constants/colors.dart';
 
 class InputField extends StatefulWidget {
   final String labeltext;
+  final bool isEnabled;
   final TextEditingController myController;
   //const InputField({ Key? key }) : super(key: key);
-  InputField(this.labeltext, this.myController);
+  InputField(this.labeltext, this.myController, this.isEnabled);
   @override
   _InputFieldState createState() => _InputFieldState();
 }
@@ -18,6 +19,7 @@ class _InputFieldState extends State<InputField> {
     return TextFormField(
       controller :widget.myController,
       cursorColor: primary,
+      readOnly: widget.isEnabled,
       decoration: InputDecoration(
         labelText: widget.labeltext,
         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
