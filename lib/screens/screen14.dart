@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/screens/home.dart';
+import 'package:millions/widgets/inputField.dart';
 
 class Screen14 extends StatefulWidget {
   @override
@@ -9,6 +10,14 @@ class Screen14 extends StatefulWidget {
 }
 
 class _Screen14State extends State<Screen14> {
+final name = TextEditingController();
+final dname = TextEditingController();
+final email = TextEditingController();
+final sex = TextEditingController();
+final dist = TextEditingController();
+final country = TextEditingController();
+final place = TextEditingController();
+final state = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,243 +39,31 @@ class _Screen14State extends State<Screen14> {
                   children: [
                     Text(
                       "Edit Profile",
-                      style:
-                          GoogleFonts.ubuntu(fontSize: 25, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.ubuntu(
+                          fontSize: 25, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
                 SizedBox(height: 25),
                 Column(
                   children: [
-                    TextFormField(
-                      cursorColor: primary,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                    ),
+                    InputField('Name', name),
                     SizedBox(height: 15),
-                    TextFormField(
-                      cursorColor: primary,
-                      decoration: InputDecoration(
-                        labelText: 'Display Name/Channel Name',
-                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                    ),
+                    InputField('Display Name/Channel Name', dname),
                     SizedBox(height: 15),
-                    TextFormField(
-                      cursorColor: primary,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                    ),
+                    InputField('Email', email),
                     SizedBox(height: 15),
-                    TextFormField(
-                      cursorColor: primary,
-                      decoration: InputDecoration(
-                        labelText: 'Sex',
-                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                    ),
+                    InputField('Sex', sex),
                     SizedBox(height: 15),
-                    TextFormField(
-                      cursorColor: primary,
-                      decoration: InputDecoration(
-                        labelText: 'Country',
-                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                    ),
+                    InputField('Country', country),
                     SizedBox(height: 15),
-                    TextFormField(
-                      cursorColor: primary,
-                      decoration: InputDecoration(
-                        labelText: 'State',
-                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                    ),
+                    InputField('State', state),
                     SizedBox(height: 15),
-                    TextFormField(
-                      cursorColor: primary,
-                      decoration: InputDecoration(
-                        labelText: 'District',
-                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                    ),
+                    InputField('District', dist),
                     SizedBox(height: 15),
-                    TextFormField(
-                      cursorColor: primary,
-                      decoration: InputDecoration(
-                        labelText: 'Place',
-                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                    ),
+                    InputField('Place', place),
                   ],
                 ),
-
-
-
-
                 SizedBox(height: 20),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -275,6 +72,7 @@ class _Screen14State extends State<Screen14> {
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(primary)),
                     onPressed: () {
+                      //print(name.text);
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (BuildContext context) => HomePage()));
                     },
