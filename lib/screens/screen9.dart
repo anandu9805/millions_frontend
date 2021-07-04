@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/screens/page8.dart';
 import 'package:millions/widgets/appbar_others.dart';
 // import 'package:millions/screens/page8.dart';
 import '../widgets/photos.dart';
@@ -72,18 +73,27 @@ class _Screen9State extends State<Screen9> {
                           padding: const EdgeInsets.only(
                             top: 5,
                           ),
-                          child: CircleAvatar(
-                            radius: w * 0.1,
-                            child: ClipRRect(
-                              child: Image.network(
-                                story[index].url,
-                                width: w * 0.16,
-                                height: w * 0.16,
-                                fit: BoxFit.cover,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Page8()),
+                              );
+                            },
+                            child: CircleAvatar(
+                              radius: w * 0.1,
+                              child: ClipRRect(
+                                child: Image.network(
+                                  story[index].url,
+                                  width: w * 0.16,
+                                  height: w * 0.16,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(w * 0.1),
                               ),
-                              borderRadius: BorderRadius.circular(w * 0.1),
+                              backgroundColor: Colors.white,
                             ),
-                            backgroundColor: Colors.white,
                           ),
                         ),
                         Text(story[index].name, style: GoogleFonts.ubuntu())

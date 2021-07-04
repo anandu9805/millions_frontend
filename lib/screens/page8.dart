@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/model/user.dart';
+import 'package:millions/model/video.dart';
 import 'package:millions/screens/verification.dart';
 import 'package:millions/screens/screen14.dart';
+import 'package:millions/widgets/videoCard.dart';
 import '../widgets/photos.dart';
 
 class Page8 extends StatefulWidget {
@@ -12,9 +16,39 @@ class Page8 extends StatefulWidget {
 }
 
 class _Page8State extends State<Page8> {
+  String propic =
+          'https://resize.indiatvnews.com/en/resize/newbucket/715_-/2021/02/emma-watson-1614303661.jpg',
+      username = 'Emma Watson',
+      channelId = 'Pon1uG0eNnhf9TLsps0jtScndtN2';
+  //User user;
+  final Future<DocumentSnapshot<Map<String, dynamic>>> userDetails =
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc('4C4iLByizTPLBBlP4rssrwGTISb2')
+          .get();
+
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
+  }
+
+  @override
+  initState() {
+    super.initState();
+
+    // //test-code
+    //     FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc('4C4iLByizTPLBBlP4rssrwGTISb2')
+    //     .get().then((value) {username =  value.data()['name'];
+    //     propic = value.data()['profilePic'];});
+
+    //     //print(value.data()));
+
+    //  print(username);
+    //  print(propic);
+
+    //testcode
   }
   //final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -244,11 +278,31 @@ class _Page8State extends State<Page8> {
                                 CircleAvatar(
                                   radius: 40,
                                   child: ClipRRect(
-                                    child: Image.network(
-                                      'https://resize.indiatvnews.com/en/resize/newbucket/715_-/2021/02/emma-watson-1614303661.jpg',
-                                      width: w * 1,
-                                      height: h * 1,
-                                      fit: BoxFit.cover,
+                                    child: FutureBuilder<DocumentSnapshot>(
+                                      future: userDetails,
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<DocumentSnapshot>
+                                              snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.done) {
+                                          Map<String, dynamic> data =
+                                              snapshot.data.data()
+                                                  as Map<String, dynamic>;
+                                          return Image.network(
+                                            data['profilePic'],
+                                            width: w * 1,
+                                            height: h * 1,
+                                            fit: BoxFit.cover,
+                                          );
+                                        }
+
+                                        return Image.network(
+                                          propic,
+                                          width: w * 1,
+                                          height: h * 1,
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
                                     ),
                                     borderRadius: BorderRadius.circular(w * 1),
                                   ),
@@ -264,14 +318,60 @@ class _Page8State extends State<Page8> {
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
-                                          Text(
-                                            'Emma Watson',
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 20,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
+                                          FutureBuilder<DocumentSnapshot>(
+                                            future: userDetails,
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<DocumentSnapshot>
+                                                    snapshot) {
+                                              if (snapshot.hasError) {
+                                                return Text(
+                                                  "Something went wrong",
+                                                  style: GoogleFonts.ubuntu(
+                                                    fontSize: 20,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                );
+                                              }
+
+                                              if (snapshot.hasData &&
+                                                  !snapshot.data.exists) {
+                                                return Text(
+                                                  "User does not exist",
+                                                  style: GoogleFonts.ubuntu(
+                                                    fontSize: 20,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                );
+                                              }
+
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.done) {
+                                                Map<String, dynamic> data =
+                                                    snapshot.data.data()
+                                                        as Map<String, dynamic>;
+                                                username = data['name'];
+                                                return Text(
+                                                  username,
+                                                  style: GoogleFonts.ubuntu(
+                                                    fontSize: 20,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                );
+                                              }
+
+                                              return Text(
+                                                "Loading User",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 20,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              );
+                                            },
+                                          )
                                         ],
                                       ),
                                       Row(
@@ -310,26 +410,26 @@ class _Page8State extends State<Page8> {
                                               ),
                                             ),
                                             /* ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  fixedSize: Size(
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.3,
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.1),
-                                                  primary: Colors.white),
-                                              onPressed: () {
-                                                print('Button Pressed');
-                                              },
-                                              child: Text(
-                                                'Follow',
-                                                style: GoogleFonts.ubuntu(
-                                                    color: Colors.black),
-                                              ),
-                                            ),*/
+                                                style: ElevatedButton.styleFrom(
+                                                    fixedSize: Size(
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.3,
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.1),
+                                                    primary: Colors.white),
+                                                onPressed: () {
+                                                  print('Button Pressed');
+                                                },
+                                                child: Text(
+                                                  'Follow',
+                                                  style: GoogleFonts.ubuntu(
+                                                      color: Colors.black),
+                                                ),
+                                              ),*/
                                           ),
                                         ],
                                       )
@@ -398,25 +498,73 @@ class _Page8State extends State<Page8> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(25, 20, 0, 0),
-                  child: Text(
-                    'Recently Uploaded',
-                    style: GoogleFonts.ubuntu(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
+                SizedBox(height: 10,),
+                // Padding(
+                //   padding: EdgeInsets.fromLTRB(25, 20, 0, 0),
+                //   child: Text(
+                //     'Recently Uploaded',
+                //     style: GoogleFonts.ubuntu(
+                //       fontWeight: FontWeight.w500,
+                //     ),
+                //   ),
+                // ),
                 Container(
                   color: Colors.white,
                   height: (h) / 1.9,
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return Photos(index);
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("videos")
+                        .where('channelId', isEqualTo : channelId)
+                        .where("isVisible", isEqualTo : "Public")
+                        .orderBy("date", descending: true)
+                        .limit(8)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView(
+                          //physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          // List<Video> data =
+                          //     snapshot.data.docs;
+                          // Video data = snapshot.data.doc;
+                          children: snapshot.data.docs.map((doc) {
+                            Video videoItems = Video.fromMap(doc.data());
+                            // print(videoItems.category);
+
+                            // return ListTile(
+                            //   title: Text("${videoItems.category}"),
+
+                            // );
+                            return VideoCard(
+                              video: videoItems,
+                            );
+                          }).toList(),
+                        );
+                        // },
+                        // scrollDirection: Axis.vertical,
+                        // itemCount: snapshot.data.size,
+                        // );
+                      } else {
+                        print(123);
+                        return Container(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
                     },
-                    scrollDirection: Axis.vertical,
-                    itemCount: 4,
+                    // future: VideoServices.getAllVideos(),
                   ),
+
+                  // ListView.builder(
+                  //   itemBuilder: (context, index) {
+                  //     return Photos(index);
+                  //   },
+                  //   scrollDirection: Axis.vertical,
+                  //   itemCount: 4,
+                  // ),
+
                   /*  Padding(
                     padding: EdgeInsets.fromLTRB(20, 20, 25, 20),
                     child: Card(
