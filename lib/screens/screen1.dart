@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/screens/login.dart';
 import '../constants/colors.dart';
+import '../auth.dart';
 
 class Screen1 extends StatefulWidget {
   @override
@@ -70,7 +71,7 @@ class _Screen1State extends State<Screen1> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          MaterialPageRoute(builder: (context) => Auth()),
                         );
                       },
                       child: Icon(

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/screens/createPost.dart';
@@ -9,6 +10,8 @@ import 'package:millions/screens/screen5.dart';
 import 'package:millions/screens/screen9.dart';
 import 'package:millions/screens/verification.dart';
 import 'package:millions/screens/shorts.dart';
+import 'package:provider/provider.dart';
+import '../provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -48,6 +51,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final currentuser=FirebaseAuth.instance.currentUser;
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
@@ -167,7 +172,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                     // backgroundColor: Colors.black,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    final millionsprovider = Provider.of<MillionsProvider>(
+                        context,
+                        listen: false);
+                    millionsprovider.logout();
+                  },
                 ),
               )
             ],

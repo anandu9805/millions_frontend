@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/provider.dart';
 import 'package:millions/screens/home.dart';
+import 'package:provider/provider.dart';
 
 class GoogleSignIn extends StatefulWidget {
   @override
@@ -61,17 +63,18 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                       color: Colors.white,
                     ),
                     width: MediaQuery.of(context).size.width * 0.5,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      },
+                    child: FlatButton(
+                      color: Colors.white,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              final millionsprovider =
+                                  Provider.of<MillionsProvider>(context,
+                                      listen: false);
+                              millionsprovider.googleLogin();
+                            },
                             icon: Image.asset('images/google.png'),
                           ),
                           Text('Sign In With Google',
@@ -81,6 +84,12 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                               )),
                         ],
                       ),
+                      onPressed: () {
+                        final millionsprovider = Provider.of<MillionsProvider>(
+                            context,
+                            listen: false);
+                        millionsprovider.googleLogin();
+                      },
                     ),
                   ),
                 ),

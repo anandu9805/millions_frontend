@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/photos.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Screen5 extends StatefulWidget {
   @override
@@ -11,6 +13,12 @@ class Screen5 extends StatefulWidget {
 class _Screen5State extends State<Screen5> {
   @override
   Widget build(BuildContext context) {
+
+    final currentuser=FirebaseAuth.instance.currentUser;
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    final currentUserDetails =users.where('email',isEqualTo:currentuser.email );
+
+
     // var ifphotos = true;
     var h = MediaQuery.of(context).size.height;
     // var w = MediaQuery.of(context).size.width;
@@ -35,7 +43,7 @@ class _Screen5State extends State<Screen5> {
                   child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Hello Anandu',
+                        'Hello '+currentUserDetails.toString(),
                         style: GoogleFonts.ubuntu(
                             fontSize: 20, color: Colors.black54),
                       )),
