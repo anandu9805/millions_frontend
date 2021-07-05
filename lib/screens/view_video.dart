@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/model/comment_model.dart';
+import 'package:millions/model/video.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/widgets/comments.dart';
-import '../model/comment_model.dart';
+import 'package:video_player/video_player.dart';
 
 class ViewVideo extends StatefulWidget {
+  final Video video;
+
+  const ViewVideo({Key key, this.video}) : super(key: key);
+
   @override
   _ViewVideoState createState() => _ViewVideoState();
 }
 
 class _ViewVideoState extends State<ViewVideo> {
+  VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.video.videoSrc);
+print(widget.video.videoSrc);
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _controller.setLooping(true);
+    _controller.initialize().then((_) => setState(() {}));
+    _controller.play();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-
-
     List comments = [
       Comment_Model(
           0,
@@ -67,15 +89,14 @@ class _ViewVideoState extends State<ViewVideo> {
           false),
     ];
     void Like(int id) {
-
       setState(() {
         comments[id].liked = !comments[id].liked;
         print(id);
       });
     }
-    var h = MediaQuery.of(context).size.height;
-    var w = MediaQuery.of(context).size.width;
 
+    var h = MediaQuery.of(context).size.height;
+    // var w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -99,202 +120,192 @@ class _ViewVideoState extends State<ViewVideo> {
             padding: const EdgeInsets.only(top: 10, bottom: 10, right: 20),
             child: InkWell(
               child: CircleAvatar(
-                child: ClipRRect(
-                  child: Image.network(
-                    'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
-                    width: w * 0.3,
-                    height: w * 0.3,
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.circular(w * 0.1),
-                ),
-                //backgroundColor: Colors.black,
+                backgroundColor: Colors.black,
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Page8()),
+                );
+              },
             ),
           )
         ],
       ),
       body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-        children: [
-          Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Image.network(
-                'https://www.processmaker.com/wp-content/uploads/2019/02/f18e571b0c57a65564d6cc16acd77f83dc5e6519.jpg',
-                fit: BoxFit.fitWidth,
-              )),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Padding(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.91,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: <Widget>[
+                          VideoPlayer(_controller),
+                          // _ControlsOverlay(controller: _controller),
+                          VideoProgressIndicator(_controller,
+                              allowScrubbing: true),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
                       padding: const EdgeInsets.only(top: 12.0),
                       child: Text(
-                        "Former Child Actors Who",
-                        style: GoogleFonts.ubuntu(
+                        widget.video.title,
+                        style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6.0, bottom: 6),
-                      child: Text(
-                        "5M Views 12 Minutes Ago",
-                        style: GoogleFonts.ubuntu(
-                            fontWeight: FontWeight.normal, fontSize: 12),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6.0, bottom: 6),
+                    child: Text(
+                      "${widget.video.views} views  |  12 Minutes Ago",
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal, fontSize: 12),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.thumb_up),
                       ),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.thumb_up),
-                        ),
-                        Text(
-                          "12M Likes",
-                          style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.share,
-                          ),
-                        ),
-                        Text(
-                          "Share",
-                          style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.bookmark_outline_sharp)),
-                        Text(
-                          "Save",
-                          style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        IconButton(onPressed: () {}, icon: Icon(Icons.flag)),
-                        Text(
-                          "Report",
-                          style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                Divider(
-                  color: Colors.grey,
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            InkWell(
-                              child: CircleAvatar(
-                                child: ClipRRect(
-                                  child: Image.network(
-                                    'https://resize.indiatvnews.com/en/resize/newbucket/715_-/2021/02/emma-watson-1614303661.jpg',
-                                    width: w * 1,
-                                    height: h * 1,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(w * 1),
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Page8()),
-                                );
-                              },
-                            ),
-                            SizedBox(width: 10),
-                            Text("Emma Watson", style:GoogleFonts.ubuntu())
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: Text("Following", style:GoogleFonts.ubuntu()),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                Divider(
-                  color: Colors.grey,
-                  height: 30,
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 1 / 14,
-                  width: double.infinity,
-                  child: Text(
-                    'Add banner comes here',
-                    style: GoogleFonts.ubuntu(color: Colors.white),
+                      Text(
+                        "${widget.video.likes}",
+                        style: TextStyle(height: 0.3, fontSize: 10),
+                      )
+                    ],
                   ),
-                  color: Colors.black,
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.share,
+                        ),
+                      ),
+                      Text(
+                        "Share",
+                        style: TextStyle(height: 0.3, fontSize: 10),
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      IconButton(
+                          onPressed: () {}, icon: Icon(Icons.bookmark_add)),
+                      Text(
+                        "Save",
+                        style: TextStyle(height: 0.3, fontSize: 10),
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      IconButton(onPressed: () {}, icon: Icon(Icons.flag)),
+                      Text(
+                        "Report",
+                        style: TextStyle(height: 0.3, fontSize: 10),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              Divider(
+                color: Colors.grey,
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(),
+                          SizedBox(width: 10),
+                          Text("${widget.video.channelName}"),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      TextButton(
+                        onPressed: () {},
+                        child: Text("Following"),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              Divider(
+                color: Colors.grey,
+                height: 30,
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 1 / 14,
+                width: double.infinity,
+                child: Text(
+                  'Add banner comes here',
+                  style: TextStyle(color: Colors.white),
                 ),
-                SizedBox(height: 10),
-                Row(
-                  children: [Text("4456 Comments", style:GoogleFonts.ubuntu())],
-                ),
-                SizedBox(height: 10),
-                Container(
+                color: Colors.black,
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [Text("${comments.length} Comments")],
+              ),
+              SizedBox(height: 10),
+              SizedBox(height: 10),
+              Container(
                   height: h / 2,
-                  child:      Container(
+                  child: Container(
                     height: h / 2,
                     child: ListView.builder(
-                        itemCount: 5,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: comments.length,
                         itemBuilder: (context, index) {
-                          var i=comments.length - 1 - index;
+                          var i = comments.length - 1 - index;
                           return Comment(
-                            Like,
-                            index,
+                              Like,
+                              index,
                               comments[i].url,
                               comments[i].name,
                               comments[i].comment_text,
                               comments[i].time,
                               comments[i].likes_number,
-                              comments[i].liked
-                          );
+                              comments[i].liked);
                         }),
-                  )
-                )
-              ],
-            ),
+                  ))
+            ],
           ),
-        ],
-      )),
+        ),
+      ),
     );
   }
 }

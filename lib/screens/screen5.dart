@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:millions/model/video.dart';
+import 'package:millions/services/video-services.dart';
+import 'package:millions/widgets/videoCard.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../widgets/photos.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,9 +17,9 @@ class _Screen5State extends State<Screen5> {
   @override
   Widget build(BuildContext context) {
 
-    final currentuser=FirebaseAuth.instance.currentUser;
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    final currentUserDetails =users.where('email',isEqualTo:currentuser.email );
+    // final currentuser=FirebaseAuth.instance.currentUser;
+    // CollectionReference users = FirebaseFirestore.instance.collection('users');
+    // final currentUserDetails =users.where('email',isEqualTo:currentuser.email );
 
 
     // var ifphotos = true;
@@ -24,12 +27,14 @@ class _Screen5State extends State<Screen5> {
     // var w = MediaQuery.of(context).size.width;
 
     return SingleChildScrollView(
+      // scrollDirection: Axis.vertical,
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           Container(
             child: Column(
               children: [
-                /*  Container(
+                Container(
                   height: (h) * 1 / 14,
                   width: double.infinity,
                   child: Text(
@@ -37,33 +42,63 @@ class _Screen5State extends State<Screen5> {
                     style: TextStyle(color: Colors.white),
                   ),
                   color: Colors.black,
-                ),*/
+                ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10),
+                  padding: const EdgeInsets.only(top: 5, left: 5),
                   child: Align(
-                      alignment: Alignment.topLeft,
+                      alignment: Alignment.center,
                       child: Text(
-                        'Hello '+currentUserDetails.toString(),
+
+                        'Hello Anandu ',
                         style: GoogleFonts.ubuntu(
                             fontSize: 20, color: Colors.black54),
+
                       )),
                 )
               ],
             ),
             color: Colors.white,
             width: double.infinity,
-            height: (h) * 1 / 20,
+            height: (h) * 1 / 8.5,
           ),
-          Container(
-            color: Colors.white,
-            height: (h) - ((h) * (1 / 8)) - ((h) * (1 / 10.16)),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Photos(index);
-              },
-              scrollDirection: Axis.vertical,
-              itemCount: 4,
-            ),
+          StreamBuilder(
+            stream: FirebaseFirestore.instance.collection('videos').snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return ListView(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  // List<Video> data =
+                  //     snapshot.data.docs;
+                  // Video data = snapshot.data.doc;
+                  children: snapshot.data.docs.map((doc) {
+                    Video videoItems = Video.fromMap(doc.data());
+                  // print(videoItems.category);
+
+                    // return ListTile(
+                    //   title: Text("${videoItems.category}"),
+
+                    // );
+                    return VideoCard(
+                      video: videoItems,
+                    );
+                  }).toList(),
+                );
+                // },
+                // scrollDirection: Axis.vertical,
+                // itemCount: snapshot.data.size,
+                // );
+              } else {
+                print(123);
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            },
+            // future: VideoServices.getAllVideos(),
           ),
         ],
       ),

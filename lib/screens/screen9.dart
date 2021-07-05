@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:millions/screens/page8.dart';
+import 'package:millions/widgets/appbar_others.dart';
+// import 'package:millions/screens/page8.dart';
 import '../widgets/photos.dart';
 import '../model/story.dart';
 
@@ -54,26 +55,23 @@ class _Screen9State extends State<Screen9> {
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
-    return SingleChildScrollView(
-      child: Column(children: <Widget>[
-        Row(children: <Widget>[
-          Container(
-            width: (w),
-            height: h * 0.16,
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Row(children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 5,
-                        ),
-                        child: InkWell(
-                          onTap: (){Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Page8()),
-                        );},
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(children: <Widget>[
+          AppBarOthers(),
+          Row(children: <Widget>[
+            Container(
+              width: (w),
+              height: h * 0.16,
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return Row(children: [
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 5,
+                          ),
                           child: CircleAvatar(
                             radius: w * 0.1,
                             child: ClipRRect(
@@ -88,42 +86,43 @@ class _Screen9State extends State<Screen9> {
                             backgroundColor: Colors.white,
                           ),
                         ),
-                      ),
-                      Text(story[index].name, style:GoogleFonts.ubuntu())
-                    ],
-                  ),
-                  SizedBox(
-                    width: 5,
-                  )
-                ]);
+                        Text(story[index].name, style: GoogleFonts.ubuntu())
+                      ],
+                    ),
+                    SizedBox(
+                      width: 5,
+                    )
+                  ]);
+                },
+                scrollDirection: Axis.horizontal,
+                itemCount: story.length,
+              ),
+            )
+          ]),
+          Padding(
+            padding: const EdgeInsets.only(top: 9, left: 5),
+            child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  'Follow',
+                  style:
+                      GoogleFonts.ubuntu(fontSize: 25, color: Colors.black54),
+                )),
+          ),
+          Container(
+            height: (h) - (h * 1 / 11) - (h * 1 / 13) - 90.30,
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return Container(
+                  child: Photos(index),
+                );
               },
-              scrollDirection: Axis.horizontal,
-              itemCount: story.length,
+              scrollDirection: Axis.vertical,
+              itemCount: 4,
             ),
-          ),
+          )
         ]),
-        Padding(
-          padding: const EdgeInsets.only(top: 9, left: 5),
-          child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                'Follow',
-                style: GoogleFonts.ubuntu(fontSize: 25, color: Colors.black54),
-              )),
-        ),
-        Container(
-          height: (h) - (h * 1 / 11) - (h * 1 / 13) - 90.30,
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return Container(
-                child: Photos(index),
-              );
-            },
-            scrollDirection: Axis.vertical,
-            itemCount: 4,
-          ),
-        )
-      ]),
+      ),
     );
   }
 }

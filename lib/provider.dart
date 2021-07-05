@@ -13,10 +13,10 @@ class MillionsProvider extends ChangeNotifier{
 
   Future googleLogin() async {
     final googleUser=await googleSignIn.signIn();
-    //print("googleUser");
-    //print(googleUser);
+
     if(googleUser==null)
       return;
+    _user=googleUser;
      googleAuth=await googleUser.authentication;
     final credential=GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,

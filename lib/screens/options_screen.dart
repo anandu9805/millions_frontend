@@ -7,7 +7,7 @@ class OptionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
-    bool liked = false;
+    // bool liked = false;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

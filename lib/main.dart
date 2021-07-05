@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:millions/screens/home.dart';
 import 'package:millions/screens/screen1.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +31,12 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
 
+
         home: Screen1(),
         // home: HomePage(),
+
+      //  home: Screen1(),
+
 
       ) ,
     );

@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/screens/login.dart';
 import '../constants/colors.dart';
 import '../auth.dart';
-
+import 'home.dart';
+import 'googleSignIn.dart';
 class Screen1 extends StatefulWidget {
   @override
   _Screen1State createState() => _Screen1State();
@@ -14,6 +15,7 @@ class _Screen1State extends State<Screen1> {
   void initState() {
     super.initState();
   }
+  var _isLogin=false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,9 @@ class _Screen1State extends State<Screen1> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Auth()),
+                          MaterialPageRoute(builder: (context){
+                           return Auth();
+                          }),
                         );
                       },
                       child: Icon(

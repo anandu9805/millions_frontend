@@ -6,7 +6,7 @@ import './screens/home.dart';
 
 import 'package:provider/provider.dart';
 import '../provider.dart';
-
+import './screens/complete_profile.dart';
 
 class Auth extends StatefulWidget {
   const Auth({Key key}) : super(key: key);
@@ -16,56 +16,93 @@ class Auth extends StatefulWidget {
 }
 
 class _AuthState extends State<Auth> {
-  final currentuser=FirebaseAuth.instance.currentUser;
+  var check = 1;
+  //final currentuser = FirebaseAuth.instance.currentUser;
 
-  User(var authResult) async{
-    // await FirebaseFirestore.instance
-    //     .collection('users').where('email',isEqualTo:currentuser.email ).get().then((value){
-    //       print("User exists");
-    //       print(value);
-    // });
+  // Future<int> User() async {
+  //   // await  FirebaseFirestore.instance
+  //   //       .collection('users').where('email',isEqualTo:currentuser.email )
+  //   //       .get()
+  //   //       .then((QuerySnapshot querySnapshot) {
+  //   //     querySnapshot.docs.forEach((doc) {
+  //   //       print(doc["place"]);
+  //   //     });
+  //   //   });
+  //
+  //   await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(currentuser.uid)
+  //       .get()
+  //       .then((DocumentSnapshot documentSnapshot) {
+  //     if (documentSnapshot.exists) {
+  //       print('Document exists on the database');
+  //       return 1;
+  //     } else {
+  //       print("do not exist");
+  //       return 0;
+  //     }
+  //   });
+  // }
 
-    FirebaseFirestore.instance
-        .collection('users').where('email',isEqualTo:currentuser.email )
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        print(doc["place"]);
-      });
-    });
 
-
-  }
 
   @override
   Widget build(BuildContext context) {
-    final millionsprovider = Provider.of<MillionsProvider>(
-        context,
-        listen: false);
+    final millionsprovider =
+    Provider.of<MillionsProvider>(context, listen: false);
 
 
     return Scaffold(
       body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot){
+          builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(
                 child: CircularProgressIndicator(),
               );
-            else if (snapshot.hasData)
-              {
-                User(millionsprovider.googleAuth);
-                return HomePage();
+            else if (snapshot.hasData) {
 
-              }
+//return HomePage();
+            print("inside outer stremreader"+snapshot.toString());
+            print( FirebaseAuth.instance.currentUser.email);
+              return StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc( FirebaseAuth.instance.currentUser.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    print("inside inner stremreader"+snapshot.toString());
 
+                    if (snapshot.connectionState == ConnectionState.done)
+                      {
+                        if (snapshot.hasData) {
+                          print('Document exists on the database');
+                          return HomePage();
+                        } else {
+                          print("do not exist");
+                          return CreateProfile();
+                        }
+                      }
+
+
+                   else{
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  });
+
+
+                  //  return check == 0 ? CreateProfile() : HomePage();
+                  }
             else if (snapshot.hasError)
               return Center(
                 child: Text('Somthing Went Wrong'),
               );
-            else{
-             // User(millionsprovider.googleAuth);
-              return GoogleSignIn();}
+            else {
+              // User(millionsprovider.googleAuth);
+              return GoogleSignIn();
+            }
           }),
     );
   }
