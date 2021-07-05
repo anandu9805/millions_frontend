@@ -84,7 +84,7 @@ class _ActionsRow extends StatelessWidget {
 }
 
 class _AuthorInfo extends StatelessWidget {
-  final User user;
+ final User user;
 
   const _AuthorInfo({
     Key key,
