@@ -1,8 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/constants/colors.dart';
+import 'package:millions/model/newpost_model.dart';
+import 'package:millions/model/user.dart';
+import 'package:millions/model/video.dart';
 import 'package:millions/screens/page8.dart';
-import 'package:millions/widgets/appbar_others.dart';
+import 'package:millions/widgets/videoCard.dart';
 // import 'package:millions/screens/page8.dart';
 import '../widgets/photos.dart';
 import '../model/story.dart';
@@ -13,6 +18,8 @@ class Screen9 extends StatefulWidget {
 }
 
 class _Screen9State extends State<Screen9> {
+  String userId = "DEyDJLaskaSXV5kMBLXSGBBZC062";
+  UserDetail user;
   List<Story> story = [
     Story(
         'https://i.pinimg.com/736x/2a/75/85/2a7585448874aabcb1d20e6829574994.jpg',
@@ -119,18 +126,95 @@ class _Screen9State extends State<Screen9> {
                       GoogleFonts.ubuntu(fontSize: 25, color: Colors.black54),
                 )),
           ),
-          Container(
-            height: (h) - (h * 1 / 11) - (h * 1 / 13) - 90.30,
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Container(
-                  child: Photos(index),
+
+          // Container(
+          //   height: (h) - (h * 1 / 11) - (h * 1 / 13) - 90.30,
+          //   child: ListView.builder(
+          //     itemBuilder: (context, index) {
+          //       return Container(
+          //         //child: Photos(index),
+          //       );
+          //     },
+          //     scrollDirection: Axis.vertical,
+          //     itemCount: 4,
+          //   ),
+          // ),
+
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("posts")
+                .where("isVisible", isEqualTo: true)
+                .orderBy("date", descending: true)
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                print(snapshot.data.size);
+                return ListView(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  children: snapshot.data.docs.map((doc) {
+                    PostDetail photoItems = PostDetail.fromMap(doc.data());
+                    return Container(
+                      child: Photos(photoItems),
+                    );
+                  }).toList(),
                 );
-              },
-              scrollDirection: Axis.vertical,
-              itemCount: 4,
-            ),
-          )
+              } else {
+                print(123);
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: primary,
+                    ),
+                  ),
+                );
+              }
+            },
+            // future: VideoServices.getAllVideos(),
+          ),
+
+          StreamBuilder(
+            stream: FirebaseFirestore.instance.collection('videos').snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return ListView(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  // List<Video> data =
+                  //     snapshot.data.docs;
+                  // Video data = snapshot.data.doc;
+                  children: snapshot.data.docs.map((doc) {
+                    Video videoItems = Video.fromMap(doc.data());
+                    // print(videoItems.category);
+
+                    // return ListTile(
+                    //   title: Text("${videoItems.category}"),
+
+                    // );
+                    return VideoCard(
+                      video: videoItems,
+                    );
+                  }).toList(),
+                );
+                // },
+                // scrollDirection: Axis.vertical,
+                // itemCount: snapshot.data.size,
+                // );
+              } else {
+                print(123);
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: primary,
+                    ),
+                  ),
+                );
+              }
+            },
+            // future: VideoServices.getAllVideos(),
+          ),
         ]),
       ),
     );

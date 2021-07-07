@@ -120,8 +120,8 @@ class _Screen14State extends State<Screen14> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: Text(
-                                        "Message",
-                                        style: GoogleFonts.ubuntu(),
+                                        "Millions",
+                                        style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold),
                                       ),
                                       content: Text(
                                         //message,
@@ -132,7 +132,7 @@ class _Screen14State extends State<Screen14> {
                                         TextButton(
                                           child: Text(
                                             "OK",
-                                            style: GoogleFonts.ubuntu(),
+                                            style: GoogleFonts.ubuntu(color: primary),
                                           ),
                                           onPressed: () {
                                             Navigator.of(context)

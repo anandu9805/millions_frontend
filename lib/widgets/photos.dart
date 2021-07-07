@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
-import 'package:millions/screens/view_video.dart';
+import 'package:millions/model/newpost_model.dart';
 import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
 
 //import 'package:millions/screens/view_video.dart';
-import '../model/content.dart';
+//import '../model/content.dart';
 import '../screens/comment_screen.dart';
 
 class Photos extends StatefulWidget {
-  int index;
+  //int index;
+  PostDetail photo;
 
-  Photos(int index) {
-    this.index = index;
+  Photos(PostDetail pic) {
+    this.photo = pic;
   }
 
   @override
@@ -25,33 +26,37 @@ class _PhotosState extends State<Photos> {
 
   IconData like = Icons.favorite_border;
 
-  List<Content> content = [
-    Content(
-        'https://cdn.pixabay.com/photo/2014/02/27/16/10/tree-276014__340.jpg',
-        'The rumors and leaks were indeed true. Microsoft just officially announced it..',
-        'Mkbhd',
-        '10 minutes'),
-    Content('https://cdn.explore-life.com/media/1401/conversions/facebook.jpg',
-        'fly high', 'Ritz', '20minutes'),
-    Content(
-        'http://public.media.smithsonianmag.com/legacy_blog/crested-ibis-pic.jpg',
-        'Mysterious Birds spoted!!!!!',
-        'nature geek',
-        '30minutes'),
-    Content(
-        'https://i.pinimg.com/originals/4c/bc/db/4cbcdb5688e4e95b866cc0c50125f13f.jpg',
-        'The Future is Here',
-        'Who',
-        '40minutes'),
-    Content(
-        'https://images.indianexpress.com/2021/01/siraj-india-vs-australia.jpg',
-        'India win!!!!',
-        'sun',
-        '45minutes'),
-  ];
+  // List<Content> content = [
+  //   Content(
+  //       'https://cdn.pixabay.com/photo/2014/02/27/16/10/tree-276014__340.jpg',
+  //       'The rumors and leaks were indeed true. Microsoft just officially announced it..',
+  //       'Mkbhd',
+  //       '10 minutes'),
+  //   Content('https://cdn.explore-life.com/media/1401/conversions/facebook.jpg',
+  //       'fly high', 'Ritz', '20minutes'),
+  //   Content(
+  //       'http://public.media.smithsonianmag.com/legacy_blog/crested-ibis-pic.jpg',
+  //       'Mysterious Birds spoted!!!!!',
+  //       'nature geek',
+  //       '30minutes'),
+  //   Content(
+  //       'https://i.pinimg.com/originals/4c/bc/db/4cbcdb5688e4e95b866cc0c50125f13f.jpg',
+  //       'The Future is Here',
+  //       'Who',
+  //       '40minutes'),
+  //   Content(
+  //       'https://images.indianexpress.com/2021/01/siraj-india-vs-australia.jpg',
+  //       'India win!!!!',
+  //       'sun',
+  //       '45minutes'),
+  // ];
 
   @override
   Widget build(BuildContext context) {
+    String tempUrl =
+        "https://cdn.pixabay.com/photo/2014/02/27/16/10/tree-276014__340.jpg";
+    String profilePicTemp =
+        "https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg";
     var w = MediaQuery.of(context).size.width;
     TransformationController pinch = new TransformationController();
 
@@ -73,7 +78,11 @@ class _PhotosState extends State<Photos> {
                           borderRadius: BorderRadius.circular(w * 0.1),
                           child: CircleAvatar(
                             child: Image.network(
-                              'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
+                              widget.photo.profilePic == null
+                                  ? profilePicTemp
+                                  : widget.photo.profilePic,
+                              //widget.photo.profilePic,
+                              // 'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
                               width: w * 0.3,
                               height: w * 0.3,
                               fit: BoxFit.cover,
@@ -86,7 +95,8 @@ class _PhotosState extends State<Photos> {
                     Column(
                       children: [
                         Text(
-                          content[this.widget.index].userName,
+                          widget.photo.channelName,
+                          //content[this.widget.index].userName,
                           style: GoogleFonts.ubuntu(
                               color: Colors.black,
                               fontSize: 15,
@@ -100,16 +110,29 @@ class _PhotosState extends State<Photos> {
               ),
               SizedBox(height: 5),
               InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ViewVideo()),
-                  );
+                onDoubleTap: () {
+                  setState(() {
+                    if (favIconColor == Colors.black) {
+                      like = Icons.favorite;
+                      favIconColor = primary;
+                    } else {
+                      like = Icons.favorite_outline;
+                      favIconColor = Colors.black;
+                    }
+                  });
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => ViewVideo()),
+                  // );
                 },
                 child: PinchZoomImage(
                   image: ClipRRect(
                     child: Image.network(
-                      content[this.widget.index].url,
+                      widget.photo.photoSrc == null
+                          ? tempUrl
+                          : widget.photo.photoSrc,
+
+                      //content[this.widget.index].url,
                       // fit: BoxFit.fill,
                     ),
                   ),
@@ -143,7 +166,7 @@ class _PhotosState extends State<Photos> {
                   SizedBox(width: 16),
                   Transform.rotate(
                       angle: 5.5, child: Icon(Icons.send_outlined)),
-                  FlatButton(
+                  TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -152,7 +175,7 @@ class _PhotosState extends State<Photos> {
                     },
                     child: Text(
                       'View comments',
-                      style: GoogleFonts.ubuntu(),
+                      style: GoogleFonts.ubuntu(color: Colors.black),
                     ),
                   )
                 ],
@@ -160,15 +183,19 @@ class _PhotosState extends State<Photos> {
               SizedBox(height: 10),
               Row(
                 children: [
-                  Text(
-                    content[this.widget.index].userName, style : GoogleFonts.ubuntu(fontWeight: FontWeight.w600)
-                  ),
+                  Text(widget.photo.channelName,
+                      //content[this.widget.index].userName,
+                      style: GoogleFonts.ubuntu(fontWeight: FontWeight.w600)),
                   SizedBox(
                     width: 10,
                   ),
                   Expanded(
                       child: Text(
-                    content[this.widget.index].tagLine, style: GoogleFonts.ubuntu(),
+                        "Post By "+widget.photo.channelName,
+                    //widget.photo.title,
+
+                    //content[this.widget.index].tagLine,
+                    style: GoogleFonts.ubuntu(),
                   )),
                 ],
               )
