@@ -9,7 +9,7 @@ import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/screen11.dart';
 import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/screen5.dart';
-import 'package:millions/screens/screen9.dart';
+import 'package:millions/screens/follow_page.dart';
 import 'package:millions/screens/shorts.dart';
 
 import 'package:provider/provider.dart';
