@@ -11,6 +11,12 @@ import 'package:millions/widgets/videoCard.dart';
 import '../widgets/photos.dart';
 
 class Page8 extends StatefulWidget {
+  String channelId;
+
+  Page8(channelId) {
+    this.channelId = channelId;
+  }
+
   @override
   _Page8State createState() => _Page8State();
 }
@@ -19,47 +25,35 @@ class _Page8State extends State<Page8> {
   String propic =
           'https://resize.indiatvnews.com/en/resize/newbucket/715_-/2021/02/emma-watson-1614303661.jpg',
       username = 'Emma Watson',
-      channelId = 'Pon1uG0eNnhf9TLsps0jtScndtN2';
+      channel;
+  int number_of_followers = 0;
+
   //User user;
-  final Future<DocumentSnapshot<Map<String, dynamic>>> userDetails =
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc('4C4iLByizTPLBBlP4rssrwGTISb2')
-          .get();
+  //print(widget.c);
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
   }
 
+  Future<DocumentSnapshot<Map<String, dynamic>>> userDetails;
+
   @override
-  initState() {
+  void initState() {
+    channel = widget.channelId;
+    userDetails =
+        FirebaseFirestore.instance.collection('channels').doc(channel).get();
+
     super.initState();
-
-    // //test-code
-    //     FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc('4C4iLByizTPLBBlP4rssrwGTISb2')
-    //     .get().then((value) {username =  value.data()['name'];
-    //     propic = value.data()['profilePic'];});
-
-    //     //print(value.data()));
-
-    //  print(username);
-    //  print(propic);
-
-    //testcode
   }
-  //final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  //final _SearchDemoSearchDelegate _delegate = _SearchDemoSearchDelegate();
-
-  //int _lastIntegerSelected;
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> data;
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
+
     return Scaffold(
       key: _drawerKey,
       drawer: Drawer(
@@ -180,68 +174,6 @@ class _Page8State extends State<Page8> {
           child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          /* Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: IconButton(
-                  onPressed: () {
-                    print('Iconbutton Pressed');
-                  },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.black,
-                    size: 30,
-                  ),
-                  iconSize: 30,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(200, 0, 5, 0),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: IconButton(
-                    icon: Icon(
-                      Icons.search,
-                      size: 30,
-                    ),
-                    color: Colors.black,
-                    onPressed: () async {
-                      final int selected = await showSearch<int>(
-                        context: context,
-                        delegate: _delegate,
-                      );
-                      if (selected != null &&
-                          selected != _lastIntegerSelected) {
-                        setState(() {
-                          _lastIntegerSelected = selected;
-                        });
-                      }
-                    },
-                  ),
-                  iconSize: 30,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(5, 0, 20, 0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.1,
-                  height: MediaQuery.of(context).size.width * 0.1,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.network(
-                    'https://image.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg',
-                  ),
-                ),
-              ),
-            ],
-          ),*/
           SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -283,6 +215,7 @@ class _Page8State extends State<Page8> {
                                       builder: (BuildContext context,
                                           AsyncSnapshot<DocumentSnapshot>
                                               snapshot) {
+                                        //---------------------------
                                         if (snapshot.connectionState ==
                                             ConnectionState.done) {
                                           Map<String, dynamic> data =
@@ -295,13 +228,13 @@ class _Page8State extends State<Page8> {
                                             fit: BoxFit.cover,
                                           );
                                         }
-
-                                        return Image.network(
-                                          propic,
-                                          width: w * 1,
-                                          height: h * 1,
-                                          fit: BoxFit.cover,
-                                        );
+return CircularProgressIndicator();
+                                        // return Image.network(
+                                        //   propic,
+                                        //   width: w * 1,
+                                        //   height: h * 1,
+                                        //   fit: BoxFit.cover,
+                                        // );
                                       },
                                     ),
                                     borderRadius: BorderRadius.circular(w * 1),
@@ -318,6 +251,7 @@ class _Page8State extends State<Page8> {
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
+                                          //---------------------------------------
                                           FutureBuilder<DocumentSnapshot>(
                                             future: userDetails,
                                             builder: (BuildContext context,
@@ -348,16 +282,18 @@ class _Page8State extends State<Page8> {
 
                                               if (snapshot.connectionState ==
                                                   ConnectionState.done) {
-                                                Map<String, dynamic> data =
-                                                    snapshot.data.data()
-                                                        as Map<String, dynamic>;
-                                                username = data['name'];
+                                                data = snapshot.data.data()
+                                                    as Map<String, dynamic>;
+
+                                                number_of_followers =
+                                                    data['subscribers'];
                                                 return Text(
-                                                  username,
+                                                  number_of_followers
+                                                          .toString() +
+                                                      ' Followers',
                                                   style: GoogleFonts.ubuntu(
-                                                    fontSize: 20,
                                                     color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15,
                                                   ),
                                                 );
                                               }
@@ -374,22 +310,23 @@ class _Page8State extends State<Page8> {
                                           )
                                         ],
                                       ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.fromLTRB(0, 4, 0, 0),
-                                            child: Text(
-                                              '16M Followers',
-                                              style: GoogleFonts.ubuntu(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      // Row(
+                                      //   mainAxisSize: MainAxisSize.max,
+                                      //   children: [
+                                      //     Padding(
+                                      //       padding:
+                                      //           EdgeInsets.fromLTRB(0, 4, 0, 0),
+                                      //       child: Text(
+                                      //         number_of_followers.toString()+
+                                      //             ' Followers',
+                                      //         style: GoogleFonts.ubuntu(
+                                      //           color: Colors.white,
+                                      //           fontSize: 15,
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //   ],
+                                      // ),
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
@@ -409,27 +346,6 @@ class _Page8State extends State<Page8> {
                                                     color: Colors.black),
                                               ),
                                             ),
-                                            /* ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    fixedSize: Size(
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.3,
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.1),
-                                                    primary: Colors.white),
-                                                onPressed: () {
-                                                  print('Button Pressed');
-                                                },
-                                                child: Text(
-                                                  'Follow',
-                                                  style: GoogleFonts.ubuntu(
-                                                      color: Colors.black),
-                                                ),
-                                              ),*/
                                           ),
                                         ],
                                       )
@@ -498,7 +414,9 @@ class _Page8State extends State<Page8> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 // Padding(
                 //   padding: EdgeInsets.fromLTRB(25, 20, 0, 0),
                 //   child: Text(
@@ -514,10 +432,9 @@ class _Page8State extends State<Page8> {
                   child: StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection("videos")
-                        .where('channelId', isEqualTo : channelId)
-                        .where("isVisible", isEqualTo : "Public")
+                        .where('channelId', isEqualTo: channel)
+                        .where("isVisible", isEqualTo: "Public")
                         .orderBy("date", descending: true)
-                        .limit(8)
                         .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -546,10 +463,10 @@ class _Page8State extends State<Page8> {
                         // itemCount: snapshot.data.size,
                         // );
                       } else {
-                        print(123);
+
                         return Container(
                           child: Center(
-                            child: CircularProgressIndicator(),
+                            child:Text('loading')// CircularProgressIndicator(),
                           ),
                         );
                       }
@@ -716,7 +633,7 @@ class _Page8State extends State<Page8> {
 //       query.isEmpty
 //           ? IconButton(
 //               tooltip: 'Voice Search',
-              
+
 //               icon: const Icon(Icons.mic, color: primary,),
 //               onPressed: () {
 //                 query = 'TODO: implement voice input';

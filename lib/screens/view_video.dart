@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:millions/model/comment_model.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/page8.dart';
+import 'package:millions/widgets/ads.dart';
 import 'package:millions/widgets/comments.dart';
 import 'package:video_player/video_player.dart';
 
@@ -123,10 +124,10 @@ print(widget.video.videoSrc);
                 backgroundColor: Colors.black,
               ),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Page8()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Page8()),
+                // );
               },
             ),
           )
@@ -206,6 +207,18 @@ print(widget.video.videoSrc);
                     children: [
                       IconButton(
                         onPressed: () {},
+                        icon: Icon(Icons.thumb_down),
+                      ),
+                      Text(
+                        "${widget.video.disLikes}",
+                        style: TextStyle(height: 0.3, fontSize: 10),
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
                         icon: Icon(
                           Icons.share,
                         ),
@@ -270,13 +283,14 @@ print(widget.video.videoSrc);
                 height: 30,
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 1 / 14,
+                //height: MediaQuery.of(context).size.height * 1 / 14,
                 width: double.infinity,
-                child: Text(
-                  'Add banner comes here',
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.black,
+                child: AdPost(),
+                // child: Text(
+                //   'Add banner comes here',
+                //   style: TextStyle(color: Colors.white),
+                // ),
+                //color: Colors.black,
               ),
               SizedBox(height: 10),
               Row(
