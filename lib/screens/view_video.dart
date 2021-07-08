@@ -124,10 +124,10 @@ print(widget.video.videoSrc);
                 backgroundColor: Colors.black,
               ),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Page8()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Page8(widget.video.channelId)),
+                // );
               },
             ),
           )

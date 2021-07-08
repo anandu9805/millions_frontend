@@ -13,14 +13,14 @@ class AdPost extends StatefulWidget {
 }
 
 class _AdPostState extends State<AdPost> {
-
-  _launchURL() async {
-  if (await canLaunch(adpost.adLink)) {
-    await launch(adpost.adLink);
-  } else {
-    throw 'Could not launch ${adpost.adLink}';
-  }
-}
+  String adLink="b3ifO4H0zlVdAizNbsat";
+  // _launchURL() async {
+  //   if (await canLaunch(adpost.adLink)) {
+  //     await launch(adpost.adLink);
+  //   } else {
+  //     throw 'Could not launch ${adpost.adLink}';
+  //   }
+  // }
 
   Future<void> _launchInBrowser(String url) async {
     if (await canLaunch(url)) {
@@ -34,6 +34,7 @@ class _AdPostState extends State<AdPost> {
       throw 'Could not launch $url';
     }
   }
+
   AdPostModel adpost;
   //get _usersStream => FirebaseFirestore.instance.collection('users').doc(userId).snapshots();
   //CollectionReference ads = FirebaseFirestore.instance.collection("post-ads").where("showAdIn","in",[user?.district || "Kollam", user?.state || "KL", user?.country || "IN",  "All Videos", ] || ["Kollam", "KL", "IN", "All Videos"]).get();
@@ -41,7 +42,7 @@ class _AdPostState extends State<AdPost> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: ads.doc("b3ifO4H0zlVdAizNbsat").get(),
+      future: ads.doc(adLink).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -64,17 +65,20 @@ class _AdPostState extends State<AdPost> {
           adpost = AdPostModel.fromDoc(data);
           return InkWell(
             onTap: () {
-              //_launchInBrowser(adpost.adLink);
+              _launchInBrowser(adpost.adLink);
+             // print(adpost.adLink);
               //_launchURL();
             },
-            child: Card(clipBehavior: Clip.antiAliasWithSaveLayer,child: Image.network(adpost.photoSrc)),
+            child: Card(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                child: Image.network(adpost.photoSrc)),
           );
         }
 
         return Text(
-                    'Add banner comes here',
-                     style: TextStyle(color: Colors.white),
-                   );
+          'Loading Ad..',
+          style: GoogleFonts.ubuntu(color: Colors.black),
+        );
       },
     );
   }

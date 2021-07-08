@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
-import 'package:millions/model/user.dart';
+import 'package:millions/model/channelModel.dart';
+import 'package:millions/model/newpost_model.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/verification.dart';
 import 'package:millions/screens/screen14.dart';
@@ -11,44 +12,67 @@ import 'package:millions/widgets/videoCard.dart';
 import '../widgets/photos.dart';
 
 class Page8 extends StatefulWidget {
+ final String channelId;
+  Page8(this.channelId);
   @override
   _Page8State createState() => _Page8State();
 }
 
 class _Page8State extends State<Page8> {
-  String propic =
-          'https://resize.indiatvnews.com/en/resize/newbucket/715_-/2021/02/emma-watson-1614303661.jpg',
-      username = 'Emma Watson',
-      channelId = 'Pon1uG0eNnhf9TLsps0jtScndtN2';
-  //User user;
-  final Future<DocumentSnapshot<Map<String, dynamic>>> userDetails =
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc('4C4iLByizTPLBBlP4rssrwGTISb2')
-          .get();
+  Color active = primary,
+      inactive = Colors.black,
+      vtextcolor = primary,
+      rtextcolor = Colors.black,
+      ptextcolor = Colors.black;
+  int currentSelection = 1;
+  //Widget returnList={VideoCard(video: videoItems,)};
+  Stream<QuerySnapshot<Map<String, dynamic>>> videoStream;
+  Stream<QuerySnapshot<Map<String, dynamic>>> postStream;
+  //String channelId = 'Pon1uG0eNnhf9TLsps0jtScndtN2';
+  String userId = "DEyDJLaskaSXV5kMBLXSGBBZC062";
+  String exists = "Follow";
+  Future<DocumentSnapshot<Map<String, dynamic>>> channelDetails, followDetails;
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
   }
 
+  Future<String> checkExist(String docID) async {
+    try {
+      await FirebaseFirestore.instance
+          .doc("followers/$docID")
+          .get()
+          .then((doc) {
+        if (doc.exists)
+          exists = "Unfollow";
+        else
+          exists = "Follow";
+      });
+      return exists;
+    } catch (e) {
+      return "Follow";
+    }
+  }
+
   @override
   initState() {
     super.initState();
-
-    // //test-code
-    //     FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc('4C4iLByizTPLBBlP4rssrwGTISb2')
-    //     .get().then((value) {username =  value.data()['name'];
-    //     propic = value.data()['profilePic'];});
-
-    //     //print(value.data()));
-
-    //  print(username);
-    //  print(propic);
-
-    //testcode
+    // followRef = FirebaseFirestore.instance.collection("followers").doc(userId + "_" + channelId);
+    videoStream = FirebaseFirestore.instance
+        .collection("videos")
+        .where('channelId', isEqualTo: widget.channelId)
+        .where("isVisible", isEqualTo: "Public")
+        .orderBy("date", descending: true)
+        .snapshots();
+    postStream = FirebaseFirestore.instance
+        .collection("posts")
+        .where("isVisible", isEqualTo: true)
+        .where("channelId", isEqualTo: widget.channelId)
+        .orderBy("date", descending: true)
+        .snapshots();
+    channelDetails =
+        FirebaseFirestore.instance.collection("channels").doc(widget.channelId).get();
   }
   //final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -177,395 +201,357 @@ class _Page8State extends State<Page8> {
       backgroundColor: Colors.white,
       // key: scaffoldKey,
       body: SafeArea(
-          child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          /* Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: IconButton(
-                  onPressed: () {
-                    print('Iconbutton Pressed');
-                  },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.black,
-                    size: 30,
-                  ),
-                  iconSize: 30,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(200, 0, 5, 0),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: IconButton(
-                    icon: Icon(
-                      Icons.search,
-                      size: 30,
-                    ),
-                    color: Colors.black,
-                    onPressed: () async {
-                      final int selected = await showSearch<int>(
-                        context: context,
-                        delegate: _delegate,
-                      );
-                      if (selected != null &&
-                          selected != _lastIntegerSelected) {
-                        setState(() {
-                          _lastIntegerSelected = selected;
-                        });
-                      }
-                    },
-                  ),
-                  iconSize: 30,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(5, 0, 20, 0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.1,
-                  height: MediaQuery.of(context).size.width * 0.1,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.network(
-                    'https://image.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg',
-                  ),
-                ),
-              ),
-            ],
-          ),*/
-          SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  child: Container(
-                    width: double.infinity,
-                    height: 155,
-                    decoration: BoxDecoration(),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  'https://motionarray.imgix.net/preview-75634-8YcoQ8Fyf3_0000.jpg'),
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                            ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FutureBuilder<DocumentSnapshot>(
+                    future: channelDetails,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(
+                          "Something went wrong",
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
+                        );
+                      }
+
+                      if (snapshot.hasData && !snapshot.data.exists) {
+                        return Text(
+                          "Channel does not exist",
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        Map<String, dynamic> data =
+                            snapshot.data.data() as Map<String, dynamic>;
+                        ChannelModel channel = ChannelModel.fromDoc(data);
+                        return Container(
+                          width: double.infinity,
+                          height: 165,
+                          decoration: BoxDecoration(),
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                CircleAvatar(
-                                  radius: 40,
-                                  child: ClipRRect(
-                                    child: FutureBuilder<DocumentSnapshot>(
-                                      future: userDetails,
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<DocumentSnapshot>
-                                              snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.done) {
-                                          Map<String, dynamic> data =
-                                              snapshot.data.data()
-                                                  as Map<String, dynamic>;
-                                          return Image.network(
-                                            data['profilePic'],
+                            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                            child: Card(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      channel.channelArt,
+                                    ),
+                                    //  'https://motionarray.imgix.net/preview-75634-8YcoQ8Fyf3_0000.jpg'),
+                                    fit: BoxFit.cover,
+                                    alignment: Alignment.topCenter,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 40,
+                                        child: ClipRRect(
+                                          child: Image.network(
+                                            channel.profilePic,
+                                            //data['profilePic'],
                                             width: w * 1,
                                             height: h * 1,
                                             fit: BoxFit.cover,
-                                          );
-                                        }
-
-                                        return Image.network(
-                                          propic,
-                                          width: w * 1,
-                                          height: h * 1,
-                                          fit: BoxFit.cover,
-                                        );
-                                      },
-                                    ),
-                                    borderRadius: BorderRadius.circular(w * 1),
-                                  ),
-                                  // backgroundColor: Colors.black,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(15, 10, 50, 0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          FutureBuilder<DocumentSnapshot>(
-                                            future: userDetails,
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot<DocumentSnapshot>
-                                                    snapshot) {
-                                              if (snapshot.hasError) {
-                                                return Text(
-                                                  "Something went wrong",
-                                                  style: GoogleFonts.ubuntu(
-                                                    fontSize: 20,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                );
-                                              }
-
-                                              if (snapshot.hasData &&
-                                                  !snapshot.data.exists) {
-                                                return Text(
-                                                  "User does not exist",
-                                                  style: GoogleFonts.ubuntu(
-                                                    fontSize: 20,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                );
-                                              }
-
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.done) {
-                                                Map<String, dynamic> data =
-                                                    snapshot.data.data()
-                                                        as Map<String, dynamic>;
-                                                username = data['name'];
-                                                return Text(
-                                                  username,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(w * 1),
+                                        ),
+                                        // backgroundColor: Colors.black,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(15, 0, 50, 0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Text(
+                                                  //username,
+                                                  channel.channelName,
                                                   style: GoogleFonts.ubuntu(
                                                     fontSize: 20,
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
                                                   ),
-                                                );
-                                              }
-
-                                              return Text(
-                                                "Loading User",
-                                                style: GoogleFonts.ubuntu(
-                                                  fontSize: 20,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                              );
-                                            },
-                                          )
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.fromLTRB(0, 4, 0, 0),
-                                            child: Text(
-                                              '16M Followers',
-                                              style: GoogleFonts.ubuntu(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                              ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                primary: Colors.white,
-                                              ),
-                                              onPressed: () {
-                                                print('Button Pressed');
-                                              },
-                                              child: Text(
-                                                'Following',
-                                                style: GoogleFonts.ubuntu(
-                                                    color: Colors.black),
-                                              ),
-                                            ),
-                                            /* ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    fixedSize: Size(
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.3,
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.1),
-                                                    primary: Colors.white),
-                                                onPressed: () {
-                                                  print('Button Pressed');
-                                                },
-                                                child: Text(
-                                                  'Follow',
-                                                  style: GoogleFonts.ubuntu(
-                                                      color: Colors.black),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      0, 4, 0, 0),
+                                                  child: Text(
+                                                    channel.subsribers
+                                                            .toString() +
+                                                        ' Subscribers',
+                                                    style: GoogleFonts.ubuntu(
+                                                      color: Colors.white,
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),*/
-                                          ),
-                                        ],
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      0, 5, 0, 0),
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      primary: Colors.white,
+                                                    ),
+                                                    onPressed: () {
+                                                      print('Button Pressed');
+                                                      //print(currentSelection);
+                                                    },
+                                                    child: FutureBuilder(
+                                                        future: checkExist(
+                                                            userId +
+                                                                "_" +
+                                                                widget.channelId),
+                                                        builder: (BuildContext
+                                                                context,
+                                                            AsyncSnapshot<
+                                                                    String>
+                                                                snapshot) {
+                                                          if (snapshot
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .done) {
+                                                            return Text(
+                                                              exists,
+                                                              style: GoogleFonts
+                                                                  .ubuntu(
+                                                                      color: Colors
+                                                                          .black),
+                                                            );
+                                                          }
+                                                          return Text(
+                                                              "Loading..",
+                                                              style: GoogleFonts
+                                                                  .ubuntu(
+                                                                      color: Colors
+                                                                          .black),
+                                                            );
+                                                        }),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),
-                                )
-                              ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(25, 20, 25, 0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Text(
-                            'Videos',
-                            style: GoogleFonts.ubuntu(
-                              color: primary,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Text(
-                            '30s',
-                            style: GoogleFonts.ubuntu(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Text(
-                            'Posts',
-                            style: GoogleFonts.ubuntu(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10,),
-                // Padding(
-                //   padding: EdgeInsets.fromLTRB(25, 20, 0, 0),
-                //   child: Text(
-                //     'Recently Uploaded',
-                //     style: GoogleFonts.ubuntu(
-                //       fontWeight: FontWeight.w500,
-                //     ),
-                //   ),
-                // ),
-                Container(
-                  color: Colors.white,
-                  height: (h) / 1.9,
-                  child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("videos")
-                        .where('channelId', isEqualTo : channelId)
-                        .where("isVisible", isEqualTo : "Public")
-                        .orderBy("date", descending: true)
-                        .limit(8)
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData) {
-                        return ListView(
-                          //physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          // List<Video> data =
-                          //     snapshot.data.docs;
-                          // Video data = snapshot.data.doc;
-                          children: snapshot.data.docs.map((doc) {
-                            Video videoItems = Video.fromMap(doc.data());
-                            // print(videoItems.category);
-
-                            // return ListTile(
-                            //   title: Text("${videoItems.category}"),
-
-                            // );
-                            return VideoCard(
-                              video: videoItems,
-                            );
-                          }).toList(),
-                        );
-                        // },
-                        // scrollDirection: Axis.vertical,
-                        // itemCount: snapshot.data.size,
-                        // );
-                      } else {
-                        print(123);
-                        return Container(
-                          child: Center(
-                            child: CircularProgressIndicator(),
                           ),
                         );
                       }
+
+                      return Text(
+                        "Loading Channel Details..",
+                        style: GoogleFonts.ubuntu(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
                     },
-                    // future: VideoServices.getAllVideos(),
                   ),
 
-                  // ListView.builder(
-                  //   itemBuilder: (context, index) {
-                  //     return Photos(index);
-                  //   },
-                  //   scrollDirection: Axis.vertical,
-                  //   itemCount: 4,
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(25, 20, 25, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                currentSelection = 1;
+                                vtextcolor = active;
+                                ptextcolor = inactive;
+                                rtextcolor = inactive;
+                              });
+                            },
+                            child: Text(
+                              'Videos',
+                              style: GoogleFonts.ubuntu(
+                                color: vtextcolor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                currentSelection = 2;
+                                rtextcolor = active;
+                                ptextcolor = inactive;
+                                vtextcolor = inactive;
+                              });
+                            },
+                            child: Text(
+                              '30s',
+                              style: GoogleFonts.ubuntu(
+                                color: rtextcolor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                currentSelection = 3;
+                                ptextcolor = active;
+                                vtextcolor = inactive;
+                                rtextcolor = inactive;
+                              });
+                            },
+                            child: Text(
+                              'Posts',
+                              style: GoogleFonts.ubuntu(
+                                color: ptextcolor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(25, 20, 0, 0),
+                  //   child: Text(
+                  //     'Recently Uploaded',
+                  //     style: GoogleFonts.ubuntu(
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //   ),
                   // ),
+                  Container(
+                    color: Colors.white,
+                    height: (h) / 1.9,
+                    child: StreamBuilder(
+                      stream:
+                          ((currentSelection == 1) || (currentSelection == 2))
+                              ? videoStream
+                              : postStream,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData) {
+                          //print(currentSelection);
+                          return ListView(
+                            //physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            // List<Video> data =
+                            //     snapshot.data.docs;
+                            // Video data = snapshot.data.doc;
+                            children: snapshot.data.docs.map((doc) {
+                              if ((currentSelection == 1) ||
+                                  (currentSelection == 2)) {
+                                Video videoItems = Video.fromMap(doc.data());
+                                return VideoCard(
+                                  video: videoItems,
+                                );
+                              } else {
+                                PostDetail photoItems =
+                                    PostDetail.fromMap(doc.data());
+                                return Container(
+                                  child: Photos(photoItems),
+                                );
+                              }
 
-                  /*  Padding(
+                              // print(videoItems.category);
+
+                              // return ListTile(
+                              //   title: Text("${videoItems.category}"),
+
+                              // );
+                            }).toList(),
+                          );
+                          // },
+                          // scrollDirection: Axis.vertical,
+                          // itemCount: snapshot.data.size,
+                          // );
+                        } else {
+                          print(123);
+                          return Container(
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: primary,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      // future: VideoServices.getAllVideos(),
+                    ),
+
+                    // ListView.builder(
+                    //   itemBuilder: (context, index) {
+                    //     return Photos(index);
+                    //   },
+                    //   scrollDirection: Axis.vertical,
+                    //   itemCount: 4,
+                    // ),
+
+                    /*  Padding(
                     padding: EdgeInsets.fromLTRB(20, 20, 25, 20),
                     child: Card(
                       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -640,12 +626,13 @@ class _Page8State extends State<Page8> {
                       ),
                     ),
                   ),*/
-                ),
-              ],
-            ),
-          )
-        ],
-      )),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

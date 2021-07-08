@@ -81,13 +81,13 @@ class _Screen9State extends State<Screen9> {
                             top: 5,
                           ),
                           child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Page8()),
-                              );
-                            },
+                            // onTap: () {
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => Page8()),
+                            //   );
+                            // },
                             child: CircleAvatar(
                               radius: w * 0.1,
                               child: ClipRRect(
