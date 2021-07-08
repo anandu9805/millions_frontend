@@ -126,7 +126,7 @@ print(widget.video.videoSrc);
               onTap: () {
                 // Navigator.push(
                 //   context,
-                //   MaterialPageRoute(builder: (context) => Page8(widget.video.channelId)),
+                //   MaterialPageRoute(builder: (context) => Page8()),
                 // );
               },
             ),
@@ -191,7 +191,10 @@ print(widget.video.videoSrc);
                   Column(
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+
+                          
+                        },//---------------------------------------------------
                         icon: Icon(Icons.thumb_up),
                       ),
                       Text(

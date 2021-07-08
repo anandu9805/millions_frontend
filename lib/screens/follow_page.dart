@@ -8,6 +8,7 @@ import 'package:millions/model/user.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/widgets/videoCard.dart';
+
 // import 'package:millions/screens/page8.dart';
 import '../widgets/photos.dart';
 import '../model/story.dart';
@@ -63,6 +64,11 @@ class _Screen9State extends State<Screen9> {
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
+    List d2 = [], d = [];
+    var currentuserid =
+        "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
+    Map<String, dynamic> channeldata;
+    Map<String, dynamic> data;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: <Widget>[
@@ -71,48 +77,106 @@ class _Screen9State extends State<Screen9> {
             Container(
               width: (w),
               height: h * 0.16,
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return Row(children: [
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 5,
-                          ),
-                          child: InkWell(
-                            // onTap: () {
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => Page8()),
-                            //   );
-                            // },
-                            child: CircleAvatar(
-                              radius: w * 0.1,
-                              child: ClipRRect(
-                                child: Image.network(
-                                  story[index].url,
-                                  width: w * 0.16,
-                                  height: w * 0.16,
-                                  fit: BoxFit.cover,
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection(
+                        'followers') //.where('follower', arrayContainsAny: [currentuserid])
+                    .snapshots(),
+
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    d = snapshot.data.docs.map((doc) {
+                      return doc.data() as Map<String, dynamic>;
+                      print("data:......" + data.toString());
+                    }).toList();
+                    // print("List d:");
+                    // print(d);
+                    //  print(d.length);
+                    var temp = d.length - 1;
+                    d2 = [];
+                    while (temp != 0) {
+// print('d[temp]'+d[temp].toString());
+// print("d[temp]['follower']"+d[temp]['follower'].toString());
+                      if (d[temp]['follower'] == currentuserid) {
+                        // print("d[temp]");
+                        // print(d[temp]);
+                        d2.add(d[temp]);
+                      }
+                      temp = temp - 1;
+                    }
+                    print("List d2:");
+                    print(d2);
+                    CollectionReference channels =
+                        FirebaseFirestore.instance.collection('channels');
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return FutureBuilder<DocumentSnapshot>(
+                          future: channels.doc(d2[index]['channel']).get(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Text("Something went wrong");
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              channeldata =
+                                  snapshot.data.data() as Map<String, dynamic>;
+
+                              return Row(children: [
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 5,
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Page8(d2[index]['channel'])),
+                                          );
+                                        },
+                                        child: CircleAvatar(
+                                          radius: w * 0.1,
+                                          child: ClipRRect(
+                                            child: Image.network(
+                                              channeldata['profilePic'],
+                                              width: w * 0.16,
+                                              height: w * 0.16,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(w * 0.1),
+                                          ),
+                                          backgroundColor: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(channeldata['channelName'],
+                                        style: GoogleFonts.ubuntu())
+                                  ],
                                 ),
-                                borderRadius: BorderRadius.circular(w * 0.1),
-                              ),
-                              backgroundColor: Colors.white,
-                            ),
-                          ),
-                        ),
-                        Text(story[index].name, style: GoogleFonts.ubuntu())
-                      ],
-                    ),
-                    SizedBox(
-                      width: 5,
-                    )
-                  ]);
+                                SizedBox(
+                                  width: 5,
+                                )
+                              ]);
+                            }
+
+                            return Text(" ");
+                          },
+                        );
+                      },
+                      itemCount: d2.length,
+                    );
+                  } else {
+                    return Text(" ");//CircularProgressIndicator();
+                  }
                 },
-                scrollDirection: Axis.horizontal,
-                itemCount: story.length,
+                // future: VideoServices.getAllVideos(),
               ),
             )
           ]),

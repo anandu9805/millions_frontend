@@ -62,35 +62,35 @@ class _AuthState extends State<Auth> {
               );
             else if (snapshot.hasData) {
 
-//return HomePage();
-            print("inside outer stremreader"+snapshot.toString());
-            print( FirebaseAuth.instance.currentUser.email);
-              return StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .doc( FirebaseAuth.instance.currentUser.uid)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    print("inside inner stremreader"+snapshot.toString());
-
-                    if (snapshot.connectionState == ConnectionState.done)
-                      {
-                        if (snapshot.hasData) {
-                          print('Document exists on the database');
-                          return HomePage();
-                        } else {
-                          print("do not exist");
-                          return CreateProfile();
-                        }
-                      }
-
-
-                   else{
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  });
+return HomePage();
+//             print("inside outer stremreader"+snapshot.toString());
+//             print( FirebaseAuth.instance.currentUser.email);
+//               return StreamBuilder(
+//                   stream: FirebaseFirestore.instance
+//                       .collection('users')
+//                       .doc( FirebaseAuth.instance.currentUser.uid)
+//                       .snapshots(),
+//                   builder: (context, snapshot) {
+//                     print("inside inner stremreader"+snapshot.toString());
+//
+//                     if (snapshot.connectionState == ConnectionState.done)
+//                       {
+//                         if (snapshot.hasData) {
+//                           print('Document exists on the database');
+//                           return HomePage();
+//                         } else {
+//                           print("do not exist");
+//                           return CreateProfile();
+//                         }
+//                       }
+//
+//
+//                    else{
+//                       return Center(
+//                         child: CircularProgressIndicator(),
+//                       );
+//                     }
+//                   });
 
 
                   //  return check == 0 ? CreateProfile() : HomePage();

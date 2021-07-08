@@ -34,6 +34,7 @@ class _Page8State extends State<Page8> {
   Future<DocumentSnapshot<Map<String, dynamic>>> channelDetails, followDetails;
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
   }
@@ -74,16 +75,13 @@ class _Page8State extends State<Page8> {
     channelDetails =
         FirebaseFirestore.instance.collection("channels").doc(widget.channelId).get();
   }
-  //final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  //final _SearchDemoSearchDelegate _delegate = _SearchDemoSearchDelegate();
-
-  //int _lastIntegerSelected;
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> data;
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
+
     return Scaffold(
       key: _drawerKey,
       drawer: Drawer(
@@ -298,9 +296,8 @@ class _Page8State extends State<Page8> {
                                                   //username,
                                                   channel.channelName,
                                                   style: GoogleFonts.ubuntu(
-                                                    fontSize: 20,
                                                     color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15,
                                                   ),
                                                 ),
                                               ],
@@ -703,7 +700,7 @@ class _Page8State extends State<Page8> {
 //       query.isEmpty
 //           ? IconButton(
 //               tooltip: 'Voice Search',
-              
+
 //               icon: const Icon(Icons.mic, color: primary,),
 //               onPressed: () {
 //                 query = 'TODO: implement voice input';
