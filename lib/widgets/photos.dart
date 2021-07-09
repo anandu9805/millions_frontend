@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/newpost_model.dart';
 import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
 
@@ -53,10 +54,6 @@ class _PhotosState extends State<Photos> {
 
   @override
   Widget build(BuildContext context) {
-    String tempUrl =
-        "https://cdn.pixabay.com/photo/2014/02/27/16/10/tree-276014__340.jpg";
-    String profilePicTemp =
-        "https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg";
     var w = MediaQuery.of(context).size.width;
     TransformationController pinch = new TransformationController();
 
@@ -79,7 +76,7 @@ class _PhotosState extends State<Photos> {
                           child: CircleAvatar(
                             child: Image.network(
                               widget.photo.profilePic == null
-                                  ? profilePicTemp
+                                  ? altProfilePic
                                   : widget.photo.profilePic,
                               //widget.photo.profilePic,
                               // 'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
@@ -129,7 +126,7 @@ class _PhotosState extends State<Photos> {
                   image: ClipRRect(
                     child: Image.network(
                       widget.photo.photoSrc == null
-                          ? tempUrl
+                          ? altChannelArt
                           : widget.photo.photoSrc,
 
                       //content[this.widget.index].url,

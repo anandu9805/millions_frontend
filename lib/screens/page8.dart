@@ -3,16 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/channelModel.dart';
 import 'package:millions/model/newpost_model.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/verification.dart';
 import 'package:millions/screens/screen14.dart';
 import 'package:millions/widgets/videoCard.dart';
-import '../widgets/photos.dart';
+import 'package:millions/widgets/photos.dart';
 
 class Page8 extends StatefulWidget {
- final String channelId;
+  final String channelId;
   Page8(this.channelId);
   @override
   _Page8State createState() => _Page8State();
@@ -25,12 +26,12 @@ class _Page8State extends State<Page8> {
       rtextcolor = Colors.black,
       ptextcolor = Colors.black;
   int currentSelection = 1;
-  //Widget returnList={VideoCard(video: videoItems,)};
   Stream<QuerySnapshot<Map<String, dynamic>>> videoStream;
   Stream<QuerySnapshot<Map<String, dynamic>>> postStream;
   //String channelId = 'Pon1uG0eNnhf9TLsps0jtScndtN2';
-  String userId = "DEyDJLaskaSXV5kMBLXSGBBZC062";
+  String userId = "4C4iLByizTPLBBlP4rssrwGTISb2";
   String exists = "Follow";
+
   Future<DocumentSnapshot<Map<String, dynamic>>> channelDetails, followDetails;
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -59,7 +60,7 @@ class _Page8State extends State<Page8> {
   @override
   initState() {
     super.initState();
-    // followRef = FirebaseFirestore.instance.collection("followers").doc(userId + "_" + channelId);
+    checkExist(userId + "_" + widget.channelId).then((value) => exists = value);
     videoStream = FirebaseFirestore.instance
         .collection("videos")
         .where('channelId', isEqualTo: widget.channelId)
@@ -68,17 +69,18 @@ class _Page8State extends State<Page8> {
         .snapshots();
     postStream = FirebaseFirestore.instance
         .collection("posts")
-        .where("isVisible", isEqualTo: true)
+        .where("isVisible", isEqualTo: "Public")
         .where("channelId", isEqualTo: widget.channelId)
         .orderBy("date", descending: true)
         .snapshots();
-    channelDetails =
-        FirebaseFirestore.instance.collection("channels").doc(widget.channelId).get();
+    channelDetails = FirebaseFirestore.instance
+        .collection("channels")
+        .doc(widget.channelId)
+        .get();
   }
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> data;
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
@@ -178,7 +180,8 @@ class _Page8State extends State<Page8> {
                 child: CircleAvatar(
                   child: ClipRRect(
                     child: Image.network(
-                      'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
+                      altProfilePic,
+                      // 'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
                       width: w * 0.3,
                       height: w * 0.3,
                       fit: BoxFit.cover,
@@ -223,6 +226,7 @@ class _Page8State extends State<Page8> {
                       }
 
                       if (snapshot.hasData && !snapshot.data.exists) {
+                        //if()
                         return Text(
                           "Channel does not exist",
                           style: GoogleFonts.ubuntu(
@@ -237,6 +241,7 @@ class _Page8State extends State<Page8> {
                         Map<String, dynamic> data =
                             snapshot.data.data() as Map<String, dynamic>;
                         ChannelModel channel = ChannelModel.fromDoc(data);
+                        //() async=>{exists = await checkExist(userId + "_" + channel.id)};
                         return Container(
                           width: double.infinity,
                           height: 165,
@@ -252,7 +257,10 @@ class _Page8State extends State<Page8> {
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     image: NetworkImage(
-                                      channel.channelArt,
+                                      (channel.channelArt == null ||
+                                              channel.channelArt.isEmpty)
+                                          ? altChannelArt
+                                          : channel.channelArt,
                                     ),
                                     //  'https://motionarray.imgix.net/preview-75634-8YcoQ8Fyf3_0000.jpg'),
                                     fit: BoxFit.cover,
@@ -270,7 +278,10 @@ class _Page8State extends State<Page8> {
                                         radius: 40,
                                         child: ClipRRect(
                                           child: Image.network(
-                                            channel.profilePic,
+                                            (channel.profilePic == null ||
+                                                    channel.profilePic.isEmpty)
+                                                ? altProfilePic
+                                                : channel.profilePic,
                                             //data['profilePic'],
                                             width: w * 1,
                                             height: h * 1,
@@ -296,8 +307,9 @@ class _Page8State extends State<Page8> {
                                                   //username,
                                                   channel.channelName,
                                                   style: GoogleFonts.ubuntu(
-                                                    color: Colors.white,
-                                                    fontSize: 15,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
                                                   ),
                                                 ),
                                               ],
@@ -313,7 +325,7 @@ class _Page8State extends State<Page8> {
                                                             .toString() +
                                                         ' Subscribers',
                                                     style: GoogleFonts.ubuntu(
-                                                      color: Colors.white,
+                                                      color: Colors.black,
                                                       fontSize: 15,
                                                     ),
                                                   ),
@@ -335,36 +347,11 @@ class _Page8State extends State<Page8> {
                                                       print('Button Pressed');
                                                       //print(currentSelection);
                                                     },
-                                                    child: FutureBuilder(
-                                                        future: checkExist(
-                                                            userId +
-                                                                "_" +
-                                                                widget.channelId),
-                                                        builder: (BuildContext
-                                                                context,
-                                                            AsyncSnapshot<
-                                                                    String>
-                                                                snapshot) {
-                                                          if (snapshot
-                                                                  .connectionState ==
-                                                              ConnectionState
-                                                                  .done) {
-                                                            return Text(
-                                                              exists,
-                                                              style: GoogleFonts
-                                                                  .ubuntu(
-                                                                      color: Colors
-                                                                          .black),
-                                                            );
-                                                          }
-                                                          return Text(
-                                                              "Loading..",
-                                                              style: GoogleFonts
-                                                                  .ubuntu(
-                                                                      color: Colors
-                                                                          .black),
-                                                            );
-                                                        }),
+                                                    child: Text(
+                                                      exists,
+                                                      style: GoogleFonts.ubuntu(
+                                                          color: Colors.black),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -381,12 +368,14 @@ class _Page8State extends State<Page8> {
                         );
                       }
 
-                      return Text(
-                        "Loading Channel Details..",
-                        style: GoogleFonts.ubuntu(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                      return Center(
+                        child: Text(
+                          "Loading Channel Details..",
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 20,
+                            color: Colors.black,
+                            //fontWeight: FontWeight.bold,
+                          ),
                         ),
                       );
                     },
@@ -472,15 +461,6 @@ class _Page8State extends State<Page8> {
                   SizedBox(
                     height: 10,
                   ),
-                  // Padding(
-                  //   padding: EdgeInsets.fromLTRB(25, 20, 0, 0),
-                  //   child: Text(
-                  //     'Recently Uploaded',
-                  //     style: GoogleFonts.ubuntu(
-                  //       fontWeight: FontWeight.w500,
-                  //     ),
-                  //   ),
-                  // ),
                   Container(
                     color: Colors.white,
                     height: (h) / 1.9,
@@ -491,15 +471,23 @@ class _Page8State extends State<Page8> {
                               : postStream,
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.data == null || snapshot.data.size < 1)
+                          return Center(
+                              child: Text(
+                            "Nothing To Show !",
+                            style: GoogleFonts.ubuntu(fontSize: 15),
+                          ));
                         if (snapshot.hasData) {
                           //print(currentSelection);
-                          return ListView(
+                          return new ListView(
                             //physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             // List<Video> data =
                             //     snapshot.data.docs;
                             // Video data = snapshot.data.doc;
                             children: snapshot.data.docs.map((doc) {
+                              // print(snapshot.data.size);
+
                               if ((currentSelection == 1) ||
                                   (currentSelection == 2)) {
                                 Video videoItems = Video.fromMap(doc.data());
@@ -507,6 +495,7 @@ class _Page8State extends State<Page8> {
                                   video: videoItems,
                                 );
                               } else {
+                                //print("No of posts : "+snapshot.data.size.toString());
                                 PostDetail photoItems =
                                     PostDetail.fromMap(doc.data());
                                 return Container(
@@ -539,90 +528,6 @@ class _Page8State extends State<Page8> {
                       },
                       // future: VideoServices.getAllVideos(),
                     ),
-
-                    // ListView.builder(
-                    //   itemBuilder: (context, index) {
-                    //     return Photos(index);
-                    //   },
-                    //   scrollDirection: Axis.vertical,
-                    //   itemCount: 4,
-                    // ),
-
-                    /*  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 25, 20),
-                    child: Card(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      color: Colors.white,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            height: 200,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFEEEEE),
-                            ),
-                            child: Image.network(
-                              'https://image.freepik.com/free-vector/organic-flat-abstract-music-youtube-thumbnail_23-2148918556.jpg',
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              height: MediaQuery.of(context).size.width * 0.8,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
-                                child: Text(
-                                  'Former Child Actros Who Ended Up Being',
-                                  textAlign: TextAlign.start,
-                                  style: GoogleFonts.ubuntu(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(5, 0, 15, 0),
-                                      child: Text(
-                                        'Looper',
-                                        style: GoogleFonts.ubuntu(
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Text(
-                                      '12 Minutes Ago',
-                                      style: GoogleFonts.ubuntu(
-                                        color: Color(0xFF464444),
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),*/
                   ),
                 ],
               ),
@@ -633,157 +538,3 @@ class _Page8State extends State<Page8> {
     );
   }
 }
-
-// class _SearchDemoSearchDelegate extends SearchDelegate<int> {
-//   final List<String> _data = ["Item 1", "Item 2","Item 3", "Value 1", "Value 2", "Value 3"];
-//      // List<int>.generate(100001, (int i) => i).reversed.toList();
-//   final List<String> _history = <String>["Item 1", "Value 2"];
-
-//   @override
-//   Widget buildLeading(BuildContext context) {
-//     return IconButton(
-//       tooltip: 'Back',
-//       icon: AnimatedIcon(
-//         icon: AnimatedIcons.menu_arrow,
-//         progress: transitionAnimation,
-//         color: primary,
-//       ),
-//       onPressed: () {
-//         close(context, null);
-//       },
-//     );
-//   }
-
-//   @override
-//   Widget buildSuggestions(BuildContext context) {
-//     final Iterable<String> suggestions = query.isEmpty
-//         ? _history
-//         : _data.where((String i) => '$i'.startsWith(query));
-
-//     return _SuggestionList(
-//       query: query,
-//       suggestions: suggestions.map<String>((String i) => '$i').toList(),
-//       onSelected: (String suggestion) {
-//         query = suggestion;
-//         showResults(context);
-//       },
-//     );
-//   }
-
-//   @override
-//   Widget buildResults(BuildContext context) {
-//     final int searched = _data.indexOf(query);
-//     if (searched == null || !_data.contains(query)) {
-//       return Center(
-//         child: Text(
-//           'No results found for "$query"\n',
-//           style: GoogleFonts.ubuntu(),
-//           textAlign: TextAlign.center,
-//         ),
-//       );
-//     }
-
-//     return ListView(
-//       children: <Widget>[
-//         _ResultCard(
-//           title: _data[searched],
-//           index: searched,
-//           searchDelegate: this,
-//         ),
-//       ],
-//     );
-//   }
-
-//   @override
-//   List<Widget> buildActions(BuildContext context) {
-//     return <Widget>[
-//       query.isEmpty
-//           ? IconButton(
-//               tooltip: 'Voice Search',
-
-//               icon: const Icon(Icons.mic, color: primary,),
-//               onPressed: () {
-//                 query = 'TODO: implement voice input';
-//               },
-//             )
-//           : IconButton(
-//               tooltip: 'Clear',
-//               icon: const Icon(Icons.clear, color: primary,),
-//               onPressed: () {
-//                 query = '';
-//                 showSuggestions(context);
-//               },
-//             ),
-//     ];
-//   }
-// }
-
-// class _ResultCard extends StatelessWidget {
-//   const _ResultCard({this.index, this.title, this.searchDelegate});
-
-//   final int index;
-//   final String title;
-//   final SearchDelegate<int> searchDelegate;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final ThemeData theme = Theme.of(context);
-//     return GestureDetector(
-//       onTap: () {
-//         searchDelegate.close(context, index);
-//       },
-//       child: Card(
-//         child: Padding(
-//           padding: const EdgeInsets.all(8.0),
-//           child: Column(
-//             children: <Widget>[
-//               Text(title, style: GoogleFonts.ubuntu(),),
-//               Text(
-//                 '$index',
-//                 style: GoogleFonts.ubuntu( textStyle: theme.textTheme.headline.copyWith(fontSize: 72.0)),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class _SuggestionList extends StatelessWidget {
-//   const _SuggestionList({this.suggestions, this.query, this.onSelected});
-
-//   final List<String> suggestions;
-//   final String query;
-//   final ValueChanged<String> onSelected;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final ThemeData theme = Theme.of(context);
-//     return ListView.builder(
-//       itemCount: suggestions.length,
-//       itemBuilder: (BuildContext context, int i) {
-//         final String suggestion = suggestions[i];
-//         return ListTile(
-//           leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
-//           title: RichText(
-//             text: TextSpan(
-//               text: suggestion.substring(0, query.length),
-//               style:
-//                  GoogleFonts.ubuntu(textStyle: theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),),
-//               children: <TextSpan>[
-//                 TextSpan(
-//                   text: suggestion.substring(query.length),
-//                   style: GoogleFonts.ubuntu(textStyle: theme.textTheme.subhead),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           onTap: () {
-//             onSelected(suggestion);
-//           },
-//         );
-//       },
-//     );
-//   }
-// }

@@ -51,7 +51,7 @@ class _Screen11State extends State<Screen11> {
             // ),
 
              StreamBuilder(
-            stream: FirebaseFirestore.instance.collection("posts").where("isVisible", isEqualTo: true).orderBy("date", descending: true).snapshots(),     
+            stream: FirebaseFirestore.instance.collection("posts").where("isVisible", isEqualTo: "Public").orderBy("date", descending: true).snapshots(),     
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {
