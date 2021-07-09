@@ -1,16 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
-import 'package:millions/screens/complete_profile.dart';
+import 'package:millions/constants/tempResources.dart';
+//import 'package:millions/screens/complete_profile.dart';
 import 'package:millions/screens/createPost.dart';
-import 'package:millions/screens/page8.dart';
+//import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/screen11.dart';
 import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/screen5.dart';
-import 'package:millions/screens/screen9.dart';
+import 'package:millions/screens/follow_page.dart';
 import 'package:millions/screens/shorts.dart';
+//import 'package:millions/screens/screen9.dart';
+import 'package:provider/provider.dart';
+import '../provider.dart';
+
 // import 'package:millions/screens/uploadpage.dart';
-import 'package:millions/screens/user_profile.dart';
+//import 'package:millions/screens/user_profile.dart';
 import 'package:millions/screens/verification.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,6 +46,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentuser = FirebaseAuth.instance.currentUser;
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
@@ -73,7 +81,8 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PaymentVerifcationPage()),
+                    MaterialPageRoute(
+                        builder: (context) => PaymentVerifcationPage()),
                   );
                 },
               ),
@@ -136,13 +145,27 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(top: 10, right: 20),
                 child: InkWell(
                   child: CircleAvatar(
-                    backgroundColor: Colors.black,
+                    child: ClipRRect(
+                      child: Image.network(
+                        altProfilePic,
+                        //'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
+                        width: w * 0.3,
+                        height: w * 0.3,
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(w * 0.1),
+                    ),
+                    //backgroundColor: Colors.black,
                   ),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Page8()),
-                    );
+                    final millionsprovider =
+                        Provider.of<MillionsProvider>(context, listen: false);
+                    millionsprovider.logout();
+
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => Page8()),
+                    // );
                   },
                 ),
               )

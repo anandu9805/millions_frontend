@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/screens/home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../provider.dart';
+
+import 'package:provider/provider.dart';
+
 
 class CreateProfile extends StatefulWidget {
   @override
@@ -9,8 +15,22 @@ class CreateProfile extends StatefulWidget {
 }
 
 class _CreateProfileState extends State<CreateProfile> {
+  final currentuser=FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
+    TextEditingController name=TextEditingController();
+    TextEditingController displayname=TextEditingController();
+    TextEditingController email=TextEditingController();
+    TextEditingController sex=TextEditingController();
+    TextEditingController country=TextEditingController();
+    TextEditingController state=TextEditingController();
+    TextEditingController district=TextEditingController();
+    TextEditingController place=TextEditingController();
+
+    final millionsprovider = Provider.of<MillionsProvider>(
+        context,
+        listen: false);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -40,6 +60,7 @@ class _CreateProfileState extends State<CreateProfile> {
                   children: [
                     TextFormField(
                       cursorColor: primary,
+                      controller: name,
                       decoration: InputDecoration(
                         labelText: 'Name',
                         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
@@ -68,6 +89,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     SizedBox(height: 15),
                     TextFormField(
                       cursorColor: primary,
+                      controller: displayname,
                       decoration: InputDecoration(
                         labelText: 'Display Name/Channel Name',
                         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
@@ -96,6 +118,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     SizedBox(height: 15),
                     TextFormField(
                       cursorColor: primary,
+                      controller: email,
                       decoration: InputDecoration(
                         labelText: 'Email',
                         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
@@ -124,6 +147,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     SizedBox(height: 15),
                     TextFormField(
                       cursorColor: primary,
+                      controller: sex,
                       decoration: InputDecoration(
                         labelText: 'Sex',
                         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
@@ -152,6 +176,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     SizedBox(height: 15),
                     TextFormField(
                       cursorColor: primary,
+                      controller: country,
                       decoration: InputDecoration(
                         labelText: 'Country',
                         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
@@ -180,6 +205,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     SizedBox(height: 15),
                     TextFormField(
                       cursorColor: primary,
+                      controller: state,
                       decoration: InputDecoration(
                         labelText: 'State',
                         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
@@ -208,6 +234,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     SizedBox(height: 15),
                     TextFormField(
                       cursorColor: primary,
+                      controller: district,
                       decoration: InputDecoration(
                         labelText: 'District',
                         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
@@ -236,6 +263,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     SizedBox(height: 15),
                     TextFormField(
                       cursorColor: primary,
+                      controller: place,
                       decoration: InputDecoration(
                         labelText: 'Place',
                         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
@@ -274,7 +302,31 @@ class _CreateProfileState extends State<CreateProfile> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(primary)),
-                    onPressed: () {
+                    onPressed: () async{
+                      await  FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(currentuser.uid)
+                          .set({
+                        'accountCreatedFrom':'Mobile',
+                        'accountStatus':'active',
+                        'country':country.text,
+                        'created':'00:00',
+                        'district':district.text,
+                        'email':email.text,
+                        'gender':sex.text,
+                        'isVerified':currentuser.emailVerified,
+                        'language':'lll',
+                        'name':displayname.text,
+                        'phone':currentuser.phoneNumber,
+                        'place':place.text,
+                        'profilePic':currentuser.photoURL,
+                        'state':state.text,
+                        'timestamp':'00:00',
+                        'uid':currentuser.uid,
+
+
+                      });
+print("inside homepage");
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (BuildContext context) => HomePage()));
                     },

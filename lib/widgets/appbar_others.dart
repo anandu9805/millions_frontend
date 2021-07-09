@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/constants/tempResources.dart';
 
 class AppBarOthers extends StatefulWidget {
   @override
@@ -65,7 +66,8 @@ class _AppBarOthersState extends State<AppBarOthers> {
             child: CircleAvatar(
               child: ClipRRect(
                 child: Image.network(
-                  'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
+                  altProfilePic,
+                  //'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
                   width: w * 0.3,
                   height: w * 0.3,
                   fit: BoxFit.cover,

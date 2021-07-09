@@ -6,6 +6,7 @@ import 'package:millions/model/video.dart';
 import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/services/commentServices.dart';
+import 'package:millions/widgets/ads.dart';
 import 'package:millions/widgets/comments.dart';
 import 'package:millions/widgets/playVideo.dart';
 
@@ -61,10 +62,10 @@ class _ViewVideoState extends State<ViewVideo> {
                 backgroundColor: Colors.black,
               ),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Page8()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Page8()),
+                // );
               },
             ),
           )
@@ -110,11 +111,26 @@ class _ViewVideoState extends State<ViewVideo> {
                   Column(
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+
+                          
+                        },//---------------------------------------------------
                         icon: Icon(Icons.thumb_up),
                       ),
                       Text(
                         "${widget.video.likes}",
+                        style: TextStyle(height: 0.3, fontSize: 10),
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.thumb_down),
+                      ),
+                      Text(
+                        "${widget.video.disLikes}",
                         style: TextStyle(height: 0.3, fontSize: 10),
                       )
                     ],
@@ -198,17 +214,15 @@ class _ViewVideoState extends State<ViewVideo> {
                 color: Colors.grey,
                 height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 1 / 14,
-                  width: double.infinity,
-                  child: Text(
-                    'Add banner comes here',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  color: Colors.black,
-                ),
+              Container(
+                //height: MediaQuery.of(context).size.height * 1 / 14,
+                width: double.infinity,
+                child: AdPost(),
+                // child: Text(
+                //   'Add banner comes here',
+                //   style: TextStyle(color: Colors.white),
+                // ),
+                //color: Colors.black,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

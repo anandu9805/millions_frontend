@@ -33,6 +33,7 @@ class _VideoCardState extends State<VideoCard> {
       child: Container(
         child: Column(
           children: [
+
             Stack(
               children: [
                 Padding(
