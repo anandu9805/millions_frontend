@@ -1,28 +1,30 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:convert';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'dart:convert';
 
-class User {
-  final String username;
-  final String profileImageUrl;
-  final String subscribers;
+// class User {
+//   final String username;
+//   final String profileImageUrl;
+//   final String subscribers;
 
-  const User({
-    this.username,
-    this.profileImageUrl,
-    this.subscribers,
-  });
-}
+//   const User({
+//     this.username,
+//     this.profileImageUrl,
+//     this.subscribers,
+//   });
+// }
 
-const User currentUser = User(
-  username: 'Marcus Ng',
-  profileImageUrl:
-      'https://yt3.ggpht.com/ytc/AAUvwniE2k5PgFu9yr4sBVEs9jdpdILdMc7ruiPw59DpS0k=s88-c-k-c0x00ffffff-no-rj',
-  subscribers: '100K',
-);
+// const User currentUser = User(
+//   username: 'Marcus Ng',
+//   profileImageUrl:
+//       'https://yt3.ggpht.com/ytc/AAUvwniE2k5PgFu9yr4sBVEs9jdpdILdMc7ruiPw59DpS0k=s88-c-k-c0x00ffffff-no-rj',
+//   subscribers: '100K',
+// );
 
 // Video videoFromJson(String str) => Video.fromJson(json.decode(str));
 
 // String videoToJson(Video data) => json.encode(data.toJson());
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Video {
   Video({
@@ -92,8 +94,7 @@ class Video {
     );
   }
 
-  // Map<String, dynamic>
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       "category": category,
       "channelId": channelId,

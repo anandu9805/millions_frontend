@@ -7,7 +7,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.0"
+    version: "2.6.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -155,6 +155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  flick_video_player:
+    dependency: "direct main"
+    description:
+      name: flick_video_player
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -497,6 +504,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  visibility_detector:
+    dependency: "direct main"
+    description:
+      name: visibility_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   wakelock:
     dependency: transitive
     description:

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/view_video.dart';
-import 'package:millions/widgets/videos.dart';
-import 'package:miniplayer/miniplayer.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class VideoCard extends StatefulWidget {
   final Video video;
@@ -23,7 +19,6 @@ class _VideoCardState extends State<VideoCard> {
 
   @override
   Widget build(BuildContext context) {
-    // print(widget.video.thumbnailUrl);
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -41,14 +36,16 @@ class _VideoCardState extends State<VideoCard> {
             Stack(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                      // horizontal: hasPadding ? 12.0 : 0,
-                      ),
+                  padding: EdgeInsets.symmetric(),
                   child: Image.network(
-                    widget.video.thumbnailUrl,
-                    // height: 220.0,
-                    // width: double.infinity,1
+                    widget.video.thumbnailUrl.isEmpty == null ||
+                            widget.video.thumbnailUrl == '' ||
+                            widget.video.thumbnailUrl.isEmpty
+                        ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
+                        : widget.video.thumbnailUrl,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, url, error) => new Icon(Icons.error),
+                    
                   ),
                 ),
               ],
@@ -77,13 +74,16 @@ class _VideoCardState extends State<VideoCard> {
                           ),
                         ),
                         Flexible(
-                          child: Text('${widget.video.channelName}',
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black54)),
+                          child: Text(
+                            '${widget.video.channelName}',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black54,
+                            ),
+                          ),
                         ),
                       ],
                     ),

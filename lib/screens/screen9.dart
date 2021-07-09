@@ -59,7 +59,6 @@ class _Screen9State extends State<Screen9> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: <Widget>[
-          AppBarOthers(),
           Row(children: <Widget>[
             Container(
               width: (w),

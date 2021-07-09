@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
 
-      //  home: Screen1(),
-     home: Screen1(),
+       home: Screen1(),
+    //  home: HomePage(),
 
     );
   }

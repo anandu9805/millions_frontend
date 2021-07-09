@@ -19,7 +19,6 @@ class _Screen11State extends State<Screen11> {
           body: SingleChildScrollView(
         child: Column(
           children: [
-            AppBarOthers(),
             Container(
               child: Padding(
                 padding: const EdgeInsets.only(top: 12, left: 5),

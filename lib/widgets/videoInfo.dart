@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/model/video.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -84,11 +85,11 @@ class _ActionsRow extends StatelessWidget {
 }
 
 class _AuthorInfo extends StatelessWidget {
- final User user;
+ final Video video;
 
   const _AuthorInfo({
     Key key,
-    this.user,
+    this.video,
   }) : super(key: key);
 
   @override
@@ -98,7 +99,7 @@ class _AuthorInfo extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            foregroundImage: NetworkImage(user.profileImageUrl),
+            foregroundImage: NetworkImage(video.thumbnailUrl),
           ),
           const SizedBox(width: 8.0),
           Expanded(
@@ -108,7 +109,7 @@ class _AuthorInfo extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    user.username,
+                    video.channelName,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
@@ -119,7 +120,7 @@ class _AuthorInfo extends StatelessWidget {
                 ),
                 Flexible(
                   child: Text(
-                    '${user.subscribers} subscribers',
+                    '${video.subscribers} subscribers',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)

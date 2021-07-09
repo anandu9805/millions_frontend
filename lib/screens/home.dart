@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/screens/complete_profile.dart';
