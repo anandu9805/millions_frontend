@@ -25,9 +25,8 @@ class PostDetail {
       language,
       photoSrc,
       profilePic,
-      title;
+      title, isVisible;
   int likes, disLikes, postScore, comments;
-  bool isVisible;
   PostDetail(
       {this.channelId,
       this.channelName,

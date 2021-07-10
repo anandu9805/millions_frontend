@@ -1,73 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/services/commentServices.dart';
 import 'package:millions/widgets/comments.dart';
 import 'package:millions/model/comment_model.dart';
 
 class Comments extends StatefulWidget {
+  final String videoId;
+
+  const Comments({Key key, this.videoId}) : super(key: key);
   @override
   _CommentsState createState() => _CommentsState();
 }
 
 class _CommentsState extends State<Comments> {
-  List comments = [
-    Comment_Model(
-        0,
-        'https://i.pinimg.com/736x/2a/75/85/2a7585448874aabcb1d20e6829574994.jpg',
-        'Christine',
-        'super',
-        '2 hours',
-        '100 likes',
-        false),
-    Comment_Model(
-        1,
-        'https://media.thetab.com/blogs.dir/90/files/2018/08/portrait-face-woman-girl-female-bowl-person-people-human.jpg',
-        'Rose',
-        'too cooool',
-        '3 hours',
-        '300 likes',
-        false),
-    Comment_Model(
-        2,
-        'https://expertphotography.com/wp-content/uploads/2020/07/instagram-profile-picture-size-guide-3.jpg',
-        'Sam',
-        'nice',
-        '4 hours',
-        '5 likes',
-        false),
-    Comment_Model(
-        3,
-        'https://www.socialnetworkelite.com/hs-fs/hubfs/image2-17.jpg?width=1200&name=image2-17.jpg',
-        'Rahul',
-        'cooool',
-        '2 hours',
-        '20 likes',
-        false),
-    Comment_Model(
-        4,
-        'https://i.pinimg.com/474x/10/ca/3e/10ca3ebf744ed949b4c598795f51803b.jpg',
-        'Shreya',
-        'good',
-        '2 hours',
-        '30 likes',
-        false),
-    Comment_Model(
-        5,
-        'https://i.pinimg.com/originals/cd/d7/cd/cdd7cd49d5442e4246c4b0409b00eb39.jpg',
-        'Aishwarya',
-        'adipowli!!!!',
-        '4 hours',
-        '40 likes',
-        false),
-  ];
-
-  void Like(int id) {
-
-    setState(() {
-      comments[id].liked = !comments[id].liked;
-      print(id);
-    });
-  }
+  // void like(int id) {
+  //   setState(() {
+  //     print(id);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -111,19 +63,20 @@ class _CommentsState extends State<Comments> {
                     ),
                     onTap: () {
                       if (getcomment.text.length > 0) {
-                        setState(() {
-                          comments.add(
-                            Comment_Model(
-                                comments.length,
-                                'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
-                                'Hrithwik',
-                                getcomment.text,
-                                'now',
-                                '0 likes',
-                                false),
-                          );
-                         // print(comments);
-                        });
+                        // setState(() {
+                        // comments.add(
+                        //   CommentModel(
+                        //       comments,
+                        //       'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
+                        //       'Hrithwik',
+                        //       getcomment.text,
+                        //       'now',
+                        //       '0 likes',
+                        //       false),
+                        // );
+                        // print(comments);
+                        // });
+                        print("add commment");
                       }
                     },
                   ),
@@ -161,20 +114,32 @@ class _CommentsState extends State<Comments> {
             SingleChildScrollView(
               child: Container(
                 height: h / 1.3,
-                child: ListView.builder(
-                    itemCount: comments.length,
-                    itemBuilder: (context, index) {
-                      var i = comments.length - 1 - index;
-                      return Comment(
-                          Like,
-                          comments[i].id,
-                          comments[i].url,
-                          comments[i].name,
-                          comments[i].comment_text,
-                          comments[i].time,
-                          comments[i].likes_number,
-                          comments[i].liked);
-                    }),
+                child: StreamBuilder(
+                  stream: CommentServices()
+                      .getVideoComments(widget.videoId.toString()),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: snapshot.data.docs.map((doc) {
+                          CommentModel comment =
+                              CommentModel.fromMap(doc.data());
+                          return Comment(
+                            comment: comment,
+                          );
+                        }).toList(),
+                      );
+                    } else {
+                      return Container(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
             )
           ],

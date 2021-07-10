@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/newpost_model.dart';
 import 'package:millions/model/user.dart';
 import 'package:millions/model/video.dart';
@@ -20,7 +21,7 @@ class Screen9 extends StatefulWidget {
 }
 
 class _Screen9State extends State<Screen9> {
-  String userId = "DEyDJLaskaSXV5kMBLXSGBBZC062";
+  // String userId = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   UserDetail user;
  // List<Story> story = [
   //   Story(
@@ -68,6 +69,7 @@ class _Screen9State extends State<Screen9> {
     List d2 = [], d = [];
     var currentuserid =
         "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
+    //var currentuserid = "XIi08ww5Fmgkv7FXOSTkOcmVh2C3";
     Map<String, dynamic> channeldata;
     Map<String, dynamic> data;
     return Scaffold(
@@ -89,7 +91,7 @@ class _Screen9State extends State<Screen9> {
                   if (snapshot.hasData) {
                     d = snapshot.data.docs.map((doc) {
                       return doc.data() as Map<String, dynamic>;
-                      print("data:......" + data.toString());
+                     // print("data:......" + data.toString());
                     }).toList();
                     // print("List d:");
                     // print(d);
@@ -106,8 +108,10 @@ class _Screen9State extends State<Screen9> {
                       }
                       temp = temp - 1;
                     }
+
                     print("List d2:");
                     print(d2);
+
 
                     CollectionReference channels =
                         FirebaseFirestore.instance.collection('channels');
@@ -139,14 +143,15 @@ class _Screen9State extends State<Screen9> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Page8(d2[index]['channel'])),
+                                                builder: (context) => Page8(
+                                                    d2[index]['channel'])),
                                           );
                                         },
                                         child: CircleAvatar(
                                           radius: w * 0.1,
                                           child: ClipRRect(
                                             child: Image.network(
-                                              channeldata['profilePic'],
+                                              channeldata['profilePic']==""?altProfilePic:channeldata['profilePic'],
                                               width: w * 0.16,
                                               height: w * 0.16,
                                               fit: BoxFit.cover,
@@ -175,7 +180,7 @@ class _Screen9State extends State<Screen9> {
                       itemCount: d2.length,
                     );
                   } else {
-                    return Text(" ");//CircularProgressIndicator();
+                    return Text(" "); //CircularProgressIndicator();
                   }
                 },
                 // future: VideoServices.getAllVideos(),
@@ -215,7 +220,7 @@ class _Screen9State extends State<Screen9> {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {
-                print(snapshot.data.size);
+                //print(snapshot.data.size);
                 return ListView(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,

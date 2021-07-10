@@ -5,10 +5,8 @@ import 'package:millions/model/video.dart';
 import 'package:millions/services/video-services.dart';
 import 'package:millions/widgets/ads.dart';
 import 'package:millions/widgets/videoCard.dart';
+
 import 'package:google_fonts/google_fonts.dart';
-import '../widgets/photos.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Screen5 extends StatefulWidget {
   @override
@@ -24,10 +22,7 @@ class _Screen5State extends State<Screen5> {
 
     // var ifphotos = true;
     var h = MediaQuery.of(context).size.height;
-    // var w = MediaQuery.of(context).size.width;
-
     return SingleChildScrollView(
-      // scrollDirection: Axis.vertical,
       physics: ClampingScrollPhysics(),
       child: Column(
         children: [
@@ -53,7 +48,7 @@ class _Screen5State extends State<Screen5> {
                         style: GoogleFonts.ubuntu(
                             fontSize: 20, color: Colors.black54),
                       )),
-                )
+                ),
               ],
             ),
             color: Colors.white,
@@ -61,16 +56,13 @@ class _Screen5State extends State<Screen5> {
             //height: (h) * 1 / 8.5,
           ),
           StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('videos').snapshots(),
+            stream: VideoServices().getAllVideos(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {
                 return ListView(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  // List<Video> data =
-                  //     snapshot.data.docs;
-                  // Video data = snapshot.data.doc;
                   children: snapshot.data.docs.map((doc) {
                     Video videoItems = Video.fromMap(doc.data());
                     // print(videoItems.category);
@@ -84,9 +76,7 @@ class _Screen5State extends State<Screen5> {
                     );
                   }).toList(),
                 );
-
               } else {
-                print(123);
                 return Container(
                   child: Center(
                     child: CircularProgressIndicator(),
