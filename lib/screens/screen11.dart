@@ -67,7 +67,7 @@ class _Screen11State extends State<Screen11> {
                   }).toList(),
                 );
               } else {
-                print(123);
+               // print(123);
                 return Container(
                   child: Center(
                     child: CircularProgressIndicator(color: primary,),

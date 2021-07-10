@@ -11,7 +11,7 @@ import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/screen5.dart';
 import 'package:millions/screens/follow_page.dart';
 import 'package:millions/screens/shorts.dart';
-//import 'package:millions/screens/screen9.dart';
+
 import 'package:provider/provider.dart';
 import '../provider.dart';
 
@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        appBar: PreferredSize(
+       appBar:PreferredSize(
           preferredSize: Size.fromHeight(
             (h) * (1 / 13),
           ),

@@ -46,10 +46,10 @@ class _VideoCardState extends State<VideoCard> {
                       // horizontal: hasPadding ? 12.0 : 0,
                       ),
                   child: Image.network(
-                    'https://mir-s3-cdn-cf.behance.net/projects/404/d06c01119728207.Y3JvcCw4MDgsNjMyLDAsMA.png',
-                  //  widget.video.thumbnailUrl,
-                    // height: 220.0,
-                    // width: double.infinity,1
+                   // 'https://mir-s3-cdn-cf.behance.net/projects/404/d06c01119728207.Y3JvcCw4MDgsNjMyLDAsMA.png',
+                    widget.video.thumbnailUrl,
+                     height: 220.0,
+                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
                 ),

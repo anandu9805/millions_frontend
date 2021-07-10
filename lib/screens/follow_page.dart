@@ -9,6 +9,7 @@ import 'package:millions/model/video.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/widgets/videoCard.dart';
 
+
 // import 'package:millions/screens/page8.dart';
 import '../widgets/photos.dart';
 import '../model/story.dart';
@@ -21,44 +22,44 @@ class Screen9 extends StatefulWidget {
 class _Screen9State extends State<Screen9> {
   String userId = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   UserDetail user;
-  List<Story> story = [
-    Story(
-        'https://i.pinimg.com/736x/2a/75/85/2a7585448874aabcb1d20e6829574994.jpg',
-        'Christine'),
-    Story(
-        'https://media.thetab.com/blogs.dir/90/files/2018/08/portrait-face-woman-girl-female-bowl-person-people-human.jpg',
-        'Rose'),
-    Story(
-        'https://expertphotography.com/wp-content/uploads/2020/07/instagram-profile-picture-size-guide-3.jpg',
-        'Sam'),
-    Story(
-        'https://www.socialnetworkelite.com/hs-fs/hubfs/image2-17.jpg?width=1200&name=image2-17.jpg',
-        'Rahul'),
-    Story(
-        'https://i.pinimg.com/474x/10/ca/3e/10ca3ebf744ed949b4c598795f51803b.jpg',
-        'Shreya'),
-    Story(
-        'https://i.pinimg.com/originals/cd/d7/cd/cdd7cd49d5442e4246c4b0409b00eb39.jpg',
-        'Aishwarya'),
-    Story(
-        'https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg',
-        'Christiano'),
-    Story(
-        'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F20%2F2020%2F03%2Fana-dearmas-3.jpg',
-        'Anna Marry'),
-    Story(
-        'https://www.businessinsider.in/thumb/msid-65957298,width-600,resizemode-4,imgsize-74717/Kevin-Systrom-is-leaving-Instagram-heres-how-he-sold-the-app-to-Facebook-for-1-billion-and-built-it-into-a-global-phenomenon.jpg',
-        'Kevin'),
-    Story(
-        'https://static.toiimg.com/thumb/msid-81962007,width-1070,height-580,imgsize-47597,resizemode-75,overlay-toi_sw,pt-32,y_pad-40/photo.jpg',
-        'Shreyas'),
-    Story(
-        'https://c.ndtvimg.com/2020-03/bthb68ug_virat-kohli-afp_625x300_27_March_20.jpg',
-        'Virat'),
-    Story(
-        'https://pbs.twimg.com/profile_images/1149783043286228993/haGfGbe3.jpg',
-        'MSD'),
-  ];
+ // List<Story> story = [
+  //   Story(
+  //       'https://i.pinimg.com/736x/2a/75/85/2a7585448874aabcb1d20e6829574994.jpg',
+  //       'Christine'),
+  //   Story(
+  //       'https://media.thetab.com/blogs.dir/90/files/2018/08/portrait-face-woman-girl-female-bowl-person-people-human.jpg',
+  //       'Rose'),
+  //   Story(
+  //       'https://expertphotography.com/wp-content/uploads/2020/07/instagram-profile-picture-size-guide-3.jpg',
+  //       'Sam'),
+  //   Story(
+  //       'https://www.socialnetworkelite.com/hs-fs/hubfs/image2-17.jpg?width=1200&name=image2-17.jpg',
+  //       'Rahul'),
+  //   Story(
+  //       'https://i.pinimg.com/474x/10/ca/3e/10ca3ebf744ed949b4c598795f51803b.jpg',
+  //       'Shreya'),
+  //   Story(
+  //       'https://i.pinimg.com/originals/cd/d7/cd/cdd7cd49d5442e4246c4b0409b00eb39.jpg',
+  //       'Aishwarya'),
+  //   Story(
+  //       'https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg',
+  //       'Christiano'),
+  //   Story(
+  //       'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F20%2F2020%2F03%2Fana-dearmas-3.jpg',
+  //       'Anna Marry'),
+  //   Story(
+  //       'https://www.businessinsider.in/thumb/msid-65957298,width-600,resizemode-4,imgsize-74717/Kevin-Systrom-is-leaving-Instagram-heres-how-he-sold-the-app-to-Facebook-for-1-billion-and-built-it-into-a-global-phenomenon.jpg',
+  //       'Kevin'),
+  //   Story(
+  //       'https://static.toiimg.com/thumb/msid-81962007,width-1070,height-580,imgsize-47597,resizemode-75,overlay-toi_sw,pt-32,y_pad-40/photo.jpg',
+  //       'Shreyas'),
+  //   Story(
+  //       'https://c.ndtvimg.com/2020-03/bthb68ug_virat-kohli-afp_625x300_27_March_20.jpg',
+  //       'Virat'),
+  //   Story(
+  //       'https://pbs.twimg.com/profile_images/1149783043286228993/haGfGbe3.jpg',
+  //       'MSD'),
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +108,7 @@ class _Screen9State extends State<Screen9> {
                     }
                     print("List d2:");
                     print(d2);
+
                     CollectionReference channels =
                         FirebaseFirestore.instance.collection('channels');
                     return ListView.builder(
