@@ -34,6 +34,13 @@ dependencies:
   miniplayer: ^1.0.0+2
   story: ^0.5.1
   pinch_zoom_image_updated: ^0.2.6
+  path_provider: ^2.0.2
+  firebase_storage: ^9.0.0
+  loading_animations: ^2.1.0
+  flutter_ffmpeg: ^0.4.0
+  video_thumbnail: ^0.3.3
+
+
 
 
   image_picker: ^0.7.0

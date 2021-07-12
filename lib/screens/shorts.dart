@@ -6,20 +6,12 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import '../model/reels_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants/colors.dart';
-import './like_icon.dart';
-import './options_screen.dart';
+
+
 import 'package:google_fonts/google_fonts.dart';
 
 class Shorts extends StatefulWidget {
-  // final List<String> videos = [
-  //   // 'https://assets.mixkit.co/videos/preview/mixkit-young-mother-with-her-little-daughter-decorating-a-christmas-tree-39745-large.mp4',
-  //   // 'https://assets.mixkit.co/videos/preview/mixkit-mother-with-her-little-daughter-eating-a-marshmallow-in-nature-39764-large.mp4',
-  //   // 'https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-1232-large.mp4',
-  //   // 'https://assets.mixkit.co/videos/preview/mixkit-taking-photos-from-different-angles-of-a-model-34421-large.mp4',
-  //   // 'https://assets.mixkit.co/videos/preview/mixkit-winter-fashion-cold-looking-woman-concept-video-39874-large.mp4',
-  //   // 'https://assets.mixkit.co/videos/preview/mixkit-womans-feet-splashing-in-the-pool-1261-large.mp4',
-  //   // 'https://assets.mixkit.co/videos/preview/mixkit-a-girl-blowing-a-bubble-gum-at-an-amusement-park-1226-large.mp4'
-  // ];
+
 
   @override
   _ShortsState createState() => _ShortsState();
@@ -51,16 +43,7 @@ class _ShortsState extends State<Shorts> {
         print("followerdetails:");
         print(following_details);
       });
-      // await FirebaseFirestore.instance
-      //     .doc("followers/$docID")
-      //     .get()
-      //     .then((doc) {
-      //   if (doc.exists)
-      //     followStatus = "Unfollow";
-      //   else
-      //     followStatus = "Follow";
-      // });
-      // return followStatus;
+
     } catch (e) {
       return "Follow";
     }
@@ -70,8 +53,7 @@ class _ShortsState extends State<Shorts> {
 
   @override
   Widget build(BuildContext context) {
-    // print("Followingdetails:");
-    // print(following_details);
+
 
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.height;

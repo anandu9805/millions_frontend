@@ -67,8 +67,10 @@ class _Screen9State extends State<Screen9> {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     List d2 = [], d = [];
-    var currentuserid =
-        "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
+    // var currentuserid =
+    //     "4C4iLByizTPLBBlP4rssrwGTISb2";
+    //the id of the logged in user
+    var currentuserid = "Pon1uG0eNnhf9TLsps0jtScndtN2";
     //var currentuserid = "XIi08ww5Fmgkv7FXOSTkOcmVh2C3";
     Map<String, dynamic> channeldata;
     Map<String, dynamic> data;
@@ -91,14 +93,12 @@ class _Screen9State extends State<Screen9> {
                   if (snapshot.hasData) {
                     d = snapshot.data.docs.map((doc) {
                       return doc.data() as Map<String, dynamic>;
-                     // print("data:......" + data.toString());
+
                     }).toList();
-                    // print("List d:");
-                    // print(d);
-                    //  print(d.length);
+
                     var temp = d.length - 1;
                     d2 = [];
-                    while (temp != 0) {
+                    while (temp >= 0) {
 // print('d[temp]'+d[temp].toString());
 // print("d[temp]['follower']"+d[temp]['follower'].toString());
                       if (d[temp]['follower'] == currentuserid) {

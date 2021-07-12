@@ -8,6 +8,11 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io'; //to use json
 import '../constants/colors.dart';
 import '../model/newpost_model.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:loading_animations/loading_animations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UploadPost extends StatefulWidget {
   @override
@@ -15,47 +20,86 @@ class UploadPost extends StatefulWidget {
 }
 
 class _UploadPostState extends State<UploadPost> {
+  bool _isLoading = false;
+  // var currentuserid =
+  //     "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
+  var currentuserid ="Pon1uG0eNnhf9TLsps0jtScndtN2";
+  PickedFile pickedImageFile;
+  String fileName;
   List posts = [];
   File _imageFile;
-
+  String url;
+List currentUserChannelDetails=[];
   bool uploadComplete = false;
   TextEditingController decsiptionController;
 
   List<String> comments = ['Enabled', 'Disabled'];
   String commentStatus = 'Enabled';
+  String description = " ";
   bool allowcomment = true;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
+    getCurrentUserChannelDetails();
     uploadComplete = false;
+    _isLoading=false;
     decsiptionController = TextEditingController();
   }
 
+  Future<String> getCurrentUserChannelDetails() async {
+    try {
+      FirebaseFirestore.instance
+          .collection('channels')
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          //print("in");
+          if (doc['id'] == currentuserid)
+            currentUserChannelDetails.add(doc);
+        });
+        print("currentUserChannelDetails");
+        print(currentUserChannelDetails[0]['email']);
+      });
+
+    } catch (e) {
+      return "Follow";
+    }
+  }
+
+
   void _fromgallery() async {
     final _picker = ImagePicker();
-    PickedFile pickedImageFile = await _picker.getImage(
+
+    pickedImageFile = await _picker.getImage(
         source: ImageSource.gallery,
         imageQuality: 100,
         maxWidth: 3000,
         maxHeight: 4000);
 
+    fileName = pickedImageFile.path.split('/').last;
+
+    //print(fileName);
+
     setState(() {
-       _imageFile = File(pickedImageFile.path);
+      _imageFile = File(pickedImageFile.path);
+      //  print(_imageFile);
 
       uploadComplete = true;
-
     });
   }
 
   void _selectImage() async {
     final _picker = ImagePicker();
-    PickedFile pickedImageFile = await _picker.getImage(
+    pickedImageFile = await _picker.getImage(
         source: ImageSource.camera,
         imageQuality: 100,
         maxWidth: 3000,
         maxHeight: 4000);
+    fileName = pickedImageFile.path.split('/').last;
+
+    // print(fileName);
 
     setState(() {
       _imageFile = File(pickedImageFile.path);
@@ -64,195 +108,107 @@ class _UploadPostState extends State<UploadPost> {
     });
   }
 
+  void upload() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
+
+    firebase_storage.Reference ref =
+        storage.ref('channels/${currentuserid}/posts/${fileName}');
+    firebase_storage.UploadTask uploadTask = ref.putFile(_imageFile);
+
+    uploadTask.whenComplete(() async {
+      url = await ref.getDownloadURL();
+
+      description =
+          decsiptionController.text.isEmpty ? " " : decsiptionController.text;
+
+      posts.add(NewPost(description, _imageFile, commentStatus));
+      var newId= FirebaseFirestore.instance
+          .collection('posts').doc();//to get the id of the document we are going to create in the collection
+
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(newId.id)
+          .set({
+        'category':"post",
+        'channelId':currentUserChannelDetails[0]['id'],
+        'channelName':currentUserChannelDetails[0]['channelName'],
+        'comments': 0,
+        'country': currentUserChannelDetails[0]['country'],
+        'date': DateTime.now(),
+        'description':posts[0].description ,
+        'disLikes': 0,
+        'generatedThumbnail': " ",
+        'id':newId.id,
+        'isComments':posts[0].comment_enabled ,
+        'isVerified':currentUserChannelDetails[0]['isVerified'],
+        'isVisible': "Public",
+        'language':"English",
+        'likes': 0,
+        'photoSrc': url,
+        'profilePic':currentUserChannelDetails[0]['profilePic'] ,
+        'subscribers':0 ,
+        'thumbnail':" " ,
+        'title':"Post by ${currentUserChannelDetails[0]['channelName']}",
+        'videoScore': 0,
+        'views':0 ,
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }).catchError((onError) {
+      print(onError);
+    });
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       key: scaffoldKey,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 30, 0, 20),
-              child: Text(
-                'Create Post',
-                style: GoogleFonts.ubuntu(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 30,
-                ),
-              ),
-            ),
-            //-----------
-
-            if(_imageFile != null)
-                   Container(
-                    child: Image.file(
-                _imageFile,
-                fit: BoxFit.fill,
-              ),
-
-                  ),
-            if(_imageFile==null)
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Card(
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                color: Color(0xFFF5F5F5),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      child: Image.network(
-                        'https://image.flaticon.com/icons/png/512/262/262530.png',
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        height: MediaQuery.of(context).size.width * 0.2,
-                        fit: BoxFit.cover,
+      body: _isLoading
+          ? Center(
+              child: LoadingBouncingGrid.circle(
+              borderColor: primary,
+              backgroundColor: Colors.white,
+              borderSize: 10,
+              size: 100,
+              duration: Duration(milliseconds: 1800),
+            ))
+          : SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 30, 0, 20),
+                    child: Text(
+                      'Create Post',
+                      style: GoogleFonts.ubuntu(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 30,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Upload An Image',
-                            textAlign: TextAlign.start,
-                            style: GoogleFonts.ubuntu(
-                              color: primary,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 30,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: Text(
-                'By submitting your photo to Millions, you acknowledge that you agree to Millions\'s Terms of Service and Community Guidelines',
-                style: GoogleFonts.ubuntu(
-                  fontSize: 12,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-              child: Text(
-                'Description',
-                style: GoogleFonts.ubuntu(),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: TextFormField(
-                maxLines: 5,
-                minLines: 4,
-                controller: decsiptionController,
-                obscureText: false,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primary,
-                      width: 1,
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
-                    ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primary,
-                      width: 1,
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
-                    ),
-                  ),
-                ),
-                style: GoogleFonts.ubuntu(),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-              child: Text(
-                'Comments',
-                style: GoogleFonts.ubuntu(),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: InkWell(
-                onTap: () {},
-                child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  //width: 20,
-                  decoration: BoxDecoration(
-                    // color: Colors.transparent,
-                    border: Border.all(
-                      color: primary,
-                      width: 1,
-                    ),
-                  ),
-                  child: DropdownButton(
-                    dropdownColor: Colors.white,
-                    elevation: 0,
-                    style: GoogleFonts.ubuntu(),
-                    // hint: Text('Please choose a location'), // Not necessary for Option 1
-                    value: commentStatus,
-                    onChanged: (newValue) {
-                      setState(() {
+                  //-----------
 
-                        commentStatus = newValue.toString();
-                      });
-                    },
-                    items: comments.map((cmnt) {
-                      return DropdownMenuItem(
-                        child: new Text(
-                          cmnt,
-                          style: GoogleFonts.ubuntu(color: Colors.black),
-                        ),
-                        value: cmnt,
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ),
-            uploadComplete
-                ? Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        posts.add(NewPost(decsiptionController.text, _imageFile,commentStatus));
-                        print("posts: $posts");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(primary: primary),
-                      child: Text(
-                        'Done',
-                        style: GoogleFonts.ubuntu(),
+                  if (_imageFile != null)
+                    Container(
+                      child: Image.file(
+                        _imageFile,
+                        fit: BoxFit.fill,
                       ),
                     ),
-                  )
-                : Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: ElevatedButton(
-                      onPressed: () {
+                  if (_imageFile == null)
+                    InkWell(
+                      onTap: () {
                         Future<void> _showMyDialog() async {
                           return showDialog<void>(
                             context: context,
@@ -295,16 +251,171 @@ class _UploadPostState extends State<UploadPost> {
 
                         _showMyDialog();
                       },
-                      style: ElevatedButton.styleFrom(primary: primary),
-                      child: Text(
-                        'Upload',
-                        style: GoogleFonts.ubuntu(),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          color: Color(0xFFF5F5F5),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                child: Image.network(
+                                  'https://image.flaticon.com/icons/png/512/262/262530.png',
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Upload An Image',
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.ubuntu(
+                                        color: primary,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    child: Text(
+                      'By submitting your photo to Millions, you acknowledge that you agree to Millions\'s Terms of Service and Community Guidelines',
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 12,
                       ),
                     ),
                   ),
-          ],
-        ),
-      ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    child: Text(
+                      'Description',
+                      style: GoogleFonts.ubuntu(),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    child: TextFormField(
+                      maxLines: 5,
+                      minLines: 4,
+                      controller: decsiptionController,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: primary,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                      ),
+                      style: GoogleFonts.ubuntu(),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    child: Text(
+                      'Comments',
+                      style: GoogleFonts.ubuntu(),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10),
+                        //width: 20,
+                        decoration: BoxDecoration(
+                          // color: Colors.transparent,
+                          border: Border.all(
+                            color: primary,
+                            width: 1,
+                          ),
+                        ),
+                        child: DropdownButton(
+                          dropdownColor: Colors.white,
+                          elevation: 0,
+                          style: GoogleFonts.ubuntu(),
+                          // hint: Text('Please choose a location'), // Not necessary for Option 1
+                          value: commentStatus,
+                          onChanged: (newValue) {
+                            setState(() {
+                              commentStatus = newValue.toString();
+                            });
+                          },
+                          items: comments.map((cmnt) {
+                            return DropdownMenuItem(
+                              child: new Text(
+                                cmnt,
+                                style: GoogleFonts.ubuntu(color: Colors.black),
+                              ),
+                              value: cmnt,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  uploadComplete
+                      ? Padding(
+                          padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              print("starting");
+                              upload();
+                            },
+                            style: ElevatedButton.styleFrom(primary: primary),
+                            child: Text(
+                              'Done',
+                              style: GoogleFonts.ubuntu(),
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(primary: primary),
+                            child: Text(
+                              'Upload',
+                              style: GoogleFonts.ubuntu(),
+                            ),
+                          ),
+                        ),
+                ],
+              ),
+            ),
     );
   }
 }
