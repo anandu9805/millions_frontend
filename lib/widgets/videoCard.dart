@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/view_video.dart';
+import 'package:millions/widgets/popUpMenu.dart';
 import 'package:millions/widgets/videos.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -90,6 +92,8 @@ class _VideoCardState extends State<VideoCard> {
                       ],
                     ),
                   ),
+                  //PopUpMenuIcon(""),
+                  widget.video.channelId==altUserId?PopUpMenuIcon("videos", widget.video.id):Row(),
                 ],
               ),
             )

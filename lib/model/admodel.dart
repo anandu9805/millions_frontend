@@ -42,7 +42,7 @@ class AdPostModel {
   factory AdPostModel.fromDoc(Map<String, dynamic> map) {
     return AdPostModel(
         adCategory: map["adCategory"],
-        adLink: map["adLink"],
+        adLink: map["adlink"],
         category: map["category"],
         channelId: map["channelId"],
         channelName: map["channelName"],

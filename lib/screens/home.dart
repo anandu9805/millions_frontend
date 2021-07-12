@@ -7,17 +7,16 @@ import 'package:millions/constants/tempResources.dart';
 import 'package:millions/screens/createPost.dart';
 //import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/screen11.dart';
-import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/screen5.dart';
 import 'package:millions/screens/follow_page.dart';
 import 'package:millions/screens/shorts.dart';
+import 'package:millions/widgets/appDrawer.dart';
 //import 'package:millions/screens/screen9.dart';
 import 'package:provider/provider.dart';
 import '../provider.dart';
 
 // import 'package:millions/screens/uploadpage.dart';
 //import 'package:millions/screens/user_profile.dart';
-import 'package:millions/screens/verification.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -50,65 +49,10 @@ class _HomePageState extends State<HomePage> {
     var w = MediaQuery.of(context).size.width;
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         key: _drawerKey,
-        drawer: Drawer(
-          child: Column(
-            children: [
-              DrawerHeader(
-                child: Container(
-                    height: 142,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      "images/million final logo with out millions.png",
-                    )),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                ),
-              ),
-              ListTile(
-                title: Text('Edit Profile'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Screen14()),
-                  );
-                },
-              ),
-              ListTile(
-                title: Text('Payment Verification'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PaymentVerifcationPage()),
-                  );
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                },
-              ),
-            ],
-          ),
-        ),
+        drawer: DefaultDrawer(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             (h) * (1 / 13),

@@ -5,6 +5,7 @@ import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/uploadvideo.dart';
 import 'package:millions/screens/uploadpost.dart';
 import 'package:millions/screens/verification.dart';
+import 'package:millions/widgets/appDrawer.dart';
 import 'package:millions/widgets/appbar_others.dart';
 
 class CreatePage extends StatefulWidget {
@@ -17,78 +18,7 @@ class _CreatePageState extends State<CreatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: Column(
-          children: [
-            DrawerHeader(
-              child: Container(
-                  height: 142,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    "images/million logo with millions.png",
-                  )),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-              ),
-            ),
-            ListTile(
-              title: Text(
-                'Edit Profile',
-                style: GoogleFonts.ubuntu(),
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Screen14()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text(
-                'Payment Verification',
-                style: GoogleFonts.ubuntu(),
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PaymentVerifcationPage()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text(
-                'Item 3',
-                style: GoogleFonts.ubuntu(),
-              ),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              title: Text(
-                'Item 4',
-                style: GoogleFonts.ubuntu(),
-              ),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              title: Text(
-                'Item 5',
-                style: GoogleFonts.ubuntu(),
-              ),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: DefaultDrawer(),
       // appBar: ,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

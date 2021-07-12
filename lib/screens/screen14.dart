@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/screens/home.dart';
 import 'package:millions/widgets/inputField.dart';
 
@@ -13,13 +14,13 @@ class Screen14 extends StatefulWidget {
 class _Screen14State extends State<Screen14> {
   var name, dname, email, sex, dist, country, place, state;
 
-  String message = "", userId = "oNHvxgaf4ITLxkSdHo52RDQP2Uz1";
+  String message = "";
   //get _usersStream => FirebaseFirestore.instance.collection('users').doc(userId).snapshots();
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   Future<void> updateUser() {
     return users
-        .doc(userId)
+        .doc(altUserId)
         .update({
           'name': dname.text,
           'country': country.text,
@@ -59,7 +60,7 @@ class _Screen14State extends State<Screen14> {
                 ),
                 SizedBox(height: 25),
                 FutureBuilder<DocumentSnapshot>(
-                  future: users.doc(userId).get(),
+                  future: users.doc(altUserId).get(),
                   builder: (BuildContext context,
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
                     if (snapshot.hasError) {
