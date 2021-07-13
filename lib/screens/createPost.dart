@@ -9,6 +9,7 @@ import 'package:millions/screens/verification.dart';
 import 'package:millions/widgets/appDrawer.dart';
 import 'package:millions/widgets/appbar_others.dart';
 import '../model/reels_model.dart';
+import 'dart:io';
 
 class CreatePage extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
+  File dummy=null;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -195,7 +197,7 @@ class _CreatePageState extends State<CreatePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UploadReel()),//-----------------------------------------------------------
+                    MaterialPageRoute(builder: (context) => UploadReel(dummy)),//-----------------------------------------------------------
                   );
                 },
                 child: Container(
@@ -243,7 +245,7 @@ class _CreatePageState extends State<CreatePage> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => UploadReel()),//-----------------------------------------------------------
+                                      MaterialPageRoute(builder: (context) => UploadReel(dummy)),//-----------------------------------------------------------
                                     );
                                   },
                                   icon: Icon(

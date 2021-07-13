@@ -54,6 +54,7 @@ dependencies:
 
   url_launcher: ^6.0.9
   percent_indicator: ^3.0.1
+  video_trimmer: ^0.5.2
 
 
 
