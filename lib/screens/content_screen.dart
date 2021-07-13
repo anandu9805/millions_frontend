@@ -1,8 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
-import './like_icon.dart';
-import './options_screen.dart';
+
 import 'package:video_player/video_player.dart';
 
 class ContentScreen extends StatefulWidget {
@@ -29,8 +28,8 @@ class _ContentScreenState extends State<ContentScreen> {
     await Future.wait([_videoPlayerController.initialize()]);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      showControls: false,
+      autoPlay:false,
+      showControls:true,
       looping: true,
     );
     setState(() {});
@@ -42,25 +41,20 @@ class _ContentScreenState extends State<ContentScreen> {
     _chewieController.dispose();
     super.dispose();
   }
-
+  // height: MediaQuery.of(context).size.height,
+  // width: MediaQuery.of(context).size.height,
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        _chewieController != null &&
-                _chewieController.videoPlayerController.value.isInitialized
-            ? GestureDetector(
-                onDoubleTap: () {
-                  setState(() {
-                    _liked = !_liked;
-                  });
-                },
-                child: Chewie(
-                  controller: _chewieController,
-                ),
+
+   return  _chewieController != null &&
+              _chewieController.videoPlayerController.value.isInitialized
+          ?  Chewie(
+                controller: _chewieController,
               )
-            : Column(
+
+
+          : Center(
+            child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
@@ -69,14 +63,9 @@ class _ContentScreenState extends State<ContentScreen> {
                   SizedBox(height: 10),
                 ],
               ),
-        if (_liked)
-          Center(
-            child: LikeIcon(),
-          ),
-        OptionsScreen()
-      ],
-    );
+          );
+    //)
+
   }
 }
-//Thanks for watching source code will be available on description
-//Like share and Subscribe
+

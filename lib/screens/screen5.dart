@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/admodel.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/services/video-services.dart';
@@ -56,7 +57,7 @@ class _Screen5State extends State<Screen5> {
             //height: (h) * 1 / 8.5,
           ),
           StreamBuilder(
-            stream: VideoServices().getAllVideos(),
+            stream: FirebaseFirestore.instance.collection('videos').where('channelId', isNotEqualTo: altUserId).snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {

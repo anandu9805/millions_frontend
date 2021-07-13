@@ -4,11 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/newpost_model.dart';
+import 'package:millions/widgets/popUpMenu.dart';
 import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
+import 'package:millions/screens/comment_screen.dart';
 
 //import 'package:millions/screens/view_video.dart';
 //import '../model/content.dart';
-import '../screens/comment_screen.dart';
 
 class Photos extends StatefulWidget {
   //int index;
@@ -139,42 +140,48 @@ class _PhotosState extends State<Photos> {
               ),
               SizedBox(height: 10),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // SizedBox(width: 16),
-                  InkWell(
-                    child: Icon(
-                      like,
-                      color: favIconColor,
-                    ),
-                    onTap: () {
-                      setState(() {
-                        if (favIconColor == Colors.black) {
-                          like = Icons.favorite;
-                          favIconColor = primary;
-                        } else {
-                          like = Icons.favorite_outline;
-                          favIconColor = Colors.black;
-                        }
-                      });
-                    },
+                  Row(
+                    children: [
+                      // SizedBox(width: 16),
+                      InkWell(
+                        child: Icon(
+                          like,
+                          color: favIconColor,
+                        ),
+                        onTap: () {
+                          setState(() {
+                            if (favIconColor == Colors.black) {
+                              like = Icons.favorite;
+                              favIconColor = primary;
+                            } else {
+                              like = Icons.favorite_outline;
+                              favIconColor = Colors.black;
+                            }
+                          });
+                        },
+                      ),
+                      SizedBox(width: 16),
+                      Icon(Icons.share_outlined),
+                      SizedBox(width: 16),
+                      Transform.rotate(
+                          angle: 5.5, child: Icon(Icons.send_outlined)),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Comments()),
+                          );
+                        },
+                        child: Text(
+                          'View comments',
+                          style: GoogleFonts.ubuntu(color: Colors.black),
+                        ),
+                      )
+                    ],
                   ),
-                  SizedBox(width: 16),
-                  Icon(Icons.share_outlined),
-                  SizedBox(width: 16),
-                  Transform.rotate(
-                      angle: 5.5, child: Icon(Icons.send_outlined)),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Comments()),
-                      );
-                    },
-                    child: Text(
-                      'View comments',
-                      style: GoogleFonts.ubuntu(color: Colors.black),
-                    ),
-                  )
+                  widget.photo.channelId==altUserId?PopUpMenuIcon("posts", widget.photo.id):Row()
                 ],
               ),
               SizedBox(height: 10),

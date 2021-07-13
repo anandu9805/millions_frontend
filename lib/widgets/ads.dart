@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:millions/constants/colors.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/admodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,15 +13,6 @@ class AdPost extends StatefulWidget {
 }
 
 class _AdPostState extends State<AdPost> {
-  String adLink="b3ifO4H0zlVdAizNbsat";
-  // _launchURL() async {
-  //   if (await canLaunch(adpost.adLink)) {
-  //     await launch(adpost.adLink);
-  //   } else {
-  //     throw 'Could not launch ${adpost.adLink}';
-  //   }
-  // }
-
   Future<void> _launchInBrowser(String url) async {
     if (await canLaunch(url)) {
       await launch(
@@ -42,7 +33,7 @@ class _AdPostState extends State<AdPost> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: ads.doc(adLink).get(),
+      future: ads.doc(altAdPostId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -66,8 +57,6 @@ class _AdPostState extends State<AdPost> {
           return InkWell(
             onTap: () {
               _launchInBrowser(adpost.adLink);
-             // print(adpost.adLink);
-              //_launchURL();
             },
             child: Card(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
