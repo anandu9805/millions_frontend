@@ -44,13 +44,12 @@ class _AuthState extends State<Auth> {
   //   });
   // }
 
-
-
   @override
   Widget build(BuildContext context) {
     final millionsprovider =
-    Provider.of<MillionsProvider>(context, listen: false);
-
+        Provider.of<MillionsProvider>(context, listen: false);
+      print(FirebaseAuth.instance.currentUser.displayName);
+      print(millionsprovider.user.photoUrl);
 
     return Scaffold(
       body: StreamBuilder(
@@ -61,8 +60,7 @@ class _AuthState extends State<Auth> {
                 child: CircularProgressIndicator(),
               );
             else if (snapshot.hasData) {
-
-return HomePage();
+              return HomePage();
 //             print("inside outer stremreader"+snapshot.toString());
 //             print( FirebaseAuth.instance.currentUser.email);
 //               return StreamBuilder(
@@ -92,10 +90,8 @@ return HomePage();
 //                     }
 //                   });
 
-
-                  //  return check == 0 ? CreateProfile() : HomePage();
-                  }
-            else if (snapshot.hasError)
+              //  return check == 0 ? CreateProfile() : HomePage();
+            } else if (snapshot.hasError)
               return Center(
                 child: Text('Somthing Went Wrong'),
               );

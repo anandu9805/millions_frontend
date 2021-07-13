@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:millions/provider.dart';
 import 'package:millions/screens/home.dart';
 import 'package:provider/provider.dart';
@@ -62,7 +64,7 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                       ],
                       color: Colors.white,
                     ),
-                    width: MediaQuery.of(context).size.width * 0.5,
+                    width: MediaQuery.of(context).size.width * 0.6,
                     child: FlatButton(
                       color: Colors.white,
                       child: Row(
@@ -88,7 +90,9 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                         final millionsprovider = Provider.of<MillionsProvider>(
                             context,
                             listen: false);
-                        millionsprovider.googleLogin();
+                        Future<User> user =
+                            millionsprovider.googleLogin();
+                            print(user);
                       },
                     ),
                   ),
