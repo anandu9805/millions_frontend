@@ -20,9 +20,9 @@ import 'package:path_provider/path_provider.dart';
 import './trimmer_view.dart';
 
 class UploadReel extends StatefulWidget {
-  final File file_to_upload,thumbnail_from_preview;
+  final File file_to_upload,thumbnail_from_preview;var duration;
 
-  UploadReel(this.file_to_upload,this.thumbnail_from_preview);
+  UploadReel(this.file_to_upload,this.thumbnail_from_preview,this.duration);
 
   @override
   _UploadReelState createState() => _UploadReelState();
@@ -46,11 +46,11 @@ class _UploadReelState extends State<UploadReel> {
   List<String> lanuages = ['Malayalam', 'English', 'Hindi'];
   List<String> comments = ['Enabled', 'Disabled'];
   List<String> category = ['All Videos', 'Entertainment', 'Comedy'];
-  List<String> visibility = ['Private', 'Public'];
+
   String selectedLanguage = 'English';
   String commentStatus = 'Enabled';
   String selectedCategory = 'All Videos';
-  String selectedVisibility = 'Private';
+
   ImageFormat _format = ImageFormat.JPEG;
   int _quality = 100;
   File thumbanil = null;
@@ -200,7 +200,7 @@ class _UploadReelState extends State<UploadReel> {
             selectedCountry,
             selectedLanguage,
             commentStatus,
-            selectedVisibility,
+         'Public',
             selectedCategory,
             _videoFile));
         print("reels: $reelslist");
@@ -219,7 +219,7 @@ class _UploadReelState extends State<UploadReel> {
           'date': DateTime.now(),
           'description': reelslist[0].description,
           'disLikes': 0,
-          'duration': 404, //calculate
+          'duration':(widget.duration/1000).round(), //calculate
           'generatedThumbnail': thumbnail_url, //generate
           'id': newId.id,
           'isComments': reelslist[0].commentallowed,
@@ -637,48 +637,48 @@ class _UploadReelState extends State<UploadReel> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Video Visibility',
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      //width: 20,
-                      decoration: BoxDecoration(
-                        // color: Colors.transparent,
-                        border: Border.all(
-                          color: primary,
-                          width: 1,
-                        ),
-                      ),
-                      child: DropdownButton(
-                        dropdownColor: Colors.white,
-                        elevation: 0,
-                        style: GoogleFonts.ubuntu(),
-                        // hint: Text('Please choose a location'), // Not necessary for Option 1
-                        value: selectedVisibility,
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedVisibility = newValue.toString();
-                          });
-                        },
-                        items: visibility.map((visi) {
-                          return DropdownMenuItem(
-                            child: new Text(
-                              visi,
-                              style: GoogleFonts.ubuntu(color: Colors.black),
-                            ),
-                            value: visi,
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                  //   child: Text(
+                  //     'Video Visibility',
+                  //     style: GoogleFonts.ubuntu(),
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  //   child: Container(
+                  //     padding: EdgeInsets.only(left: 10),
+                  //     //width: 20,
+                  //     decoration: BoxDecoration(
+                  //       // color: Colors.transparent,
+                  //       border: Border.all(
+                  //         color: primary,
+                  //         width: 1,
+                  //       ),
+                  //     ),
+                  //     child: DropdownButton(
+                  //       dropdownColor: Colors.white,
+                  //       elevation: 0,
+                  //       style: GoogleFonts.ubuntu(),
+                  //       // hint: Text('Please choose a location'), // Not necessary for Option 1
+                  //       value: selectedVisibility,
+                  //       onChanged: (newValue) {
+                  //         setState(() {
+                  //           selectedVisibility = newValue.toString();
+                  //         });
+                  //       },
+                  //       items: visibility.map((visi) {
+                  //         return DropdownMenuItem(
+                  //           child: new Text(
+                  //             visi,
+                  //             style: GoogleFonts.ubuntu(color: Colors.black),
+                  //           ),
+                  //           value: visi,
+                  //         );
+                  //       }).toList(),
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
                     child: Text(

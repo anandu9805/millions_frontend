@@ -4,6 +4,7 @@ import './preview_after_trim.dart';
 import 'package:flutter/material.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 import '../constants/colors.dart';
+import 'package:flutter_video_info/flutter_video_info.dart';
 
 class TrimmerView extends StatefulWidget {
   final File file,thumbnail;
@@ -18,9 +19,10 @@ class _TrimmerViewState extends State<TrimmerView> {
 
   double _startValue = 0.0;
   double _endValue = 0.0;
-
+var info;
   bool _isPlaying = false;
   bool _progressVisibility = false;
+  final videoInfo = FlutterVideoInfo();
 
   @override
   void initState() {
@@ -48,12 +50,16 @@ class _TrimmerViewState extends State<TrimmerView> {
         _value = value;
       });
     });
+    info = await videoInfo.getVideoInfo(_value);
+    print("duration");
+    print(info.duration);
 
     return _value;
   }
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: () async {
         if (Navigator.of(context).userGestureInProgress)
@@ -86,10 +92,11 @@ class _TrimmerViewState extends State<TrimmerView> {
                         ? null
                         : () async {
                       _saveVideo().then((outputPath) {
+
                         print('OUTPUT PATH: $outputPath');
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => Preview(outputPath,widget.thumbnail),
+                            builder: (context) => Preview(outputPath,widget.thumbnail,info.duration),
                           ),
                         );
                       });

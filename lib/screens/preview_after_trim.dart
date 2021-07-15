@@ -7,15 +7,16 @@ import '../model/content.dart';
 import '../screens/uploadreels.dart';
 
 class Preview extends StatefulWidget {
-  final String outputVideoPath;File thumbnail;
+  final String outputVideoPath;File thumbnail;var duration;
 
-  Preview(this.outputVideoPath,this.thumbnail);
+  Preview(this.outputVideoPath,this.thumbnail,this.duration);
 
   @override
   _PreviewState createState() => _PreviewState();
 }
 
 class _PreviewState extends State<Preview> {
+
    VideoPlayerController _controller;
 
   @override
@@ -43,7 +44,7 @@ class _PreviewState extends State<Preview> {
       backgroundColor: Colors.black,
       appBar: AppBar(backgroundColor:primary ,
         title: Text("Preview"),actions: [FlatButton(onPressed: (){
-       Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => UploadReel(File(widget.outputVideoPath),widget.thumbnail)));
+       Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => UploadReel(File(widget.outputVideoPath),widget.thumbnail,widget.duration)));
         }, child:Text("Done"))],
       ),
 

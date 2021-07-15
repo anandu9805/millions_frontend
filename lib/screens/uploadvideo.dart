@@ -16,7 +16,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:video_player/video_player.dart';
+
 import 'package:flutter_video_info/flutter_video_info.dart';
 
 class UploadPage extends StatefulWidget {
@@ -42,11 +42,11 @@ class _UploadPageState extends State<UploadPage> {
   List<String> lanuages = ['Malayalam', 'English', 'Hindi'];
   List<String> comments = ['Enabled', 'Disabled'];
   List<String> category = ['All Videos', 'Entertainment', 'Comedy'];
-  List<String> visibility = ['Private', 'Public'];
+
   String selectedLanguage = 'English';
   String commentStatus = 'Enabled';
   String selectedCategory = 'All Videos';
-  String selectedVisibility = 'Private';
+
   ImageFormat _format = ImageFormat.JPEG;
   int _quality = 100;
   File thumbanil = null;
@@ -55,7 +55,7 @@ class _UploadPageState extends State<UploadPage> {
   String thumnailpath;
   String thumnail_image_name;
   String thumbnail_url;
-  VideoPlayerController controller;// = new VideoPlayerController.file('');//Your file here
+
   final videoInfo = FlutterVideoInfo();
   var info;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -85,7 +85,6 @@ class _UploadPageState extends State<UploadPage> {
     print(info.duration);
     setState(() {
       _videoFile = File(pickedImageFile.path);
-
 
       // controller = new VideoPlayerController.file(_videoFile);
       // print("controller.value.duration");
@@ -179,7 +178,7 @@ class _UploadPageState extends State<UploadPage> {
             selectedCountry,
             selectedLanguage,
             commentStatus,
-            selectedVisibility,
+            'Public',
             selectedCategory,
             _videoFile));
         print("videos: $videoslist");
@@ -201,7 +200,7 @@ class _UploadPageState extends State<UploadPage> {
           'date': DateTime.now(),
           'description': videoslist[0].description,
           'disLikes': 0,
-          'duration':info.duration, //calculate
+          'duration': (info.duration/1000).round(), //calculate
           'generatedThumbnail': thumbnail_url, //generate
           'id': newId.id,
           'isComments': videoslist[0].commentallowed,
@@ -591,48 +590,48 @@ class _UploadPageState extends State<UploadPage> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Video Visibility',
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      //width: 20,
-                      decoration: BoxDecoration(
-                        // color: Colors.transparent,
-                        border: Border.all(
-                          color: primary,
-                          width: 1,
-                        ),
-                      ),
-                      child: DropdownButton(
-                        dropdownColor: Colors.white,
-                        elevation: 0,
-                        style: GoogleFonts.ubuntu(),
-                        // hint: Text('Please choose a location'), // Not necessary for Option 1
-                        value: selectedVisibility,
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedVisibility = newValue.toString();
-                          });
-                        },
-                        items: visibility.map((visi) {
-                          return DropdownMenuItem(
-                            child: new Text(
-                              visi,
-                              style: GoogleFonts.ubuntu(color: Colors.black),
-                            ),
-                            value: visi,
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                  //   child: Text(
+                  //     'Video Visibility',
+                  //     style: GoogleFonts.ubuntu(),
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  //   child: Container(
+                  //     padding: EdgeInsets.only(left: 10),
+                  //     //width: 20,
+                  //     decoration: BoxDecoration(
+                  //       // color: Colors.transparent,
+                  //       border: Border.all(
+                  //         color: primary,
+                  //         width: 1,
+                  //       ),
+                  //     ),
+                  //     child: DropdownButton(
+                  //       dropdownColor: Colors.white,
+                  //       elevation: 0,
+                  //       style: GoogleFonts.ubuntu(),
+                  //       // hint: Text('Please choose a location'), // Not necessary for Option 1
+                  //       value: selectedVisibility,
+                  //       onChanged: (newValue) {
+                  //         setState(() {
+                  //           selectedVisibility = newValue.toString();
+                  //         });
+                  //       },
+                  //       items: visibility.map((visi) {
+                  //         return DropdownMenuItem(
+                  //           child: new Text(
+                  //             visi,
+                  //             style: GoogleFonts.ubuntu(color: Colors.black),
+                  //           ),
+                  //           value: visi,
+                  //         );
+                  //       }).toList(),
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
                     child: Text(
