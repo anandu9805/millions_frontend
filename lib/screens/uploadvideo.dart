@@ -16,6 +16,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:video_player/video_player.dart';
+import 'package:flutter_video_info/flutter_video_info.dart';
 
 class UploadPage extends StatefulWidget {
   @override
@@ -46,14 +48,16 @@ class _UploadPageState extends State<UploadPage> {
   String selectedCategory = 'All Videos';
   String selectedVisibility = 'Private';
   ImageFormat _format = ImageFormat.JPEG;
-  int _quality =100;
-File thumbanil=null;
-  File thumbanil_temp=null;
+  int _quality = 100;
+  File thumbanil = null;
+  File thumbanil_temp = null;
   String _tempDir;
   String thumnailpath;
   String thumnail_image_name;
   String thumbnail_url;
-
+  VideoPlayerController controller;// = new VideoPlayerController.file('');//Your file here
+  final videoInfo = FlutterVideoInfo();
+  var info;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -61,8 +65,11 @@ File thumbanil=null;
     super.initState();
     decsiptionController = TextEditingController();
     titleController = TextEditingController();
-    getTemporaryDirectory().then((d){ _tempDir = d.path;  print("_tempDir");
-    print(_tempDir);});
+    getTemporaryDirectory().then((d) {
+      _tempDir = d.path;
+      print("_tempDir");
+      print(_tempDir);
+    });
     getCurrentUserChannelDetails();
   }
 
@@ -72,11 +79,19 @@ File thumbanil=null;
       source: ImageSource.gallery,
     );
     fileName = pickedImageFile.path.split('/').last;
-   await getThumbanil(pickedImageFile).then((value) => thumbanil_temp=value);
-
+    await getThumbanil(pickedImageFile).then((value) => thumbanil_temp = value);
+    info = await videoInfo.getVideoInfo(pickedImageFile.path);
+    print("duration");
+    print(info.duration);
     setState(() {
       _videoFile = File(pickedImageFile.path);
-thumbanil=thumbanil_temp;
+
+
+      // controller = new VideoPlayerController.file(_videoFile);
+      // print("controller.value.duration");
+      // print(controller.value.duration.toString());
+
+      thumbanil = thumbanil_temp;
       uploadComplete = true;
     });
   }
@@ -87,11 +102,17 @@ thumbanil=thumbanil_temp;
       source: ImageSource.camera,
     );
     fileName = pickedImageFile.path.split('/').last;
-   await getThumbanil(pickedImageFile).then((value) => thumbanil_temp=value);
+    await getThumbanil(pickedImageFile).then((value) => thumbanil_temp = value);
+    info = await videoInfo.getVideoInfo(pickedImageFile.path);
+    print("duration");
+    print(info.duration);
     setState(() {
       _videoFile = File(pickedImageFile.path);
+      // controller = new VideoPlayerController.file(_videoFile);
+      // print("controller.value.duration");
+      // print(controller.value.duration.toString());
 
-      thumbanil=thumbanil_temp;
+      thumbanil = thumbanil_temp;
 
       uploadComplete = true;
     });
@@ -115,16 +136,16 @@ thumbanil=thumbanil_temp;
     }
   }
 
-  Future<File> getThumbanil(PickedFile videoFile ) async {
+  Future<File> getThumbanil(PickedFile videoFile) async {
     final thumbnail = await VideoThumbnail.thumbnailFile(
         video: videoFile.path,
         thumbnailPath: _tempDir,
         imageFormat: _format,
-        maxHeight:0,
+        maxHeight: 0,
         quality: _quality);
 
     final file = File(thumbnail);
-    thumnail_image_name=file.path.split('/').last;
+    thumnail_image_name = file.path.split('/').last;
     print("thumbnail");
     print(file);
     return file;
@@ -138,14 +159,15 @@ thumbanil=thumbanil_temp;
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
 
-    firebase_storage.Reference ref_thumbnail =
-    storage.ref('testvideos/${currentuserid}/thumbnails/${thumnail_image_name}');
-    firebase_storage.UploadTask uploadTask_thumbnail = ref_thumbnail.putFile(thumbanil);
+    firebase_storage.Reference ref_thumbnail = storage
+        .ref('testvideos/${currentuserid}/thumbnails/${thumnail_image_name}');
+    firebase_storage.UploadTask uploadTask_thumbnail =
+        ref_thumbnail.putFile(thumbanil);
     uploadTask_thumbnail.whenComplete(() async {
       thumbnail_url = await ref_thumbnail.getDownloadURL();
 
       firebase_storage.Reference ref =
-      storage.ref('testvideos/${currentuserid}/videos/${fileName}');
+          storage.ref('testvideos/${currentuserid}/videos/${fileName}');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
 
       uploadTask.whenComplete(() async {
@@ -167,7 +189,10 @@ thumbanil=thumbanil_temp;
             .doc(); //to get the id of the document we are going to create in the collection
         print("hello2");
         print(currentUserChannelDetails[0]['channelName']);
-        await FirebaseFirestore.instance.collection('videos').doc(newId.id).set({
+        await FirebaseFirestore.instance
+            .collection('videos')
+            .doc(newId.id)
+            .set({
           'category': videoslist[0].category,
           'channelId': currentUserChannelDetails[0]['id'],
           'channelName': currentUserChannelDetails[0]['channelName'],
@@ -176,8 +201,8 @@ thumbanil=thumbanil_temp;
           'date': DateTime.now(),
           'description': videoslist[0].description,
           'disLikes': 0,
-          'duration': 404, //calculate
-          'generatedThumbnail':thumbnail_url, //generate
+          'duration':info.duration, //calculate
+          'generatedThumbnail': thumbnail_url, //generate
           'id': newId.id,
           'isComments': videoslist[0].commentallowed,
           'isVerified': currentUserChannelDetails[0]['isVerified'],
@@ -188,7 +213,7 @@ thumbanil=thumbanil_temp;
           'profilePic': currentUserChannelDetails[0]['profilePic'],
           'shortLink': " ", //to be filled
           'subscribers': 0,
-          'thumbnail':thumbnail_url,
+          'thumbnail': thumbnail_url,
           'title': videoslist[0].title,
           'updated': DateTime.now(),
           'videoScore': 0,
@@ -203,7 +228,6 @@ thumbanil=thumbanil_temp;
       }).catchError((onError) {
         print(onError);
       });
-
     }).catchError((onError) {
       print(onError);
     });
@@ -243,106 +267,113 @@ thumbanil=thumbanil_temp;
                   ),
 
                   //----------------------
-                  thumbanil != null?
-                    Container(
-                      child: Image.file(
-                        thumbanil,
-                        fit: BoxFit.fill,
-                      ),
-                    ): InkWell(
-                    onTap: () {
-                      Future<void> _showMyDialog() async {
-                        return showDialog<void>(
-                          context: context,
-                          //barrierDismissible: false, // user must tap button!
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text(
-                                'Millions',
-                                style: TextStyle(color: primary),
-                                textAlign: TextAlign.center,
-                              ),
-                              content: SingleChildScrollView(
-                                child: ListBody(
-                                  children: const <Widget>[
-                                    Text('Upload Post from:'),
-                                  ],
-                                ),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('Gallery'),
-                                  onPressed: () {
-                                    _fromgallery();
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                TextButton(
-                                  child: const Text('Record a video'),
-                                  onPressed: () {
-                                    _selectVideo();
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                      //------------
+                  thumbanil != null
+                      ? Container(
+                          child: Image.file(
+                            thumbanil,
+                            fit: BoxFit.fill,
+                          ),
+                        )
+                      : InkWell(
+                          onTap: () {
+                            Future<void> _showMyDialog() async {
+                              return showDialog<void>(
+                                context: context,
+                                //barrierDismissible: false, // user must tap button!
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                      'Millions',
+                                      style: TextStyle(color: primary),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: const <Widget>[
+                                          Text('Upload Post from:'),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Gallery'),
+                                        onPressed: () {
+                                          _fromgallery();
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('Record a video'),
+                                        onPressed: () {
+                                          _selectVideo();
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                            //------------
 
-                      _showMyDialog();
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        color: Color(0xFFF5F5F5),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              child: Row(
+                            _showMyDialog();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Card(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              color: Color(0xFFF5F5F5),
+                              child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Image.network(
-                                    'https://image.flaticon.com/icons/png/512/262/262530.png',
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.2,
-                                    height:
-                                        MediaQuery.of(context).size.width * 0.2,
-                                    fit: BoxFit.cover,
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Image.network(
+                                          'https://image.flaticon.com/icons/png/512/262/262530.png',
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.2,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.2,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Upload Video',
-                                    textAlign: TextAlign.start,
-                                    style: GoogleFonts.ubuntu(
-                                      color: primary,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 30,
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Upload Video',
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.ubuntu(
+                                            color: primary,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                     child: Text(

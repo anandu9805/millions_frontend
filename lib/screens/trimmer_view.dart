@@ -6,9 +6,9 @@ import 'package:video_trimmer/video_trimmer.dart';
 import '../constants/colors.dart';
 
 class TrimmerView extends StatefulWidget {
-  final File file;
+  final File file,thumbnail;
 
-  TrimmerView(this.file);
+  TrimmerView(this.file,this.thumbnail);
   @override
   _TrimmerViewState createState() => _TrimmerViewState();
 }
@@ -89,7 +89,7 @@ class _TrimmerViewState extends State<TrimmerView> {
                         print('OUTPUT PATH: $outputPath');
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => Preview(outputPath),
+                            builder: (context) => Preview(outputPath,widget.thumbnail),
                           ),
                         );
                       });

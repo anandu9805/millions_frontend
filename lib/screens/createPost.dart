@@ -17,7 +17,7 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
-  File dummy=null;
+  File dummy1=null, dummy2=null;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -197,7 +197,7 @@ class _CreatePageState extends State<CreatePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UploadReel(dummy)),//-----------------------------------------------------------
+                    MaterialPageRoute(builder: (context) => UploadReel(dummy1,dummy2)),//-----------------------------------------------------------
                   );
                 },
                 child: Container(
@@ -245,7 +245,7 @@ class _CreatePageState extends State<CreatePage> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => UploadReel(dummy)),//-----------------------------------------------------------
+                                      MaterialPageRoute(builder: (context) => UploadReel(dummy1,dummy2)),//-----------------------------------------------------------
                                     );
                                   },
                                   icon: Icon(

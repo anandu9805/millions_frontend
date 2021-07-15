@@ -39,6 +39,7 @@ dependencies:
   loading_animations: ^2.1.0
   flutter_ffmpeg: ^0.4.0
   video_thumbnail: ^0.3.3
+  flutter_video_info: ^1.2.0
 
 
 

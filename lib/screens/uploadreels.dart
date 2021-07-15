@@ -20,9 +20,9 @@ import 'package:path_provider/path_provider.dart';
 import './trimmer_view.dart';
 
 class UploadReel extends StatefulWidget {
-  final File file_to_upload;
+  final File file_to_upload,thumbnail_from_preview;
 
-  UploadReel(this.file_to_upload);
+  UploadReel(this.file_to_upload,this.thumbnail_from_preview);
 
   @override
   _UploadReelState createState() => _UploadReelState();
@@ -72,11 +72,14 @@ class _UploadReelState extends State<UploadReel> {
       print("_tempDir");
       print(_tempDir);
     });
+
     getCurrentUserChannelDetails();
     if (widget.file_to_upload != null) {
       _videoFile = widget.file_to_upload;
+      thumbanil=widget.thumbnail_from_preview;
       uploadComplete = true;
       fileName = widget.file_to_upload.path.split('/').last;
+      thumnail_image_name = widget.thumbnail_from_preview.path.split('/').last;
     }
   }
 
@@ -93,18 +96,18 @@ class _UploadReelState extends State<UploadReel> {
       Navigator.of(context).push(
         //to trim..............................
         MaterialPageRoute(builder: (context) {
-          return TrimmerView(File(pickedImageFile.path));
+          return TrimmerView(File(pickedImageFile.path),thumbanil_temp);
         }),
       );
 
     }
 
 //--------------------------------------------------------------
-    setState(() {
-      _videoFile = widget.file_to_upload;
-      thumbanil = thumbanil_temp;
-      uploadComplete = true;
-    });
+//     setState(() {
+//       _videoFile = widget.file_to_upload;
+//       thumbanil = thumbanil_temp;
+//       uploadComplete = true;
+//     });
   }
 
   void _selectVideo() async {
@@ -120,20 +123,20 @@ class _UploadReelState extends State<UploadReel> {
       Navigator.of(context).push(
         //to trim..............................
         MaterialPageRoute(builder: (context) {
-          return TrimmerView(File(pickedImageFile.path));
+          return TrimmerView(File(pickedImageFile.path),thumbanil_temp);
         }),
       );
 
     }
 
 //--------------------------------------------------------------
-    setState(() {
-      _videoFile = widget.file_to_upload;
-
-      thumbanil = thumbanil_temp;
-
-      uploadComplete = true;
-    });
+//     setState(() {
+//       _videoFile = widget.file_to_upload;
+//
+//       thumbanil = thumbanil_temp;
+//
+//       uploadComplete = true;
+//     });
   }
 
   Future<String> getCurrentUserChannelDetails() async {
@@ -163,76 +166,86 @@ class _UploadReelState extends State<UploadReel> {
         quality: _quality);
 
     final file = File(thumbnail);
-    thumnail_image_name = file.path.split('/').last;
+
     print("thumbnail");
     print(file);
     return file;
   }
 
   void upload() async {
+    // if(widget.file_path!=null)
+    //   await getThumbanil(widget.file_path).then((value) => thumbanil_temp = value);
     setState(() {
       _isLoading = true;
     });
 
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
+    firebase_storage.Reference ref_thumbnail =
+    storage.ref('test-reels/${currentuserid}/thumbnails/${thumnail_image_name}');
+    firebase_storage.UploadTask uploadTask_thumbnail = ref_thumbnail.putFile(thumbanil);
+    uploadTask_thumbnail.whenComplete(() async {
+      thumbnail_url = await ref_thumbnail.getDownloadURL();
 
-    firebase_storage.Reference ref =
-        storage.ref('test-reels/${currentuserid}/${fileName}');
-    firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
+      firebase_storage.Reference ref =
+      storage.ref('test-reels/${currentuserid}/${fileName}');
+      firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
 
-    uploadTask.whenComplete(() async {
-      url = await ref.getDownloadURL();
-      print("hello1");
-      reelslist.add(NewReel(
-          titleController.text,
-          decsiptionController.text,
-          selectedCountry,
-          selectedLanguage,
-          commentStatus,
-          selectedVisibility,
-          selectedCategory,
-          _videoFile));
-      print("reels: $reelslist");
+      uploadTask.whenComplete(() async {
+        url = await ref.getDownloadURL();
+        print("hello1");
+        reelslist.add(NewReel(
+            titleController.text,
+            decsiptionController.text,
+            selectedCountry,
+            selectedLanguage,
+            commentStatus,
+            selectedVisibility,
+            selectedCategory,
+            _videoFile));
+        print("reels: $reelslist");
 
-      var newId = FirebaseFirestore.instance
-          .collection('videos')
-          .doc(); //to get the id of the document we are going to create in the collection
-      print("hello2");
-      print(currentUserChannelDetails[0]['channelName']);
-      await FirebaseFirestore.instance.collection('reels').doc(newId.id).set({
-        'category': reelslist[0].category,
-        'channelId': currentUserChannelDetails[0]['id'],
-        'channelName': currentUserChannelDetails[0]['channelName'],
-        'comments': 0,
-        'country': currentUserChannelDetails[0]['country'],
-        'date': DateTime.now(),
-        'description': reelslist[0].description,
-        'disLikes': 0,
-        'duration': 404, //calculate
-        'generatedThumbnail':url,//thumbnail_url, //generate
-        'id': newId.id,
-        'isComments': reelslist[0].commentallowed,
-        'isVerified': currentUserChannelDetails[0]['isVerified'],
-        'isVisible': reelslist[0].visibility,
-        'language': "English",
-        'likes': 0,
+        var newId = FirebaseFirestore.instance
+            .collection('videos')
+            .doc(); //to get the id of the document we are going to create in the collection
+        print("hello2");
+        print(currentUserChannelDetails[0]['channelName']);
+        await FirebaseFirestore.instance.collection('reels').doc(newId.id).set({
+          'category': reelslist[0].category,
+          'channelId': currentUserChannelDetails[0]['id'],
+          'channelName': currentUserChannelDetails[0]['channelName'],
+          'comments': 0,
+          'country': currentUserChannelDetails[0]['country'],
+          'date': DateTime.now(),
+          'description': reelslist[0].description,
+          'disLikes': 0,
+          'duration': 404, //calculate
+          'generatedThumbnail': thumbnail_url, //generate
+          'id': newId.id,
+          'isComments': reelslist[0].commentallowed,
+          'isVerified': currentUserChannelDetails[0]['isVerified'],
+          'isVisible': reelslist[0].visibility,
+          'language': "English",
+          'likes': 0,
 
-        'profilePic': currentUserChannelDetails[0]['profilePic'],
-        'shortLink':url, //to be filled
-        'subscribers': 0,
-        'thumbnail':url,//thumbnail_url,
-        'title': reelslist[0].title,
+          'profilePic': currentUserChannelDetails[0]['profilePic'],
+          'shortLink': url, //to be filled
+          'subscribers': 0,
+          'thumbnail': thumbnail_url,
+          'title': reelslist[0].title,
 
-        'videoScore': 0,
-        'videoSrc': url,
-        'views': 0,
+          'videoScore': 0,
+          'videoSrc': url,
+          'views': 0,
+        });
+        print("hello3");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }).catchError((onError) {
+        print(onError);
       });
-      print("hello3");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
     }).catchError((onError) {
       print(onError);
     });
