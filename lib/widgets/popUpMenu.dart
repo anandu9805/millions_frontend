@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
-import 'package:millions/screens/editPost.dart';
-import 'package:millions/screens/editVideo.dart';
 
 class PopUpMenuIcon extends StatefulWidget {
   // const PopUpMenuIcon({Key key}) : super(key: key);
@@ -13,30 +11,52 @@ class PopUpMenuIcon extends StatefulWidget {
   @override
   _PopUpMenuIconState createState() => _PopUpMenuIconState();
 }
+
 String resultMessage;
 
-  Future<void> delete(String coll, String docID) {
-    return FirebaseFirestore.instance
-        .doc("$coll/$docID")
-        .delete()
-        .then((value) => resultMessage = "Deleted ")
-        .catchError((error) => resultMessage = "Failed to delete ");
-  }
+// void delete(String coll, String docID) async {
+//  await FirebaseFirestore.instance.collection(coll)
+//       .doc(docID)
+//       .delete();
+// }
+
+Future<void> deletenow(String coll, String doc) async{
+  await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
+     myTransaction.delete(FirebaseFirestore.instance.collection(coll)
+      .doc(doc));
+});
+//   await delete(coll, doc).then((value) => print("deleted"));
+}
+
+// void _showToast(BuildContext context, String message) {
+//   final scaffold = ScaffoldMessenger.of(context);
+//   scaffold.showSnackBar(
+//     SnackBar(
+//       content: Text(message),
+//       action: SnackBarAction(
+//         label: 'OK',
+//         onPressed: scaffold.hideCurrentSnackBar,
+//         textColor: primary,
+//       ),
+//     ),
+//   );
+// }
+
 
 //enum MenuOption {a,b,c}
 class _PopUpMenuIconState extends State<PopUpMenuIcon> {
-  String _selection;
+ // String _selection;
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(itemBuilder: (BuildContext context) {
       return <PopupMenuEntry>[
-        PopupMenuItem(
-          child: Text(
-            "Edit",
-            style: GoogleFonts.ubuntu(),
-          ),
-          value: 'edit',
-        ),
+        // PopupMenuItem(
+        //   child: Text(
+        //     "Edit",
+        //     style: GoogleFonts.ubuntu(),
+        //   ),
+        //   value: 'edit',
+        // ),
         PopupMenuItem(
           child: Text("Delete", style: GoogleFonts.ubuntu()),
           value: 'delete',
@@ -44,8 +64,8 @@ class _PopUpMenuIconState extends State<PopUpMenuIcon> {
       ];
     }, onSelected: (value) {
       setState(() {
-        _selection = value;
-        print(_selection);
+        //_selection = value;
+        //print(_selection);
       });
       if (value == "delete") {
         showDialog(
@@ -69,7 +89,13 @@ class _PopUpMenuIconState extends State<PopUpMenuIcon> {
                     "OK",
                     style: GoogleFonts.ubuntu(color: primary),
                   ),
-                  onPressed: () {delete(widget.collection, widget.id);},
+                  onPressed: () {
+                    //print(widget.collection+"--"+widget.id);
+                    deletenow(widget.collection, widget.id).whenComplete(() => print("Deleted Successfully!"));
+                    
+                    Navigator.of(context).pop();  
+                                     
+                  },
                 ),
                 SizedBox(
                   width: 5,
@@ -87,17 +113,18 @@ class _PopUpMenuIconState extends State<PopUpMenuIcon> {
             );
           },
         );
-      } else {
-        widget.collection == "posts"
-            ? Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EditPost(widget.id)),
-              )
-            : Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EditVideo(widget.id)),
-              );
-      }
+      } 
+      // else {
+      //   widget.collection == "posts"
+      //       ? Navigator.push(
+      //           context,
+      //           MaterialPageRoute(builder: (context) => EditPost(widget.id)),
+      //         )
+      //       : Navigator.push(
+      //           context,
+      //           MaterialPageRoute(builder: (context) => EditVideo(widget.id)),
+      //         );
+      // }
     });
   }
 }

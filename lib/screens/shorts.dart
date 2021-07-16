@@ -62,15 +62,19 @@ class _ShortsState extends State<Shorts> {
         stream: FirebaseFirestore.instance.collection('reels').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
+            print("has data");
             reels_objects = snapshot.data.docs.map((doc) {
               Reels reelsItems = Reels.fromMap(doc.data());
 
               return reelsItems;
             }).toList();
+            print(reels_objects);
 
             return Swiper(
               containerWidth: MediaQuery.of(context).size.width,
               itemBuilder: (BuildContext context, int index) {
+                print("reels_objects[index].videoSrc");
+                print(reels_objects[index].videoSrc);
                 return Stack(children: [
                   ContentScreen(
                     src: reels_objects[index].videoSrc,

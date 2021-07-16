@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/screens/home.dart';
 import 'package:millions/widgets/inputField.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class Screen14 extends StatefulWidget {
   @override
@@ -12,25 +15,68 @@ class Screen14 extends StatefulWidget {
 }
 
 class _Screen14State extends State<Screen14> {
-  var name, dname, email, sex, dist, country, place, state;
-
-  String message = "";
+  var name, dname, phone, sex, dist, place, state, countr;
+  List _selectedLanguages;
+  bool countrySelected;
+  //String selectedLanguage = 'English';
+  String selectedCountry;
+  String message;
+  bool waiting;
   //get _usersStream => FirebaseFirestore.instance.collection('users').doc(userId).snapshots();
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  Future<void> updateUser() {
+  Future<void> updateUser() async {
     return users
         .doc(altUserId)
         .update({
           'name': dname.text,
-          'country': country.text,
+          'gender': sex.text,
+          'phone': phone.text,
+          'country': countrySelected?selectedCountry:countr,
           'state': state.text,
           'district': dist.text,
-          'place': place.text
+          'place': place.text,
+          'language' : _selectedLanguages
         })
-        .then((value) => message = "Profile Updated Successfully")
-        .catchError((error) => message = "Failed to update user: $error");
+        .then((value) => setState(() {message = "Profile Updated Successfully";}))
+        .catchError((error) => setState(() {message = "Failed to update user: $error";}));
   }
+
+  Future<void> getDetails() async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(altUserId)
+        .get()
+        .then((value) {
+      name = TextEditingController(text: value['realName']);
+      dname = TextEditingController(text: value['name']);
+      phone = TextEditingController(text: value['phone']);
+      sex = TextEditingController(text: value['gender']);
+      countr = value['country'];
+      state = TextEditingController(text: value['state']);
+      dist = TextEditingController(text: value['district']);
+      place = TextEditingController(text: value['place']);
+      _selectedLanguages = value['language'];
+    });
+  }
+
+// void waitt() async{
+//   await getDetails();
+// }
+
+  @override
+  void initState() {
+    countrySelected=false;
+    message = "";
+    waiting = true;
+    super.initState();
+    getDetails().whenComplete(() => setState(() {
+          waiting = false;
+        }));
+    _selectedLanguages = [];
+  }
+
+  //static final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,69 +88,204 @@ class _Screen14State extends State<Screen14> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 18.0, right: 18, top: 20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Edit Profile",
-                      style: GoogleFonts.ubuntu(
-                          fontSize: 25, fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-                SizedBox(height: 25),
-                FutureBuilder<DocumentSnapshot>(
-                  future: users.doc(altUserId).get(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    if (snapshot.hasError) {
-                      return Text(
-                        "Something went wrong",
-                        style: GoogleFonts.ubuntu(fontSize: 20),
-                      );
-                    }
-
-                    if (snapshot.hasData && !snapshot.data.exists) {
-                      return Text(
-                        "Document does not exist",
-                        style: GoogleFonts.ubuntu(fontSize: 20),
-                      );
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      Map<String, dynamic> data =
-                          snapshot.data.data() as Map<String, dynamic>;
-                      name = TextEditingController(text: data['realName']);
-                      dname = TextEditingController(text: data['name']);
-                      email = TextEditingController(text: data['email']);
-                      sex = TextEditingController(text: data['gender']);
-                      country = TextEditingController(text: data['country']);
-                      state = TextEditingController(text: data['state']);
-                      dist = TextEditingController(text: data['district']);
-                      place = TextEditingController(text: data['place']);
-                      return Column(
+      body: waiting
+          ? Center(
+              child: LoadingBouncingGrid.circle(
+              borderColor: primary,
+              backgroundColor: Colors.white,
+              borderSize: 10,
+              size: 100,
+              duration: Duration(milliseconds: 1800),
+            ))
+          : SingleChildScrollView(
+              child: Container(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 18.0, right: 18, top: 20),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          InputField('Name', name, true),
+                          Text(
+                            "Edit Profile",
+                            style: GoogleFonts.ubuntu(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 25),
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'Name',
+                            style: GoogleFonts.ubuntu(),
+                          ),
+                          InputField('', name, false),
                           SizedBox(height: 15),
-                          InputField('Display Name/Channel Name', dname, false),
+                          Text(
+                            'Display Name/Channel Name',
+                            style: GoogleFonts.ubuntu(),
+                          ),
+                          InputField('', dname, false),
                           SizedBox(height: 15),
-                          InputField('Email', email, true),
+                          Text(
+                            'Phone Number',
+                            style: GoogleFonts.ubuntu(),
+                          ),
+                          InputField('', phone, false),
                           SizedBox(height: 15),
-                          InputField('Sex', sex, true),
+                          Text(
+                            'Sex',
+                            style: GoogleFonts.ubuntu(),
+                          ),
+                          InputField('', sex, false),
                           SizedBox(height: 15),
-                          InputField('Country', country, false),
+                          //InputField('Country', country, false),
+                          Text(
+                            'Video Country',
+                            style: GoogleFonts.ubuntu(),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            //width: 20,
+                            decoration: BoxDecoration(
+                              // color: Colors.transparent,
+                              border: Border.all(
+                                color: primary,
+                                width: 1,
+                              ),
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                showCountryPicker(
+                                  countryListTheme: CountryListThemeData(
+                                      textStyle: GoogleFonts.ubuntu(),
+                                      inputDecoration: InputDecoration(
+                                          focusColor: primary,
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: primary)))),
+                                  context: context,
+                                  showPhoneCode: false,
+                                  // optional. Shows phone code before the country name.
+                                  onSelect: (Country c) {
+                                    //print('Select country: ${country.displayName}');
+                                    setState(() {
+                                      countrySelected = true;
+                                      selectedCountry = c.countryCode;
+                                    });
+                                  },
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.only(top: 20, bottom: 20),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                ),
+                                child: Text(
+                                  countrySelected ? selectedCountry : countr,
+                                  style: GoogleFonts.ubuntu(),
+                                ),
+                              ),
+                            ),
+                          ),
+
                           SizedBox(height: 15),
-                          InputField('State', state, false),
+                          Text(
+                            'State',
+                            style: GoogleFonts.ubuntu(),
+                          ),
+                          InputField('', state, false),
                           SizedBox(height: 15),
-                          InputField('District', dist, false),
+                          Text(
+                            'District',
+                            style: GoogleFonts.ubuntu(),
+                          ),
+                          InputField('', dist, false),
                           SizedBox(height: 15),
-                          InputField('Place', place, false),
+                          Text(
+                            'Place',
+                            style: GoogleFonts.ubuntu(),
+                          ),
+                          InputField('', place, false),
+                          SizedBox(height: 20),
+                          Text(
+                            'Languages',
+                            style: GoogleFonts.ubuntu(),
+                          ),
+                          // Container(
+                          //   padding: EdgeInsets.only(left: 10),
+                          //   //width: 20,
+                          //   decoration: BoxDecoration(
+                          //     // color: Colors.transparent,
+                          //     border: Border.all(
+                          //       color: primary,
+                          //       width: 1,
+                          //     ),
+                          //   ),
+                          //   child: DropdownButton(
+                          //     dropdownColor: Colors.white,
+                          //     elevation: 0,
+                          //     style: GoogleFonts.ubuntu(),
+                          //     // hint: Text('Please choose a location'), // Not necessary for Option 1
+                          //     value: selectedLanguage,
+                          //     onChanged: (newValue) {
+                          //       setState(() {
+                          //         selectedLanguage = newValue.toString();
+                          //       });
+                          //     },
+                          //     items: lanuages.map((lang) {
+                          //       return DropdownMenuItem(
+                          //         child: new Text(
+                          //           lang,
+                          //           style:
+                          //               GoogleFonts.ubuntu(color: Colors.black),
+                          //         ),
+                          //         value: lang,
+                          //       );
+                          //     }).toList(),
+                          //   ),
+                          // ),
+                          //SizedBox(height: 20),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: primary,
+                                width: 1,
+                              ),
+                            ),
+                            child: MultiSelectDialogField(
+                              checkColor: Colors.white,
+                              selectedColor: primary,
+                              itemsTextStyle: GoogleFonts.ubuntu(),
+                              title: Text(
+                                "Select Language",
+                                style: GoogleFonts.ubuntu(),
+                              ),
+                              buttonText: Text("Select Language",
+                                  style: GoogleFonts.ubuntu()),
+                              items: languages
+                                  .map((l) => MultiSelectItem<String>(l, l))
+                                  .toList(),
+                              initialValue: _selectedLanguages,
+                              onConfirm: (val) {
+                                setState(() {
+                                    _selectedLanguages = val;
+                                });
+                              },
+                              chipDisplay: MultiSelectChipDisplay(
+                                chipColor: primary,
+                                textStyle:
+                                    GoogleFonts.ubuntu(color: Colors.white),
+                                items: _selectedLanguages
+                                    .map((e) => MultiSelectItem(e, e))
+                                    .toList(),
+                              ),
+                            ),
+                          ),
                           SizedBox(height: 20),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.9,
@@ -115,25 +296,27 @@ class _Screen14State extends State<Screen14> {
                                       MaterialStateProperty.all(primary)),
                               onPressed: () {
                                 //print(name.text);
-                                updateUser();
+                                updateUser().whenComplete(() => 
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: Text(
                                         "Millions",
-                                        style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold),
+                                        style: GoogleFonts.ubuntu(
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       content: Text(
-                                        //message,
-                                        "Profile Updated Successfully!",
+                                        message,
+                                       // "Profile Updated Successfully!",
                                         style: GoogleFonts.ubuntu(),
                                       ),
                                       actions: [
                                         TextButton(
                                           child: Text(
                                             "OK",
-                                            style: GoogleFonts.ubuntu(color: primary),
+                                            style: GoogleFonts.ubuntu(
+                                                color: primary),
                                           ),
                                           onPressed: () {
                                             Navigator.of(context)
@@ -147,7 +330,7 @@ class _Screen14State extends State<Screen14> {
                                       ],
                                     );
                                   },
-                                );
+                                ));
                               },
                               child: Text(
                                 "Update",
@@ -156,19 +339,12 @@ class _Screen14State extends State<Screen14> {
                             ),
                           ),
                         ],
-                      );
-                    }
-
-                    return CircularProgressIndicator(
-                      color: primary,
-                    );
-                  },
+                      )
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

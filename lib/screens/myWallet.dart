@@ -18,10 +18,114 @@ class MyWallet extends StatefulWidget {
 
 class _MyWalletState extends State<MyWallet> {
   bool withdrawable = false;
+  String phone, email, name, profilepic;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<void> getDetails() async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(altUserId)
+        .get()
+        .then((value) {
+      phone = value['phone'];
+      email = value['email'];
+      name = value['name'];
+      profilepic = value['profilePic'];
+    }).catchError((error) => print("error in retreival"));
+  }
+
+  Future<void> addRequest() async {
+    try {
+      await getDetails();
+      return FirebaseFirestore.instance
+          .collection('wallet-requests')
+          .add({
+            'user': altUserId,
+            'date': Timestamp.now(),
+            'email': email,
+            'isRequestActive': true,
+            'money': int.parse(_textFieldController.text),
+            'name': name,
+            'paid': false,
+            'phoneNumber': phone,
+            'profilePic': profilepic, // 42
+          })
+          .then((value) => _showToast(context, "Request Submitted"))
+          .catchError(
+              (error) => _showToast(context, "Failed to place request $error"));
+    } catch (e) {
+      print("error");
+    }
+  }
+
+  void _showToast(BuildContext context, String message) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: 'OK',
+          onPressed: scaffold.hideCurrentSnackBar,
+          textColor: primary,
+        ),
+      ),
+    );
+  }
+
+  TextEditingController _textFieldController = TextEditingController();
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            'Millions',
+            style: GoogleFonts.ubuntu(),
+          ),
+          content: TextField(
+            cursorColor: primary,
+            style: GoogleFonts.ubuntu(color: Colors.black),
+            controller: _textFieldController,
+            decoration: InputDecoration(
+                labelText: "Enter Amount",
+                focusColor: primary,
+                labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                fillColor: primary,
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: primary)),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: primary))),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'CANCEL',
+                style: GoogleFonts.ubuntu(color: primary),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text(
+                'OK',
+                style: GoogleFonts.ubuntu(color: primary),
+              ),
+              onPressed: () {
+                addRequest();
+                //print(_textFieldController.text);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -62,8 +166,10 @@ class _MyWalletState extends State<MyWallet> {
                     if (snapshot.connectionState == ConnectionState.done) {
                       Map<String, dynamic> data =
                           snapshot.data.data() as Map<String, dynamic>;
-                          Wallet myWallet = Wallet.fromDoc(data);
-
+                      Wallet myWallet = Wallet.fromDoc(data);
+                      myWallet.money > 2000
+                          ? withdrawable = true
+                          : withdrawable = false;
                       return Container(
                         child: myWallet.isActivated
                             ? Column(
@@ -102,7 +208,9 @@ class _MyWalletState extends State<MyWallet> {
                                                       .height *
                                                   0.01,
                                             ),
-                                            Text('₹ '+myWallet.money.toString(),
+                                            Text(
+                                                '₹ ' +
+                                                    myWallet.money.toString(),
                                                 style: GoogleFonts.ubuntu(
                                                     fontSize: 40)),
                                             SizedBox(
@@ -117,11 +225,18 @@ class _MyWalletState extends State<MyWallet> {
                                               animation: true,
                                               lineHeight: 20.0,
                                               animationDuration: 2500,
-                                              percent: 0.02,
+                                              percent: myWallet.money > 2000
+                                                  ? 1.0
+                                                  : myWallet.money / 2000,
                                               trailing: Padding(
                                                 padding: const EdgeInsets.only(
                                                     left: 5),
-                                                child: Text((myWallet.money/20).toString()+"%",
+                                                child: Text(
+                                                    myWallet.money > 2000
+                                                        ? "100%"
+                                                        : (myWallet.money / 20)
+                                                                .toString() +
+                                                            "%",
                                                     style: GoogleFonts.ubuntu(
                                                         color: Colors.black)),
                                               ),
@@ -148,12 +263,16 @@ class _MyWalletState extends State<MyWallet> {
                                             ),
                                             ElevatedButton(
                                                 onPressed: () {
-                                                 
+                                                  if (myWallet.money > 2000) {
+                                                    _displayTextInputDialog(
+                                                        context);
+                                                  }
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                    primary: myWallet.money>2000
-                                                        ? primary
-                                                        : Colors.grey),
+                                                    primary:
+                                                        myWallet.money > 2000
+                                                            ? primary
+                                                            : Colors.grey),
                                                 child: Text(
                                                   'Withdraw',
                                                   style: GoogleFonts.ubuntu(),
@@ -191,62 +310,111 @@ class _MyWalletState extends State<MyWallet> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "₹ 2078",
-                                                    style: GoogleFonts.ubuntu(),
-                                                  ),
-                                                  Text(
-                                                    "32 minutes ago",
-                                                    style: GoogleFonts.ubuntu(),
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.01,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "₹ 5078",
-                                                    style: GoogleFonts.ubuntu(),
-                                                  ),
-                                                  Text(
-                                                    "30 minutes ago",
-                                                    style: GoogleFonts.ubuntu(),
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.01,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "₹ 3768",
-                                                    style: GoogleFonts.ubuntu(),
-                                                  ),
-                                                  Text(
-                                                    "2 months ago",
-                                                    style: GoogleFonts.ubuntu(),
-                                                  )
-                                                ],
+                                              StreamBuilder(
+                                                stream: FirebaseFirestore
+                                                    .instance
+                                                    .collection(
+                                                        'wallet-history')
+                                                    .where('user',
+                                                        isEqualTo:
+                                                            myWallet.user)
+                                                    .snapshots(),
+                                                builder: (BuildContext context,
+                                                    AsyncSnapshot<QuerySnapshot>
+                                                        snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                      color: primary,
+                                                    ));
+                                                  }
+                                                  if (snapshot
+                                                      .data.docs.isEmpty) {
+                                                    return Center(
+                                                      child: Text(
+                                                        "No transactions to show!",
+                                                        style:
+                                                            GoogleFonts.ubuntu(
+                                                                fontSize: 15),
+                                                      ),
+                                                    );
+                                                  }
+                                                  if (snapshot.hasData) {
+                                                    return new ListView(
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      children: snapshot
+                                                          .data.docs
+                                                          .map((doc) {
+                                                        int amount =
+                                                            doc['money'];
+                                                        bool deposited =
+                                                            doc['deposited'];
+                                                        Timestamp time =
+                                                            doc['date'];
+
+                                                        return Column(
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  "₹ " +
+                                                                      amount
+                                                                          .toString(),
+                                                                  style: GoogleFonts
+                                                                      .ubuntu(),
+                                                                ),
+                                                                Text(
+                                                                  DateTime.now()
+                                                                              .difference(time
+                                                                                  .toDate())
+                                                                              .inDays ==
+                                                                          0
+                                                                      ? (DateTime.now().difference(time.toDate()).inHours ==
+                                                                              0
+                                                                          ? (DateTime.now().difference(time.toDate()).inMinutes.toString() +
+                                                                              " minutes ago")
+                                                                          : DateTime.now().difference(time.toDate()).inHours.toString() +
+                                                                              " hours ago")
+                                                                      : DateTime.now()
+                                                                              .difference(time.toDate())
+                                                                              .inDays
+                                                                              .toString() +
+                                                                          " days ago",
+                                                                  style: GoogleFonts
+                                                                      .ubuntu(),
+                                                                )
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.01,
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  } else {
+                                                    return Center(
+                                                      child: Text(
+                                                        "Unknown Error Occured!",
+                                                        style:
+                                                            GoogleFonts.ubuntu(
+                                                                fontSize: 15),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
                                               ),
                                             ]),
                                       ),
@@ -257,7 +425,7 @@ class _MyWalletState extends State<MyWallet> {
                                               0.02,
                                     ),
                                     Text(
-                                      "Active Requests",
+                                      "Withdraw Requests",
                                       style: GoogleFonts.ubuntu(
                                         color: Colors.black,
                                         fontSize: 20,
@@ -280,31 +448,121 @@ class _MyWalletState extends State<MyWallet> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "₹ 200",
-                                                  style: GoogleFonts.ubuntu(),
-                                                ),
-                                                Text(
-                                                  "Requested",
-                                                  style: GoogleFonts.ubuntu(
-                                                      color: primary),
-                                                )
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.01,
-                                            ),
-                                            Text(
-                                              'Requested 2 months ago',
-                                              style: GoogleFonts.ubuntu(),
+                                            StreamBuilder(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection('wallet-requests')
+                                                  .where('user',
+                                                      isEqualTo: myWallet.user)
+                                                  .snapshots(),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot<QuerySnapshot>
+                                                      snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return Center(
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                    color: primary,
+                                                  ));
+                                                }
+                                                if (snapshot
+                                                    .data.docs.isEmpty) {
+                                                  return Center(
+                                                    child: Text(
+                                                      "No requests to show!",
+                                                      style: GoogleFonts.ubuntu(
+                                                          fontSize: 15),
+                                                    ),
+                                                  );
+                                                }
+                                                if (snapshot.hasData) {
+                                                  return new ListView(
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    children: snapshot.data.docs
+                                                        .map((doc) {
+                                                      int money = doc['money'];
+                                                      Timestamp time =
+                                                          doc['date'];
+                                                      bool isRequestActive =
+                                                          doc['isRequestActive'];
+                                                      return Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                "₹ " +
+                                                                    money
+                                                                        .toString(),
+                                                                style: GoogleFonts
+                                                                    .ubuntu(),
+                                                              ),
+                                                              Text(
+                                                                isRequestActive
+                                                                    ? "Requested"
+                                                                    : "Rejected",
+                                                                style: GoogleFonts
+                                                                    .ubuntu(
+                                                                        color:
+                                                                            primary),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.01,
+                                                          ),
+                                                          Text(
+                                                             DateTime.now()
+                                                                              .difference(time
+                                                                                  .toDate())
+                                                                              .inDays ==
+                                                                          0
+                                                                      ? (DateTime.now().difference(time.toDate()).inHours ==
+                                                                              0
+                                                                          ? (DateTime.now().difference(time.toDate()).inMinutes.toString() +
+                                                                              " minutes ago")
+                                                                          : DateTime.now().difference(time.toDate()).inHours.toString() +
+                                                                              " hours ago")
+                                                                      : DateTime.now()
+                                                                              .difference(time.toDate())
+                                                                              .inDays
+                                                                              .toString() +
+                                                                          " days ago",
+                                                            style: GoogleFonts
+                                                                .ubuntu(),
+                                                          ),
+                                                          SizedBox(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.025,
+                                                          ),
+                                                        ],
+                                                      );
+                                                    }).toList(),
+                                                  );
+                                                } else {
+                                                  return Center(
+                                                    child: Text(
+                                                      "Unknown Error Occured!",
+                                                      style: GoogleFonts.ubuntu(
+                                                          fontSize: 15),
+                                                    ),
+                                                  );
+                                                }
+                                              },
                                             ),
                                             Divider(
                                               color: Colors.black,
