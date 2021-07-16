@@ -32,27 +32,25 @@ class _PlayVideoState extends State<PlayVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: Container(
-        // height: 200,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FlickVideoPlayer(
-              flickManager: flickManager,
-              // flickVideoWithControls: FlickVideoWithControls(
-              //   playerLoadingFallback: Center(
-              //     child: CircularProgressIndicator(),
-              //   ),
-              //   playerErrorFallback: const Center(
-              //     child: const Icon(Icons.error, color: Colors.white),
-              //   ),
-              //   videoFit: BoxFit.cover,
-              // ),
-            )
-          ],
-        ),
+    return Container(
+      height: 200,
+      padding: EdgeInsets.all(0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FlickVideoPlayer(
+            flickManager: flickManager,
+            // flickVideoWithControls: FlickVideoWithControls(
+            //   playerLoadingFallback: Center(
+            //     child: CircularProgressIndicator(),
+            //   ),
+            //   playerErrorFallback: const Center(
+            //     child: const Icon(Icons.error, color: Colors.white),
+            //   ),
+            //   videoFit: BoxFit.cover,
+            // ),
+          )
+        ],
       ),
     );
   }

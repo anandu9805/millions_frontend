@@ -35,22 +35,17 @@ class _VideoCardState extends State<VideoCard> {
       child: Container(
         child: Column(
           children: [
-
             Stack(
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(),
                   child: Image.network(
-
-                    widget.video.thumbnailUrl.isEmpty == null ||
-                            widget.video.thumbnailUrl == '' ||
-                            widget.video.thumbnailUrl.isEmpty
+                    widget.video.thumbnailUrl == null
                         ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
                         : widget.video.thumbnailUrl,
-
                     fit: BoxFit.cover,
-                    errorBuilder: (context, url, error) => new Icon(Icons.error),
-                    
+                    errorBuilder: (context, url, error) =>
+                        new Icon(Icons.error),
                   ),
                 ),
               ],
@@ -94,7 +89,9 @@ class _VideoCardState extends State<VideoCard> {
                     ),
                   ),
                   //PopUpMenuIcon(""),
-                  widget.video.channelId==altUserId?PopUpMenuIcon("videos", widget.video.id):Row(),
+                  widget.video.channelId == altUserId
+                      ? PopUpMenuIcon("videos", widget.video.id)
+                      : Row(),
                 ],
               ),
             )

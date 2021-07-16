@@ -6,9 +6,17 @@ import 'package:millions/model/video.dart';
 import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/services/commentServices.dart';
+import 'package:millions/services/likeServices.dart';
+import 'package:millions/services/report-services.dart';
 import 'package:millions/widgets/ads.dart';
 import 'package:millions/widgets/comments.dart';
 import 'package:millions/widgets/playVideo.dart';
+
+class ReasonList {
+  String reason;
+  int index;
+  ReasonList({this.reason, this.index});
+}
 
 class ViewVideo extends StatefulWidget {
   final Video video;
@@ -22,10 +30,52 @@ class ViewVideo extends StatefulWidget {
 class _ViewVideoState extends State<ViewVideo> {
   FlickManager flickManager;
   bool playState = false;
+  bool liked= false;
+  String likeId;
+  String userId = "XIi08ww5Fmgkv7FXOSTkOcmVh2C3";
+
+  // Default Radio Button Selected Item.
+  String radioItemHolder = 'One';
+
+  // Group Value for Radio Button.
+  int id = 1;
+
+  List<ReasonList> nList = [
+    ReasonList(
+      index: 1,
+      reason: "One",
+    ),
+    ReasonList(
+      index: 2,
+      reason: "Two",
+    ),
+    ReasonList(
+      index: 3,
+      reason: "Three",
+    ),
+    ReasonList(
+      index: 4,
+      reason: "Four",
+    ),
+    ReasonList(
+      index: 5,
+      reason: "Five",
+    ),
+  ];
 
   @override
   void initState() {
     super.initState();
+    likeId = userId + '_' + widget.video.id;
+    Future<DocumentSnapshot> likedData = LikeServices().likeChecker(likeId);
+    likedData.then((value) {
+      setState(() {
+        liked = value.get('liked') || false;
+        liked = liked ?? false;
+      });
+    });
+    print(liked);
+    print("liked");
   }
 
   @override
@@ -110,31 +160,52 @@ class _ViewVideoState extends State<ViewVideo> {
                 children: [
                   Column(
                     children: [
-                      IconButton(
-                        onPressed: () {
-
-                          
-                        },//---------------------------------------------------
-                        icon: Icon(Icons.thumb_up),
-                      ),
+                      liked == true
+                          ? IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  liked = !liked;
+                                });
+                                LikeServices().unLikeVideo(
+                                    widget.video.id, userId, userId);
+                              }, //---------------------------------------------------
+                              icon: Icon(
+                                Icons.thumb_up,
+                              ),
+                            )
+                          : IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  liked = !liked;
+                                });
+                                LikeServices()
+                                    .likeVideo(widget.video.id, userId, userId);
+                              }, //----------------------
+                              icon: Icon(
+                                Icons.thumb_up_alt_outlined,
+                              ),
+                            ),
                       Text(
                         "${widget.video.likes}",
                         style: TextStyle(height: 0.3, fontSize: 10),
                       )
                     ],
                   ),
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.thumb_down),
-                      ),
-                      Text(
-                        "${widget.video.disLikes}",
-                        style: TextStyle(height: 0.3, fontSize: 10),
-                      )
-                    ],
-                  ),
+                  // Column(
+                  //   children: [
+                  //     IconButton(
+                  //       onPressed: () {
+                  //         LikeServices()
+                  //             .unLikeVideo(widget.video.id, userId, userId);
+                  //       },
+                  //       icon: Icon(Icons.thumb_down),
+                  //     ),
+                  //     Text(
+                  //       "${widget.video.disLikes}",
+                  //       style: TextStyle(height: 0.3, fontSize: 10),
+                  //     )
+                  //   ],
+                  // ),
                   Column(
                     children: [
                       IconButton(
@@ -152,16 +223,83 @@ class _ViewVideoState extends State<ViewVideo> {
                   Column(
                     children: [
                       IconButton(
-                          onPressed: () {}, icon: Icon(Icons.bookmark_add)),
-                      Text(
-                        "Save",
-                        style: TextStyle(height: 0.3, fontSize: 10),
-                      )
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(onPressed: () {}, icon: Icon(Icons.flag)),
+                          onPressed: () {
+                            print(123);
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Flexible(
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.6,
+                                      child: SimpleDialog(
+                                        children: [
+                                          ListView.builder(
+                                            shrinkWrap: true,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Text(nList[index].reason);
+                                            },
+                                            itemCount: nList.length,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                });
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (BuildContext context) {
+                            //       return Container(
+                            //         child: Column(
+                            //           children: [
+                            //             SimpleDialog(
+                            //               title: Row(
+                            //                 mainAxisAlignment:
+                            //                     MainAxisAlignment.spaceBetween,
+                            //                 children: <Widget>[
+                            //                   Column(
+                            //                     children: nList
+                            //                         .map((data) =>
+                            //                             RadioListTile(
+                            //                               title: Text(
+                            //                                   "${data.reason}"),
+                            //                               groupValue: id,
+                            //                               value: data.index,
+                            //                               onChanged: (val) {
+                            //                                 setState(() {
+                            //                                   radioItemHolder =
+                            //                                       data.reason;
+                            //                                   id = data.index;
+                            //                                 });
+                            //                               },
+                            //                             ))
+                            //                         .toList(),
+                            //                   ),
+                            //                   new ElevatedButton(
+                            //                     onPressed: () {
+                            //                       ReportServices().reportVideo(
+                            //                           widget.video,
+                            //                           radioItemHolder);
+                            //                     },
+                            //                     child: new Text(
+                            //                       "Done",
+                            //                       style: TextStyle(
+                            //                           color: Colors.white),
+                            //                     ),
+                            //                   )
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       );
+                            //     });
+                            ReportServices()
+                                .reportVideo(widget.video, "inappropriate");
+                          },
+                          icon: Icon(Icons.flag)),
                       Text(
                         "Report",
                         style: TextStyle(height: 0.3, fontSize: 10),
@@ -236,7 +374,10 @@ class _ViewVideoState extends State<ViewVideo> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Comments(videoId: widget.video.id.toString(),)),
+                          MaterialPageRoute(
+                              builder: (context) => Comments(
+                                    videoId: widget.video.id.toString(),
+                                  )),
                         );
                       },
                       child: Text(
