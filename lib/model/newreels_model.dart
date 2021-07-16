@@ -11,15 +11,15 @@ class NewReel {
   File video;
 
   NewReel(
-      String title,
-      String description,
-      String country,
-      String language,
-      String commentallowed,
-      String visibility,
-      String category,
-      File video,
-      ) {
+    String title,
+    String description,
+    String country,
+    String language,
+    String commentallowed,
+    String visibility,
+    String category,
+    File video,
+  ) {
     this.title = title;
     this.description = description;
     this.country = country;
@@ -30,3 +30,4 @@ class NewReel {
     this.video = video;
   }
 }
+

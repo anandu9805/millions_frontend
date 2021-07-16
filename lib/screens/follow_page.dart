@@ -21,7 +21,7 @@ class Screen9 extends StatefulWidget {
 }
 
 class _Screen9State extends State<Screen9> {
-  UserDetail user;
+ UserDetail user;
   List followersId = [];
   @override
   Widget build(BuildContext context) {
@@ -29,9 +29,11 @@ class _Screen9State extends State<Screen9> {
     var w = MediaQuery.of(context).size.width;
     List d = [];
     Map<String, dynamic> channeldata;
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: StreamBuilder(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('followers')
               .where('follower', isEqualTo: altUserId)
@@ -48,14 +50,18 @@ class _Screen9State extends State<Screen9> {
                 followersId.add(d[temp]['channel']);
                 temp = temp - 1;
               }
-              //print(followersId);
+              print(followersId);
+              if(followersId.isEmpty)
+              return Center(child: Text("You are not following any channels!", style: GoogleFonts.ubuntu(fontSize: 20),));
               CollectionReference channels =
                   FirebaseFirestore.instance.collection('channels');
               return Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
+                        
                         width: MediaQuery.of(context).size.width,
                         height: h * 0.16,
                         child: ListView.builder(
@@ -87,8 +93,9 @@ class _Screen9State extends State<Screen9> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) => Page8(
-                                                        d[index]['channel'])),
+                                                    builder: (context) =>
+                                                        Page8(d[index]
+                                                            ['channel'])),
                                               );
                                             },
                                             child: CircleAvatar(
@@ -144,83 +151,223 @@ class _Screen9State extends State<Screen9> {
                               fontSize: 25, color: Colors.black54),
                         )),
                   ),
-                  followersId.isNotEmpty
-                      ? StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection("posts")
-                              .where("isVisible", isEqualTo: "Public")
-                              .where('channelId', whereIn: followersId)
-                              .orderBy("date", descending: true)
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.hasData) {
-                              //print(snapshot.data.size);
-                              return ListView(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                children: snapshot.data.docs.map((doc) {
-                                  PostDetail photoItems =
-                                      PostDetail.fromMap(doc.data());
-                                  return Container(
-                                    child: Photos(photoItems),
-                                  );
-                                }).toList(),
-                              );
-                            } else {
-                              print(123);
-                              return Container(
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: primary,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          // future: VideoServices.getAllVideos(),
-                        )
-                      : Text(""),
-                  followersId.isNotEmpty
-                      ? StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('videos')
-                              .where("isVisible", isEqualTo: "Public")
-                              .where('channelId', whereIn: followersId)
-                              .orderBy("date", descending: true)
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.hasData) {
-                              return ListView(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                children: snapshot.data.docs.map((doc) {
-                                  Video videoItems = Video.fromMap(doc.data());
-                                  return VideoCard(
-                                    video: videoItems,
-                                  );
-                                }).toList(),
-                              );
-                            } else {
-                              print(123);
-                              return Container(
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: primary,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          // future: VideoServices.getAllVideos(),
-                        )
-                      : Text('')
+                  SizedBox(
+                    height: 50,
+                    child: AppBar(
+                      backgroundColor: Colors.white,
+                      bottom: TabBar(
+                        indicatorColor: primary,
+                        tabs: [
+                          Tab(
+                            child: Text('Videos',
+                                style: GoogleFonts.ubuntu(color: Colors.black)),
+                          ),
+                          Tab(
+                            child: Text('Posts',
+                                style: GoogleFonts.ubuntu(color: Colors.black)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        // first tab bar view widget
+                        SingleChildScrollView(
+                          child: StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('videos')
+                                .where("isVisible", isEqualTo: "Public")
+                                .where('channelId', whereIn: followersId)
+                                .orderBy("date", descending: true)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    child: Center(
+                                        child: CircularProgressIndicator(
+                                      color: primary,
+                                    )));
+                              }
+                              if (snapshot.data.docs.isEmpty) {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    child: Center(
+                                        child: Text("No videos to show!",
+                                            style: GoogleFonts.ubuntu(
+                                                fontSize: 15))));
+                              }
+                              if (snapshot.hasData) {
+                                return new ListView(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  children: snapshot.data.docs.map((doc) {
+                                    Video videoItems =
+                                        Video.fromMap(doc.data());
+                                    return VideoCard(
+                                      video: videoItems,
+                                    );
+                                  }).toList(),
+                                );
+                              } else {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    child: Center(
+                                        child: Text("Unknown Error Occured!",
+                                            style: GoogleFonts.ubuntu(
+                                                fontSize: 15))));
+                              }
+                            },
+                          ),
+                        ),
+
+                        // second tab bar viiew widget
+                        SingleChildScrollView(
+                          child: StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("posts")
+                                .where("isVisible", isEqualTo: "Public")
+                                .where('channelId', whereIn: followersId)
+                                .orderBy("date", descending: true)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    child: Center(
+                                        child: CircularProgressIndicator(
+                                      color: primary,
+                                    )));
+                              }
+                              if (snapshot.data.docs.isEmpty) {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    child: Center(
+                                        child: Text("No posts to show!",
+                                            style: GoogleFonts.ubuntu(
+                                                fontSize: 15))));
+                              }
+                              if (snapshot.hasData) {
+                                return new ListView(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  children: snapshot.data.docs.map((doc) {
+                                    PostDetail photoItems =
+                                        PostDetail.fromMap(doc.data());
+                                    return Container(
+                                      child: Photos(photoItems),
+                                    );
+                                  }).toList(),
+                                );
+                              } else {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    child: Center(
+                                        child: Text("Unknown Error Occured!",
+                                            style: GoogleFonts.ubuntu(
+                                                fontSize: 15))));
+                              }
+                            },
+                          ),
+                        ),
+                        // Container(
+                        //     height: MediaQuery.of(context).size.height * 0.25,
+                        //     child: Center(
+                        //       child: ElevatedButton(
+                        //         style:
+                        //             ElevatedButton.styleFrom(primary: primary),
+                        //         onPressed: () {
+                        //           // Navigator.push(
+                        //           //   context,
+                        //           //   MaterialPageRoute(
+                        //           //       builder: (context) =>
+                        //           //           ChannelShorts(widget.channelId)),
+                        //           // );
+                        //         },
+                        //         child: Text(
+                        //           "View all 30s of this channel",
+                        //           style: GoogleFonts.ubuntu(fontSize: 15),
+                        //         ),
+                        //       ),
+                        //     ))
+                        // SingleChildScrollView(
+                        //   child: StreamBuilder(
+                        //     stream: FirebaseFirestore.instance
+                        //         .collection('reels')
+                        //         .where('channelId', isEqualTo: altUserId)
+                        //         .snapshots(),
+                        //     builder: (BuildContext context,
+                        //         AsyncSnapshot<QuerySnapshot> snapshot) {
+                        //       if (snapshot.connectionState ==
+                        //           ConnectionState.waiting) {
+                        //         return Container(
+                        //             height: MediaQuery.of(context).size.height * 0.25,
+                        //             child: Center(
+                        //                 child: CircularProgressIndicator(
+                        //               color: primary,
+                        //             )));
+                        //       }
+                        //       if (snapshot.data.docs.isEmpty) {
+                        //         return Container(
+                        //             height: MediaQuery.of(context).size.height * 0.25,
+                        //             child: Center(
+                        //                 child: Text("No 30s to show!",
+                        //                     style:
+                        //                         GoogleFonts.ubuntu(fontSize: 15))));
+                        //       }
+                        //       if (snapshot.hasData) {
+                        //         return new ListView(
+                        //           physics: NeverScrollableScrollPhysics(),
+                        //           shrinkWrap: true,
+                        //           children: snapshot.data.docs.map((doc) {
+                        //             Reels reelsItems = Reels.fromMap(doc.data());
+                        //             return InkWell(
+                        //               onTap: () {
+                        //                 Navigator.push(
+                        //                   context,
+                        //                   MaterialPageRoute(
+                        //                       builder: (context) => ContentScreen(
+                        //                           src: reelsItems.videoSrc)),
+                        //                 );
+                        //               },
+                        //               child: Image.network(
+                        //                   reelsItems.generatedThumbnail),
+                        //             );
+                        //           }).toList(),
+                        //         );
+                        //       } else {
+                        //         return Container(
+                        //             height: MediaQuery.of(context).size.height * 0.25,
+                        //             child: Center(
+                        //                 child: Text("Unknown Error Occured!",
+                        //                     style:
+                        //                         GoogleFonts.ubuntu(fontSize: 15))));
+                        //       }
+                        //     },
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ),
                 ],
               );
             } else {
-              return CircularProgressIndicator(
-                color: primary,
+              return Center(
+                child: CircularProgressIndicator(
+                  color: primary,
+                ),
               );
             }
           },

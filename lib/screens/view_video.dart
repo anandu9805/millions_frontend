@@ -61,12 +61,7 @@ class _ViewVideoState extends State<ViewVideo> {
               child: CircleAvatar(
                 backgroundColor: Colors.black,
               ),
-              onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Page8()),
-                // );
-              },
+              onTap: () {},
             ),
           )
         ],
@@ -111,10 +106,8 @@ class _ViewVideoState extends State<ViewVideo> {
                   Column(
                     children: [
                       IconButton(
-                        onPressed: () {
-
-                          
-                        },//---------------------------------------------------
+                        onPressed:
+                            () {}, //---------------------------------------------------
                         icon: Icon(Icons.thumb_up),
                       ),
                       Text(
@@ -186,9 +179,19 @@ class _ViewVideoState extends State<ViewVideo> {
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Row(
                           children: [
-                            CircleAvatar(
-                              foregroundImage:
-                                  NetworkImage(widget.video.thumbnailUrl),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          Page8(widget.video.channelId)),
+                                );
+                              },
+                              child: CircleAvatar(
+                                foregroundImage:
+                                    NetworkImage(widget.video.thumbnailUrl),
+                              ),
                             ),
                             SizedBox(width: 10),
                             Text("${widget.video.channelName}"),
@@ -236,7 +239,10 @@ class _ViewVideoState extends State<ViewVideo> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Comments(videoId: widget.video.id.toString(),)),
+                          MaterialPageRoute(
+                              builder: (context) => Comments(
+                                    videoId: widget.video.id.toString(),
+                                  )),
                         );
                       },
                       child: Text(
