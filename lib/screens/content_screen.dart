@@ -48,9 +48,11 @@ class _ContentScreenState extends State<ContentScreen> {
 
    return  _chewieController != null &&
               _chewieController.videoPlayerController.value.isInitialized
-          ?  Chewie(
-                controller: _chewieController,
-              )
+          ?  Container(color: Colors.black,
+            child: Chewie(
+                  controller: _chewieController,
+                ),
+          )
 
 
           : Center(

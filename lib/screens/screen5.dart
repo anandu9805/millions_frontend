@@ -57,7 +57,8 @@ class _Screen5State extends State<Screen5> {
             //height: (h) * 1 / 8.5,
           ),
           StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('videos').where('channelId', isNotEqualTo: altUserId).snapshots(),
+            stream: FirebaseFirestore.instance.collection('videos')//.where('channelId', isNotEqualTo: altUserId)
+                .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {

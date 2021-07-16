@@ -39,6 +39,7 @@ dependencies:
   loading_animations: ^2.1.0
   flutter_ffmpeg: ^0.4.0
   video_thumbnail: ^0.3.3
+  flutter_video_info: ^1.2.0
 
 
   image_picker: ^0.7.0
@@ -53,6 +54,7 @@ dependencies:
 
   url_launcher: ^6.0.9
   percent_indicator: ^3.0.1
+  video_trimmer: ^0.5.2
 
 
 
