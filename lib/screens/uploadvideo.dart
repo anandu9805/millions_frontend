@@ -72,6 +72,26 @@ class _UploadPageState extends State<UploadPage> {
     });
     getCurrentUserChannelDetails();
   }
+  void _thumbnailfromgallery() async {
+    final _picker = ImagePicker();
+
+    PickedFile pickedImageFile = await _picker.getImage(
+        source: ImageSource.gallery,
+        imageQuality: 100,
+        maxWidth: 3000,
+        maxHeight: 4000);
+
+   // fileName = pickedImageFile.path.split('/').last;
+
+    //print(fileName);
+
+    setState(() {
+      thumbanil = File(pickedImageFile.path);
+      //  print(_imageFile);
+
+    //  uploadComplete = true;
+    });
+  }
 
   void _fromgallery() async {
     final _picker = ImagePicker();
@@ -91,6 +111,7 @@ class _UploadPageState extends State<UploadPage> {
       // print(controller.value.duration.toString());
 
       thumbanil = thumbanil_temp;
+      thumnail_image_name = thumbanil.path.split('/').last;
       uploadComplete = true;
     });
   }
@@ -124,8 +145,9 @@ class _UploadPageState extends State<UploadPage> {
           .get()
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((doc) {
-          //print("in");
-          if (doc['id'] == currentuserid) currentUserChannelDetails.add(doc);
+          print("doc['id]");
+          print(doc['id']);
+          if (doc['id'] ==currentuserid) currentUserChannelDetails.add(doc);
         });
         print("currentUserChannelDetails");
         print(currentUserChannelDetails[0]['email']);
@@ -187,6 +209,8 @@ class _UploadPageState extends State<UploadPage> {
             .collection('videos')
             .doc(); //to get the id of the document we are going to create in the collection
         print("hello2");
+        print("currentUserChannelDetails");
+        print(currentUserChannelDetails);
         print(currentUserChannelDetails[0]['channelName']);
         await FirebaseFirestore.instance
             .collection('videos')
@@ -200,7 +224,7 @@ class _UploadPageState extends State<UploadPage> {
           'date': DateTime.now(),
           'description': videoslist[0].description,
           'disLikes': 0,
-          'duration': (info.duration/1000).round(), //calculate
+          'duration': (info.duration / 1000).round(), //calculate
           'generatedThumbnail': thumbnail_url, //generate
           'id': newId.id,
           'isComments': videoslist[0].commentallowed,
@@ -237,18 +261,18 @@ class _UploadPageState extends State<UploadPage> {
   @override
   Widget build(BuildContext context) {
     //print("_videoFile $_videoFile");
-    return _isLoading
-        ? Center(
-            child: LoadingBouncingGrid.circle(
-            borderColor: primary,
-            backgroundColor: Colors.white,
-            borderSize: 10,
-            size: 100,
-            duration: Duration(milliseconds: 1800),
-          ))
-        : Scaffold(
+    return Scaffold(
             key: scaffoldKey,
-            body: SingleChildScrollView(
+            body:_isLoading
+                ? Center(
+                child: LoadingBouncingGrid.circle(
+                  borderColor: primary,
+                  backgroundColor: Colors.white,
+                  borderSize: 10,
+                  size: 100,
+                  duration: Duration(milliseconds: 1800),
+                ))
+                :  SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -382,6 +406,22 @@ class _UploadPageState extends State<UploadPage> {
                       ),
                     ),
                   ),
+                if(  thumbanil != null)
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        //--------------------
+                        _thumbnailfromgallery();
+                      },
+                      style: ElevatedButton.styleFrom(primary: primary),
+                      child: Text(
+                        'Upload custom thumbnail',
+                        style: GoogleFonts.ubuntu(),
+                      ),
+                    ),
+                  ),
+
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
                     child: Text(
@@ -674,6 +714,7 @@ class _UploadPageState extends State<UploadPage> {
                       ),
                     ),
                   ),
+
 
                   uploadComplete
                       ? Padding(
