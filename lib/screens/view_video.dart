@@ -408,12 +408,19 @@ class _ViewVideoState extends State<ViewVideo> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           children: snapshot.data.docs.map((doc) {
-                            CommentModel comment =
-                                CommentModel.fromMap(doc.data());
-                            return Comment(
-                              comment: comment,
-                            );
-                          }).toList(),
+                          CommentModel comment =
+                              CommentModel.fromMap(doc.data());
+                          List<QueryDocumentSnapshot<Object>> replyComments =
+                              snapshot.data.docs
+                                  .where((o) =>
+                                      o['commentId'] ==
+                                      'reply-' + comment.commentId)
+                                  .toList();
+                          return Comment(
+                            comment: comment,
+                            replies: replyComments
+                          );
+                        }).toList(),
                         );
                       } else {
                         return Container(

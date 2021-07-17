@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/newpost_model.dart';
+import 'package:millions/services/likeServices.dart';
 import 'package:millions/widgets/popUpMenu.dart';
 import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
 import 'package:millions/screens/comment_screen.dart';
@@ -27,6 +29,21 @@ class _PhotosState extends State<Photos> {
   Color favIconColor = Colors.black;
 
   IconData like = Icons.favorite_border;
+  bool liked = false;
+  String currentuserid = "4C4iLByizTPLBBlP4rssrwGTISb2";
+  String likeId;
+  @override
+  void initState() {
+    super.initState();
+    likeId = currentuserid + '_' + widget.photo.id;
+    Future<DocumentSnapshot> likeData = LikeServices().postLikeChecker(likeId);
+    likeData.then((value) {
+      setState(() {
+        liked = value.get('liked') == true ? true : false;
+      });
+    });
+    print(liked);
+  }
 
   // List<Content> content = [
   //   Content(
@@ -109,15 +126,27 @@ class _PhotosState extends State<Photos> {
               SizedBox(height: 5),
               InkWell(
                 onDoubleTap: () {
-                  setState(() {
-                    if (favIconColor == Colors.black) {
+                  if (liked == true) {
+                    print(0);
+                    setState(() {
                       like = Icons.favorite;
                       favIconColor = primary;
-                    } else {
+                      liked = !liked;
+                    });
+                    LikeServices().likePost(
+                        widget.photo.id, currentuserid, currentuserid);
+                  } else {
+                    print(1);
+
+                    setState(() {
+                      liked = !liked;
                       like = Icons.favorite_outline;
                       favIconColor = Colors.black;
-                    }
-                  });
+                    });
+
+                    LikeServices().unLikePost(
+                        widget.photo.id, currentuserid, currentuserid);
+                  }
                   // Navigator.push(
                   //   context,
                   //   MaterialPageRoute(builder: (context) => ViewVideo()),
@@ -144,23 +173,32 @@ class _PhotosState extends State<Photos> {
                 children: [
                   Row(
                     children: [
-                      // SizedBox(width: 16),
-                      InkWell(
-                        child: Icon(
-                          like,
-                          color: favIconColor,
-                        ),
-                        onTap: () {
-                          setState(() {
-                            if (favIconColor == Colors.black) {
-                              like = Icons.favorite;
-                              favIconColor = primary;
+                      Container(
+                        child: GestureDetector(
+                          child: Icon(
+                            like,
+                            color: favIconColor,
+                          ),
+                          onTap: () {
+                            if (liked == true) {
+                              setState(() {
+                                liked=!liked;
+                                like = Icons.favorite;
+                                favIconColor = primary;
+                              });
+                              LikeServices().likePost(
+                                  widget.photo.id, currentuserid, currentuserid);
                             } else {
-                              like = Icons.favorite_outline;
-                              favIconColor = Colors.black;
+                              setState(() {
+                                liked=!liked;
+                                like = Icons.favorite_outline;
+                                favIconColor = Colors.black;
+                              });
+                              LikeServices().unLikePost(
+                                  widget.photo.id, currentuserid, currentuserid);
                             }
-                          });
-                        },
+                          },
+                        ),
                       ),
                       SizedBox(width: 16),
                       Icon(Icons.share_outlined),
@@ -181,7 +219,9 @@ class _PhotosState extends State<Photos> {
                       )
                     ],
                   ),
-                  widget.photo.channelId==altUserId?PopUpMenuIcon("posts", widget.photo.id):Row()
+                  widget.photo.channelId == altUserId
+                      ? PopUpMenuIcon("posts", widget.photo.id)
+                      : Row()
                 ],
               ),
               SizedBox(height: 10),
@@ -195,7 +235,7 @@ class _PhotosState extends State<Photos> {
                   ),
                   Expanded(
                       child: Text(
-                        "Post By "+widget.photo.channelName,
+                    widget.photo.description,
                     //widget.photo.title,
 
                     //content[this.widget.index].tagLine,

@@ -61,7 +61,7 @@ class LikeServices {
         .get();
   }
 
-  reelsLikeVideo(String videoId, String channelId, String userId) async {
+  likeReels(String videoId, String channelId, String userId) async {
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
     await FirebaseFirestore.instance
         .collection('reels-likes')
@@ -82,7 +82,7 @@ class LikeServices {
     );
   }
 
-  reelsUnLikeVideo(String videoId, String channelId, String userId) async {
+  unLikeReels(String videoId, String channelId, String userId) async {
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
     // print(userId + '_' + videoId);
     await FirebaseFirestore.instance
@@ -97,6 +97,58 @@ class LikeServices {
         'link': "reels/" + videoId,
         'source': "videos",
         'video': videoId
+      },
+      SetOptions(
+        merge: true,
+      ),
+    );
+  }
+
+
+  Future<DocumentSnapshot> postLikeChecker(String likeId) async {
+    // print(likeId);
+    return await FirebaseFirestore.instance
+        .collection('video-likes')
+        .doc(likeId)
+        .get();
+  }
+
+  likePost(String postId, String channelId, String userId) async {
+    // var newId = FirebaseFirestore.instance.collection('reports').doc();
+    await FirebaseFirestore.instance
+        .collection('video-likes')
+        .doc(userId + '_' + postId)
+        .set(
+      {
+        'channel': channelId,
+        'date': DateTime.now(),
+        'follower': userId,
+        'liked': true,
+        'link': 'posts/' + postId,
+        'source': 'posts',
+        'video': postId
+      },
+      SetOptions(
+        merge: true,
+      ),
+    );
+  }
+
+  unLikePost(String postId, String channelId, String userId) async {
+    // var newId = FirebaseFirestore.instance.collection('reports').doc();
+    // print(userId + '_' + postId);
+    await FirebaseFirestore.instance
+        .collection('video-likes')
+        .doc(userId + '_' + postId)
+        .set(
+      {
+        'channel': channelId,
+        'date': DateTime.now(),
+        'follower': userId,
+        'liked': false,
+        'link': "posts/" + postId,
+        'source': "posts",
+        'video': postId
       },
       SetOptions(
         merge: true,

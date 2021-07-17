@@ -3,25 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:millions/constants/size.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:millions/services/likeServices.dart';
 import '../model/reels_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants/colors.dart';
 
-
 import 'package:google_fonts/google_fonts.dart';
 
 class Shorts extends StatefulWidget {
-
-
   @override
   _ShortsState createState() => _ShortsState();
 }
 
 class _ShortsState extends State<Shorts> {
-   var currentuserid =
-       "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
- // var currentuserid = "DEyDJLaskaSXV5kMBLXSGBBZC062";
+  var currentuserid =
+      "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
+  // var currentuserid = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   List following_details = [];
+  bool liked = false;
+  String likeId;
 
   @override
   void initState() {
@@ -43,7 +43,6 @@ class _ShortsState extends State<Shorts> {
         print("followerdetails:");
         print(following_details);
       });
-
     } catch (e) {
       return "Follow";
     }
@@ -53,8 +52,6 @@ class _ShortsState extends State<Shorts> {
 
   @override
   Widget build(BuildContext context) {
-
-
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -75,6 +72,15 @@ class _ShortsState extends State<Shorts> {
               itemBuilder: (BuildContext context, int index) {
                 print("reels_objects[index].videoSrc");
                 print(reels_objects[index].videoSrc);
+                likeId = currentuserid + '_' + reels_objects[index].id;
+                Future<DocumentSnapshot> likedData =
+                    LikeServices().reelsLikeChecker(likeId);
+                likedData.then((value) {
+                  setState(() {
+                    liked = value.get('liked') == true ? true : false;
+                    // liked = liked ?? false;
+                  });
+                });
                 return Stack(children: [
                   ContentScreen(
                     src: reels_objects[index].videoSrc,
@@ -118,7 +124,6 @@ class _ShortsState extends State<Shorts> {
                         SizedBox(
                           height: 5,
                         ),
-
                         Row(
                           children: [
                             FlatButton(
@@ -166,19 +171,44 @@ class _ShortsState extends State<Shorts> {
                     ),
                   ),
                   Positioned(
-                    right: w/80,
+                    right: w / 80,
                     bottom: h / 7,
                     child: Column(
                       children: [
-                        IconButton(
-                          onPressed: (){},//reels like function
-                          icon: Icon(
-                            Icons.favorite_border_outlined,
-                            color: Colors.white,
-                          ),
-                        ),
+                        liked == true
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    liked = !liked;
+                                  });
+                                  LikeServices().unLikeReels(
+                                      reels_objects[index].id,
+                                      currentuserid,
+                                      currentuserid);
+                                }, //---------------------------------------------------
+                                icon: Icon(
+                                  Icons.favorite_rounded,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    liked = !liked;
+                                  });
+                                  LikeServices().likeReels(
+                                      reels_objects[index].id,
+                                      currentuserid,
+                                      currentuserid);
+                                }, //----------------------
+                                icon: Icon(
+                                  Icons.favorite_outline_rounded,
+                                  color: Colors.white,
+                                ),
+                              ),
                         SizedBox(height: 20),
-                        IconButton(onPressed: (){},//reels share function
+                        IconButton(
+                          onPressed: () {}, //reels share function
                           icon: Icon(
                             Icons.share,
                             color: Colors.white,
@@ -186,7 +216,7 @@ class _ShortsState extends State<Shorts> {
                         ),
                         SizedBox(height: 20),
                         IconButton(
-                          onPressed: (){},//reels report function
+                          onPressed: () {}, //reels report function
                           icon: Icon(
                             Icons.flag_outlined,
                             color: Colors.white,
