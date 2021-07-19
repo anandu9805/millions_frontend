@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
@@ -10,6 +11,7 @@ import 'package:millions/screens/follow_page.dart';
 import 'package:millions/screens/screen11.dart';
 import 'package:millions/screens/screen5.dart';
 import 'package:millions/screens/shorts.dart';
+import 'package:millions/services/userService.dart';
 import 'package:millions/widgets/appDrawer.dart';
 //import 'package:millions/screens/screen9.dart';
 import 'package:provider/provider.dart';
@@ -31,9 +33,12 @@ class _HomePageState extends State<HomePage> {
 
   final pages = [Screen5(), Shorts(), CreatePage(), Screen9(), Screen11()];
   int page = 0;
-
+  var userDetalis;
+  Future<String> userProfilePic;
   @override
   initState() {
+    userProfilePic = UserServices().getUserDetails(altUserId);
+    print(userProfilePic.toString());
     super.initState();
   }
 
@@ -87,19 +92,27 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.only(top: 10, right: 20),
                 child: InkWell(
-                  child: CircleAvatar(
-                    child: ClipRRect(
-                      child: Image.network(
-                        altProfilePic,
-                        //'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
-                        width: w * 0.3,
-                        height: w * 0.3,
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(w * 0.1),
-                    ),
-                    //backgroundColor: Colors.black,
-                  ),
+                  child: FutureBuilder(
+                      future: UserServices().getUserDetails(altUserId),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return CircleAvatar(
+                            child: ClipRRect(
+                              child: Image.network(
+                                snapshot.data.toString(),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(w * 0.1),
+                            ),
+                            //backgroundColor: Colors.black,
+                          );
+                        } else {
+                          return CircleAvatar(
+                            radius: w * 0.1,
+                            backgroundColor: Colors.black,
+                          );
+                        }
+                      }),
                   onTap: () {
                     final millionsprovider =
                         Provider.of<MillionsProvider>(context, listen: false);

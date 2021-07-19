@@ -28,8 +28,8 @@ class _ContentScreenState extends State<ContentScreen> {
     await Future.wait([_videoPlayerController.initialize()]);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      autoPlay:false,
-      showControls:true,
+      autoPlay: false,
+      showControls: true,
       looping: true,
     );
     setState(() {});
@@ -41,33 +41,30 @@ class _ContentScreenState extends State<ContentScreen> {
     _chewieController.dispose();
     super.dispose();
   }
+
   // height: MediaQuery.of(context).size.height,
   // width: MediaQuery.of(context).size.height,
   @override
   Widget build(BuildContext context) {
-
-   return  _chewieController != null &&
-              _chewieController.videoPlayerController.value.isInitialized
-          ?  Container(color: Colors.black,
+    return _chewieController != null &&
+            _chewieController.videoPlayerController.value.isInitialized
+        ? Container(
+            color: Colors.black,
             child: Chewie(
-                  controller: _chewieController,
-                ),
+              controller: _chewieController,
+            ),
           )
-
-
-          : Center(
+        : Center(
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: primary,
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  color: primary,
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
           );
     //)
-
   }
 }
-

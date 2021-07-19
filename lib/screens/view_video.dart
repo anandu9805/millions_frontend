@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:millions/constants/colors.dart';
 import 'package:millions/model/comment_model.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/comment_screen.dart';
@@ -8,6 +9,8 @@ import 'package:millions/screens/page8.dart';
 import 'package:millions/services/commentServices.dart';
 import 'package:millions/services/likeServices.dart';
 import 'package:millions/services/report-services.dart';
+import 'package:millions/services/userService.dart';
+import 'package:millions/services/video-services.dart';
 import 'package:millions/widgets/ads.dart';
 import 'package:millions/widgets/comments.dart';
 import 'package:millions/widgets/playVideo.dart';
@@ -30,7 +33,7 @@ class ViewVideo extends StatefulWidget {
 class _ViewVideoState extends State<ViewVideo> {
   FlickManager flickManager;
   bool playState = false;
-  bool liked= false;
+  bool liked = false;
   String likeId;
   String userId = "XIi08ww5Fmgkv7FXOSTkOcmVh2C3";
 
@@ -43,25 +46,29 @@ class _ViewVideoState extends State<ViewVideo> {
   List<ReasonList> nList = [
     ReasonList(
       index: 1,
-      reason: "One",
+      reason: "Spam Content",
     ),
     ReasonList(
       index: 2,
-      reason: "Two",
+      reason: "Explisit or Sexual Content",
     ),
     ReasonList(
       index: 3,
-      reason: "Three",
+      reason: "Child Abuse",
     ),
     ReasonList(
       index: 4,
-      reason: "Four",
+      reason: "Against law",
     ),
     ReasonList(
       index: 5,
-      reason: "Five",
+      reason: "Harassment or bullying",
     ),
   ];
+  int selectedIndex = 1;
+  String selectedReason = '';
+  bool isSelected = false;
+  int value;
 
   @override
   void initState() {
@@ -86,7 +93,10 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   Widget build(BuildContext context) {
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -97,13 +107,14 @@ class _ViewVideoState extends State<ViewVideo> {
           Padding(
             padding: const EdgeInsets.only(top: 10, right: 10),
             child: IconButton(
-                icon: Icon(
-                  Icons.search_outlined,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  //go to search screen
-                }),
+              icon: Icon(
+                Icons.search_outlined,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                //go to search screen
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10, right: 20),
@@ -180,10 +191,15 @@ class _ViewVideoState extends State<ViewVideo> {
                                 Icons.thumb_up_alt_outlined,
                               ),
                             ),
-                      Text(
-                        "${widget.video.likes}",
-                        style: TextStyle(height: 0.3, fontSize: 10),
-                      )
+                      FutureBuilder(
+                          future:
+                              LikeServices().videoLikeCount(widget.video.id),
+                          builder: (context, snapshot) {
+                            return Text(
+                              "${snapshot.data}",
+                              style: TextStyle(height: 0.3, fontSize: 10),
+                            );
+                          })
                     ],
                   ),
                   // Column(
@@ -219,27 +235,70 @@ class _ViewVideoState extends State<ViewVideo> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            print(123);
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return Flexible(
-                                    child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.6,
-                                      child: SimpleDialog(
-                                        children: [
-                                          ListView.builder(
+                                  return AlertDialog(
+                                    insetPadding: EdgeInsets.symmetric(
+                                        vertical: h * 0.15, horizontal: 20),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          "Report",
+                                          style: TextStyle(color: primary),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(color: primary),
+                                        ),
+                                      ),
+                                    ],
+                                    title: Text("Report video"),
+                                    content: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                  "If you belive this content is against our guidelines, kindly report. Your identity will not be revealed"),
+                                            )
+                                          ],
+                                        ),
+                                        Container(
+                                          height:
+                                              200.0, // Change as per your requirement
+                                          width: w * 0.8,
+                                          child: ListView.builder(
                                             shrinkWrap: true,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
-                                              return Text(nList[index].reason);
+                                              return RadioListTile(
+                                                dense: true,
+                                                value: nList[index].index,
+                                                selected: isSelected,
+                                                groupValue: index,
+                                                onChanged: (index) {
+                                                  print(index);
+                                                  setState(() {
+                                                    isSelected = true;
+                                                    selectedReason =
+                                                        nList[index].reason;
+                                                  });
+                                                },
+                                                title: Text(
+                                                    "${nList[index].reason}"),
+                                              );
                                             },
                                             itemCount: nList.length,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   );
                                 });
@@ -328,10 +387,29 @@ class _ViewVideoState extends State<ViewVideo> {
                                           Page8(widget.video.channelId)),
                                 );
                               },
-                              child: CircleAvatar(
-                                foregroundImage:
-                                    NetworkImage(widget.video.thumbnailUrl),
-                              ),
+                              child: FutureBuilder(
+                                  future: UserServices()
+                                      .getUserDetails(widget.video.channelId),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return CircleAvatar(
+                                        child: ClipRRect(
+                                          child: Image.network(
+                                            snapshot.data.toString(),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(w * 0.1),
+                                        ),
+                                        //backgroundColor: Colors.black,
+                                      );
+                                    } else {
+                                      return CircleAvatar(
+                                        // radius: w * 0.05,
+                                        backgroundColor: Colors.black,
+                                      );
+                                    }
+                                  }),
                             ),
                             SizedBox(width: 10),
                             Text("${widget.video.channelName}"),
@@ -382,6 +460,7 @@ class _ViewVideoState extends State<ViewVideo> {
                           MaterialPageRoute(
                               builder: (context) => Comments(
                                     videoId: widget.video.id.toString(),
+                                    video: widget.video,
                                   )),
                         );
                       },
@@ -408,19 +487,17 @@ class _ViewVideoState extends State<ViewVideo> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           children: snapshot.data.docs.map((doc) {
-                          CommentModel comment =
-                              CommentModel.fromMap(doc.data());
-                          List<QueryDocumentSnapshot<Object>> replyComments =
-                              snapshot.data.docs
-                                  .where((o) =>
-                                      o['commentId'] ==
-                                      'reply-' + comment.commentId)
-                                  .toList();
-                          return Comment(
-                            comment: comment,
-                            replies: replyComments
-                          );
-                        }).toList(),
+                            CommentModel comment =
+                                CommentModel.fromMap(doc.data());
+                            List<QueryDocumentSnapshot<Object>> replyComments =
+                                snapshot.data.docs
+                                    .where((o) =>
+                                        o['commentId'] ==
+                                        'reply-' + comment.commentId)
+                                    .toList();
+                            return Comment(
+                                comment: comment, replies: replyComments);
+                          }).toList(),
                         );
                       } else {
                         return Container(

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/comment_model.dart';
+import 'package:millions/services/commentServices.dart';
 import '../constants/colors.dart';
 
 class Comment extends StatefulWidget {
@@ -22,11 +24,23 @@ class _CommentState extends State<Comment> {
     super.initState();
   }
 
+  bool liked;
   @override
   void dispose() {
+    String likeId = altUserId + '_' + widget.comment.commentId;
+    print(likeId);
+    Future<DocumentSnapshot> likedData =
+        CommentServices().commentLikeChecker(likeId);
+    likedData.then((value) {
+      setState(() {
+        liked = value.get('liked') || false;
+        liked = liked ?? false;
+      });
+    });
     super.dispose();
   }
 
+  bool isOwner = true;
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -147,27 +161,57 @@ class _CommentState extends State<Comment> {
             IconButton(
               onPressed: () {
                 print("pressed like");
+                CommentServices().likeComment(
+                    widget.comment.channel,
+                    widget.comment.comment,
+                    widget.comment.commentId,
+                    widget.comment.userId,
+                    altUserId,
+                    isOwner,
+                    "user 1",
+                    altProfilePic,
+                    widget.comment.type,
+                    widget.comment.videoId,
+                    widget.comment.videoTitle);
                 print(widget.comment.userId);
               },
               iconSize: 15,
               splashRadius: 10,
               splashColor: primary,
-              icon: true
+              icon: liked == true
                   ? Icon(
                       Icons.thumb_up,
                       color: primary,
                     )
-                  // ignore: dead_code
                   : Icon(
                       Icons.thumb_up_alt_outlined,
                     ),
             ),
-            Text(
-              "${widget.comment.likes}",
-            ),
+            FutureBuilder(
+                future: CommentServices()
+                    .getCommentLikeCount(widget.comment.commentId),
+                builder: (context, snapshot) {
+                  print(snapshot.data);
+                  return Text(
+                    "${snapshot.data}",
+                    style: TextStyle(height: 0.3, fontSize: 10),
+                  );
+                }),
             IconButton(
               onPressed: () {
                 print("pressed like");
+                CommentServices().dislikeComment(
+                    widget.comment.channel,
+                    widget.comment.comment,
+                    widget.comment.commentId,
+                    widget.comment.userId,
+                    altUserId,
+                    isOwner,
+                    "user 1",
+                    altProfilePic,
+                    widget.comment.type,
+                    widget.comment.videoId,
+                    widget.comment.videoTitle);
                 print(widget.comment.userId);
               },
               iconSize: 15,

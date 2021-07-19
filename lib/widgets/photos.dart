@@ -29,7 +29,7 @@ class _PhotosState extends State<Photos> {
   Color favIconColor = Colors.black;
 
   IconData like = Icons.favorite_border;
-  bool liked = false;
+  bool liked=true;
   String currentuserid = "4C4iLByizTPLBBlP4rssrwGTISb2";
   String likeId;
   @override
