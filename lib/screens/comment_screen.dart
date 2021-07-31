@@ -24,16 +24,80 @@ class _CommentsState extends State<Comments> {
   //     print(id);
   //   });
   // }
+
   Future<String> profilePic;
   bool isOwner = true;
   String commentId =
       altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString();
   String uniqueId =
       altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString();
+
+  List<DocumentSnapshot> _comments = [];
+  bool _loadingComments = true,
+      _gettingMoreComments = false,
+      _moreCommentsAvailable = true;
+  int _perPage = 10;
+  DocumentSnapshot _lastDocument;
+  ScrollController _scrollController = ScrollController();
+
+  _getComments() async {
+    Query q = FirebaseFirestore.instance
+        .collection("comments")
+        .orderBy("date", descending: true)
+        .limit(_perPage);
+
+    setState(() {
+      _loadingComments = true;
+    });
+    QuerySnapshot querySnapshot = await q.get();
+    _comments = querySnapshot.docs;
+    _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    setState(() {
+      _loadingComments = false;
+    });
+  }
+
+  _getMoreComments() async {
+    if (!_moreCommentsAvailable) {
+      print("No more products");
+      return;
+    }
+    if (_gettingMoreComments) {
+      return;
+    }
+
+    _gettingMoreComments = true;
+    Query q = FirebaseFirestore.instance
+        .collection("comments")
+        .orderBy("date", descending: true)
+        .limit(_perPage)
+        .startAfter([_lastDocument['id']]);
+    QuerySnapshot querySnapshot = await q.get();
+    if (querySnapshot.docs.length < _perPage) {
+      _moreCommentsAvailable = false;
+    }
+    _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    _comments.addAll(querySnapshot.docs);
+
+    setState(() {
+      _gettingMoreComments = false;
+    });
+  }
+
   @override
   void initState() {
-    profilePic = UserServices().getUserDetails(altUserId);
     super.initState();
+    profilePic = UserServices().getUserDetails(altUserId);
+    _getComments();
+    _scrollController.addListener(() {
+      double maxScroll = _scrollController.position.maxScrollExtent;
+      double currentScroll = _scrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.25;
+
+      if (maxScroll - currentScroll <= delta) {
+        _getMoreComments();
+      }
+    });
   }
 
   @override
@@ -89,7 +153,7 @@ class _CommentsState extends State<Comments> {
                     ),
                     onTap: () {
                       if (getcomment.text.length > 0) {
-                        print(getcomment.text);
+                        // print(getcomment.text);
                         CommentServices().addVideoComment(
                             widget.video.channelId,
                             widget.video.channelName,
@@ -141,38 +205,84 @@ class _CommentsState extends State<Comments> {
             ),
             Divider(),
             Container(
-              child: StreamBuilder(
-                stream: CommentServices()
-                    .getVideoComments(widget.videoId.toString()),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: snapshot.data.docs.map((doc) {
-                        CommentModel comment = CommentModel.fromMap(doc.data());
-                        List<QueryDocumentSnapshot<Object>> replyComments =
-                            snapshot
-                                .data.docs
-                                .where((o) =>
-                                    o['commentId'] ==
-                                    'reply-' + comment.commentId)
-                                .toList();
-                        return Comment(
-                            comment: comment, replies: replyComments);
-                      }).toList(),
-                    );
-                  } else {
-                    return Container(
-                      child: Center(
-                        child: CircularProgressIndicator(),
+              child: _loadingComments
+                  ? Center(
+                      child: Container(
+                      child: CircularProgressIndicator(
+                        color: primary,
                       ),
-                    );
-                  }
-                },
-              ),
-            )
+                    ))
+                  : _comments.length == 0
+                      ? Center(
+                          child: Container(
+                          child: Text('No posts to show!',
+                              style: GoogleFonts.ubuntu(fontSize: 15)),
+                        ))
+                      : Column(
+                          children: [
+                            ListView.builder(
+                                itemCount: _comments.length,
+                                controller: _scrollController,
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext ctx, int index) {
+                                  CommentModel comment = CommentModel.fromMap(
+                                      _comments[index].data());
+                                  List<QueryDocumentSnapshot<Object>>
+                                      replyComments = _comments
+                                          .where((o) =>
+                                              o['commentId'] ==
+                                              'reply-' + comment.commentId)
+                                          .toList();
+                                  if (comment.commentId
+                                      .contains(new RegExp(r'reply'))) {
+                                    print(123);
+                                    return Container();
+                                  } else {
+                                    return Comment(
+                                        comment: comment,
+                                        replies: replyComments);
+                                  }
+                                })
+                          ],
+                        ),
+              // child: StreamBuilder(
+              //   stream: CommentServices()
+              //       .getVideoComments(widget.videoId.toString()),
+              //   builder: (BuildContext context,
+              //       AsyncSnapshot<QuerySnapshot> snapshot) {
+              //     if (snapshot.hasData) {
+              //       return ListView(
+              //         physics: NeverScrollableScrollPhysics(),
+              //         shrinkWrap: true,
+              //         children: snapshot.data.docs.map((doc) {
+              //           CommentModel comment = CommentModel.fromMap(doc.data());
+              //           List<QueryDocumentSnapshot<Object>> replyComments =
+              //               snapshot
+              //                   .data.docs
+              //                   .where((o) =>
+              //                       o['commentId'] ==
+              //                       'reply-' + comment.commentId)
+              //                   .toList();
+              //           if (comment.commentId.contains(new RegExp(r'reply'))) {
+              //             print(123);
+              //             return Container();
+              //           } else {
+              //             return Comment(
+              //                 comment: comment, replies: replyComments);
+              //           }
+              //         }).toList(),
+              //       );
+              //     } else {
+              //       return Container(
+              //         child: Center(
+              //           child: CircularProgressIndicator(),
+              //         ),
+              //       );
+              //     }
+              //   },
+              // ),
+            ),
           ],
         ),
       ),

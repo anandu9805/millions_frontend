@@ -19,8 +19,35 @@ class _VideoCardState extends State<VideoCard> {
     super.initState();
   }
 
+  static String formatDuration(double time) {
+    Duration d = Duration(seconds: time.round());
+    var seconds = d.inSeconds;
+    final days = seconds ~/ Duration.secondsPerDay;
+    seconds -= days * Duration.secondsPerDay;
+    final hours = seconds ~/ Duration.secondsPerHour;
+    seconds -= hours * Duration.secondsPerHour;
+    final minutes = seconds ~/ Duration.secondsPerMinute;
+    seconds -= minutes * Duration.secondsPerMinute;
+
+    final List<String> tokens = [];
+    if (days != 0) {
+      tokens.add('${days}d');
+    }
+    if (tokens.isNotEmpty || hours != 0) {
+      tokens.add('${hours}h');
+    }
+    if (tokens.isNotEmpty || minutes != 0) {
+      tokens.add('${minutes}m');
+    }
+    tokens.add('${seconds}s');
+
+    return tokens.join(':');
+  }
+
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+    String dummyId = null;
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -28,6 +55,7 @@ class _VideoCardState extends State<VideoCard> {
           MaterialPageRoute(
             builder: (context) => ViewVideo(
               video: widget.video,
+              id:dummyId
             ),
           ),
         );
@@ -35,20 +63,47 @@ class _VideoCardState extends State<VideoCard> {
       child: Container(
         child: Column(
           children: [
-            Stack(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(),
-                  child: Image.network(
-                    widget.video.thumbnailUrl == null
-                        ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
-                        : widget.video.thumbnailUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, url, error) =>
-                        new Icon(Icons.error),
+            Container(
+              height: h * 0.3,
+              color: Colors.black,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(),
+                    child: Image.network(
+                      widget.video.thumbnailUrl == null
+                          ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
+                          : widget.video.thumbnailUrl,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent loadingProgress) {
+                        return Center(child: child);
+                      },
+                      frameBuilder: (BuildContext context, Widget child,
+                          int frame, bool wasSynchronouslyLoaded) {
+                        return Padding(
+                          padding: EdgeInsets.all(0.0),
+                          child: child,
+                        );
+                      },
+                      errorBuilder: (context, url, error) =>
+                          new Icon(Icons.error),
+                    ),
                   ),
-                ),
-              ],
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: Container(
+                      color: Colors.black,
+                      padding: EdgeInsets.all(2),
+                      child: Text(
+                        ("${formatDuration(widget.video.duration * 1.0)}"),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(12.0),

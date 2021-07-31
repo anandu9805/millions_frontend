@@ -18,4 +18,8 @@ class ReportServices {
     );
     print(reason);
   }
+
+  isVideoReported(String reportId){
+    
+  }
 }

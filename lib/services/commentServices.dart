@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/widgets/comments.dart';
 
 class CommentServices {
@@ -21,6 +22,14 @@ class CommentServices {
   Stream<QuerySnapshot> getVideoComments(String videoId) {
     return commentReference
         .where('videoId', isEqualTo: videoId)
+        .get()
+        .asStream();
+  }
+
+
+  Stream<QuerySnapshot> getPostComments(String postId) {
+    return commentReference
+        .where('videoId', isEqualTo: postId)
         .get()
         .asStream();
   }
@@ -102,12 +111,15 @@ class CommentServices {
       String userId,
       String videoId,
       String videoTitle) async {
-    await FirebaseFirestore.instance.collection('comments').doc(commentId).set(
+    await FirebaseFirestore.instance
+        .collection('comments')
+        .doc(userId + DateTime.now().toString())
+        .set(
       {
         "channel": channel,
         "channelName": channelName,
         "comment": comment,
-        "commentId": commentId,
+        "commentId": "reply-" + commentId,
         "date": DateTime.now(),
         "dislikes": 0,
         "editedTime": DateTime.now(),
@@ -141,77 +153,84 @@ class CommentServices {
       String type,
       String video,
       String videoTitle) async {
-    // var newId = FirebaseFirestore.instance.collection('reports').doc();
     await FirebaseFirestore.instance
         .collection('comment-likes')
-        .doc(follower + '_' + commentId)
+        .doc(altUserId + '_' + commentId)
         .set(
       {
-        ' channel': channel,
-        ' comment': comment,
-        ' commentId': commentId,
-        ' commentOwner': commentOwner,
-        ' date': DateTime.now(),
-        ' follower': follower,
-        ' isOwner': isOwner,
-        ' liked': true,
-        ' likerName': likerName,
-        ' likerPhoto': likerPhoto,
-        ' type': type,
-        ' video': video,
-        ' videoTitle': videoTitle
+        'channel': channel,
+        'comment': comment,
+        'commentId': commentId,
+        'commentOwner': commentOwner,
+        'date': DateTime.now(),
+        'follower': follower,
+        'isOwner': isOwner,
+        'liked': true,
+        'likerName': likerName,
+        'likerPhoto': likerPhoto,
+        'type': type,
+        'video': video,
+        'videoTitle': videoTitle
       },
       SetOptions(
         merge: true,
       ),
-    );
+    ).whenComplete(() {
+      print(123);
+      DocumentReference dislike = FirebaseFirestore.instance
+          .collection('comment-dislikes')
+          .doc('altUserId' + '_' + commentId);
+      if (dislike.id.isEmpty == false) {
+        print('altUserId' + '_' + commentId);
+        FirebaseFirestore.instance
+            .collection('comment-dislikes')
+            .doc(altUserId + '_' + commentId)
+            .delete();
+      }
+    });
   }
 
-  dislikeComment(
-      String channel,
-      String comment,
-      String commentId,
-      String commentOwner,
-      String follower,
-      bool isOwner,
-      String likerName,
-      String likerPhoto,
-      String type,
-      String video,
-      String videoTitle) async {
+  dislikeComment(String channel, String comment, String commentId,
+      String commentOwner, String follower, String video) async {
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
     await FirebaseFirestore.instance
-        .collection('comment-likes')
+        .collection('comment-dislikes')
         .doc(follower + '_' + commentId)
         .set(
       {
-        ' channel': channel,
-        ' comment': comment,
-        ' commentId': commentId,
-        ' commentOwner': commentOwner,
-        ' date': DateTime.now(),
-        ' follower': follower,
-        ' isOwner': isOwner,
-        ' liked': false,
-        ' likerName': likerName,
-        ' likerPhoto': likerPhoto,
-        ' type': type,
-        ' video': video,
-        ' videoTitle': videoTitle
+        'channel': channel,
+        'comment': commentId,
+        'commentOwner': commentOwner,
+        'date': DateTime.now(),
+        'follower': follower,
+        'liked': false,
+        'video': video,
       },
       SetOptions(
         merge: true,
       ),
-    );
+    ).whenComplete(() {
+      FirebaseFirestore.instance
+          .collection('comment-likes')
+          .doc(altUserId + '_' + commentId)
+          .set(
+        {'liked': false},
+        SetOptions(
+          merge: true,
+        ),
+      );
+    });
   }
 
   Future<int> getCommentLikeCount(String commentId) async =>
       await FirebaseFirestore.instance
-          .collection('comment-likes')
-          .where('commentId', isEqualTo: commentId)
-          .where('liked', isEqualTo: true)
+          .collection("comment-likes")
+          .where("liked", isEqualTo: true)
+          .where("commentId",
+              isEqualTo: "Pon1uG0eNnhf9TLsps0jtScndtN2-1626719503018")
           .get()
           .then((value) {
+        // print(commentId);
         return value.size;
       });
 
@@ -226,10 +245,18 @@ class CommentServices {
       });
 
   Future<DocumentSnapshot> commentLikeChecker(String commentLikeId) async {
-    // print(likeId);
+
+    print(commentLikeId);
     return await FirebaseFirestore.instance
         .collection('comment-likes')
         .doc(commentLikeId)
         .get();
+  }
+
+  Future<DocumentReference> disLikeChecker(String commentLikeId) async {
+    // print(likeId);
+    return FirebaseFirestore.instance
+        .collection('comment-dislikes')
+        .doc(commentLikeId);
   }
 }

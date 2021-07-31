@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/size.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:millions/services/likeServices.dart';
@@ -20,9 +23,8 @@ class _ShortsState extends State<Shorts> {
       "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
   // var currentuserid = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   List following_details = [];
-  bool liked ;
+  bool liked=false;
   String likeId;
-
   @override
   void initState() {
     getFollowingdetails();
@@ -60,6 +62,7 @@ class _ShortsState extends State<Shorts> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             // print("has data");
+
             reels_objects = snapshot.data.docs.map((doc) {
               Reels reelsItems = Reels.fromMap(doc.data());
 
@@ -72,7 +75,10 @@ class _ShortsState extends State<Shorts> {
               itemBuilder: (BuildContext context, int index) {
                 // print("reels_objects[index].videoSrc");
                 // print(reels_objects[index].videoSrc);
-
+                // setState(() {
+                //   likeId = altUserId + '_' + reels_objects[index].id;
+                // });
+                likeId = altUserId + '_' + reels_objects[index].id;
                 return Stack(children: [
                   ContentScreen(
                     src: reels_objects[index].videoSrc,
@@ -169,12 +175,20 @@ class _ShortsState extends State<Shorts> {
                       children: [
                         FutureBuilder(
                           future: LikeServices().reelsLikeChecker(likeId),
-                          builder: (BuildContext context, snapshot) {
-                            if (snapshot.hasData) {
-                              // print(snapshot.data);
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              print(1);
+                              return Icon(Icons.favorite);
+                            } else {
+                              if (snapshot == null) {
+                                print(10);
+                              }
+                              print(liked.toString()+DateTime.now().toString());
+                              // print(
+                              //     snapshot.data[FieldPath.fromString("liked")]);
                               // print("snapshot.data");
                               setState(() {
-                                liked = snapshot.data;
+                                liked = snapshot.data['liked']??false;
                               });
                               return liked == true
                                   ? IconButton(
@@ -184,12 +198,12 @@ class _ShortsState extends State<Shorts> {
                                         });
                                         LikeServices().unLikeReels(
                                             reels_objects[index].id,
-                                            currentuserid,
-                                            currentuserid);
-                                      }, //---------------------------------------------------
+                                            reels_objects[index].channelId,
+                                            altUserId);
+                                      },
                                       icon: Icon(
-                                        Icons.favorite_rounded,
-                                        color: Colors.white,
+                                        Icons.favorite,
+                                        color: primary,
                                       ),
                                     )
                                   : IconButton(
@@ -197,17 +211,19 @@ class _ShortsState extends State<Shorts> {
                                         setState(() {
                                           liked = !liked;
                                         });
+                                        print(reels_objects[index].id+
+                                            reels_objects[index].channelId+
+                                            altUserId);
                                         LikeServices().likeReels(
                                             reels_objects[index].id,
-                                            currentuserid,
-                                            currentuserid);
-                                      }, //----------------------
+                                            reels_objects[index].channelId,
+                                            altUserId);
+                                      },
                                       icon: Icon(
-                                        Icons.favorite_outline_rounded,
-                                        color: Colors.white,
+                                        Icons.favorite_border,
+                                        color: primary,
                                       ),
                                     );
-
 
                               // likeId =
                               //     currentuserid + '_' + reels_objects[index].id;
@@ -222,24 +238,25 @@ class _ShortsState extends State<Shorts> {
                               //   //   liked = liked ?? false;
                               //   // });
                               // });
-                            } else {
-                              print(snapshot.hasError);
-                              return IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    liked = !liked;
-                                  });
-                                  LikeServices().likeReels(
-                                      reels_objects[index].id,
-                                      currentuserid,
-                                      currentuserid);
-                                }, //----------------------
-                                icon: Icon(
-                                  Icons.favorite_outline_rounded,
-                                  color: Colors.white,
-                                ),
-                              );
                             }
+                            // else {
+                            //   print(snapshot.hasError);
+                            //   return IconButton(
+                            //     onPressed: () {
+                            //       setState(() {
+                            //         liked = !liked;
+                            //       });
+                            //       LikeServices().likeReels(
+                            //           reels_objects[index].id,
+                            //           currentuserid,
+                            //           currentuserid);
+                            //     }, //----------------------
+                            //     icon: Icon(
+                            //       Icons.favorite_outline_rounded,
+                            //       color: Colors.white,
+                            //     ),
+                            //   );
+                            // }
                           },
                         ),
                         SizedBox(height: 20),

@@ -61,33 +61,51 @@ class LikeServices {
     );
   }
 
-  Future<bool> reelsLikeChecker(String likeId) async {
-    bool liked;
+  // Future<bool> reelsLikeChecker(String likeId) async {
+  //   bool liked;
+  //   FirebaseFirestore.instance
+  //       .collection('reels-likes')
+  //       .doc(likeId)
+  //       .get()
+  //       .then((value) {
+  //     liked = value.get('liked') || false;
+  //     liked = liked ?? false;
+  //     return liked;
+  //   });
+  // }
+
+  Future<DocumentSnapshot> reelsLikeChecker(String likeId) async {
     FirebaseFirestore.instance
         .collection('reels-likes')
         .doc(likeId)
         .get()
         .then((value) {
-      liked = value.get('liked') || false;
-      liked = liked ?? false;
-      return liked;
-    });
+          if(value.exists){
+            print(value.get('liked'));
+          }else{
+            print(false);
+          }
+        });
+    return await FirebaseFirestore.instance
+        .collection('reels-likes')
+        .doc(likeId)
+        .get();
   }
 
-  likeReels(String videoId, String channelId, String userId) async {
+  likeReels(String reelId, String channelId, String userId) async {
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
     await FirebaseFirestore.instance
         .collection('reels-likes')
-        .doc(userId + '_' + videoId)
+        .doc(userId + '_' + reelId)
         .set(
       {
         'channel': channelId,
         'date': DateTime.now(),
         'follower': userId,
         'liked': true,
-        'link': 'reels/' + videoId,
+        'link': 'reels/' + reelId,
         'source': 'videos',
-        'video': videoId
+        'video': reelId
       },
       SetOptions(
         merge: true,

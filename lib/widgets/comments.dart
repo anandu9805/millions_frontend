@@ -17,27 +17,45 @@ class Comment extends StatefulWidget {
 }
 
 class _CommentState extends State<Comment> {
+  TextEditingController replyController = TextEditingController();
+  bool liked = false;
+  bool disliked =false;
+  // @override
+  // void initState() {
+
+  //   super.initState();
+  // }
+  String likeId;
   @override
   void initState() {
-    print(widget.comment.commentId);
-    print(widget.replies.length + 10);
-    super.initState();
-  }
-
-  bool liked;
-  @override
-  void dispose() {
-    String likeId = altUserId + '_' + widget.comment.commentId;
-    print(likeId);
+    likeId = altUserId + '_' + widget.comment.commentId;
     Future<DocumentSnapshot> likedData =
         CommentServices().commentLikeChecker(likeId);
     likedData.then((value) {
-      setState(() {
-        liked = value.get('liked') || false;
-        liked = liked ?? false;
-      });
+      if (value == null) {
+        setState(() {
+          liked = false;
+          disliked = false;
+        });
+      } else {
+        setState(() {
+          liked = value.get('liked');
+          disliked = !liked;
+        });
+      }
     });
-    super.dispose();
+    // DocumentReference<Map<String, dynamic>> disLikeData =
+    //     FirebaseFirestore.instance.collection('comment-dislikes').doc(likeId);
+    // if (disLikeData.id.isNotEmpty) {
+    //   setState(() {
+    //     disliked = true;
+    //   });
+    // } else {
+    //   setState(() {
+    //     disliked = false;
+    //   });
+    // }
+    super.initState();
   }
 
   bool isOwner = true;
@@ -73,7 +91,7 @@ class _CommentState extends State<Comment> {
             Flexible(
               child: RichText(
                 text: TextSpan(
-                  text: "${widget.comment.name}   ",
+                  text: "${widget.comment.name}",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w800,
@@ -107,50 +125,54 @@ class _CommentState extends State<Comment> {
             return Container(
               padding: EdgeInsets.only(left: w * 0.2, bottom: 10),
               width: w * 0.7,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
                 children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  CircleAvatar(
-                    radius: 15,
-                    child: ClipRRect(
-                      child: Image.network(
-                        widget.replies[index]['profilePic'] == null
-                            ? 'https://img-premium.flaticon.com/png/512/552/premium/552909.png?token=exp=1625761770~hmac=50547f60af312c1b16263272abb7c4ba'
-                            : widget.replies[index]['profilePic'],
-                        width: w * 0.3,
-                        height: w * 0.3,
-                        fit: BoxFit.cover,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 10,
                       ),
-                      borderRadius: BorderRadius.circular(w * 0.1),
-                    ),
-                    // backgroundColor: Colors.black,
-                  ),
-                  SizedBox(width: 10),
-                  Flexible(
-                    child: RichText(
-                      text: TextSpan(
-                        text: "${widget.replies[index]['name']}   ",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w800,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: widget.replies[index]['comment'],
-                            style: GoogleFonts.ubuntu(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                            ),
+                      CircleAvatar(
+                        radius: 15,
+                        child: ClipRRect(
+                          child: Image.network(
+                            widget.replies[index]['profilePic'] == null
+                                ? 'https://img-premium.flaticon.com/png/512/552/premium/552909.png?token=exp=1625761770~hmac=50547f60af312c1b16263272abb7c4ba'
+                                : widget.replies[index]['profilePic'],
+                            width: w * 0.3,
+                            height: w * 0.3,
+                            fit: BoxFit.cover,
                           ),
-                        ],
+                          borderRadius: BorderRadius.circular(w * 0.1),
+                        ),
+                        // backgroundColor: Colors.black,
                       ),
-                    ),
+                      SizedBox(width: 10),
+                      Flexible(
+                        child: RichText(
+                          text: TextSpan(
+                            text: "${widget.replies[index]['name']}   ",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w800,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: widget.replies[index]['comment'],
+                                style: GoogleFonts.ubuntu(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Icon(Icons.favorite_border)
+                    ],
                   ),
-                  // Icon(Icons.favorite_border)
                 ],
               ),
             );
@@ -159,6 +181,18 @@ class _CommentState extends State<Comment> {
         Row(
           children: [
             IconButton(
+              iconSize: 15,
+              splashRadius: 10,
+              splashColor: primary,
+              icon: liked
+                  ? Icon(
+                      Icons.thumb_up,
+                      color: primary,
+                    )
+                  : Icon(
+                      Icons.thumb_up_outlined,
+                      color: primary,
+                    ),
               onPressed: () {
                 print("pressed like");
                 CommentServices().likeComment(
@@ -173,63 +207,120 @@ class _CommentState extends State<Comment> {
                     widget.comment.type,
                     widget.comment.videoId,
                     widget.comment.videoTitle);
-                print(widget.comment.userId);
+                setState(() {
+                  liked = true;
+                  disliked = false;
+                });
+                print(widget.comment.commentId);
               },
+            ),
+            Text("${widget.comment.likes}"),
+            // FutureBuilder(
+            //     future: CommentServices()
+            //         .getCommentLikeCount(widget.comment.commentId),
+            //     builder: (context, snapshot) {
+            //       if (snapshot.hasData) {
+            //         // print(snapshot.data);
+            //         return Text(
+            //           "${snapshot.data}",
+            //           style: TextStyle(height: 0.3, fontSize: 10),
+            //         );
+            //       } else {
+            //         return Text(
+            //           "0",
+            //           style: TextStyle(height: 0.3, fontSize: 10),
+            //         );
+            //       }
+            //     }),
+            IconButton(
               iconSize: 15,
               splashRadius: 10,
               splashColor: primary,
-              icon: liked == true
+              icon: disliked
                   ? Icon(
-                      Icons.thumb_up,
+                      Icons.thumb_down,
                       color: primary,
                     )
                   : Icon(
-                      Icons.thumb_up_alt_outlined,
+                      Icons.thumb_down_alt_outlined,
+                      color: primary,
                     ),
-            ),
-            FutureBuilder(
-                future: CommentServices()
-                    .getCommentLikeCount(widget.comment.commentId),
-                builder: (context, snapshot) {
-                  print(snapshot.data);
-                  return Text(
-                    "${snapshot.data}",
-                    style: TextStyle(height: 0.3, fontSize: 10),
-                  );
-                }),
-            IconButton(
               onPressed: () {
-                print("pressed like");
+                print("pressed dislike");
                 CommentServices().dislikeComment(
                     widget.comment.channel,
                     widget.comment.comment,
                     widget.comment.commentId,
                     widget.comment.userId,
                     altUserId,
-                    isOwner,
-                    "user 1",
-                    altProfilePic,
-                    widget.comment.type,
-                    widget.comment.videoId,
-                    widget.comment.videoTitle);
+                    widget.comment.videoId);
                 print(widget.comment.userId);
+                setState(() {
+                  liked = false;
+                  disliked = true;
+                });
               },
-              iconSize: 15,
-              splashRadius: 10,
-              splashColor: primary,
-              icon: false
-                  // ignore: dead_code
-                  ? Icon(
-                      Icons.thumb_down,
-                      color: primary,
-                    )
-                  // ignore: dead_code
-                  : Icon(
-                      Icons.thumb_down_alt_outlined,
-                    ),
             ),
             Text(
               "${widget.comment.dislikes}",
+            ),
+            Spacer(),
+            TextButton(
+              onPressed: () {
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Reply to Comment'),
+                    content: new Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        TextField(
+                          controller: replyController,
+                        )
+                      ],
+                    ),
+                    actions: <Widget>[
+                      new FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        textColor: Theme.of(context).primaryColor,
+                        child: const Text('Close'),
+                      ),
+                      new FlatButton(
+                        onPressed: () {
+                          print(replyController.text);
+                          CommentServices().addCommentReply(
+                              widget.comment.channel,
+                              widget.comment.channelName,
+                              replyController.text,
+                              widget.comment.commentId,
+                              isOwner,
+                              widget.comment.source,
+                              widget.comment.name,
+                              widget.comment.commentId,
+                              widget.comment.profilePic,
+                              widget.comment.source,
+                              widget.comment.type,
+                              widget.comment.uniqueId,
+                              widget.comment.userId,
+                              widget.comment.videoId,
+                              widget.comment.videoTitle);
+                          replyController.clear();
+                          Navigator.pop(context);
+                        },
+                        textColor: Theme.of(context).primaryColor,
+                        child: const Text('Comment'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: Icon(
+                Icons.comment,
+                color: primary,
+              ),
             ),
           ],
         ),

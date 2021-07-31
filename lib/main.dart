@@ -23,14 +23,13 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MillionsProvider(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: HomePage()//Screen1(),
-      ),
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: Screen1() //Screen1(),
+          ),
     );
   }
 }

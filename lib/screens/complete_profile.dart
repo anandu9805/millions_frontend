@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
@@ -5,31 +6,58 @@ import 'package:millions/screens/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../provider.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 
-
 class CreateProfile extends StatefulWidget {
+  final User user;
+
+  const CreateProfile({Key key, this.user}) : super(key: key);
   @override
   _CreateProfileState createState() => _CreateProfileState();
 }
 
 class _CreateProfileState extends State<CreateProfile> {
-  final currentuser=FirebaseAuth.instance.currentUser;
+  final currentuser = FirebaseAuth.instance.currentUser;
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (widget.user != null) {
+      print(widget.user.displayName);
+    }
+
+    Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore
+        .instance
+        .collection('users')
+        .where("uid", isEqualTo: widget.user.uid)
+        .get();
+    result.then((value) {
+      if (value.docs.length > 0) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController name=TextEditingController();
-    TextEditingController displayname=TextEditingController();
-    TextEditingController email=TextEditingController();
-    TextEditingController sex=TextEditingController();
-    TextEditingController country=TextEditingController();
-    TextEditingController state=TextEditingController();
-    TextEditingController district=TextEditingController();
-    TextEditingController place=TextEditingController();
+    TextEditingController name = TextEditingController();
+    TextEditingController displayname = TextEditingController();
+    TextEditingController email = TextEditingController();
+    TextEditingController sex = TextEditingController();
+    TextEditingController country = TextEditingController();
+    TextEditingController state = TextEditingController();
+    TextEditingController district = TextEditingController();
+    TextEditingController place = TextEditingController();
 
-    final millionsprovider = Provider.of<MillionsProvider>(
-        context,
-        listen: false);
+    final millionsprovider =
+        Provider.of<MillionsProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -291,10 +319,6 @@ class _CreateProfileState extends State<CreateProfile> {
                     ),
                   ],
                 ),
-
-
-
-                
                 SizedBox(height: 20),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -302,31 +326,51 @@ class _CreateProfileState extends State<CreateProfile> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(primary)),
-                    onPressed: () async{
-                      await  FirebaseFirestore.instance
+                    onPressed: () async {
+                      await FirebaseFirestore.instance
                           .collection('users')
                           .doc(currentuser.uid)
                           .set({
-                        'accountCreatedFrom':'Mobile',
-                        'accountStatus':'active',
-                        'country':country.text,
-                        'created':'00:00',
-                        'district':district.text,
-                        'email':email.text,
-                        'gender':sex.text,
-                        'isVerified':currentuser.emailVerified,
-                        'language':'lll',
-                        'name':displayname.text,
-                        'phone':currentuser.phoneNumber,
-                        'place':place.text,
-                        'profilePic':currentuser.photoURL,
-                        'state':state.text,
-                        'timestamp':'00:00',
-                        'uid':currentuser.uid,
-
-
+                        'accountCreatedFrom': 'Mobile',
+                        'accountStatus': 'active',
+                        'country': country.text,
+                        'created': '00:00',
+                        'district': district.text,
+                        'email': email.text,
+                        'gender': sex.text,
+                        'isVerified': currentuser.emailVerified,
+                        'language': 'lll',
+                        'name': displayname.text,
+                        'phone': currentuser.phoneNumber,
+                        'place': place.text,
+                        'profilePic': currentuser.photoURL,
+                        'state': state.text,
+                        'timestamp': '00:00',
+                        'uid': currentuser.uid,
                       });
-print("inside homepage");
+                      print("inside homepage");
+
+                      String uid = widget.user.uid;
+                      // FirebaseUser user = await _auth.currentUser();
+
+                      // Get the token for this device
+                      String fcmToken = await _fcm.getToken();
+                      print(fcmToken);
+
+                      // Save it to Firestore
+                      if (fcmToken != null) {
+                        var tokens = FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(uid)
+                            .collection('tokens')
+                            .doc(fcmToken);
+
+                        await tokens.set({
+                          'token': fcmToken,
+                          'createdAt': FieldValue.serverTimestamp(), // optional
+                          'platform': TargetPlatform.android // optional
+                        });
+                      }
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (BuildContext context) => HomePage()));
                     },
