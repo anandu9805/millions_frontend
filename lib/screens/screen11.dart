@@ -66,6 +66,7 @@ class _Screen11State extends State<Screen11> {
     var h = MediaQuery.of(context).size.height;
     // var w = MediaQuery.of(context).size.width;
     return Scaffold(
+
       body: (_isLoading == false || widget.postId == null)
           ? SingleChildScrollView(
               child: Column(
@@ -145,6 +146,7 @@ class _Screen11State extends State<Screen11> {
                 ),
               ),
             ),
+
     );
   }
 }

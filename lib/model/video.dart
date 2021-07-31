@@ -36,6 +36,7 @@ class Video {
     this.date,
     this.description,
     this.disLikes,
+    this.duration,
     this.id,
     this.isComments,
     this.isVisible,
@@ -57,6 +58,7 @@ class Video {
   Timestamp date;
   String description;
   int disLikes;
+  dynamic duration;
   String id;
   String isComments;
   String isVisible;
@@ -80,6 +82,7 @@ class Video {
       date: snapshot["date"],
       description: snapshot["description"],
       disLikes: snapshot["disLikes"],
+      duration: snapshot["duration"],
       id: snapshot["id"],
       isComments: snapshot["isComments"],
       isVisible: snapshot["isVisible"],
@@ -104,6 +107,7 @@ class Video {
       "date": date,
       "description": description,
       "disLikes": disLikes,
+      "duration": duration,
       "id": id,
       "isComments": isComments,
       "isVisible": isVisible,

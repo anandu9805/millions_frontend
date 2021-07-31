@@ -64,6 +64,10 @@ class AdPostModel {
         thumbnail: map["thumbnail"],
         views: map["views"]);
   }
+
+
+
+  
 }
 
 

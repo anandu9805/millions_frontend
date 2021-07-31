@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './screens/googleSignIn.dart';
@@ -6,7 +5,6 @@ import './screens/home.dart';
 
 import 'package:provider/provider.dart';
 import '../provider.dart';
-import './screens/complete_profile.dart';
 
 class Auth extends StatefulWidget {
   const Auth({Key key}) : super(key: key);

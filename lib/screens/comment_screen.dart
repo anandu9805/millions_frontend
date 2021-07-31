@@ -2,14 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/constants/tempResources.dart';
+import 'package:millions/model/video.dart';
 import 'package:millions/services/commentServices.dart';
+import 'package:millions/services/userService.dart';
 import 'package:millions/widgets/comments.dart';
 import 'package:millions/model/comment_model.dart';
 
 class Comments extends StatefulWidget {
   final String videoId;
+  final Video video;
 
-  const Comments({Key key, this.videoId}) : super(key: key);
+  const Comments({Key key, this.videoId, this.video}) : super(key: key);
   @override
   _CommentsState createState() => _CommentsState();
 }
@@ -21,133 +25,266 @@ class _CommentsState extends State<Comments> {
   //   });
   // }
 
+  Future<String> profilePic;
+  bool isOwner = true;
+  String commentId =
+      altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString();
+  String uniqueId =
+      altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString();
+
+  List<DocumentSnapshot> _comments = [];
+  bool _loadingComments = true,
+      _gettingMoreComments = false,
+      _moreCommentsAvailable = true;
+  int _perPage = 10;
+  DocumentSnapshot _lastDocument;
+  ScrollController _scrollController = ScrollController();
+
+  _getComments() async {
+    Query q = FirebaseFirestore.instance
+        .collection("comments")
+        .orderBy("date", descending: true)
+        .limit(_perPage);
+
+    setState(() {
+      _loadingComments = true;
+    });
+    QuerySnapshot querySnapshot = await q.get();
+    _comments = querySnapshot.docs;
+    _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    setState(() {
+      _loadingComments = false;
+    });
+  }
+
+  _getMoreComments() async {
+    if (!_moreCommentsAvailable) {
+      print("No more products");
+      return;
+    }
+    if (_gettingMoreComments) {
+      return;
+    }
+
+    _gettingMoreComments = true;
+    Query q = FirebaseFirestore.instance
+        .collection("comments")
+        .orderBy("date", descending: true)
+        .limit(_perPage)
+        .startAfter([_lastDocument['id']]);
+    QuerySnapshot querySnapshot = await q.get();
+    if (querySnapshot.docs.length < _perPage) {
+      _moreCommentsAvailable = false;
+    }
+    _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    _comments.addAll(querySnapshot.docs);
+
+    setState(() {
+      _gettingMoreComments = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    profilePic = UserServices().getUserDetails(altUserId);
+    _getComments();
+    _scrollController.addListener(() {
+      double maxScroll = _scrollController.position.maxScrollExtent;
+      double currentScroll = _scrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.25;
+
+      if (maxScroll - currentScroll <= delta) {
+        _getMoreComments();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
+
     TextEditingController getcomment = TextEditingController();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: primary,
         title: Text('Comments'),
       ),
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 10,
-          ),
-          ListTile(
-            leading: CircleAvatar(
-              radius: 25,
-              child: ClipRRect(
-                child: Image.network(
-                  'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
-                  width: w * 0.3,
-                  height: w * 0.3,
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(w * 0.1),
-              ),
-              // backgroundColor: Colors.black,
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 10,
             ),
-            title: TextFormField(
-              controller: getcomment,
-              cursorColor: primary,
-              decoration: InputDecoration(
-                suffixIcon: InkWell(
-                  child: Icon(
-                    Icons.send,
-                    color: primary,
-                  ),
-                  onTap: () {
-                    if (getcomment.text.length > 0) {
-                      // setState(() {
-                      // comments.add(
-                      //   CommentModel(
-                      //       comments,
-                      //       'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
-                      //       'Hrithwik',
-                      //       getcomment.text,
-                      //       'now',
-                      //       '0 likes',
-                      //       false),
-                      // );
-                      // print(comments);
-                      // });
-                      print("add commment");
-                    }
-                  },
-                ),
-                // labelText: 'Add a comment',
-                hintText: 'Add a comment',
-                labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: primary,
-                    width: 1,
-                  ),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15.0),
-                    topRight: Radius.circular(15.0),
-                    bottomLeft: Radius.circular(15.0),
-                    bottomRight: Radius.circular(15.0),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: primary,
-                    width: 1,
-                  ),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20.0),
-                    topRight: Radius.circular(20.0),
-                    bottomLeft: Radius.circular(15.0),
-                    bottomRight: Radius.circular(15.0),
-                  ),
-                ),
+            ListTile(
+              leading: FutureBuilder(
+                future: UserServices().getUserDetails(altUserId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return CircleAvatar(
+                      child: ClipRRect(
+                        child: Image.network(
+                          snapshot.data.toString(),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(w * 0.1),
+                      ),
+                      //backgroundColor: Colors.black,
+                    );
+                  } else {
+                    return CircleAvatar(
+                      radius: w * 0.1,
+                      backgroundColor: Colors.black,
+                    );
+                  }
+                },
               ),
-            ),
-          ),
-          Divider(),
-          Container(
-            height: h / 1.3,
-            child: StreamBuilder(
-              stream: CommentServices()
-                  .getVideoComments(widget.videoId.toString()),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasData) {
-                  // print(snapshot.data.docs[1]['comment']);
-                  return ListView(
-                    // physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    children: snapshot.data.docs.map((doc) {
-                      CommentModel comment =
-                          CommentModel.fromMap(doc.data());
-                      List<QueryDocumentSnapshot<Object>> replyComments =
-                          snapshot.data.docs
-                              .where((o) =>
-                                  o['commentId'] ==
-                                  'reply-' + comment.commentId)
-                              .toList();
-                      return Comment(
-                        comment: comment,
-                        replies: replyComments
-                      );
-                    }).toList(),
-                  );
-                } else {
-                  return Container(
-                    child: Center(
-                      child: CircularProgressIndicator(),
+              title: TextFormField(
+                controller: getcomment,
+                cursorColor: primary,
+                decoration: InputDecoration(
+                  suffixIcon: InkWell(
+                    child: Icon(
+                      Icons.send,
+                      color: primary,
                     ),
-                  );
-                }
-              },
+                    onTap: () {
+                      if (getcomment.text.length > 0) {
+                        // print(getcomment.text);
+                        CommentServices().addVideoComment(
+                            widget.video.channelId,
+                            widget.video.channelName,
+                            getcomment.text,
+                            commentId,
+                            isOwner,
+                            "watch/" + widget.video.id,
+                            widget.video.channelName,
+                            altProfilePic,
+                            "main-comment",
+                            uniqueId,
+                            "video",
+                            altUserId,
+                            widget.video.id,
+                            widget.video.title);
+                      }
+                      getcomment.clear();
+                    },
+                  ),
+                  // labelText: 'Add a comment',
+                  hintText: 'Add a comment',
+                  labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: primary,
+                      width: 1,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(15.0),
+                      topRight: Radius.circular(15.0),
+                      bottomLeft: Radius.circular(15.0),
+                      bottomRight: Radius.circular(15.0),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: primary,
+                      width: 1,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0),
+                      bottomLeft: Radius.circular(15.0),
+                      bottomRight: Radius.circular(15.0),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          )
-        ],
+            Divider(),
+            Container(
+              child: _loadingComments
+                  ? Center(
+                  child: Container(
+                    child: CircularProgressIndicator(
+                      color: primary,
+                    ),
+                  ))
+                  : _comments.length == 0
+                  ? Center(
+                  child: Container(
+                    child: Text('No posts to show!',
+                        style: GoogleFonts.ubuntu(fontSize: 15)),
+                  ))
+                  : Column(
+                children: [
+                  ListView.builder(
+                      itemCount: _comments.length,
+                      controller: _scrollController,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext ctx, int index) {
+                        CommentModel comment = CommentModel.fromMap(
+                            _comments[index].data());
+                        List<QueryDocumentSnapshot<Object>>
+                        replyComments = _comments
+                            .where((o) =>
+                        o['commentId'] ==
+                            'reply-' + comment.commentId)
+                            .toList();
+                        if (comment.commentId
+                            .contains(new RegExp(r'reply'))) {
+                          print(123);
+                          return Container();
+                        } else {
+                          return Comment(
+                              comment: comment,
+                              replies: replyComments);
+                        }
+                      })
+                ],
+              ),
+              // child: StreamBuilder(
+              //   stream: CommentServices()
+              //       .getVideoComments(widget.videoId.toString()),
+              //   builder: (BuildContext context,
+              //       AsyncSnapshot<QuerySnapshot> snapshot) {
+              //     if (snapshot.hasData) {
+              //       return ListView(
+              //         physics: NeverScrollableScrollPhysics(),
+              //         shrinkWrap: true,
+              //         children: snapshot.data.docs.map((doc) {
+              //           CommentModel comment = CommentModel.fromMap(doc.data());
+              //           List<QueryDocumentSnapshot<Object>> replyComments =
+              //               snapshot
+              //                   .data.docs
+              //                   .where((o) =>
+              //                       o['commentId'] ==
+              //                       'reply-' + comment.commentId)
+              //                   .toList();
+              //           if (comment.commentId.contains(new RegExp(r'reply'))) {
+              //             print(123);
+              //             return Container();
+              //           } else {
+              //             return Comment(
+              //                 comment: comment, replies: replyComments);
+              //           }
+              //         }).toList(),
+              //       );
+              //     } else {
+              //       return Container(
+              //         child: Center(
+              //           child: CircularProgressIndicator(),
+              //         ),
+              //       );
+              //     }
+              //   },
+              // ),
+            ),
+          ],
+        ),
       ),
     );
   }

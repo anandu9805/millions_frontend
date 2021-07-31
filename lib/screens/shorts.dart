@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/size.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:millions/screens/uploadvideo.dart';
@@ -28,6 +31,7 @@ class _ShortsState extends State<Shorts> {
       "Pon1uG0eNnhf9TLsps0jtScndtN2"; //the id of the logged in user
   // var currentuserid = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   List following_details = [];
+
   bool liked = false;
   String likeId;
   var _perpage = 10;
@@ -38,6 +42,7 @@ class _ShortsState extends State<Shorts> {
   int number_of_items, swiper_number_of_items;
   String dynamic_link;
   List parameters=['30s'];
+
 
   @override
   void initState() {
@@ -137,6 +142,7 @@ GetCurrentUserDetails();
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.height;
     return Scaffold(
+
       body: _isLoading == false
           ? Swiper(
               onIndexChanged: (int index) {
@@ -152,6 +158,7 @@ GetCurrentUserDetails();
               controller: _scrollController,
               containerWidth: MediaQuery.of(context).size.width,
               itemBuilder: (BuildContext context, int index) {
+
                 return Stack(children: [
                   ContentScreen(
                       src: _reels_items[index]
@@ -254,6 +261,7 @@ GetCurrentUserDetails();
                     bottom: h / 7,
                     child: Column(
                       children: [
+//<<<<<<< HEAD
                         liked == true
                             ? IconButton(
                                 onPressed: () {
@@ -290,6 +298,65 @@ GetCurrentUserDetails();
                                   },
                                 ),
                               ),
+//======= Some problem here..............................................
+                  /*      FutureBuilder(
+                          future: LikeServices().reelsLikeChecker(likeId),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              print(1);
+                              return Icon(Icons.favorite);
+                            } else {
+                              if (snapshot == null) {
+                                print(10);
+                              }
+                              print(liked.toString()+DateTime.now().toString());
+                              // print(
+                              //     snapshot.data[FieldPath.fromString("liked")]);
+                              // print("snapshot.data");
+                              setState(() {
+                                liked = snapshot.data['liked']??false;
+                              });
+                              return liked == true
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          liked = !liked;
+                                        });
+                                        LikeServices().unLikeReels(
+                                            reels_objects[index].id,
+                                            reels_objects[index].channelId,
+                                            altUserId);
+                                      },
+                                      icon: Icon(
+                                        Icons.favorite,
+                                        color: primary,
+                                      ),
+                                    )
+                                  : IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          liked = !liked;
+                                        });
+                                        print(reels_objects[index].id+
+                                            reels_objects[index].channelId+
+                                            altUserId);
+                                        LikeServices().likeReels(
+                                            reels_objects[index].id,
+                                            reels_objects[index].channelId,
+                                            altUserId);
+                                      },
+                                      icon: Icon(
+                                        Icons.favorite_border,
+                                        color: primary,
+                                      ),
+                                    );
+
+
+                            }
+
+                          },
+                        ),*/
+//>>>>>>> 9f2164bf502e9ec41dcc5db14c2606bd5ff2b1bc
                         SizedBox(height: 20),
                         IconButton(
                           onPressed: () async{

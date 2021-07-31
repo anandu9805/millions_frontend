@@ -110,7 +110,7 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
 
   }
   void init() async {
-    print("inside upload_background");
+    print("checking internet connection");
 
 
 
@@ -169,8 +169,10 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     return ChangeNotifierProvider(
       create: (context) => MillionsProvider(),
       child: MaterialApp(
+
         routes: <String, WidgetBuilder>{
-          '/': (BuildContext context) =>isConnected==true?HomePage():Center(child: Text("No net")),
+          '/': (BuildContext context) =>isConnected==true?HomePage()//Screen1()
+              :Center(child: Text("No net")),
 
         },
         debugShowCheckedModeBanner: false,
@@ -181,6 +183,7 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
         ),
         // home: HomePage()//Screen1(),
       ),
+
     );
   }
 }

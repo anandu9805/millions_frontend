@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:millions/provider.dart';
+import 'package:millions/screens/complete_profile.dart';
+import 'package:millions/screens/createPost.dart';
 import 'package:millions/screens/home.dart';
 import 'package:provider/provider.dart';
 
@@ -86,13 +88,22 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                               )),
                         ],
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         final millionsprovider = Provider.of<MillionsProvider>(
                             context,
                             listen: false);
-                        Future<User> user =
-                            millionsprovider.googleLogin();
-                            print(user);
+                        User user = await millionsprovider.googleLogin(
+                            context: context);
+                        print(user);
+                        if (user != null) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => CreateProfile(
+                                user: user,
+                              ),
+                            ),
+                          );
+                        }
                       },
                     ),
                   ),

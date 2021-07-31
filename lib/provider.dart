@@ -8,7 +8,7 @@ class MillionsProvider extends ChangeNotifier {
   // GoogleSignInAccount get user => _user;
   var googleAuth;
 
-  Future<User> googleLogin() async {
+  Future<User> googleLogin({ BuildContext context}) async {
     final googleUser = await googleSignIn.signIn();
     print(googleUser.email);
     if (googleUser == null) return null;
@@ -20,7 +20,8 @@ class MillionsProvider extends ChangeNotifier {
     );
 
     await FirebaseAuth.instance.signInWithCredential(credential);
-    // notifyListeners();
+    notifyListeners();
+    print(FirebaseAuth.instance.currentUser.displayName);
     return FirebaseAuth.instance.currentUser;
   }
 

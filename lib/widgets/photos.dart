@@ -5,9 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/newpost_model.dart';
+import 'package:millions/screens/post_coments.dart';
 import 'package:millions/services/likeServices.dart';
 import 'package:millions/widgets/popUpMenu.dart';
-import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
+// import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
 import 'package:millions/screens/comment_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import '../constants/colors.dart';
@@ -44,13 +45,27 @@ class _PhotosState extends State<Photos> {
   @override
   void initState() {
     super.initState();
-    likeId = currentuserid + '_' + widget.photo.id;
-    Future<DocumentSnapshot> likeData = LikeServices().postLikeChecker(likeId);
-    likeData.then((value) {
+    likeId = altUserId + '_' + widget.photo.id;
+    Future<DocumentSnapshot> likedData = LikeServices().postLikeChecker(likeId);
+    likedData.then((value) {
       setState(() {
-        liked = value.get('liked') == true ? true : false;
+        liked = value.get('liked') || false;
+        liked = liked ?? false;
       });
     });
+    // Future<DocumentSnapshot> likeData = LikeServices().postLikeChecker(likeId);
+
+    // likeData.then((value) {
+    //   if (value.get('liked') == null) {
+    //     setState(() {
+    //       liked = false;
+    //     });
+    //   } else {
+    //     setState(() {
+    //       liked = value.get('liked');
+    //     });
+    //   }
+    // });
     print(liked);
   }
 
@@ -139,111 +154,151 @@ class _PhotosState extends State<Photos> {
                   if (liked == true) {
                     print(0);
                     setState(() {
-                      like = Icons.favorite;
-                      favIconColor = primary;
                       liked = !liked;
                     });
-                    LikeServices().likePost(
-                        widget.photo.id, currentuserid, currentuserid);
+                    LikeServices().unLikePost(
+                        widget.photo.id, widget.photo.channelId, altUserId);
                   } else {
                     print(1);
 
                     setState(() {
                       liked = !liked;
-                      like = Icons.favorite_outline;
-                      favIconColor = Colors.black;
                     });
-
-                    LikeServices().unLikePost(
-                        widget.photo.id, currentuserid, currentuserid);
+                    LikeServices().likePost(
+                        widget.photo.id, widget.photo.channelId, altUserId);
                   }
                   // Navigator.push(
                   //   context,
                   //   MaterialPageRoute(builder: (context) => ViewVideo()),
                   // );
                 },
-                child: PinchZoomImage(
-                  image: ClipRRect(
-                    child: Image.network(
-                      widget.photo.photoSrc == null
-                          ? altChannelArt
-                          : widget.photo.photoSrc,
-
-                      //content[this.widget.index].url,
-                      // fit: BoxFit.fill,
-                    ),
+                child:
+                    // PinchZoomImage(
+                    ClipRRect(
+                  child: Image.network(
+                    widget.photo.photoSrc == null
+                        ? altChannelArt
+                        : widget.photo.photoSrc,
+                    //content[this.widget.index].url,
+                    // fit: BoxFit.fill,
                   ),
-                  zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
-                  //hideStatusBarWhileZooming: true,
                 ),
+                // zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
+                //hideStatusBarWhileZooming: true,
+                // ),
               ),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        child: GestureDetector(
-                          child: Icon(
-                            like,
-                            color: favIconColor,
-                          ),
-                          onTap: () {
-                            if (liked == true) {
-                              setState(() {
-                                liked=!liked;
-                                like = Icons.favorite;
-                                favIconColor = primary;
-                              });
-                              LikeServices().likePost(
-                                  widget.photo.id, currentuserid, currentuserid);
-                            } else {
-                              setState(() {
-                                liked=!liked;
-                                like = Icons.favorite_outline;
-                                favIconColor = Colors.black;
-                              });
-                              LikeServices().unLikePost(
-                                  widget.photo.id, currentuserid, currentuserid);
-                            }
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      IconButton(
-                        onPressed: () async {
-                          parameters = ['posts'];
-                          parameters.add(widget.photo.id);
-                          print(parameters);
-                          await _dynamicLinkService
-                              .createDynamicLink(parameters)
-                              .then((value) {
-                            dynamic_link = value;
-                          });
-                          //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
-                          Share.share(dynamic_link);
-                        },
-                        icon: Icon(
-                          Icons.share,
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Transform.rotate(
-                          angle: 5.5, child: Icon(Icons.send_outlined)),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Comments()),
-                          );
-                        },
-                        child: Text(
-                          'View comments',
-                          style: GoogleFonts.ubuntu(color: Colors.black),
-                        ),
-                      )
-                    ],
+
+                  Container(
+                    child: FutureBuilder(
+                      future: LikeServices().postLikeChecker(likeId),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Icon(Icons.favorite);
+                        } else {
+                          if (snapshot.data == null) {
+                            print(10);
+                          }
+                          // setState(() {
+                          //   liked = snapshot.data['liked'] ?? false;
+                          // });
+                          // print(snapshot.data['liked']);
+                          return liked == true
+                              ? IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      liked = !liked;
+                                    });
+                                    LikeServices().unLikePost(widget.photo.id,
+                                        widget.photo.channelId, altUserId);
+                                  },
+                                  icon: Icon(
+                                    Icons.favorite,
+                                    color: primary,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      liked = !liked;
+                                    });
+                                    LikeServices().likePost(widget.photo.id,
+                                        widget.photo.channelId, altUserId);
+                                  },
+                                  icon: Icon(
+                                    Icons.favorite_border,
+                                    color: favIconColor,
+                                  ),
+                                );
+                        }
+                      },
+                    ),
+
+                    // child: GestureDetector(
+                    //   child: Icon(
+                    //     like,
+                    //     color: favIconColor,
+                    //   ),
+                    //   onTap: () {
+                    //     if (liked == true) {
+                    //       setState(() {
+                    //         liked = !liked;
+                    //         like = Icons.favorite;
+                    //         favIconColor = primary;
+                    //       });
+                    // LikeServices().likePost(widget.photo.id,
+                    //     currentuserid, currentuserid);
+                    //     } else {
+                    //       setState(() {
+                    //         liked = !liked;
+                    //         like = Icons.favorite_outline;
+                    //         favIconColor = Colors.black;
+                    //       });
+                    // LikeServices().unLikePost(widget.photo.id,
+                    //     currentuserid, currentuserid);
+                    //     }
+                    //   },
+                    // ),
+                  ),
+                  SizedBox(width: 16),
+    IconButton(
+    onPressed: () async {
+    parameters = ['posts'];
+    parameters.add(widget.photo.id);
+    print(parameters);
+    await _dynamicLinkService
+        .createDynamicLink(parameters)
+        .then((value) {
+    dynamic_link = value;
+    });
+    //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
+    Share.share(dynamic_link);
+    },
+    icon: Icon(
+    Icons.share,
+    ),
+    ),
+                  SizedBox(width: 16),
+                  Transform.rotate(
+                      angle: 5.5, child: Icon(Icons.send_outlined)),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PostComments(
+                                commentId: widget.photo.id,
+                                post: widget.photo)),
+                      );
+                    },
+                    child: Text(
+                      'View comments',
+                      style: GoogleFonts.ubuntu(color: Colors.black),
+                    ),
+
                   ),
                   widget.photo.channelId == altUserId
                       ? PopUpMenuIcon("posts", widget.photo.id)

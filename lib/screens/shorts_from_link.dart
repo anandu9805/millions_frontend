@@ -13,7 +13,6 @@ import '../constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 
-
 import '../services/dynamiclinkservice.dart';
 
 class ShortsFromLink extends StatefulWidget {
