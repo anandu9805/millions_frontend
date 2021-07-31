@@ -10,6 +10,7 @@ class LikeServices {
   }
 
   likeVideo(String videoId, String channelId, String userId) async {
+    // var newId = FirebaseFirestore.instance.collection('reports').doc();
     await FirebaseFirestore.instance
         .collection('video-likes')
         .doc(userId + '_' + videoId)
@@ -28,16 +29,6 @@ class LikeServices {
       ),
     );
   }
-
-  Future<int> videoLikeCount(String videoId) async =>
-      await FirebaseFirestore.instance
-          .collection('video-likes')
-          .where('video', isEqualTo: videoId)
-          .where('liked', isEqualTo: true)
-          .get()
-          .then((value) {
-        return value.size;
-      });
 
   unLikeVideo(String videoId, String channelId, String userId) async {
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
@@ -61,17 +52,13 @@ class LikeServices {
     );
   }
 
-  Future<bool> reelsLikeChecker(String likeId) async {
-    bool liked;
-    FirebaseFirestore.instance
+
+  Future<DocumentSnapshot> reelsLikeChecker(String likeId) async {
+    // print(likeId);
+    return await FirebaseFirestore.instance
         .collection('reels-likes')
         .doc(likeId)
-        .get()
-        .then((value) {
-      liked = value.get('liked') || false;
-      liked = liked ?? false;
-      return liked;
-    });
+        .get();
   }
 
   likeReels(String videoId, String channelId, String userId) async {
@@ -116,6 +103,7 @@ class LikeServices {
       ),
     );
   }
+
 
   Future<DocumentSnapshot> postLikeChecker(String likeId) async {
     // print(likeId);

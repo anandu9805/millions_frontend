@@ -21,13 +21,14 @@ class _VideoCardState extends State<VideoCard> {
 
   @override
   Widget build(BuildContext context) {
+    String dummyId=null;
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ViewVideo(
-              video: widget.video,
+              video:widget.video,id:dummyId
             ),
           ),
         );

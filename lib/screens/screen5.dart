@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/admodel.dart';
 import 'package:millions/model/video.dart';
-import 'package:millions/services/userService.dart';
 import 'package:millions/services/video-services.dart';
 import 'package:millions/widgets/ads.dart';
 import 'package:millions/widgets/videoCard.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class Screen5 extends StatefulWidget {
   @override
@@ -19,11 +19,13 @@ class _Screen5State extends State<Screen5> {
 
   @override
   void initState() {
-    UserServices().getUserDetails('XIi08ww5Fmgkv7FXOSTkOcmVh2C3');
     super.initState();
+
   }
+
   @override
   Widget build(BuildContext context) {
+
     // final currentuser=FirebaseAuth.instance.currentUser;
     // CollectionReference users = FirebaseFirestore.instance.collection('users');
     // final currentUserDetails =users.where('email',isEqualTo:currentuser.email );

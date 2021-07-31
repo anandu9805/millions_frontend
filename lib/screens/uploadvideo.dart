@@ -173,6 +173,9 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   void upload() async {
+    var newId = FirebaseFirestore.instance
+        .collection('videos')
+        .doc(); //to get the id of the document we are going to create in the collection
     setState(() {
       _isLoading = true;
     });
@@ -181,14 +184,15 @@ class _UploadPageState extends State<UploadPage> {
         firebase_storage.FirebaseStorage.instance;
 
     firebase_storage.Reference ref_thumbnail = storage
-        .ref('testvideos/${currentuserid}/thumbnails/${thumnail_image_name}');
+        .ref('assets/${currentuserid}/videos/${newId.id}/${newId.id}.jpg');
     firebase_storage.UploadTask uploadTask_thumbnail =
         ref_thumbnail.putFile(thumbanil);
     uploadTask_thumbnail.whenComplete(() async {
+
       thumbnail_url = await ref_thumbnail.getDownloadURL();
 
       firebase_storage.Reference ref =
-          storage.ref('testvideos/${currentuserid}/videos/${fileName}');
+          storage.ref('assets/${currentuserid}/videos/${newId.id}/${newId.id}.mp4');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
 
       uploadTask.whenComplete(() async {
@@ -205,9 +209,7 @@ class _UploadPageState extends State<UploadPage> {
             _videoFile));
         print("videos: $videoslist");
 
-        var newId = FirebaseFirestore.instance
-            .collection('videos')
-            .doc(); //to get the id of the document we are going to create in the collection
+
         print("hello2");
         print("currentUserChannelDetails");
         print(currentUserChannelDetails);
@@ -244,10 +246,11 @@ class _UploadPageState extends State<UploadPage> {
           'views': 0,
         });
         print("hello3");
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
         );
+        _isLoading=false;
       }).catchError((onError) {
         print(onError);
       });

@@ -109,6 +109,8 @@ List currentUserChannelDetails=[];
   }
 
   void upload() async {
+    var newId= FirebaseFirestore.instance
+        .collection('posts').doc();//to get the id of the document we are going to create in the collection
     setState(() {
       _isLoading = true;
     });
@@ -117,7 +119,7 @@ List currentUserChannelDetails=[];
         firebase_storage.FirebaseStorage.instance;
 
     firebase_storage.Reference ref =
-        storage.ref('channels/${currentuserid}/posts/${fileName}');
+        storage.ref('assets/${currentuserid}/posts/${newId.id}.jpg');
     firebase_storage.UploadTask uploadTask = ref.putFile(_imageFile);
 
     uploadTask.whenComplete(() async {
@@ -127,8 +129,7 @@ List currentUserChannelDetails=[];
           decsiptionController.text.isEmpty ? " " : decsiptionController.text;
 
       posts.add(NewPost(description, _imageFile, commentStatus));
-      var newId= FirebaseFirestore.instance
-          .collection('posts').doc();//to get the id of the document we are going to create in the collection
+
 
       await FirebaseFirestore.instance
           .collection('posts')
@@ -158,10 +159,11 @@ List currentUserChannelDetails=[];
         'views':0 ,
       });
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
+      _isLoading=false;
     }).catchError((onError) {
       print(onError);
     });

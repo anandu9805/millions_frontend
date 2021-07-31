@@ -18,11 +18,13 @@ import 'package:loading_animations/loading_animations.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
 import './trimmer_view.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class UploadReel extends StatefulWidget {
-  final File file_to_upload,thumbnail_from_preview;var duration;
+  final File file_to_upload, thumbnail_from_preview;
+  var duration;
 
-  UploadReel(this.file_to_upload,this.thumbnail_from_preview,this.duration);
+  UploadReel(this.file_to_upload, this.thumbnail_from_preview, this.duration);
 
   @override
   _UploadReelState createState() => _UploadReelState();
@@ -34,7 +36,7 @@ class _UploadReelState extends State<UploadReel> {
   // var currentuserid =
   //     "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
   var currentuserid = "Pon1uG0eNnhf9TLsps0jtScndtN2";
-  String fileName=null;
+  String fileName = null;
   String url;
   List currentUserChannelDetails = [];
   List reelslist = [];
@@ -76,7 +78,7 @@ class _UploadReelState extends State<UploadReel> {
     getCurrentUserChannelDetails();
     if (widget.file_to_upload != null) {
       _videoFile = widget.file_to_upload;
-      thumbanil=widget.thumbnail_from_preview;
+      thumbanil = widget.thumbnail_from_preview;
       uploadComplete = true;
       fileName = widget.file_to_upload.path.split('/').last;
       thumnail_image_name = widget.thumbnail_from_preview.path.split('/').last;
@@ -88,7 +90,7 @@ class _UploadReelState extends State<UploadReel> {
     PickedFile pickedImageFile = await _picker.getVideo(
       source: ImageSource.gallery,
     );
-   // fileName = pickedImageFile.path.split('/').last;
+    // fileName = pickedImageFile.path.split('/').last;
     await getThumbanil(pickedImageFile).then((value) => thumbanil_temp = value);
 
     //---------------------------------------------------------
@@ -96,10 +98,9 @@ class _UploadReelState extends State<UploadReel> {
       Navigator.of(context).push(
         //to trim..............................
         MaterialPageRoute(builder: (context) {
-          return TrimmerView(File(pickedImageFile.path),thumbanil_temp);
+          return TrimmerView(File(pickedImageFile.path), thumbanil_temp);
         }),
       );
-
     }
 
 //--------------------------------------------------------------
@@ -123,10 +124,9 @@ class _UploadReelState extends State<UploadReel> {
       Navigator.of(context).push(
         //to trim..............................
         MaterialPageRoute(builder: (context) {
-          return TrimmerView(File(pickedImageFile.path),thumbanil_temp);
+          return TrimmerView(File(pickedImageFile.path), thumbanil_temp);
         }),
       );
-
     }
 
 //--------------------------------------------------------------
@@ -181,14 +181,15 @@ class _UploadReelState extends State<UploadReel> {
 
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
-    firebase_storage.Reference ref_thumbnail =
-    storage.ref('test-reels/${currentuserid}/thumbnails/${thumnail_image_name}');
-    firebase_storage.UploadTask uploadTask_thumbnail = ref_thumbnail.putFile(thumbanil);
+    firebase_storage.Reference ref_thumbnail = storage
+        .ref('test-reels/${currentuserid}/thumbnails/${thumnail_image_name}');
+    firebase_storage.UploadTask uploadTask_thumbnail =
+        ref_thumbnail.putFile(thumbanil);
     uploadTask_thumbnail.whenComplete(() async {
       thumbnail_url = await ref_thumbnail.getDownloadURL();
 
       firebase_storage.Reference ref =
-      storage.ref('test-reels/${currentuserid}/${fileName}');
+          storage.ref('test-reels/${currentuserid}/${fileName}');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
 
       uploadTask.whenComplete(() async {
@@ -200,7 +201,7 @@ class _UploadReelState extends State<UploadReel> {
             selectedCountry,
             selectedLanguage,
             commentStatus,
-         'Public',
+            'Public',
             selectedCategory,
             _videoFile));
         print("reels: $reelslist");
@@ -219,7 +220,7 @@ class _UploadReelState extends State<UploadReel> {
           'date': DateTime.now(),
           'description': reelslist[0].description,
           'disLikes': 0,
-          'duration':(widget.duration/1000).round(), //calculate
+          'duration': (widget.duration / 1000).round(), //calculate
           'generatedThumbnail': thumbnail_url, //generate
           'id': newId.id,
           'isComments': reelslist[0].commentallowed,
@@ -256,18 +257,18 @@ class _UploadReelState extends State<UploadReel> {
   @override
   Widget build(BuildContext context) {
     //print("_videoFile $_videoFile");
-    return _isLoading
-        ? Center(
-            child: LoadingBouncingGrid.circle(
-            borderColor: primary,
-            backgroundColor: Colors.white,
-            borderSize: 10,
-            size: 100,
-            duration: Duration(milliseconds: 1800),
-          ))
-        : Scaffold(
-            key: scaffoldKey,
-            body: SingleChildScrollView(
+    return Scaffold(
+      key: scaffoldKey,
+      body: _isLoading
+          ? Center(
+              child: LoadingBouncingGrid.circle(
+              borderColor: primary,
+              backgroundColor: Colors.white,
+              borderSize: 10,
+              size: 100,
+              duration: Duration(milliseconds: 1800),
+            ))
+          : SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -307,10 +308,10 @@ class _UploadReelState extends State<UploadReel> {
                                 child: Center(
                                     child: Text(
                                   "30s video selected",
-                                  style:  GoogleFonts.ubuntu(
-                                    color:Colors.white,
+                                  style: GoogleFonts.ubuntu(
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w600,
-                                    fontSize:20,
+                                    fontSize: 20,
                                   ),
                                   textAlign: TextAlign.center,
                                 )),
@@ -750,6 +751,6 @@ class _UploadReelState extends State<UploadReel> {
                 ],
               ),
             ),
-          );
+    );
   }
 }

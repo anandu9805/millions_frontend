@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:millions/constants/size.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:millions/screens/uploadvideo.dart';
 import 'package:millions/services/likeServices.dart';
 import '../model/reels_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants/colors.dart';
 
+
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../services/dynamiclinkservice.dart';
 
 class Shorts extends StatefulWidget {
   @override
@@ -16,67 +21,142 @@ class Shorts extends StatefulWidget {
 }
 
 class _ShortsState extends State<Shorts> {
+  SwiperController _scrollController = SwiperController();
+
+  //ScrollController _scrollController=ScrollController();
   var currentuserid =
-      "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
+      "Pon1uG0eNnhf9TLsps0jtScndtN2"; //the id of the logged in user
   // var currentuserid = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   List following_details = [];
-  bool liked ;
+  bool liked = false;
   String likeId;
+  var _perpage = 10;
+  List<Reels> reels_objects = [];
+  List<DocumentSnapshot> _reels_items = [];
+  DocumentSnapshot _lastdocument;
+  var _isLoading = true;
+  int number_of_items, swiper_number_of_items;
+  String dynamic_link;
+  List parameters=['30s'];
 
   @override
   void initState() {
+    print("going to call");
+
+GetCurrentUserDetails();
+    _getReels();
     getFollowingdetails();
+
+
+
+
     super.initState();
+  }
+
+
+
+  Future<String> GetCurrentUserDetails() async {//get current user details here
+    try {
+        print("hello---------------------------------------------------------------------------------------------");
+    await  FirebaseFirestore.instance
+          .collection('channels').doc(currentuserid)
+          .get().then((value) => print(value));
+
+    } catch (e) {
+      return "Follow";
+    }
   }
 
   Future<String> getFollowingdetails() async {
     try {
-      FirebaseFirestore.instance
+      //  print("hello");
+     await FirebaseFirestore.instance
           .collection('followers')
           .get()
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((doc) {
-          // print("in");
+          //  print("in");
           if (doc['follower'] == currentuserid)
             following_details.add(doc['channel']);
         });
-        // print("followerdetails:");
-        // print(following_details);
       });
     } catch (e) {
       return "Follow";
     }
   }
 
-  List<Reels> reels_objects = [];
+  _getReels() async {
+    Query q = FirebaseFirestore.instance
+        .collection('reels')
+        .orderBy("date")
+        .limit(_perpage);
+    QuerySnapshot querySnapshot = await q.get();
+    _reels_items = querySnapshot.docs;
+    _lastdocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    setState(() {
+      _isLoading = false;
+    });
+    print("_getReels");
+    print("_reels_items");
+    print(_reels_items);
+    number_of_items = _reels_items.length - 1;
+    swiper_number_of_items = _reels_items.length;
+  }
+
+  _getMoreReels() async {
+    print(_lastdocument.data());
+    print(_lastdocument.id);
+    Query q = FirebaseFirestore.instance
+        .collection('reels')
+        .orderBy("date")
+        .startAfterDocument(_lastdocument);
+    QuerySnapshot querySnapshot = await q.get();
+    setState(() {
+      swiper_number_of_items = _reels_items.length;
+    });
+    if (querySnapshot.docs.length == 0) {
+      print("empty-------------------------------------------");
+    } else {
+      _lastdocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+      _reels_items.addAll(querySnapshot.docs);
+      print("_getMoreReels");
+      print("_reels_items");
+      print(_reels_items);
+      number_of_items = _reels_items.length - 1;
+    }
+  }
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
+    final DynamicLinkService _dynamicLinkService = DynamicLinkService();
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('reels').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData) {
-            // print("has data");
-            reels_objects = snapshot.data.docs.map((doc) {
-              Reels reelsItems = Reels.fromMap(doc.data());
-
-              return reelsItems;
-            }).toList();
-            // print(reels_objects);
-
-            return Swiper(
+      body: _isLoading == false
+          ? Swiper(
+              onIndexChanged: (int index) {
+                print(
+                    "--------------------------------------------------------------------------------------------");
+                print(index);
+                if (number_of_items - index == 2) {
+                  print(
+                      "Now going to get more items---------------------------------------------------------------");
+                  _getMoreReels();
+                }
+              },
+              controller: _scrollController,
               containerWidth: MediaQuery.of(context).size.width,
               itemBuilder: (BuildContext context, int index) {
-                // print("reels_objects[index].videoSrc");
-                // print(reels_objects[index].videoSrc);
-
                 return Stack(children: [
                   ContentScreen(
-                    src: reels_objects[index].videoSrc,
-                  ),
+                      src: _reels_items[index]
+                          ["videoSrc"] //reels_objects[index].videoSrc,
+                      ),
                   Positioned(
                     left: w / 30,
                     bottom: h / 10,
@@ -86,7 +166,8 @@ class _ShortsState extends State<Shorts> {
                         CircleAvatar(
                           child: ClipRRect(
                             child: Image.network(
-                              reels_objects[index].profilePic,
+                              _reels_items[index]["profilePic"],
+                              //reels_objects[index].profilePic,
                               width: w * 1,
                               height: h * 1,
                               fit: BoxFit.cover,
@@ -101,11 +182,14 @@ class _ShortsState extends State<Shorts> {
                         Row(
                           children: [
                             Text(
-                              reels_objects[index].channelName,
+                              _reels_items[index]["channelName"],
+                              //  reels_objects[index].channelName,
                               style: GoogleFonts.ubuntu(color: Colors.white),
                             ),
                             SizedBox(width: 10),
-                            if (reels_objects[index].isVerified)
+                            if (_reels_items[index]["isVerified"]
+                            //reels_objects[index].isVerified
+                            )
                               Icon(
                                 Icons.verified,
                                 size: 15,
@@ -118,30 +202,32 @@ class _ShortsState extends State<Shorts> {
                         ),
                         Row(
                           children: [
-                            FlatButton(
+                            _reels_items[index]["channelId"]!=currentuserid ? FlatButton(
                               color: primary,
                               onPressed: () {
                                 if (!following_details
-                                    .contains(reels_objects[index].channelId)) {
+                                    .contains(_reels_items[index]["channelId"]
+                                        // reels_objects[index].channelId
+                                        )) {
                                   setState(() {
                                     following_details
-                                        .add(reels_objects[index].channelId);
+                                        .add(_reels_items[index]["channelId"]);
                                   });
                                   FirebaseFirestore.instance
                                       .collection('followers')
                                       .doc(currentuserid)
                                       .set({
-                                    'channel': reels_objects[index].channelId,
+                                    'channel': _reels_items[index]["channelId"],
                                     'date': DateTime.now(),
                                     'follower': currentuserid
                                   });
                                 } else {
-                                  print("already following");
+                                  //                        print("already following");
                                 }
                               },
                               child: Text(
                                 !following_details.contains(
-                                        reels_objects[index].channelId)
+                                        _reels_items[index]["channelId"])
                                     ? 'Follow'
                                     : 'Following',
                                 style: GoogleFonts.ubuntu(
@@ -149,11 +235,12 @@ class _ShortsState extends State<Shorts> {
                                     height: 1,
                                     fontWeight: FontWeight.w500),
                               ),
-                            ),
+                            ):FlatButton(child:Text('Following'),color: Colors.black12,)
                           ],
                         ),
                         Text(
-                          reels_objects[index].description,
+                          _reels_items[index]["description"],
+                          // reels_objects[index].description,
                           style: GoogleFonts.ubuntu(
                               color: Colors.white,
                               height: 1,
@@ -167,84 +254,56 @@ class _ShortsState extends State<Shorts> {
                     bottom: h / 7,
                     child: Column(
                       children: [
-                        FutureBuilder(
-                          future: LikeServices().reelsLikeChecker(likeId),
-                          builder: (BuildContext context, snapshot) {
-                            if (snapshot.hasData) {
-                              // print(snapshot.data);
-                              // print("snapshot.data");
-                              setState(() {
-                                liked = snapshot.data;
-                              });
-                              return liked == true
-                                  ? IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        LikeServices().unLikeReels(
-                                            reels_objects[index].id,
-                                            currentuserid,
-                                            currentuserid);
-                                      }, //---------------------------------------------------
-                                      icon: Icon(
-                                        Icons.favorite_rounded,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        LikeServices().likeReels(
-                                            reels_objects[index].id,
-                                            currentuserid,
-                                            currentuserid);
-                                      }, //----------------------
-                                      icon: Icon(
-                                        Icons.favorite_outline_rounded,
-                                        color: Colors.white,
-                                      ),
-                                    );
-
-
-                              // likeId =
-                              //     currentuserid + '_' + reels_objects[index].id;
-                              // Future<DocumentSnapshot> likedData =
-                              //     snapshot.data();
-                              // likedData.then((value) {
-                              //   print(value.get('liked'));
-                              //   // setState(() {
-                              //   //   // print(value.get('liked'));
-                              //   //   liked =
-                              //   //       value.get('liked') == true ? true : false;
-                              //   //   liked = liked ?? false;
-                              //   // });
-                              // });
-                            } else {
-                              print(snapshot.hasError);
-                              return IconButton(
+                        liked == true
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    liked = !liked;
+                                  });
+                                  LikeServices().unLikeReels(
+                                      _reels_items[index]["id"],
+                                      // reels_objects[index].id,
+                                      currentuserid,
+                                      currentuserid);
+                                }, //---------------------------------------------------
+                                icon: Icon(
+                                  Icons.favorite_rounded,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : IconButton(
                                 onPressed: () {
                                   setState(() {
                                     liked = !liked;
                                   });
                                   LikeServices().likeReels(
-                                      reels_objects[index].id,
+                                      _reels_items[index]["id"],
                                       currentuserid,
                                       currentuserid);
                                 }, //----------------------
-                                icon: Icon(
-                                  Icons.favorite_outline_rounded,
+                                icon: IconButton(
+                                  icon: Icon(Icons.favorite_outline_rounded),
                                   color: Colors.white,
+                                  onPressed: () {
+                                    print("index");
+                                    print(index);
+                                  },
                                 ),
-                              );
-                            }
-                          },
-                        ),
+                              ),
                         SizedBox(height: 20),
                         IconButton(
-                          onPressed: () {}, //reels share function
+                          onPressed: () async{
+                            parameters=['30s'];
+                            parameters.add(_reels_items[index]["id"]);
+                            print(parameters);
+                           await _dynamicLinkService.createDynamicLink(parameters).then((value){
+                              dynamic_link=value;
+                            });
+                            //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
+                            Share.share(dynamic_link);
+
+                            //-----------------------------
+                          }, //reels share function
                           icon: Icon(
                             Icons.share,
                             color: Colors.white,
@@ -265,20 +324,17 @@ class _ShortsState extends State<Shorts> {
               },
               // autoplay: true,
               //  itemWidth:DeviceSize(context).width*0.5,
-              itemCount: reels_objects.length,
+              itemCount: swiper_number_of_items = _reels_items.length,
               scrollDirection: Axis.vertical,
-            );
-          } else {
-            return Container(
+              //loop: false,
+            )
+          : Container(
               child: Center(
                 child: CircularProgressIndicator(
                   color: primary,
                 ),
               ),
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }

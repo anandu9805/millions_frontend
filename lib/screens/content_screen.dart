@@ -19,6 +19,7 @@ class _ContentScreenState extends State<ContentScreen> {
   bool _liked = false;
   @override
   void initState() {
+    print("hello we are in content screen");
     super.initState();
     initializePlayer();
   }
@@ -28,8 +29,8 @@ class _ContentScreenState extends State<ContentScreen> {
     await Future.wait([_videoPlayerController.initialize()]);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      autoPlay: false,
-      showControls: true,
+      autoPlay:false,
+      showControls:true,
       looping: true,
     );
     setState(() {});
@@ -41,30 +42,33 @@ class _ContentScreenState extends State<ContentScreen> {
     _chewieController.dispose();
     super.dispose();
   }
-
   // height: MediaQuery.of(context).size.height,
   // width: MediaQuery.of(context).size.height,
   @override
   Widget build(BuildContext context) {
-    return _chewieController != null &&
-            _chewieController.videoPlayerController.value.isInitialized
-        ? Container(
-            color: Colors.black,
+
+   return  _chewieController != null &&
+              _chewieController.videoPlayerController.value.isInitialized
+          ?  Container(color: Colors.black,
             child: Chewie(
-              controller: _chewieController,
-            ),
-          )
-        : Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(
-                  color: primary,
+                  controller: _chewieController,
                 ),
-                SizedBox(height: 10),
-              ],
-            ),
+          )
+
+
+          : Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: primary,
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
           );
     //)
+
   }
 }
+

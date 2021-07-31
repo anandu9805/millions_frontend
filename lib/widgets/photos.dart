@@ -9,6 +9,11 @@ import 'package:millions/services/likeServices.dart';
 import 'package:millions/widgets/popUpMenu.dart';
 import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
 import 'package:millions/screens/comment_screen.dart';
+import 'package:share_plus/share_plus.dart';
+import '../constants/colors.dart';
+import '../services/dynamiclinkservice.dart';
+
+import '../services/dynamiclinkservice.dart';
 
 //import 'package:millions/screens/view_video.dart';
 //import '../model/content.dart';
@@ -19,6 +24,7 @@ class Photos extends StatefulWidget {
 
   Photos(PostDetail pic) {
     this.photo = pic;
+
   }
 
   @override
@@ -29,9 +35,12 @@ class _PhotosState extends State<Photos> {
   Color favIconColor = Colors.black;
 
   IconData like = Icons.favorite_border;
-  bool liked=true;
+  bool liked = false;
   String currentuserid = "4C4iLByizTPLBBlP4rssrwGTISb2";
   String likeId;
+
+  String dynamic_link;
+  List parameters = ['posts'];
   @override
   void initState() {
     super.initState();
@@ -72,6 +81,7 @@ class _PhotosState extends State<Photos> {
 
   @override
   Widget build(BuildContext context) {
+    final DynamicLinkService _dynamicLinkService = DynamicLinkService();
     var w = MediaQuery.of(context).size.width;
     TransformationController pinch = new TransformationController();
 
@@ -201,7 +211,23 @@ class _PhotosState extends State<Photos> {
                         ),
                       ),
                       SizedBox(width: 16),
-                      Icon(Icons.share_outlined),
+                      IconButton(
+                        onPressed: () async {
+                          parameters = ['posts'];
+                          parameters.add(widget.photo.id);
+                          print(parameters);
+                          await _dynamicLinkService
+                              .createDynamicLink(parameters)
+                              .then((value) {
+                            dynamic_link = value;
+                          });
+                          //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
+                          Share.share(dynamic_link);
+                        },
+                        icon: Icon(
+                          Icons.share,
+                        ),
+                      ),
                       SizedBox(width: 16),
                       Transform.rotate(
                           angle: 5.5, child: Icon(Icons.send_outlined)),
