@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:millions/screens/edit30s.dart';
+import 'package:millions/services/dynamiclinkservice.dart';
+import 'package:millions/services/likeServices.dart';
+import 'package:share_plus/share_plus.dart';
 import '../model/reels_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants/colors.dart';
@@ -22,12 +26,20 @@ class _ShortsState extends State<ChannelShorts> {
   // var currentuserid = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   List following_details = [];
 
-  Future<void> deletenow(String coll, String doc) async {
+  void deletenow(String coll, String doc) async {
     await FirebaseFirestore.instance
-        .runTransaction((Transaction myTransaction) async {
-      myTransaction
-          .delete(FirebaseFirestore.instance.collection(coll).doc(doc));
-    });
+        .collection(coll)
+        .doc(doc)
+        .delete()
+        .whenComplete(() {
+      _showToast(context, "30s deleted");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ChannelShorts(widget.channelId)),
+      );
+    }).catchError(
+            (error) => _showToast(context, "Failed to delete 30s: $error"));
   }
 
   void _showToast(BuildContext context, String message) {
@@ -44,87 +56,109 @@ class _ShortsState extends State<ChannelShorts> {
     );
   }
 
+  SwiperController _scrollController = SwiperController();
+  bool liked = false;
+  String likeId;
+  var _perpage = 10;
+  List<Reels> reels_objects = [];
+  List<DocumentSnapshot> _reels_items = [];
+  DocumentSnapshot _lastdocument;
+  var _isLoading = true;
+  int number_of_items, swiper_number_of_items;
+  String dynamic_link;
+  List parameters = ['30s'];
+
   @override
   void initState() {
-    // getFollowingdetails();
+   // GetCurrentUserDetails();
+    _getReels();
     super.initState();
   }
 
-  // Future<String> getFollowingdetails() async {
+  // Future<String> GetCurrentUserDetails() async {
+  //   //get current user details here
   //   try {
-  //     FirebaseFirestore.instance
-  //         .collection('followers')
+  //     print(
+  //         "hello---------------------------------------------------------------------------------------------");
+  //     await FirebaseFirestore.instance
+  //         .collection('channels')
+  //         .doc(altUserId)
   //         .get()
-  //         .then((QuerySnapshot querySnapshot) {
-  //       querySnapshot.docs.forEach((doc) {
-  //         print("in");
-  //         if (doc['follower'] == altUserId)
-  //           following_details.add(doc['channel']);
-  //       });
-  //       print("followerdetails:");
-  //       print(following_details);
-  //     });
-
+  //         .then((value) => print(value));
   //   } catch (e) {
   //     return "Follow";
   //   }
   // }
 
-  List<Reels> reels_objects = [];
+  _getReels() async {
+    Query q = FirebaseFirestore.instance
+        .collection('reels')
+        .where('channelId', isEqualTo: widget.channelId)
+        .orderBy("date", descending: true)
+        .limit(_perpage);
+    QuerySnapshot querySnapshot = await q.get();
+    _reels_items = querySnapshot.docs;
+    _lastdocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    setState(() {
+      _isLoading = false;
+    });
+    print("_getReels");
+    print("_reels_items");
+    print(_reels_items);
+    number_of_items = _reels_items.length - 1;
+    swiper_number_of_items = _reels_items.length;
+  }
+
+  _getMoreReels() async {
+    print(_lastdocument.data());
+    print(_lastdocument.id);
+    Query q = FirebaseFirestore.instance
+        .collection('reels')
+        .where('channelId', isEqualTo: widget.channelId)
+        .orderBy("date")
+        .startAfterDocument(_lastdocument);
+    QuerySnapshot querySnapshot = await q.get();
+    setState(() {
+      swiper_number_of_items = _reels_items.length;
+    });
+    if (querySnapshot.docs.length == 0) {
+      print("empty-------------------------------------------");
+    } else {
+      _lastdocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+      _reels_items.addAll(querySnapshot.docs);
+      print("_getMoreReels");
+      print("_reels_items");
+      print(_reels_items);
+      number_of_items = _reels_items.length - 1;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final DynamicLinkService _dynamicLinkService = DynamicLinkService();
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('reels')
-            .where('channelId', isEqualTo: widget.channelId)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-                height: MediaQuery.of(context).size.height * 0.25,
-                child: Center(
-                    child: CircularProgressIndicator(
-                  color: primary,
-                )));
-          }
-          if (snapshot.data.docs.isEmpty) {
-            return Container(
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("No 30s videos to show!",
-                        style: GoogleFonts.ubuntu(fontSize: 15)),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(primary: primary),
-                        child: Text("Go Back to Channel Page",
-                            style: GoogleFonts.ubuntu(fontSize: 15)))
-                  ],
-                )));
-          }
-          if (snapshot.hasData) {
-            reels_objects = snapshot.data.docs.map((doc) {
-              Reels reelsItems = Reels.fromMap(doc.data());
-
-              return reelsItems;
-            }).toList();
-
-            return Swiper(
+      body: _isLoading == false
+          ? Swiper(
+              onIndexChanged: (int index) {
+                print(
+                    "--------------------------------------------------------------------------------------------");
+                print(index);
+                if (number_of_items - index == 2) {
+                  print(
+                      "Now going to get more items---------------------------------------------------------------");
+                  _getMoreReels();
+                }
+              },
+              controller: _scrollController,
               containerWidth: MediaQuery.of(context).size.width,
               itemBuilder: (BuildContext context, int index) {
                 return Stack(children: [
                   ContentScreen(
-                    src: reels_objects[index].videoSrc,
-                  ),
+                      src: _reels_items[index]
+                          ["videoSrc"] //reels_objects[index].videoSrc,
+                      ),
                   Positioned(
                     left: w / 30,
                     bottom: h / 10,
@@ -134,7 +168,8 @@ class _ShortsState extends State<ChannelShorts> {
                         CircleAvatar(
                           child: ClipRRect(
                             child: Image.network(
-                              reels_objects[index].profilePic,
+                              _reels_items[index]["profilePic"],
+                              //reels_objects[index].profilePic,
                               width: w * 1,
                               height: h * 1,
                               fit: BoxFit.cover,
@@ -149,11 +184,14 @@ class _ShortsState extends State<ChannelShorts> {
                         Row(
                           children: [
                             Text(
-                              reels_objects[index].channelName,
+                              _reels_items[index]["channelName"],
+                              //  reels_objects[index].channelName,
                               style: GoogleFonts.ubuntu(color: Colors.white),
                             ),
                             SizedBox(width: 10),
-                            if (reels_objects[index].isVerified)
+                            if (_reels_items[index]["isVerified"]
+                            //reels_objects[index].isVerified
+                            )
                               Icon(
                                 Icons.verified,
                                 size: 15,
@@ -164,48 +202,9 @@ class _ShortsState extends State<ChannelShorts> {
                         SizedBox(
                           height: 5,
                         ),
-                        widget.channelId != altUserId
-                            ? Row(
-                                children: [
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        primary: primary),
-                                    onPressed: () {
-                                      if (!following_details.contains(
-                                          reels_objects[index].channelId)) {
-                                        setState(() {
-                                          following_details.add(
-                                              reels_objects[index].channelId);
-                                        });
-                                        FirebaseFirestore.instance
-                                            .collection('followers')
-                                            .doc(altUserId)
-                                            .set({
-                                          'channel':
-                                              reels_objects[index].channelId,
-                                          'date': DateTime.now(),
-                                          'follower': altUserId
-                                        });
-                                      } else {
-                                        print("already following");
-                                      }
-                                    },
-                                    child: Text(
-                                      !following_details.contains(
-                                              reels_objects[index].channelId)
-                                          ? 'Follow'
-                                          : 'Following',
-                                      style: GoogleFonts.ubuntu(
-                                          color: Colors.white,
-                                          height: 1,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Text(''),
                         Text(
-                          reels_objects[index].description,
+                          _reels_items[index]["description"],
+                          // reels_objects[index].description,
                           style: GoogleFonts.ubuntu(
                               color: Colors.white,
                               height: 1,
@@ -219,18 +218,132 @@ class _ShortsState extends State<ChannelShorts> {
                     bottom: h / 7,
                     child: Column(
                       children: [
+//<<<<<<< HEAD
+                        liked == true
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    liked = !liked;
+                                  });
+                                  LikeServices().unLikeReels(
+                                      _reels_items[index]["id"],
+                                      // reels_objects[index].id,
+                                      altUserId,
+                                      altUserId);
+                                }, //---------------------------------------------------
+                                icon: Icon(
+                                  Icons.favorite_rounded,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    liked = !liked;
+                                  });
+                                  LikeServices().likeReels(
+                                      _reels_items[index]["id"],
+                                      altUserId,
+                                      altUserId);
+                                }, //----------------------
+                                icon: IconButton(
+                                  icon: Icon(Icons.favorite_outline_rounded),
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    print("index");
+                                    print(index);
+                                  },
+                                ),
+                              ),
+//======= Some problem here..............................................
+                        /*      FutureBuilder(
+                          future: LikeServices().reelsLikeChecker(likeId),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              print(1);
+                              return Icon(Icons.favorite);
+                            } else {
+                              if (snapshot == null) {
+                                print(10);
+                              }
+                              print(liked.toString()+DateTime.now().toString());
+                              // print(
+                              //     snapshot.data[FieldPath.fromString("liked")]);
+                              // print("snapshot.data");
+                              setState(() {
+                                liked = snapshot.data['liked']??false;
+                              });
+                              return liked == true
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          liked = !liked;
+                                        });
+                                        LikeServices().unLikeReels(
+                                            reels_objects[index].id,
+                                            reels_objects[index].channelId,
+                                            altUserId);
+                                      },
+                                      icon: Icon(
+                                        Icons.favorite,
+                                        color: primary,
+                                      ),
+                                    )
+                                  : IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          liked = !liked;
+                                        });
+                                        print(reels_objects[index].id+
+                                            reels_objects[index].channelId+
+                                            altUserId);
+                                        LikeServices().likeReels(
+                                            reels_objects[index].id,
+                                            reels_objects[index].channelId,
+                                            altUserId);
+                                      },
+                                      icon: Icon(
+                                        Icons.favorite_border,
+                                        color: primary,
+                                      ),
+                                    );
+                            }
+                          },
+                        ),*/
+//>>>>>>> 9f2164bf502e9ec41dcc5db14c2606bd5ff2b1bc
+                        SizedBox(height: 20),
                         IconButton(
-                          onPressed: () {}, //reels like function
+                          onPressed: () async {
+                            parameters = ['30s'];
+                            parameters.add(_reels_items[index]["id"]);
+                            print(parameters);
+                            await _dynamicLinkService
+                                .createDynamicLink(parameters)
+                                .then((value) {
+                              dynamic_link = value;
+                            });
+                            //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
+                            Share.share(dynamic_link);
+
+                            //-----------------------------
+                          }, //reels share function
                           icon: Icon(
-                            Icons.favorite_border_outlined,
+                            Icons.share,
                             color: Colors.white,
                           ),
                         ),
                         SizedBox(height: 20),
                         IconButton(
-                          onPressed: () {}, //reels share function
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Edit30s(_reels_items[index]["id"])),
+                            );
+                          }, //reels edit function
                           icon: Icon(
-                            Icons.share,
+                            Icons.edit,
                             color: Colors.white,
                           ),
                         ),
@@ -262,10 +375,7 @@ class _ShortsState extends State<ChannelShorts> {
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                           deletenow("reels",
-                                                  reels_objects[index].id)
-                                              .whenComplete(() => _showToast(
-                                                  context,
-                                                  "30s Video deleted"));
+                                              _reels_items[index]["id"]);
                                         },
                                       ),
                                       SizedBox(
@@ -301,20 +411,17 @@ class _ShortsState extends State<ChannelShorts> {
               },
               // autoplay: true,
               //  itemWidth:DeviceSize(context).width*0.5,
-              itemCount: reels_objects.length,
+              itemCount: swiper_number_of_items = _reels_items.length,
               scrollDirection: Axis.vertical,
-            );
-          } else {
-            return Container(
+              //loop: false,
+            )
+          : Container(
               child: Center(
                 child: CircularProgressIndicator(
                   color: primary,
                 ),
               ),
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }

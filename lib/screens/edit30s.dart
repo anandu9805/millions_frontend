@@ -1,37 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
-import 'package:millions/model/newpost_model.dart';
+import 'package:millions/model/reels_model.dart';
 import 'package:millions/widgets/inputField.dart';
 
-class EditPost extends StatefulWidget {
+class Edit30s extends StatefulWidget {
   //const EditPost({ Key? key }) : super(key: key);
-  final String myPostId;
-  EditPost(this.myPostId);
+  final String myReelId;
+  Edit30s(this.myReelId);
 
   @override
-  _EditPostState createState() => _EditPostState();
+  _Edit30sState createState() => _Edit30sState();
 }
 
-class _EditPostState extends State<EditPost> {
-  String commentStatus;
-  bool _isLoading;
-  PostDetail post;
-  TextEditingController descontroller;
+class _Edit30sState extends State<Edit30s> {
+  String selectedLanguage, selectedCountry;
+  bool _isLoading, countrySelected = false;
+  Reels reel;
+  TextEditingController descontroller, titlecontroller;
 
   Future<void> getDetails() async {
     return FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.myPostId)
+        .collection('reels')
+        .doc(widget.myReelId)
         .get()
         .then((value) {
-      post = PostDetail.fromMap(value.data());
-      commentStatus = post.isComments;
-      print(post.isComments + "--" + widget.myPostId);
-      descontroller = TextEditingController(text: post.description);
+      reel = Reels.fromMap(value.data());
+      selectedLanguage = reel.language;
+      selectedCountry = reel.country;
+      titlecontroller = TextEditingController(text: reel.title);
+      descontroller = TextEditingController(text: reel.description);
     });
   }
 
@@ -55,19 +57,21 @@ class _EditPostState extends State<EditPost> {
         _isLoading = true;
       });
       await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.myPostId)
+          .collection('reels')
+          .doc(widget.myReelId)
           .update({
-        'isComments': commentStatus,
+        'title': titlecontroller.text,
         'description': descontroller.text,
+        'language': selectedLanguage,
+        'country': selectedCountry
       }).then((value) {
-        _showToast(context, "Post Edited Successfully");
+        _showToast(context, "30s Updated Successfully");
         setState(() {
           _isLoading = false;
         });
         Navigator.pop(context);
       }).catchError(
-              (error) => _showToast(context, "Failed to edit post: $error"));
+              (error) => _showToast(context, "Failed to update 30s: $error"));
     } catch (e) {
       print("Error");
     }
@@ -111,7 +115,7 @@ class _EditPostState extends State<EditPost> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Edit Post",
+                          "Edit 30s",
                           style: GoogleFonts.ubuntu(
                               fontSize: 25, fontWeight: FontWeight.bold),
                         )
@@ -123,14 +127,21 @@ class _EditPostState extends State<EditPost> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Post Description',
+                          '30s Title',
+                          style: GoogleFonts.ubuntu(),
+                        ),
+                        InputField("", titlecontroller, 2),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.03),
+                        Text(
+                          '30s Description',
                           style: GoogleFonts.ubuntu(),
                         ),
                         InputField("", descontroller, 6),
                         SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
+                            height: MediaQuery.of(context).size.height * 0.03),
                         Text(
-                          'Comments',
+                          'Language',
                           style: GoogleFonts.ubuntu(),
                         ),
                         Container(
@@ -146,23 +157,73 @@ class _EditPostState extends State<EditPost> {
                               dropdownColor: Colors.white,
                               elevation: 0,
                               style: GoogleFonts.ubuntu(),
-                              value: commentStatus,
+                              value: selectedLanguage,
                               onChanged: (newValue) {
                                 setState(() {
-                                  commentStatus = newValue.toString();
-                                  print("object" + commentStatus);
+                                  selectedLanguage = newValue.toString();
+                                  // print("object" + commentStatus);
                                 });
                               },
-                              items: comments.map((cmnt) {
+                              items: languages.map((lang) {
                                 return DropdownMenuItem(
                                   child: new Text(
-                                    cmnt,
+                                    lang,
                                     style:
                                         GoogleFonts.ubuntu(color: Colors.black),
                                   ),
-                                  value: cmnt,
+                                  value: lang,
                                 );
                               }).toList(),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.03),
+                        Text(
+                          'Video Country',
+                          style: GoogleFonts.ubuntu(),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 10),
+                          //width: 20,
+                          decoration: BoxDecoration(
+                            // color: Colors.transparent,
+                            border: Border.all(
+                              color: primary,
+                              width: 1,
+                            ),
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              showCountryPicker(
+                                countryListTheme: CountryListThemeData(
+                                    textStyle: GoogleFonts.ubuntu(),
+                                    inputDecoration: InputDecoration(
+                                        focusColor: primary,
+                                        border: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: primary)))),
+                                context: context,
+                                showPhoneCode: false,
+                                onSelect: (Country c) {
+                                  setState(() {
+                                    countrySelected = true;
+                                    selectedCountry = c.countryCode;
+                                  });
+                                },
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20, bottom: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                              ),
+                              child: Text(
+                                countrySelected
+                                    ? selectedCountry
+                                    : reel.country,
+                                style: GoogleFonts.ubuntu(),
+                              ),
                             ),
                           ),
                         ),

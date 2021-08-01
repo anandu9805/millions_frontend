@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/walletModel.dart';
@@ -17,12 +18,13 @@ class MyWallet extends StatefulWidget {
 }
 
 class _MyWalletState extends State<MyWallet> {
-  bool withdrawable = false;
+  bool withdrawable = false, noActiveRequests;
   String phone, email, name, profilepic;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
+    noActiveRequests =true;
   }
 
   Future<void> getDetails() async {
@@ -263,14 +265,16 @@ class _MyWalletState extends State<MyWallet> {
                                             ),
                                             ElevatedButton(
                                                 onPressed: () {
-                                                  if (myWallet.money > 2000) {
+                                                  if (myWallet.money > 2000 &&
+                                                      noActiveRequests) {
                                                     _displayTextInputDialog(
                                                         context);
                                                   }
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                     primary:
-                                                        myWallet.money > 2000
+                                                        myWallet.money > 2000 &&
+                                                                noActiveRequests
                                                             ? primary
                                                             : Colors.grey),
                                                 child: Text(
@@ -318,6 +322,7 @@ class _MyWalletState extends State<MyWallet> {
                                                     .where('user',
                                                         isEqualTo:
                                                             myWallet.user)
+                                                    // .orderBy("date", descending: true)
                                                     .snapshots(),
                                                 builder: (BuildContext context,
                                                     AsyncSnapshot<QuerySnapshot>
@@ -352,8 +357,8 @@ class _MyWalletState extends State<MyWallet> {
                                                           .map((doc) {
                                                         int amount =
                                                             doc['money'];
-                                                        bool deposited =
-                                                            doc['deposited'];
+                                                        // bool deposited =
+                                                        //   doc['deposited'];
                                                         Timestamp time =
                                                             doc['date'];
 
@@ -372,22 +377,8 @@ class _MyWalletState extends State<MyWallet> {
                                                                       .ubuntu(),
                                                                 ),
                                                                 Text(
-                                                                  DateTime.now()
-                                                                              .difference(time
-                                                                                  .toDate())
-                                                                              .inDays ==
-                                                                          0
-                                                                      ? (DateTime.now().difference(time.toDate()).inHours ==
-                                                                              0
-                                                                          ? (DateTime.now().difference(time.toDate()).inMinutes.toString() +
-                                                                              " minutes ago")
-                                                                          : DateTime.now().difference(time.toDate()).inHours.toString() +
-                                                                              " hours ago")
-                                                                      : DateTime.now()
-                                                                              .difference(time.toDate())
-                                                                              .inDays
-                                                                              .toString() +
-                                                                          " days ago",
+                                                                  timeago.format(
+                                                                      time.toDate()),
                                                                   style: GoogleFonts
                                                                       .ubuntu(),
                                                                 )
@@ -453,6 +444,9 @@ class _MyWalletState extends State<MyWallet> {
                                                   .collection('wallet-requests')
                                                   .where('user',
                                                       isEqualTo: myWallet.user)
+                                                  .where('isRequestActive',
+                                                      isEqualTo: true)
+                                                  //.orderBy("date", descending: true)
                                                   .snapshots(),
                                               builder: (BuildContext context,
                                                   AsyncSnapshot<QuerySnapshot>
@@ -467,6 +461,9 @@ class _MyWalletState extends State<MyWallet> {
                                                 }
                                                 if (snapshot
                                                     .data.docs.isEmpty) {
+                                                  // setState(() {
+                                                  //   noActiveRequests=true;
+                                                  // });
                                                   return Center(
                                                     child: Text(
                                                       "No requests to show!",
@@ -523,22 +520,8 @@ class _MyWalletState extends State<MyWallet> {
                                                                 0.01,
                                                           ),
                                                           Text(
-                                                             DateTime.now()
-                                                                              .difference(time
-                                                                                  .toDate())
-                                                                              .inDays ==
-                                                                          0
-                                                                      ? (DateTime.now().difference(time.toDate()).inHours ==
-                                                                              0
-                                                                          ? (DateTime.now().difference(time.toDate()).inMinutes.toString() +
-                                                                              " minutes ago")
-                                                                          : DateTime.now().difference(time.toDate()).inHours.toString() +
-                                                                              " hours ago")
-                                                                      : DateTime.now()
-                                                                              .difference(time.toDate())
-                                                                              .inDays
-                                                                              .toString() +
-                                                                          " days ago",
+                                                            timeago.format(
+                                                                time.toDate()),
                                                             style: GoogleFonts
                                                                 .ubuntu(),
                                                           ),
@@ -621,7 +604,7 @@ class _MyWalletState extends State<MyWallet> {
                                                     fontSize: 12),
                                                 recognizer: TapGestureRecognizer()
                                                   ..onTap = () => launch(
-                                                      "https://www.millions.vercel.app"),
+                                                      "https://docs.millionsofficial.in/docs/intro"),
                                               ),
                                             ],
                                           ),
@@ -659,3 +642,34 @@ class _MyWalletState extends State<MyWallet> {
         ));
   }
 }
+
+// class TimeAgo{
+//   static String timeAgoSinceDate(DateTime notificationDate, {bool numericDates = true}) {
+//    // DateTime notificationDate = DateFormat("dd-MM-yyyy h:mma").parse(dateString);
+//     final date2 = DateTime.now();
+//     final difference = date2.difference(notificationDate);
+
+//     if (difference.inDays > 8) {
+//       return dateString;
+//     } else if ((difference.inDays / 7).floor() >= 1) {
+//       return (numericDates) ? '1 week ago' : 'Last week';
+//     } else if (difference.inDays >= 2) {
+//       return '${difference.inDays} days ago';
+//     } else if (difference.inDays >= 1) {
+//       return (numericDates) ? '1 day ago' : 'Yesterday';
+//     } else if (difference.inHours >= 2) {
+//       return '${difference.inHours} hours ago';
+//     } else if (difference.inHours >= 1) {
+//       return (numericDates) ? '1 hour ago' : 'An hour ago';
+//     } else if (difference.inMinutes >= 2) {
+//       return '${difference.inMinutes} minutes ago';
+//     } else if (difference.inMinutes >= 1) {
+//       return (numericDates) ? '1 minute ago' : 'A minute ago';
+//     } else if (difference.inSeconds >= 2) {
+//       return '${difference.inSeconds} seconds ago';
+//     } else {
+//       return 'Just now';
+//     }
+//   }
+
+// } 

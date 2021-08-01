@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:millions/screens/complete_profile.dart';
 import 'package:millions/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:millions/screens/noNetConnection.dart';
 import 'package:millions/screens/screen1.dart';
 import 'package:provider/provider.dart';
 import 'provider.dart';
@@ -18,6 +19,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import './screens/screen11.dart';
 import './services/local_notification_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import './screens/view_video.dart';
+
 
 // Future<void> main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -109,32 +112,72 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     init();
     LocalNotificationService.initialize(context);
     //to get message data while app is in terminated state and opened by clicking on the notification
-    FirebaseMessaging.instance.getInitialMessage().then((message) {
-      if (message != null) {
-        final routemessage = message.data["route"];
-        print(routemessage);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Screen11(null)),
-        );
+    FirebaseMessaging.instance.getInitialMessage().then((message){
+      print("//to get message data while app is in terminated state and opened by clicking on the notification");
+      if(message!=null){
+
+        if(message.data["screen"]=="videos")
+        {
+          //-------------------------------------------------------------------------------------------------
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>ViewVideo(id:message.data["itemId"],video:null)),
+          );
+        }
+        if(message.data["screen"]=="posts")
+        {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Screen11(message.data["itemId"])),
+          );
+        }
+        if(message.data["screen"]=="channel")
+        {
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => Screen11(null)),
+          // );
+
+        }
+
       }
     });
     //to get message data while app in foreground
     FirebaseMessaging.onMessage.listen((message) {
+      print("to get message data while app in foreground");
       if (message.notification != null) {
-        print(message.notification.body);
-        print(message.notification.title);
+
+
       }
       LocalNotificationService.display(message);
     });
     //to get message data while app is in background and opened by clicking on the notification
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      final routemessage = message.data["route"];
-      print(routemessage);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Screen11(null)),
-      );
+print("to get message data while app is in background and opened by clicking on the notification");
+      if(message.data["screen"]=="videos")
+        {
+          //-------------------------------------------------------------------------------------------------
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>ViewVideo(id:message.data["itemId"],video:null)),
+          );
+        }
+      if(message.data["screen"]=="posts")
+      {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Screen11(message.data["itemId"])),
+        );
+      }
+      if(message.data["screen"]=="channel")
+      {
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => Screen11(null)),
+        // );
+
+      }
+
     });
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -198,7 +241,7 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => isConnected == true
               ? Screen1() //Screen1()
-              : Center(child: Text("No net")),
+              : NoInternet(),
           'Posts': (BuildContext context) => Screen11(null),
         },
         debugShowCheckedModeBanner: false,

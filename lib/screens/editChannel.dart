@@ -28,8 +28,7 @@ class _EditChannelState extends State<EditChannel> {
       artchanged = false,
       uploadComplete = false,
       _isLoading = false;
-  TextEditingController namecontroller;
-  TextEditingController descontroller;
+  TextEditingController namecontroller, descontroller, linkOneController, linkTwoController;
   String profileFileName, artFileName, channelArtUrl, profileUrl;
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -74,12 +73,14 @@ class _EditChannelState extends State<EditChannel> {
 
     setState(() {
       if (val == 1) {
-        profileFileName = pickedImageFile.path.split('/').last;
+        profileFileName = pickedImageFile.path.split('.').last;
         _profileImageFile = File(pickedImageFile.path);
         profilechanged = true;
         //profileremoved = false;
       } else {
-        artFileName = pickedImageFile.path.split('/').last;
+        print(artFileName);
+        artFileName = pickedImageFile.path.split('.').last;
+        print(artFileName);
         _artImageFile = File(pickedImageFile.path);
         artchanged = true;
         //artremoved = false;
@@ -90,7 +91,7 @@ class _EditChannelState extends State<EditChannel> {
 
   Future<void> uploadProfilePic() async {
     firebase_storage.Reference ref1 =
-        storage.ref('channels/$altUserId/dp/$profileFileName');
+        storage.ref('assets/$altUserId/channel/$altUserId.$profileFileName');
     firebase_storage.UploadTask profilePicUploadTask =
         ref1.putFile(_profileImageFile);
     return profilePicUploadTask.whenComplete(() async {
@@ -103,7 +104,7 @@ class _EditChannelState extends State<EditChannel> {
 
   Future<void> uploadChannelArt() async {
     firebase_storage.Reference ref2 =
-        storage.ref('channels/$altUserId/cover/$artFileName');
+        storage.ref('assets/$altUserId/channel/banner-$altUserId.$artFileName');
     firebase_storage.UploadTask channelArtUploadTask =
         ref2.putFile(_artImageFile);
     return channelArtUploadTask.whenComplete(() async {
@@ -139,6 +140,8 @@ class _EditChannelState extends State<EditChannel> {
           .doc(widget.myChannel.id)
           .update({
         'channelName': namecontroller.text,
+        'linkone' : linkOneController.text,
+        'linktwo' : linkTwoController.text,
         'description': descontroller.text.isEmpty ? " " : descontroller.text,
         'channelArt': artchanged
             ? channelArtUrl
@@ -163,6 +166,8 @@ class _EditChannelState extends State<EditChannel> {
     _isLoading = false;
     namecontroller = TextEditingController(text: widget.myChannel.channelName);
     descontroller = TextEditingController(text: widget.myChannel.description);
+    linkOneController=TextEditingController(text: widget.myChannel.linkone);
+    linkTwoController=TextEditingController(text: widget.myChannel.linktwo);
   }
 
   @override
@@ -294,7 +299,10 @@ class _EditChannelState extends State<EditChannel> {
                                         : Image.file(_profileImageFile))
                                     : ((widget.myChannel.profilePic == null ||
                                             widget.myChannel.profilePic.isEmpty)
-                                        ? Image.network(altProfilePic)
+                                        ?  Text(
+                                            "No Profile Picture",
+                                            style: GoogleFonts.ubuntu(),
+                                          )
                                         : Image.network(
                                             widget.myChannel.profilePic))
                               ],
@@ -303,10 +311,16 @@ class _EditChannelState extends State<EditChannel> {
                         ),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * 0.05),
-                        InputField("Channel Name", namecontroller, false),
+                        InputField("Channel Name", namecontroller, 1),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * 0.05),
-                        InputField("Channel Description", descontroller, false),
+                        InputField("Channel Description", descontroller, 4),
+                                                SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05),
+                        InputField("Featured Link 1", linkOneController, 1),
+                                                SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05),
+                        InputField("Featured Link 2", linkTwoController, 1),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * 0.05),
                         Card(
@@ -402,17 +416,12 @@ class _EditChannelState extends State<EditChannel> {
                                                     null ||
                                                 widget.myChannel.channelArt
                                                     .isEmpty)
-                                            ? Image.network(altChannelArt)
+                                            ?Text(
+                                            "No Channel Art",
+                                            style: GoogleFonts.ubuntu(),
+                                          )
                                             : Image.network(
                                                 widget.myChannel.channelArt)))
-                                // (artremoved
-                                //     ? Text(
-                                //         "Channel Art Removed",
-                                //         style: GoogleFonts.ubuntu(),
-                                //       )
-                                //     : (widget.myChannel.channelArt==null||widget.myChannel.channelArt.isEmpty)?Image.network(altChannelArt):((_artImageFile == null)
-                                //         ? Image.network(widget.myChannel.channelArt)
-                                //         : Image.file(_artImageFile)))
                               ],
                             ),
                           ),
@@ -426,41 +435,6 @@ class _EditChannelState extends State<EditChannel> {
                         style: ElevatedButton.styleFrom(primary: primary),
                         onPressed: () {
                           updateChannel();
-                          // Navigator.of(context).pushReplacement(
-                          //     MaterialPageRoute(
-                          //         builder: (BuildContext context) =>
-                          //             ChannelPage(widget.myChannel.id)));
-                          // showDialog(
-                          //   context: context,
-                          //   builder: (BuildContext context) {
-                          //     return AlertDialog(
-                          //       title: Text(
-                          //         "Millions",
-                          //         style:
-                          //             GoogleFonts.ubuntu(fontWeight: FontWeight.bold),
-                          //       ),
-                          //       content: Text(
-                          //         //message,
-                          //         "Channel Updated Successfully!",
-                          //         style: GoogleFonts.ubuntu(),
-                          //       ),
-                          //       actions: [
-                          //         TextButton(
-                          //           child: Text(
-                          //             "OK",
-                          //             style: GoogleFonts.ubuntu(color: primary),
-                          //           ),
-                          //           onPressed: () {
-                          //             Navigator.of(context).pushReplacement(
-                          //                 MaterialPageRoute(
-                          //                     builder: (BuildContext context) =>
-                          //                         HomePage()));
-                          //           },
-                          //         ),
-                          //       ],
-                          //     );
-                          //   },
-                          // );
                         },
                         child: Text(
                           "Update",
