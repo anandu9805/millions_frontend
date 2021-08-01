@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:millions/screens/home.dart';
@@ -11,7 +12,10 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'dart:async';
 import './services/dynamiclinkservice.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
-//import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import './screens/screen11.dart';
+import'./services/local_notification_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // Future<void> main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -62,23 +66,21 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 //
 // }
 
-
-
-
-
-
-
-
-
-
+//to get the message data while app in background
+Future<void> backgroundHandler(RemoteMessage message) async {
+  print(message.data.toString());
+  print(message.notification.title);
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   runApp(MyApp());
 }
-class MyApp extends StatelessWidget {
 
+class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -97,60 +99,83 @@ class mainPage extends StatefulWidget {
 class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
   final DynamicLinkService _dynamicLinkService = DynamicLinkService();
   Timer _timerLink;
-  var isConnected =true;
+  var isConnected = true;
   var listener;
-
 
   @override
   void initState() {
     init();
+    LocalNotificationService.initialize(context);
+    //to get message data while app is in terminated state and opened by clicking on the notification
+    FirebaseMessaging.instance.getInitialMessage().then((message){
+      if(message!=null){
+        final routemessage = message.data["route"];
+        print(routemessage);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Screen11(null)),
+        );
+
+      }
+    });
+    //to get message data while app in foreground
+    FirebaseMessaging.onMessage.listen((message) {
+      if (message.notification != null) {
+        print(message.notification.body);
+        print(message.notification.title);
+      }
+      LocalNotificationService.display(message);
+    });
+    //to get message data while app is in background and opened by clicking on the notification
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      final routemessage = message.data["route"];
+      print(routemessage);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Screen11(null)),
+      );
+    });
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-
   }
+
   void init() async {
     print("checking internet connection");
 
-
-
     this.listener =
         DataConnectionChecker().onStatusChange.listen((status) async {
-          switch (status) {
-            case DataConnectionStatus.connected:
-              setState(() {
-                this.isConnected = true;
-              });
+      switch (status) {
+        case DataConnectionStatus.connected:
+          setState(() {
+            this.isConnected = true;
+          });
 
-              break;
-            case DataConnectionStatus.disconnected:
-              setState(() {
-                this.isConnected = false;
-              });
+          break;
+        case DataConnectionStatus.disconnected:
+          setState(() {
+            this.isConnected = false;
+          });
 
-              break;
-          }
-        });
+          break;
+      }
+    });
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-     _dynamicLinkService.retrieveDynamicLink(context);
-    if (state == AppLifecycleState.resumed
-    ) {
+    _dynamicLinkService.retrieveDynamicLink(context);
+    if (state == AppLifecycleState.resumed) {
       _timerLink = new Timer(
         const Duration(milliseconds: 1000),
-            () {
+        () {
           _dynamicLinkService.retrieveDynamicLink(context);
         },
       );
     }
-
   }
 
   @override
   void dispose() {
-
     WidgetsBinding.instance.removeObserver(this);
     if (_timerLink != null) {
       _timerLink.cancel();
@@ -158,7 +183,6 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
 
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -169,21 +193,19 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     return ChangeNotifierProvider(
       create: (context) => MillionsProvider(),
       child: MaterialApp(
-
         routes: <String, WidgetBuilder>{
-          '/': (BuildContext context) =>isConnected==true?HomePage()//Screen1()
-              :Center(child: Text("No net")),
-
+          '/': (BuildContext context) => isConnected == true
+              ? HomePage() //Screen1()
+              : Center(child: Text("No net")),
+          'Posts': (BuildContext context) => Screen11(null),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         // home: HomePage()//Screen1(),
       ),
-
     );
   }
 }

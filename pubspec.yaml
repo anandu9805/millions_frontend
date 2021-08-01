@@ -59,6 +59,8 @@ dependencies:
   data_connection_checker: ^0.3.4
   firebase_messaging: ^10.0.4
 
+  flutter_local_notifications: ^8.0.0
+
 
 
 
