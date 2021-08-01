@@ -599,7 +599,7 @@ class _ViewVideoState extends State<ViewVideo> {
                               IconButton(
                                 onPressed: () async {
                                   print("clicking share videos");
-                                  parameters = ['videos'];
+                                  parameters = ['watch'];
                                   parameters.add(
                                     widget.id == null
                                         ? widget.video.id

@@ -35,47 +35,53 @@ class DynamicLinkService {
     }
     print(deepLink.path);
     print(deepLink.pathSegments);
+    print(deepLink.pathSegments[1]);
     print("handling link");
-    print(deepLink.queryParameters);
-    if (deepLink != null) {
-      if (deepLink.queryParameters.containsKey('type')) {
-        if (deepLink.queryParameters['type'] == '30s') {
-          String reelid = deepLink.queryParameters['id'];
 
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ShortsFromLink(
-                reelid: reelid,
-              )));
-        } else if (deepLink.queryParameters['type'] == 'videos') {
-          Video video = null;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ViewVideo(video: video, id: deepLink.queryParameters['id']),
-            ),
-          );
-        } else if (deepLink.queryParameters['type'] == 'posts') {
-          // PostDetail photo = null;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Screen11(deepLink.queryParameters['id']),
-            ),
-          );
-        }
+    if (deepLink != null) {
+      print(deepLink.pathSegments[0]);
+      print(deepLink.pathSegments[0]=='30s');
+      if (deepLink.pathSegments[0]=='30s') {
+        print("in");
+        print(deepLink.pathSegments[1]);
+        String reelid =deepLink.pathSegments[1];
+
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ShortsFromLink(
+              reelid: reelid,
+            )));
+      } else if (deepLink.pathSegments[0]=='watch') {
+        print("dynamiclinkservice->handledynamic->watch");
+        Video video = null;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                ViewVideo(video: video, id: deepLink.pathSegments[1]),
+          ),
+        );
+      } else if (deepLink.pathSegments[0]== 'posts') {
+        // PostDetail photo = null;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Screen11(deepLink.pathSegments[1]),
+          ),
+        );
       }
+
     }
   }
 
   Future<String> createDynamicLink(List arguments) async {
     type = arguments[0];
     id = arguments[1];
+    // type="watch";
     print("type : $type and id : $id");
     //?type=$type/
     var parameters = DynamicLinkParameters(
       uriPrefix: 'https://millionsofficial.page.link',
-      link: Uri.parse('https://millionsofficial.in/?type=$type&id=$id'),
+      link: Uri.parse('https://millionsofficial.in/$type/$id'),
       androidParameters: AndroidParameters(
         packageName: "com.android.millions",
       ),
