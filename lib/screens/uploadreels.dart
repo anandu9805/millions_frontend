@@ -9,6 +9,7 @@ import '../model/newreels_model.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart';
@@ -61,6 +62,7 @@ class _UploadReelState extends State<UploadReel> {
   String thumnailpath;
   String thumnail_image_name;
   String thumbnail_url;
+  var percentage_uploaded = 0;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -191,6 +193,26 @@ class _UploadReelState extends State<UploadReel> {
       firebase_storage.Reference ref =
           storage.ref('test-reels/${currentuserid}/${fileName}');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
+      uploadTask.snapshotEvents.listen(
+              (firebase_storage.TaskSnapshot snapshot) {
+            print('Task state: ${snapshot.state}');
+            print(
+                'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
+
+            setState(() {
+              _isLoading = true;
+              percentage_uploaded =
+                  ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).round();
+            });
+          }, onError: (e) {
+        // The final snapshot is also available on the task via `.snapshot`,
+        // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
+        print(uploadTask.snapshot);
+
+        if (e.code == 'permission-denied') {
+          print('User does not have permission to upload to this reference.');
+        }
+      });
 
       uploadTask.whenComplete(() async {
         url = await ref.getDownloadURL();
@@ -260,14 +282,40 @@ class _UploadReelState extends State<UploadReel> {
     return Scaffold(
       key: scaffoldKey,
       body: _isLoading
-          ? Center(
-              child: LoadingBouncingGrid.circle(
-              borderColor: primary,
-              backgroundColor: Colors.white,
-              borderSize: 10,
-              size: 100,
-              duration: Duration(milliseconds: 1800),
-            ))
+           ?Center(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height / 4,
+          width: MediaQuery.of(context).size.width / 4,
+          child: LiquidCircularProgressIndicator(
+            value: percentage_uploaded / 100,
+            // Defaults to 0.5.
+            valueColor: AlwaysStoppedAnimation(primary),
+            // Defaults to the current Theme's accentColor.
+            backgroundColor: Colors.white,
+            // Defaults to the current Theme's backgroundColor.
+            borderColor: primary,
+            borderWidth: 5.0,
+            direction: Axis.vertical,
+            // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
+            center: FittedBox(
+              fit: BoxFit.contain,
+              child: Text(
+                "$percentage_uploaded%",
+                style:
+                TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+            ),
+          ),
+        ),
+      )
+      // Center(
+          //     child: LoadingBouncingGrid.circle(
+          //     borderColor: primary,
+          //     backgroundColor: Colors.white,
+          //     borderSize: 10,
+          //     size: 100,
+          //     duration: Duration(milliseconds: 1800),
+          //   ))
           : SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,

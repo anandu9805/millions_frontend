@@ -8,6 +8,7 @@ import '../model/newvideo_model.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart';
@@ -59,6 +60,8 @@ class _UploadPageState extends State<UploadPage> {
   final videoInfo = FlutterVideoInfo();
   var info;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  firebase_storage.UploadTask uploading_task;
+  var percentage_uploaded = 0;
 
   @override
   void initState() {
@@ -72,6 +75,7 @@ class _UploadPageState extends State<UploadPage> {
     });
     getCurrentUserChannelDetails();
   }
+
   void _thumbnailfromgallery() async {
     final _picker = ImagePicker();
 
@@ -81,7 +85,7 @@ class _UploadPageState extends State<UploadPage> {
         maxWidth: 3000,
         maxHeight: 4000);
 
-   // fileName = pickedImageFile.path.split('/').last;
+    // fileName = pickedImageFile.path.split('/').last;
 
     //print(fileName);
 
@@ -89,7 +93,7 @@ class _UploadPageState extends State<UploadPage> {
       thumbanil = File(pickedImageFile.path);
       //  print(_imageFile);
 
-    //  uploadComplete = true;
+      //  uploadComplete = true;
     });
   }
 
@@ -147,7 +151,7 @@ class _UploadPageState extends State<UploadPage> {
         querySnapshot.docs.forEach((doc) {
           print("doc['id]");
           print(doc['id']);
-          if (doc['id'] ==currentuserid) currentUserChannelDetails.add(doc);
+          if (doc['id'] == currentuserid) currentUserChannelDetails.add(doc);
         });
         print("currentUserChannelDetails");
         print(currentUserChannelDetails[0]['email']);
@@ -169,9 +173,11 @@ class _UploadPageState extends State<UploadPage> {
     print("File path-------------------------------------------------------");
     print(file.path);
     thumnail_image_name = file.path.split('/').last;
-    print("thumbnail name----------------------------------------------------------");
+    print(
+        "thumbnail name----------------------------------------------------------");
     print(thumnail_image_name);
-    print("thumbnail format----------------------------------------------------------");
+    print(
+        "thumbnail format----------------------------------------------------------");
     print(thumnail_image_name.split('.').last);
     print(file);
     return file;
@@ -188,28 +194,53 @@ class _UploadPageState extends State<UploadPage> {
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
     thumnail_image_name = thumbanil.path.split('/').last;
-   // thumnail_image_name = file.path.split('/').last;
-    print("thumbnail name----------------------------------------------------------");
+    // thumnail_image_name = file.path.split('/').last;
+    print(
+        "thumbnail name----------------------------------------------------------");
     print(thumnail_image_name);
-    print("thumbnail format----------------------------------------------------------");
+    print(
+        "thumbnail format----------------------------------------------------------");
     print(thumnail_image_name.split('.').last);
-    firebase_storage.Reference ref_thumbnail = storage
-        .ref('assets/${currentuserid}/videos/${newId.id}/${newId.id}.${thumnail_image_name.split('.').last}');
+    firebase_storage.Reference ref_thumbnail = storage.ref(
+        'assets/${currentuserid}/videos/${newId.id}/${newId.id}.${thumnail_image_name.split('.').last}');
     firebase_storage.UploadTask uploadTask_thumbnail =
         ref_thumbnail.putFile(thumbanil);
     uploadTask_thumbnail.whenComplete(() async {
-
       thumbnail_url = await ref_thumbnail.getDownloadURL();
-    //  thumnail_image_name = file.path.split('/').last;
-      print("videofile name----------------------------------------------------------");
+      //  thumnail_image_name = file.path.split('/').last;
+      print(
+          "videofile name----------------------------------------------------------");
       print(fileName);
-      print("videofile format-----------------------------------------------------------");
+      print(
+          "videofile format-----------------------------------------------------------");
       print(fileName.split('.').last);
-     // print(thumnail_image_name.split('.').last);
+      // print(thumnail_image_name.split('.').last);
 
-      firebase_storage.Reference ref =
-          storage.ref('assets/${currentuserid}/videos/${newId.id}/${newId.id}.${fileName.split('.').last}');
+      firebase_storage.Reference ref = storage.ref(
+          'assets/${currentuserid}/videos/${newId.id}/${newId.id}.${fileName.split('.').last}');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
+      uploading_task = uploadTask; //to pass to loading_screen
+
+      uploadTask.snapshotEvents.listen(
+          (firebase_storage.TaskSnapshot snapshot) {
+        print('Task state: ${snapshot.state}');
+        print(
+            'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
+
+        setState(() {
+          _isLoading = true;
+          percentage_uploaded =
+              ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).round();
+        });
+      }, onError: (e) {
+        // The final snapshot is also available on the task via `.snapshot`,
+        // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
+        print(uploadTask.snapshot);
+
+        if (e.code == 'permission-denied') {
+          print('User does not have permission to upload to this reference.');
+        }
+      });
 
       uploadTask.whenComplete(() async {
         url = await ref.getDownloadURL();
@@ -224,7 +255,6 @@ class _UploadPageState extends State<UploadPage> {
             selectedCategory,
             _videoFile));
         print("videos: $videoslist");
-
 
         print("hello2");
         print("currentUserChannelDetails");
@@ -266,7 +296,7 @@ class _UploadPageState extends State<UploadPage> {
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
         );
-        _isLoading=false;
+        _isLoading = false;
       }).catchError((onError) {
         print(onError);
       });
@@ -281,17 +311,43 @@ class _UploadPageState extends State<UploadPage> {
   Widget build(BuildContext context) {
     //print("_videoFile $_videoFile");
     return Scaffold(
-            key: scaffoldKey,
-            body:_isLoading
-                ? Center(
-                child: LoadingBouncingGrid.circle(
-                  borderColor: primary,
+      key: scaffoldKey,
+      body: _isLoading
+          ? Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height / 4,
+                width: MediaQuery.of(context).size.width / 4,
+                child: LiquidCircularProgressIndicator(
+                  value: percentage_uploaded / 100,
+                  // Defaults to 0.5.
+                  valueColor: AlwaysStoppedAnimation(primary),
+                  // Defaults to the current Theme's accentColor.
                   backgroundColor: Colors.white,
-                  borderSize: 10,
-                  size: 100,
-                  duration: Duration(milliseconds: 1800),
-                ))
-                :  SingleChildScrollView(
+                  // Defaults to the current Theme's backgroundColor.
+                  borderColor: primary,
+                  borderWidth: 5.0,
+                  direction: Axis.vertical,
+                  // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
+                  center: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      "$percentage_uploaded%",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          // Center(
+          //     child: LoadingBouncingGrid.circle(
+          //     borderColor: primary,
+          //     backgroundColor: Colors.white,
+          //     borderSize: 10,
+          //     size: 100,
+          //     duration: Duration(milliseconds: 1800),
+          //   ))
+          : SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -425,21 +481,21 @@ class _UploadPageState extends State<UploadPage> {
                       ),
                     ),
                   ),
-                if(  thumbanil != null)
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        //--------------------
-                        _thumbnailfromgallery();
-                      },
-                      style: ElevatedButton.styleFrom(primary: primary),
-                      child: Text(
-                        'Upload custom thumbnail',
-                        style: GoogleFonts.ubuntu(),
+                  if (thumbanil != null)
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          //--------------------
+                          _thumbnailfromgallery();
+                        },
+                        style: ElevatedButton.styleFrom(primary: primary),
+                        child: Text(
+                          'Upload custom thumbnail',
+                          style: GoogleFonts.ubuntu(),
+                        ),
                       ),
                     ),
-                  ),
 
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
@@ -734,7 +790,6 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                   ),
 
-
                   uploadComplete
                       ? Padding(
                           padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
@@ -763,6 +818,6 @@ class _UploadPageState extends State<UploadPage> {
                 ],
               ),
             ),
-          );
+    );
   }
 }

@@ -24,7 +24,7 @@ class _MyWalletState extends State<MyWallet> {
   @override
   void initState() {
     super.initState();
-    noActiveRequests = false;
+    noActiveRequests =true;
   }
 
   Future<void> getDetails() async {
