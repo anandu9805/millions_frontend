@@ -111,6 +111,7 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     LocalNotificationService.initialize(context);
     //to get message data while app is in terminated state and opened by clicking on the notification
     FirebaseMessaging.instance.getInitialMessage().then((message){
+      print("//to get message data while app is in terminated state and opened by clicking on the notification");
       if(message!=null){
 
         if(message.data["screen"]=="videos")
@@ -141,6 +142,7 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     });
     //to get message data while app in foreground
     FirebaseMessaging.onMessage.listen((message) {
+      print("to get message data while app in foreground");
       if (message.notification != null) {
 
 
@@ -149,7 +151,7 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     });
     //to get message data while app is in background and opened by clicking on the notification
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-
+print("to get message data while app is in background and opened by clicking on the notification");
       if(message.data["screen"]=="videos")
         {
           //-------------------------------------------------------------------------------------------------
