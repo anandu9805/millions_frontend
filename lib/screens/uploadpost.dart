@@ -117,9 +117,13 @@ List currentUserChannelDetails=[];
 
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
+    print("postfile name----------------------------------------------------------");
+    print(fileName);
+    print("postfile format-----------------------------------------------------------");
+    print(fileName.split('.').last);
 
     firebase_storage.Reference ref =
-        storage.ref('assets/${currentuserid}/posts/${newId.id}.jpg');
+        storage.ref('assets/${currentuserid}/posts/${newId.id}.${fileName.split('.').last}');
     firebase_storage.UploadTask uploadTask = ref.putFile(_imageFile);
 
     uploadTask.whenComplete(() async {

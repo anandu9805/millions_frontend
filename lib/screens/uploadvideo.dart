@@ -111,7 +111,7 @@ class _UploadPageState extends State<UploadPage> {
       // print(controller.value.duration.toString());
 
       thumbanil = thumbanil_temp;
-      thumnail_image_name = thumbanil.path.split('/').last;
+
       uploadComplete = true;
     });
   }
@@ -166,8 +166,13 @@ class _UploadPageState extends State<UploadPage> {
         quality: _quality);
 
     final file = File(thumbnail);
+    print("File path-------------------------------------------------------");
+    print(file.path);
     thumnail_image_name = file.path.split('/').last;
-    print("thumbnail");
+    print("thumbnail name----------------------------------------------------------");
+    print(thumnail_image_name);
+    print("thumbnail format----------------------------------------------------------");
+    print(thumnail_image_name.split('.').last);
     print(file);
     return file;
   }
@@ -182,17 +187,28 @@ class _UploadPageState extends State<UploadPage> {
 
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
-
+    thumnail_image_name = thumbanil.path.split('/').last;
+   // thumnail_image_name = file.path.split('/').last;
+    print("thumbnail name----------------------------------------------------------");
+    print(thumnail_image_name);
+    print("thumbnail format----------------------------------------------------------");
+    print(thumnail_image_name.split('.').last);
     firebase_storage.Reference ref_thumbnail = storage
-        .ref('assets/${currentuserid}/videos/${newId.id}/${newId.id}.jpg');
+        .ref('assets/${currentuserid}/videos/${newId.id}/${newId.id}.${thumnail_image_name.split('.').last}');
     firebase_storage.UploadTask uploadTask_thumbnail =
         ref_thumbnail.putFile(thumbanil);
     uploadTask_thumbnail.whenComplete(() async {
 
       thumbnail_url = await ref_thumbnail.getDownloadURL();
+    //  thumnail_image_name = file.path.split('/').last;
+      print("videofile name----------------------------------------------------------");
+      print(fileName);
+      print("videofile format-----------------------------------------------------------");
+      print(fileName.split('.').last);
+     // print(thumnail_image_name.split('.').last);
 
       firebase_storage.Reference ref =
-          storage.ref('assets/${currentuserid}/videos/${newId.id}/${newId.id}.mp4');
+          storage.ref('assets/${currentuserid}/videos/${newId.id}/${newId.id}.${fileName.split('.').last}');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
 
       uploadTask.whenComplete(() async {

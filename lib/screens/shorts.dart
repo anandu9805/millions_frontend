@@ -93,7 +93,7 @@ GetCurrentUserDetails();
   _getReels() async {
     Query q = FirebaseFirestore.instance
         .collection('reels')
-        .orderBy("date")
+        .orderBy("date" ,descending: true)
         .limit(_perpage);
     QuerySnapshot querySnapshot = await q.get();
     _reels_items = querySnapshot.docs;
