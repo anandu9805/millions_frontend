@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/newpost_model.dart';
+import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/post_coments.dart';
 import 'package:millions/services/likeServices.dart';
 import 'package:millions/widgets/popUpMenu.dart';
@@ -66,7 +67,7 @@ class _PhotosState extends State<Photos> {
     //     });
     //   }
     // });
-    print(liked);
+    //print(liked);
   }
 
   // List<Content> content = [
@@ -116,16 +117,26 @@ class _PhotosState extends State<Photos> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(w * 0.1),
-                          child: CircleAvatar(
-                            child: Image.network(
-                              widget.photo.profilePic == null
-                                  ? altProfilePic
-                                  : widget.photo.profilePic,
-                              //widget.photo.profilePic,
-                              // 'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
-                              width: w * 0.3,
-                              height: w * 0.3,
-                              fit: BoxFit.cover,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Page8(widget.photo.channelId)),
+                              );
+                            },
+                            child: CircleAvatar(
+                              child: Image.network(
+                                widget.photo.profilePic == null
+                                    ? altProfilePic
+                                    : widget.photo.profilePic,
+                                //widget.photo.profilePic,
+                                // 'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
+                                width: w * 0.3,
+                                height: w * 0.3,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -133,6 +144,7 @@ class _PhotosState extends State<Photos> {
                     ),
                     SizedBox(width: 5),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           widget.photo.channelName,
@@ -143,6 +155,13 @@ class _PhotosState extends State<Photos> {
                               height: 1.2,
                               fontWeight: FontWeight.bold),
                         ),
+                        Text(
+                          widget.photo.description,
+                          //widget.photo.title,
+
+                          //content[this.widget.index].tagLine,
+                          style: GoogleFonts.ubuntu(),
+                        ),
                       ],
                     ),
                   ],
@@ -152,14 +171,14 @@ class _PhotosState extends State<Photos> {
               InkWell(
                 onDoubleTap: () {
                   if (liked == true) {
-                    print(0);
+                    //print(0);
                     setState(() {
                       liked = !liked;
                     });
                     LikeServices().unLikePost(
                         widget.photo.id, widget.photo.channelId, altUserId);
                   } else {
-                    print(1);
+                    //print(1);
 
                     setState(() {
                       liked = !liked;
@@ -174,18 +193,31 @@ class _PhotosState extends State<Photos> {
                 },
                 child:
                     // PinchZoomImage(
-                    ClipRRect(
-                  child: Image.network(
-                    widget.photo.photoSrc == null
-                        ? altChannelArt
-                        : widget.photo.photoSrc,
-                    //content[this.widget.index].url,
-                    // fit: BoxFit.fill,
-                  ),
-                ),
-                // zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
+                    //image:
+                    Image.network(
+                      widget.photo.photoSrc == null
+                          ? altChannelArt
+                          : widget.photo.photoSrc,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: primary,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes
+                                : null,
+                          ),
+                        );
+                      },
+
+                      //content[this.widget.index].url,
+                      // fit: BoxFit.fill,
+                    ),
+                //  zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
                 //hideStatusBarWhileZooming: true,
-                // ),
+                //  ),
               ),
               SizedBox(height: 10),
               Row(
@@ -200,7 +232,7 @@ class _PhotosState extends State<Photos> {
                           return Icon(Icons.favorite);
                         } else {
                           if (snapshot.data == null) {
-                            print(10);
+                            //print(10);
                           }
                           // setState(() {
                           //   liked = snapshot.data['liked'] ?? false;
@@ -306,24 +338,24 @@ class _PhotosState extends State<Photos> {
                 ],
               ),
               SizedBox(height: 10),
-              Row(
-                children: [
-                  Text(widget.photo.channelName,
-                      //content[this.widget.index].userName,
-                      style: GoogleFonts.ubuntu(fontWeight: FontWeight.w600)),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                      child: Text(
-                    widget.photo.description,
-                    //widget.photo.title,
+              // Row(
+              //   children: [
+              //     Text(widget.photo.channelName,
+              //         //content[this.widget.index].userName,
+              //         style: GoogleFonts.ubuntu(fontWeight: FontWeight.w600)),
+              //     SizedBox(
+              //       width: 10,
+              //     ),
+              //     Expanded(
+              //         child: Text(
+              //       widget.photo.description,
+              //       //widget.photo.title,
 
-                    //content[this.widget.index].tagLine,
-                    style: GoogleFonts.ubuntu(),
-                  )),
-                ],
-              )
+              //       //content[this.widget.index].tagLine,
+              //       style: GoogleFonts.ubuntu(),
+              //     )),
+              //   ],
+              // )
             ],
           ),
         ),

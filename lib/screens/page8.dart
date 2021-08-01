@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/channelModel.dart';
@@ -12,6 +15,7 @@ import 'package:millions/screens/myShorts.dart';
 import 'package:millions/widgets/appDrawer.dart';
 import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/widgets/photos.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Page8 extends StatefulWidget {
   final String channelId;
@@ -24,7 +28,7 @@ class _Page8State extends State<Page8> {
   Stream<QuerySnapshot<Map<String, dynamic>>> videoStream;
   Stream<QuerySnapshot<Map<String, dynamic>>> postStream;
   String followStatus = "Follow";
-  String resultMessage;
+  String resultMessage, cname;
   Future<DocumentSnapshot<Map<String, dynamic>>> channelDetails, followDetails;
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -33,49 +37,83 @@ class _Page8State extends State<Page8> {
     _drawerKey.currentState.openDrawer();
   }
 
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   Future<String> checkExist(String docID) async {
     try {
       await FirebaseFirestore.instance
           .doc("followers/$docID")
           .get()
           .then((doc) {
-        if (doc.exists)
-          followStatus = "Unfollow";
-        else
-          followStatus = "Follow";
+        if (doc.exists) {
+          setState(() {
+            followStatus = "Unfollow";
+          });
+        } else {
+          setState(() {
+            followStatus = "Follow";
+          });
+        }
       });
       return followStatus;
     } catch (e) {
-      return "Follow";
+      print("Error");
+      return '';
     }
   }
 
-  Future<void> unfollow(String docID) {
-    return FirebaseFirestore.instance
-        .doc("followers/$docID")
-        .delete()
-        .then((value) => setState(() {
-              resultMessage = "Unfollowed ";
-            }))
-        .catchError((error) => setState(() {
-              resultMessage = "Failed to unfollow ";
-            }));
+  void unfollow(String docID) async {
+    try {
+      await FirebaseFirestore.instance
+          .doc("followers/$docID")
+          .delete()
+          .whenComplete(() {
+        _showToast(context, "Unfollowed " + cname);
+        FirebaseMessaging.instance.unsubscribeFromTopic(widget.channelId);
+        setState(() {
+          followStatus="Follow";
+        });
+       // checkExist(widget.channelId);
+      }).catchError(
+              (error) => _showToast(context, "Failed to unfollow: $error"));
+    } catch (e) {
+      print("Error");
+    }
   }
 
-  Future<void> follow(String docID, Map details) {
-    return FirebaseFirestore.instance
+   void follow(String docID, Map details) async {
+     try{
+       await FirebaseFirestore.instance
         .doc("followers/$docID")
         .set({
-          'channel' : details['channel'],
-          'date' : details['date'],
-          'follower' : details['follower']
+          'channel': details['channel'],
+          'date': details['date'],
+          'follower': details['follower']
         })
-        .then((value) => setState(() {
-              resultMessage = "Following ";
-            }))
-        .catchError((error) => setState(() {
-              resultMessage = "Failed to Follow ";
-            }));
+        .whenComplete(() {
+        _showToast(context, "Following " + cname);
+        FirebaseMessaging.instance.subscribeToTopic(widget.channelId);
+        setState(() {
+          followStatus="Unfollow";
+        });
+      }).catchError(
+              (error) => _showToast(context, "Failed to follow: $error"));
+
+     }
+     catch (e) {
+      print("Error"+e.toString());
+    }
+    
   }
 
   void _showToast(BuildContext context, String message) {
@@ -118,7 +156,7 @@ class _Page8State extends State<Page8> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         key: _drawerKey,
         drawer: DefaultDrawer(),
@@ -139,25 +177,48 @@ class _Page8State extends State<Page8> {
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text(
-                    "Something went wrong",
-                    style: GoogleFonts.ubuntu(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Container(
+                      color: Colors.white,
+                      height: 160,
+                      width: MediaQuery.of(context).size.width * 0.90,
+                      child: Card(
+                        elevation: 0,
+                        color: Colors.white,
+                        child: Container(
+                            child: Text(
+                          "Something went wrong",
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                      ),
                     ),
                   );
                 }
 
                 if (snapshot.hasData && !snapshot.data.exists) {
                   //if()
-                  return Center(
-                    child: Text(
-                      "Channel does not exist",
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Container(
+                      color: Colors.white,
+                      height: 160,
+                      width: MediaQuery.of(context).size.width * 0.90,
+                      child: Card(
+                        elevation: 0,
+                        color: Colors.white,
+                        child: Center(
+                            child: Text(
+                          "Channel does not exist !",
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        )),
                       ),
                     ),
                   );
@@ -168,20 +229,19 @@ class _Page8State extends State<Page8> {
                       snapshot.data.data() as Map<String, dynamic>;
                   ChannelModel channel = ChannelModel.fromDoc(data);
                   //() async=>{exists = await checkExist(userId + "_" + channel.id)};
-                  return Container(
-                    width: double.infinity,
-                    height: 165,
-                    color: Colors.white,
-                    //decoration: BoxDecoration(),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  cname = channel.channelName;
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: Container(
+                      color: Colors.white,
+                      height: 160,
+                      width: MediaQuery.of(context).size.width * 0.90,
                       child: Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                        elevation: 0,
                         child: Container(
+                          //color: Colors.white,
                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25.0),
                             image: DecorationImage(
                               image: NetworkImage(
                                 (channel.channelArt == null ||
@@ -189,141 +249,117 @@ class _Page8State extends State<Page8> {
                                     ? altChannelArt
                                     : channel.channelArt,
                               ),
-                              //  'https://motionarray.imgix.net/preview-75634-8YcoQ8Fyf3_0000.jpg'),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fitWidth,
                               alignment: Alignment.topCenter,
                             ),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                            padding: const EdgeInsets.all(20.0),
                             child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                CircleAvatar(
-                                  radius: 40,
-                                  child: ClipRRect(
-                                    child: Image.network(
-                                      (channel.profilePic == null ||
-                                              channel.profilePic.isEmpty)
-                                          ? altProfilePic
-                                          : channel.profilePic,
-                                      //data['profilePic'],
-                                      width: MediaQuery.of(context).size.width,
-                                      height:
-                                          MediaQuery.of(context).size.height,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        MediaQuery.of(context).size.width * 1),
-                                  ),
-                                  // backgroundColor: Colors.black,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 40,
+                                      backgroundImage: NetworkImage(
+                                        (channel.profilePic == null ||
+                                                channel.profilePic.isEmpty)
+                                            ? altProfilePic
+                                            : channel.profilePic,
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(15, 0, 50, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 8, 0, 8),
                                   child: Column(
-                                    mainAxisSize: MainAxisSize.max,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    //mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Text(
-                                            //username,
-                                            channel.channelName,
+                                            channel.channelName.length > 15
+                                                ? channel.channelName
+                                                        .substring(0, 15) +
+                                                    "...."
+                                                : channel.channelName,
+                                            overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.ubuntu(
-                                              color: Colors.black,
+                                              color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.fromLTRB(0, 4, 0, 0),
-                                            child: Text(
-                                              channel.subsribers.toString() +
-                                                  ' Subscribers',
-                                              style: GoogleFonts.ubuntu(
-                                                color: Colors.black,
-                                                fontSize: 15,
-                                              ),
+                                          if (channel.isVerified)
+                                            Icon(
+                                              Icons.verified_sharp,
+                                              size: 20,
+                                              color: Colors.blue,
                                             ),
-                                          ),
                                         ],
                                       ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                primary: Colors.white,
-                                              ),
-                                              onPressed: () {
-                                                if (channel.id == altUserId)
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EditChannel(
-                                                                channel)),
-                                                  );
+                                      Text(
+                                        NumberFormat.compact()
+                                                .format(channel.subsribers)
+                                                .toString() +
+                                            ' Subscribers',
+                                        style: GoogleFonts.ubuntu(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: primary,
+                                          ),
+                                          onPressed: () {
+                                            if (channel.id == altUserId)
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        EditChannel(channel)),
+                                              );
+                                            else {
+                                              setState(() {
+                                                if (followStatus == "Unfollow")
+                                                  unfollow(altUserId +
+                                                      "_" +
+                                                      channel.id);
                                                 else {
-                                                  setState(() {
-                                                    if (followStatus ==
-                                                        "Unfollow")
-                                                      unfollow(altUserId +
+                                                  Map details = {
+                                                    'channel': channel.id,
+                                                    'date': FieldValue
+                                                        .serverTimestamp(),
+                                                    'follower': altUserId
+                                                  };
+                                                  follow(
+                                                          altUserId +
                                                               "_" +
-                                                              channel.id)
-                                                          .whenComplete(() =>
-                                                              _showToast(
-                                                                  context,
-                                                                  resultMessage +
-                                                                      channel
-                                                                          .channelName));
-                                                    else {
-                                                      Map details = {
-                                                        'channel':
-                                                            channel.id,
-                                                        'date': FieldValue
-                                                            .serverTimestamp(),
-                                                        'follower': altUserId
-                                                      };
-                                                      follow(
-                                                              altUserId +
-                                                                  "_" +
-                                                                  channel.id,
-                                                              details)
-                                                          .whenComplete(() =>
-                                                              _showToast(
-                                                                  context,
-                                                                  resultMessage +
-                                                                      channel
-                                                                          .channelName));
-                                                    }
-                                                    checkExist(channel.channelName);
-                                                  });
+                                                              channel.id,
+                                                          details);
+                                                     
                                                 }
-                                              },
-                                              child: Text(
-                                                channel.id == altUserId
-                                                    ? "Edit Channel"
-                                                    : followStatus,
-                                                style: GoogleFonts.ubuntu(
-                                                    color: Colors.black),
-                                              ),
-                                            ),
+                                              });
+                                            }
+                                          },
+                                          child: Text(
+                                            channel.id == altUserId
+                                                ? "Edit Channel"
+                                                : followStatus,
+                                            style: GoogleFonts.ubuntu(
+                                                color: Colors.white),
                                           ),
-                                        ],
-                                      )
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 )
@@ -335,14 +371,23 @@ class _Page8State extends State<Page8> {
                     ),
                   );
                 }
-
-                return Center(
-                  child: Text(
-                    "Loading Channel Details..",
-                    style: GoogleFonts.ubuntu(
-                      fontSize: 20,
-                      color: Colors.black,
-                      //fontWeight: FontWeight.bold,
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: Container(
+                    color: Colors.white,
+                    height: 160,
+                    width: MediaQuery.of(context).size.width * 0.90,
+                    child: Card(
+                      elevation: 0,
+                      color: Colors.white,
+                      child: Center(
+                          child: Text(
+                        "Loading Channel Details...",
+                        style: GoogleFonts.ubuntu(
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      )),
                     ),
                   ),
                 );
@@ -350,12 +395,17 @@ class _Page8State extends State<Page8> {
             ),
 
             // the tab bar with two items
+            Divider(
+              color: primary,
+              thickness: 1.5,
+            ),
             SizedBox(
               height: 50,
               child: AppBar(
                 backgroundColor: Colors.white,
                 bottom: TabBar(
                   indicatorColor: primary,
+                  indicatorWeight: 2,
                   tabs: [
                     Tab(
                       child: Text('Videos',
@@ -367,6 +417,10 @@ class _Page8State extends State<Page8> {
                     ),
                     Tab(
                       child: Text('30s',
+                          style: GoogleFonts.ubuntu(color: Colors.black)),
+                    ),
+                    Tab(
+                      child: Text('About',
                           style: GoogleFonts.ubuntu(color: Colors.black)),
                     ),
                   ],
@@ -527,63 +581,118 @@ class _Page8State extends State<Page8> {
                       },
                     ),
                   ),
-
-                  // SingleChildScrollView(
-                  //   child: StreamBuilder(
-                  //     stream: FirebaseFirestore.instance
-                  //         .collection('reels')
-                  //         .where('channelId', isEqualTo: altUserId)
-                  //         .snapshots(),
-                  //     builder: (BuildContext context,
-                  //         AsyncSnapshot<QuerySnapshot> snapshot) {
-                  //       if (snapshot.connectionState ==
-                  //           ConnectionState.waiting) {
-                  //         return Container(
-                  //             height: MediaQuery.of(context).size.height * 0.25,
-                  //             child: Center(
-                  //                 child: CircularProgressIndicator(
-                  //               color: primary,
-                  //             )));
-                  //       }
-                  //       if (snapshot.data.docs.isEmpty) {
-                  //         return Container(
-                  //             height: MediaQuery.of(context).size.height * 0.25,
-                  //             child: Center(
-                  //                 child: Text("No 30s to show!",
-                  //                     style:
-                  //                         GoogleFonts.ubuntu(fontSize: 15))));
-                  //       }
-                  //       if (snapshot.hasData) {
-                  //         return new ListView(
-                  //           physics: NeverScrollableScrollPhysics(),
-                  //           shrinkWrap: true,
-                  //           children: snapshot.data.docs.map((doc) {
-                  //             Reels reelsItems = Reels.fromMap(doc.data());
-                  //             return InkWell(
-                  //               onTap: () {
-                  //                 Navigator.push(
-                  //                   context,
-                  //                   MaterialPageRoute(
-                  //                       builder: (context) => ContentScreen(
-                  //                           src: reelsItems.videoSrc)),
-                  //                 );
-                  //               },
-                  //               child: Image.network(
-                  //                   reelsItems.generatedThumbnail),
-                  //             );
-                  //           }).toList(),
-                  //         );
-                  //       } else {
-                  //         return Container(
-                  //             height: MediaQuery.of(context).size.height * 0.25,
-                  //             child: Center(
-                  //                 child: Text("Unknown Error Occured!",
-                  //                     style:
-                  //                         GoogleFonts.ubuntu(fontSize: 15))));
-                  //       }
-                  //     },
-                  //   ),
-                  // ),
+                  SingleChildScrollView(
+                    child: FutureBuilder<DocumentSnapshot>(
+                      future: channelDetails,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: primary,
+                              )));
+                        }
+                        if (snapshot.hasData) {
+                          ChannelModel channelmodel =
+                              ChannelModel.fromDoc(snapshot.data.data());
+                          return Container(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('About Channel',
+                                      style: GoogleFonts.ubuntu(fontSize: 18)),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.02),
+                                  Text(
+                                      "Channel Description : " +
+                                          (snapshot.data['description'] == ""
+                                              ? "No Description Provided"
+                                              : snapshot.data['description']),
+                                      maxLines: 5,
+                                      style: GoogleFonts.ubuntu(fontSize: 13)),
+                                  Divider(
+                                    color: Colors.grey,
+                                    thickness: 1,
+                                  ),
+                                  // SizedBox(height: MediaQuery.of(context).size.height*0.05),
+                                  Text('Links',
+                                      style: GoogleFonts.ubuntu(fontSize: 18)),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.02),
+                                  if (snapshot.data['linkone'] != '')
+                                    InkWell(
+                                        onTap: () {
+                                          _launchInBrowser(
+                                              snapshot.data['linkone']);
+                                        },
+                                        child: Text(snapshot.data['linkone'],
+                                            style: GoogleFonts.ubuntu(
+                                                color: Colors.blue,
+                                                fontSize: 13))),
+                                  if (snapshot.data['linktwo'] != '')
+                                    InkWell(
+                                        onTap: () {
+                                          _launchInBrowser(
+                                              snapshot.data['linktwo']);
+                                        },
+                                        child: Text(snapshot.data['linktwo'],
+                                            style: GoogleFonts.ubuntu(
+                                                color: Colors.blue,
+                                                fontSize: 13))),
+                                  Divider(
+                                    color: Colors.grey,
+                                    thickness: 1,
+                                  ),
+                                  Text('Details',
+                                      style: GoogleFonts.ubuntu(fontSize: 18)),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.02),
+                                  Text(
+                                      "Country Code : " +
+                                          snapshot.data['country'],
+                                      style: GoogleFonts.ubuntu(fontSize: 13)),
+                                  Text(
+                                      "Created On : " +
+                                          channelmodel.created
+                                              .toDate()
+                                              .toString(),
+                                      style: GoogleFonts.ubuntu(fontSize: 13)),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.025),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        primary: primary),
+                                    onPressed: () {},
+                                    child: Text(
+                                      "Report Channel",
+                                      style: GoogleFonts.ubuntu(fontSize: 15),
+                                    ),
+                                  ),
+                                ]),
+                          );
+                        } else {
+                          return Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              child: Center(
+                                  child: Text("Unknown Error Occured!",
+                                      style:
+                                          GoogleFonts.ubuntu(fontSize: 15))));
+                        }
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

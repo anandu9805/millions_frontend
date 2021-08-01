@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ChannelModel {
   String accountStatus,
       channelArt,
@@ -9,6 +11,8 @@ class ChannelModel {
       linktwo,
       profilePic;
   int subsribers, videos;
+  bool isVerified;
+  Timestamp created;
   ChannelModel(
       {this.accountStatus,
       this.channelArt,
@@ -20,13 +24,17 @@ class ChannelModel {
       this.linktwo,
       this.profilePic,
       this.subsribers,
+      this.isVerified,
+      this.created,
       this.videos});
   factory ChannelModel.fromDoc(Map<String, dynamic> map) {
     return ChannelModel(
         accountStatus: map["accountStatus"],
         channelArt: map["channelArt"],
+        created: map['created'],
         channelName: map["channelName"],
         country: map["country"],
+        isVerified: map['isVerified'],
         description: map["description"],
         id: map["id"],
         linkone: map["linkone"],

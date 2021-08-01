@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/screens/editPost.dart';
+import 'package:millions/screens/editVideo.dart';
 
 class PopUpMenuIcon extends StatefulWidget {
   // const PopUpMenuIcon({Key key}) : super(key: key);
@@ -50,13 +52,13 @@ class _PopUpMenuIconState extends State<PopUpMenuIcon> {
   Widget build(BuildContext context) {
     return PopupMenuButton(itemBuilder: (BuildContext context) {
       return <PopupMenuEntry>[
-        // PopupMenuItem(
-        //   child: Text(
-        //     "Edit",
-        //     style: GoogleFonts.ubuntu(),
-        //   ),
-        //   value: 'edit',
-        // ),
+        PopupMenuItem(
+          child: Text(
+            "Edit",
+            style: GoogleFonts.ubuntu(),
+          ),
+          value: 'edit',
+        ),
         PopupMenuItem(
           child: Text("Delete", style: GoogleFonts.ubuntu()),
           value: 'delete',
@@ -114,17 +116,17 @@ class _PopUpMenuIconState extends State<PopUpMenuIcon> {
           },
         );
       } 
-      // else {
-      //   widget.collection == "posts"
-      //       ? Navigator.push(
-      //           context,
-      //           MaterialPageRoute(builder: (context) => EditPost(widget.id)),
-      //         )
-      //       : Navigator.push(
-      //           context,
-      //           MaterialPageRoute(builder: (context) => EditVideo(widget.id)),
-      //         );
-      // }
+      else {
+        widget.collection == "posts"
+            ? Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditPost(widget.id)),
+              )
+            : Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditVideo(widget.id)),
+              );
+      }
     });
   }
 }

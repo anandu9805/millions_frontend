@@ -59,6 +59,8 @@ dependencies:
   data_connection_checker: ^0.3.4
   firebase_messaging: ^10.0.4
 
+  algolia: ^1.0.1
+  intl: ^0.17.0
   flutter_local_notifications: ^8.0.0
 
 
@@ -92,6 +94,8 @@ flutter:
       - images/white millions logo with millions.png
       - images/million logo with millions.png
       - images/google.png
+      - images/million logo no internet.png
+      - images/algolia.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -7,6 +7,7 @@ import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/newpost_model.dart';
 import 'package:millions/model/user.dart';
 import 'package:millions/model/video.dart';
+import 'package:millions/screens/followersShorts.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/widgets/photos.dart';
@@ -30,7 +31,7 @@ class _Screen9State extends State<Screen9> {
     List d = [];
     Map<String, dynamic> channeldata;
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: StreamBuilder(
@@ -50,7 +51,7 @@ class _Screen9State extends State<Screen9> {
                 followersId.add(d[temp]['channel']);
                 temp = temp - 1;
               }
-              print(followersId);
+              //print(followersId);
               if(followersId.isEmpty)
               return Center(child: Text("You are not following any channels!", style: GoogleFonts.ubuntu(fontSize: 20),));
               CollectionReference channels =
@@ -130,7 +131,7 @@ class _Screen9State extends State<Screen9> {
                                 }
 
                                 return Center(
-                                    child: Text("Loading Following Channels..",
+                                    child: Text("Loading..",
                                         style:
                                             GoogleFonts.ubuntu(fontSize: 15)));
                               },
@@ -151,6 +152,7 @@ class _Screen9State extends State<Screen9> {
                               fontSize: 25, color: Colors.black54),
                         )),
                   ),
+                  Divider(color: primary,thickness: 1.5,),
                   SizedBox(
                     height: 50,
                     child: AppBar(
@@ -164,6 +166,10 @@ class _Screen9State extends State<Screen9> {
                           ),
                           Tab(
                             child: Text('Posts',
+                                style: GoogleFonts.ubuntu(color: Colors.black)),
+                          ),
+                          Tab(
+                            child: Text('30s',
                                 style: GoogleFonts.ubuntu(color: Colors.black)),
                           ),
                         ],
@@ -282,82 +288,63 @@ class _Screen9State extends State<Screen9> {
                             },
                           ),
                         ),
-                        // Container(
-                        //     height: MediaQuery.of(context).size.height * 0.25,
-                        //     child: Center(
-                        //       child: ElevatedButton(
-                        //         style:
-                        //             ElevatedButton.styleFrom(primary: primary),
-                        //         onPressed: () {
-                        //           // Navigator.push(
-                        //           //   context,
-                        //           //   MaterialPageRoute(
-                        //           //       builder: (context) =>
-                        //           //           ChannelShorts(widget.channelId)),
-                        //           // );
-                        //         },
-                        //         child: Text(
-                        //           "View all 30s of this channel",
-                        //           style: GoogleFonts.ubuntu(fontSize: 15),
-                        //         ),
-                        //       ),
-                        //     ))
-                        // SingleChildScrollView(
-                        //   child: StreamBuilder(
-                        //     stream: FirebaseFirestore.instance
-                        //         .collection('reels')
-                        //         .where('channelId', isEqualTo: altUserId)
-                        //         .snapshots(),
-                        //     builder: (BuildContext context,
-                        //         AsyncSnapshot<QuerySnapshot> snapshot) {
-                        //       if (snapshot.connectionState ==
-                        //           ConnectionState.waiting) {
-                        //         return Container(
-                        //             height: MediaQuery.of(context).size.height * 0.25,
-                        //             child: Center(
-                        //                 child: CircularProgressIndicator(
-                        //               color: primary,
-                        //             )));
-                        //       }
-                        //       if (snapshot.data.docs.isEmpty) {
-                        //         return Container(
-                        //             height: MediaQuery.of(context).size.height * 0.25,
-                        //             child: Center(
-                        //                 child: Text("No 30s to show!",
-                        //                     style:
-                        //                         GoogleFonts.ubuntu(fontSize: 15))));
-                        //       }
-                        //       if (snapshot.hasData) {
-                        //         return new ListView(
-                        //           physics: NeverScrollableScrollPhysics(),
-                        //           shrinkWrap: true,
-                        //           children: snapshot.data.docs.map((doc) {
-                        //             Reels reelsItems = Reels.fromMap(doc.data());
-                        //             return InkWell(
-                        //               onTap: () {
-                        //                 Navigator.push(
-                        //                   context,
-                        //                   MaterialPageRoute(
-                        //                       builder: (context) => ContentScreen(
-                        //                           src: reelsItems.videoSrc)),
-                        //                 );
-                        //               },
-                        //               child: Image.network(
-                        //                   reelsItems.generatedThumbnail),
-                        //             );
-                        //           }).toList(),
-                        //         );
-                        //       } else {
-                        //         return Container(
-                        //             height: MediaQuery.of(context).size.height * 0.25,
-                        //             child: Center(
-                        //                 child: Text("Unknown Error Occured!",
-                        //                     style:
-                        //                         GoogleFonts.ubuntu(fontSize: 15))));
-                        //       }
-                        //     },
-                        //   ),
-                        // ),
+                        SingleChildScrollView(
+                    child: StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('reels')
+                          .where('channelId', whereIn: followersId)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: primary,
+                              )));
+                        }
+                        if (snapshot.data.docs.isEmpty) {
+                          return Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              child: Center(
+                                  child: Text("No 30s videos to show!",
+                                      style:
+                                          GoogleFonts.ubuntu(fontSize: 15))));
+                        }
+                        if (snapshot.hasData) {
+                          return Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              child: Center(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: primary),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              FollowersShorts(followersId)),
+                                    );
+                                  },
+                                  child: Text(
+                                    "View all 30s of your followers",
+                                    style: GoogleFonts.ubuntu(fontSize: 15),
+                                  ),
+                                ),
+                              ));
+                        } else {
+                          return Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              child: Center(
+                                  child: Text("Unknown Error Occured!",
+                                      style:
+                                          GoogleFonts.ubuntu(fontSize: 15))));
+                        }
+                      },
+                    ),
+                  ),
                       ],
                     ),
                   ),

@@ -9,6 +9,7 @@ import 'package:millions/model/comment_model.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/screens/page8.dart';
+import 'package:millions/screens/searchPage..dart';
 import 'package:millions/services/commentServices.dart';
 import 'package:millions/services/likeServices.dart';
 import 'package:millions/services/report-services.dart';
@@ -263,13 +264,18 @@ class _ViewVideoState extends State<ViewVideo> {
           Padding(
             padding: const EdgeInsets.only(top: 10, right: 10),
             child: IconButton(
-                icon: Icon(
-                  Icons.search_outlined,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  //go to search screen
-                }),
+              icon: Icon(
+                Icons.search_outlined,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                 Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchPage()),
+                    );
+                //go to search screen
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10, right: 20),

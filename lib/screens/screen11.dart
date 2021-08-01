@@ -4,12 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/model/newpost_model.dart';
 import 'package:millions/model/user.dart';
-//import 'package:millions/widgets/appbar_others.dart';
-
-import '../widgets/photos.dart';
+import 'package:millions/widgets/photos.dart';
 
 class Screen11 extends StatefulWidget {
-
   //---------------------------------------------------------------------------------------------------------------------
   String postId;
 
@@ -18,23 +15,11 @@ class Screen11 extends StatefulWidget {
   }
 
   //---------------------------------------------------------------------------------------------------------------------
-
   @override
   _Screen11State createState() => _Screen11State();
 }
 
 class _Screen11State extends State<Screen11> {
-
-  void initState() {
-    //---------------------------------------------------------------------------------------------------------------------
-    if (widget.postId != null) {
-      _getPostFromId();
-    }
-    //---------------------------------------------------------------------------------------------------------------------
-    super.initState();
-  }
-
-
   //---------------------------------------------------------------------------------------------------------------------
   PostDetail post2;
   var _isLoading = true;
@@ -54,99 +39,118 @@ class _Screen11State extends State<Screen11> {
     print(' post2');
     print(post2);
     print(post2.id);
-
   }
 
   //---------------------------------------------------------------------------------------------------------------------
 
   UserDetail user;
 
+  List<DocumentSnapshot> _posts = [];
+  bool _loadingPosts = true,
+      _gettingMorePosts = false,
+      _morePostsAvailable = true;
+  int _perPage = 10;
+  DocumentSnapshot _lastDocument;
+  ScrollController _scrollController = ScrollController();
+
+  _getPosts() async {
+    Query q = FirebaseFirestore.instance
+        .collection("posts")
+        .where("isVisible", isEqualTo: "Public")
+        .orderBy("date", descending: true)
+        .limit(_perPage);
+
+    setState(() {
+      _loadingPosts = true;
+    });
+    QuerySnapshot querySnapshot = await q.get();
+    _posts = querySnapshot.docs;
+    _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    setState(() {
+      _loadingPosts = false;
+    });
+  }
+
+  _getMorePosts() async {
+    //print("object called");
+    if (!_morePostsAvailable) {
+      print("No more posts");
+      return;
+    }
+    if (_gettingMorePosts) {
+      return;
+    }
+
+    _gettingMorePosts = true;
+    Query q = FirebaseFirestore.instance
+        .collection("posts")
+        .where("isVisible", isEqualTo: "Public")
+        .orderBy("date", descending: true)
+        .limit(_perPage)
+        .startAfterDocument(_lastDocument);
+    QuerySnapshot querySnapshot = await q.get();
+    if (querySnapshot.docs.length < _perPage) {
+      _morePostsAvailable = false;
+    }
+    _lastDocument = querySnapshot.docs[querySnapshot.size - 1];
+    _posts.addAll(querySnapshot.docs);
+    //print(_posts.length);
+
+    setState(() {
+      _gettingMorePosts = false;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //---------------------------------------------------------------------------------------------------------------------
+    if (widget.postId != null) {
+      _getPostFromId();
+    }
+    //---------------------------------------------------------------------------------------------------------------------
+    _getPosts();
+    _scrollController.addListener(() {
+      double maxScroll = _scrollController.position.maxScrollExtent;
+      double currentScroll = _scrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.75;
+
+      if (maxScroll - currentScroll > delta) {
+        _getMorePosts();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var h = MediaQuery.of(context).size.height;
-    // var w = MediaQuery.of(context).size.width;
     return Scaffold(
-
-      body: (_isLoading == false || widget.postId == null)
-          ? SingleChildScrollView(
-              child: Column(
-                children: [
-                  if (widget.postId != null)
-                    SizedBox(height:30,),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 12, left: 5),
-                      child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Posts',
-                            style: GoogleFonts.ubuntu(
-                                fontSize: 25, color: Colors.black54),
-                          )),
-                    ),
-                  ),
-
-                  // Container(
-                  //   height: (h) - ((h) * (1 / 8)) - ((h) * (1 / 8.5)),
-                  //   child: ListView.builder(
-                  //     itemBuilder: (context, index) {
-                  //       return Photos(index);
-                  //     },
-                  //     scrollDirection: Axis.vertical,
-                  //     itemCount: 5,
-                  //   ),
-                  // ),
-                  //---------------------------------------------------------------------------------------------------------------------
-                  if (widget.postId != null)
-                    Container(
-                      child: Photos(post2),
-                    ),
-                  //---------------------------------------------------------------------------------------------------------------------
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("posts")
-                        .where("isVisible", isEqualTo: "Public")
-                        .orderBy("date", descending: true)
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData) {
-                        //print(snapshot.data.size);
-                        return ListView(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          children: snapshot.data.docs.map((doc) {
-                            PostDetail photoItems =
-                                PostDetail.fromMap(doc.data());
-                            return Container(
-                              child: Photos(photoItems),
-                            );
-                          }).toList(),
-                        );
-                      } else {
-                        // print(123);
-                        return Container(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: primary,
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    // future: VideoServices.getAllVideos(),
-                  ),
-                ],
+      body: _loadingPosts
+          ? Center(
+              child: Container(
+              child: CircularProgressIndicator(
+                color: primary,
               ),
-            )
-          : Container(
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: primary,
+            ))
+          : _posts.length == 0
+              ? Center(
+                  child: Container(
+                  child: Text('No posts to show!',
+                      style: GoogleFonts.ubuntu(fontSize: 15)),
+                ))
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: _posts.length,
+                          controller: _scrollController,
+                          itemBuilder: (BuildContext ctx, int index) {
+                            return Photos(
+                                PostDetail.fromMap(_posts[index].data()));
+                          }),
+                    )
+                  ],
                 ),
-              ),
-            ),
-
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:millions/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:millions/screens/noNetConnection.dart';
 import 'package:millions/screens/screen1.dart';
 import 'package:provider/provider.dart';
 import 'provider.dart';
@@ -235,7 +236,7 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => isConnected == true
               ? HomePage() //Screen1()
-              : Center(child: Text("No net")),
+              : NoInternet(),
           'Posts': (BuildContext context) => Screen11(null),
         },
         debugShowCheckedModeBanner: false,

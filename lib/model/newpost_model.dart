@@ -25,7 +25,9 @@ class PostDetail {
       language,
       photoSrc,
       profilePic,
-      title, isVisible;
+      title,
+      isVisible,
+      isComments;
   int likes, disLikes, postScore, comments;
   PostDetail(
       {this.channelId,
@@ -41,6 +43,7 @@ class PostDetail {
       this.photoSrc,
       this.postScore,
       this.profilePic,
+      this.isComments,
       this.title});
 
   factory PostDetail.fromMap(Map snapshot) {
@@ -58,6 +61,7 @@ class PostDetail {
       photoSrc: snapshot["photoSrc"],
       profilePic: snapshot["profilePic"],
       title: snapshot["title"],
+      isComments: snapshot["isComments"]
     );
   }
 }
