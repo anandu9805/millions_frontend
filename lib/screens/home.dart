@@ -28,6 +28,8 @@ class _HomePageState extends State<HomePage> {
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
   }
+
+
 //we pass null inside Screen11 for dynamic linking logic
   final pages = [Screen5(), Shorts(), CreatePage(), Screen9(), Screen11(null)];
   int page = 0;
@@ -35,6 +37,9 @@ class _HomePageState extends State<HomePage> {
   @override
   initState() {
     super.initState();
+    
+    print(FirebaseAuth.instance.currentUser);
+    print(FirebaseAuth.instance.currentUser.displayName+"132");
   }
 
   @override
@@ -45,6 +50,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final currentuser = FirebaseAuth.instance.currentUser;
+
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 

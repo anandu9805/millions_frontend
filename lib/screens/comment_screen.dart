@@ -87,6 +87,7 @@ class _CommentsState extends State<Comments> {
   @override
   void initState() {
     super.initState();
+  
     profilePic = UserServices().getUserDetails(altUserId);
     _getComments();
     _scrollController.addListener(() {

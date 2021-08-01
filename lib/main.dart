@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:millions/screens/complete_profile.dart';
 import 'package:millions/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:millions/screens/screen1.dart';
@@ -14,7 +16,7 @@ import './services/dynamiclinkservice.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import './screens/screen11.dart';
-import'./services/local_notification_service.dart';
+import './services/local_notification_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // Future<void> main() async {
@@ -107,15 +109,14 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     init();
     LocalNotificationService.initialize(context);
     //to get message data while app is in terminated state and opened by clicking on the notification
-    FirebaseMessaging.instance.getInitialMessage().then((message){
-      if(message!=null){
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
         final routemessage = message.data["route"];
         print(routemessage);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Screen11(null)),
         );
-
       }
     });
     //to get message data while app in foreground
@@ -137,6 +138,7 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     });
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+   
   }
 
   void init() async {
@@ -195,7 +197,7 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
       child: MaterialApp(
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => isConnected == true
-              ? HomePage() //Screen1()
+              ? Screen1() //Screen1()
               : Center(child: Text("No net")),
           'Posts': (BuildContext context) => Screen11(null),
         },

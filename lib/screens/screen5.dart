@@ -59,7 +59,7 @@ class _Screen5State extends State<Screen5> {
         .where("isVisible", isEqualTo: "Public")
         .orderBy("date", descending: true)
         .limit(_perPage)
-        .startAfter([_lastDocument['id']]);
+        .startAfterDocument(_lastDocument);
     QuerySnapshot querySnapshot = await q.get();
     if (querySnapshot.docs.length < _perPage) {
       _moreVideosAvailable = false;
@@ -83,7 +83,7 @@ class _Screen5State extends State<Screen5> {
       double currentScroll = _scrollController.position.pixels;
       double delta = MediaQuery.of(context).size.height * 0.25;
 
-      if (maxScroll - currentScroll <= delta) {
+      if (maxScroll - currentScroll > delta) {
         _getMoreVideos();
       }
     });
@@ -96,10 +96,8 @@ class _Screen5State extends State<Screen5> {
   //   if(l)
   // }
 
-
   @override
   Widget build(BuildContext context) {
-
     // final currentuser=FirebaseAuth.instance.currentUser;
     // CollectionReference users = FirebaseFirestore.instance.collection('users');
     // final currentUserDetails =users.where('email',isEqualTo:currentuser.email );
@@ -107,6 +105,7 @@ class _Screen5State extends State<Screen5> {
     // var ifphotos = true;
     var h = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
+      // physics: NeverScrollableScrollPhysics(),
       child: Column(
         children: [
           Container(

@@ -10,9 +10,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 
 class CreateProfile extends StatefulWidget {
-  final User user;
+  final String uid;
 
-  const CreateProfile({Key key, this.user}) : super(key: key);
+  const CreateProfile({Key key, this.uid}) : super(key: key);
   @override
   _CreateProfileState createState() => _CreateProfileState();
 }
@@ -26,18 +26,15 @@ class _CreateProfileState extends State<CreateProfile> {
     // TODO: implement initState
     super.initState();
 
-    if (widget.user != null) {
-      print(widget.user.displayName);
-    }
 
     Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore
         .instance
         .collection('users')
-        .where("uid", isEqualTo: widget.user.uid)
+        .where("uid", isEqualTo: widget.uid)
         .get();
     result.then((value) {
       if (value.docs.length > 0) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
         );
@@ -334,7 +331,7 @@ class _CreateProfileState extends State<CreateProfile> {
                         'accountCreatedFrom': 'Mobile',
                         'accountStatus': 'active',
                         'country': country.text,
-                        'created': '00:00',
+                        'created': DateTime.now(),
                         'district': district.text,
                         'email': email.text,
                         'gender': sex.text,
@@ -345,12 +342,12 @@ class _CreateProfileState extends State<CreateProfile> {
                         'place': place.text,
                         'profilePic': currentuser.photoURL,
                         'state': state.text,
-                        'timestamp': '00:00',
+                        'timestamp': DateTime.now(),
                         'uid': currentuser.uid,
                       });
                       print("inside homepage");
 
-                      String uid = widget.user.uid;
+                      String uid = widget.uid;
                       // FirebaseUser user = await _auth.currentUser();
 
                       // Get the token for this device
@@ -368,7 +365,7 @@ class _CreateProfileState extends State<CreateProfile> {
                         await tokens.set({
                           'token': fcmToken,
                           'createdAt': FieldValue.serverTimestamp(), // optional
-                          'platform': TargetPlatform.android // optional
+                          // 'platform': TargetPlatform.android // optional
                         });
                       }
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
