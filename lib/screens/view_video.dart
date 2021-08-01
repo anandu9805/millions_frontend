@@ -628,55 +628,56 @@ class _ViewVideoState extends State<ViewVideo> {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  reportPopUp(h);
-                                  // showDialog(
-                                  //     context: context,
-                                  //     builder: (BuildContext context) {
-                                  //       return Container(
-                                  //         child: Column(
-                                  //           children: [
-                                  //             SimpleDialog(
-                                  //               title: Row(
-                                  //                 mainAxisAlignment:
-                                  //                     MainAxisAlignment.spaceBetween,
-                                  //                 children: <Widget>[
-                                  //                   Column(
-                                  //                     children: nList
-                                  //                         .map((data) =>
-                                  //                             RadioListTile(
-                                  //                               title: Text(
-                                  //                                   "${data.reason}"),
-                                  //                               groupValue: id,
-                                  //                               value: data.index,
-                                  //                               onChanged: (val) {
-                                  //                                 setState(() {
-                                  //                                   radioItemHolder =
-                                  //                                       data.reason;
-                                  //                                   id = data.index;
-                                  //                                 });
-                                  //                               },
-                                  //                             ))
-                                  //                         .toList(),
-                                  //                   ),
-                                  //                   new ElevatedButton(
-                                  //                     onPressed: () {
-                                  //                       ReportServices().reportVideo(
-                                  //                           widget.video,
-                                  //                           radioItemHolder);
-                                  //                     },
-                                  //                     child: new Text(
-                                  //                       "Done",
-                                  //                       style: TextStyle(
-                                  //                           color: Colors.white),
-                                  //                     ),
-                                  //                   )
-                                  //                 ],
-                                  //               ),
-                                  //             ),
-                                  //           ],
-                                  //         ),
-                                  //       );
-                                  //     });
+                                //  reportPopUp(h);
+                                  //-------------------------------------------------------------------------------------------------------------
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                          child: Column(
+                                            children: [
+                                              AlertDialog(
+                                                title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.spaceBetween,
+                                                  children: <Widget>[
+                                                    Column(
+                                                      children: nList
+                                                          .map((data) =>
+                                                              RadioListTile(
+                                                                title: Text(
+                                                                    "${data.reason}"),
+                                                                groupValue: id,
+                                                                value: data.index,
+                                                                onChanged: (val) {
+                                                                  setState(() {
+                                                                    radioItemHolder =
+                                                                        data.reason;
+                                                                    id = data.index;
+                                                                  });
+                                                                },
+                                                              ))
+                                                          .toList(),
+                                                    ),
+                                                    new ElevatedButton(
+                                                      onPressed: () {
+                                                        ReportServices().reportVideo(
+                                                            widget.video,
+                                                            radioItemHolder);
+                                                      },
+                                                      child: new Text(
+                                                        "Done",
+                                                        style: TextStyle(
+                                                            color: Colors.white),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      });
                                 },
                                 icon: Icon(Icons.flag_outlined),
                               ),

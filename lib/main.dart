@@ -16,6 +16,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import './screens/screen11.dart';
 import'./services/local_notification_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import './screens/view_video.dart';
+
 
 // Future<void> main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -109,31 +111,68 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     //to get message data while app is in terminated state and opened by clicking on the notification
     FirebaseMessaging.instance.getInitialMessage().then((message){
       if(message!=null){
-        final routemessage = message.data["route"];
-        print(routemessage);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Screen11(null)),
-        );
+
+        if(message.data["screen"]=="videos")
+        {
+          //-------------------------------------------------------------------------------------------------
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>ViewVideo(id:message.data["itemId"],video:null)),
+          );
+        }
+        if(message.data["screen"]=="posts")
+        {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Screen11(message.data["itemId"])),
+          );
+        }
+        if(message.data["screen"]=="channel")
+        {
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => Screen11(null)),
+          // );
+
+        }
 
       }
     });
     //to get message data while app in foreground
     FirebaseMessaging.onMessage.listen((message) {
       if (message.notification != null) {
-        print(message.notification.body);
-        print(message.notification.title);
+
+
       }
       LocalNotificationService.display(message);
     });
     //to get message data while app is in background and opened by clicking on the notification
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      final routemessage = message.data["route"];
-      print(routemessage);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Screen11(null)),
-      );
+
+      if(message.data["screen"]=="videos")
+        {
+          //-------------------------------------------------------------------------------------------------
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>ViewVideo(id:message.data["itemId"],video:null)),
+          );
+        }
+      if(message.data["screen"]=="posts")
+      {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Screen11(message.data["itemId"])),
+        );
+      }
+      if(message.data["screen"]=="channel")
+      {
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => Screen11(null)),
+        // );
+
+      }
+
     });
     super.initState();
     WidgetsBinding.instance.addObserver(this);
