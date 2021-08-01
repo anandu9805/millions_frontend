@@ -58,6 +58,7 @@ dependencies:
   firebase_dynamic_links: ^2.0.7
   data_connection_checker: ^0.3.4
   firebase_messaging: ^10.0.4
+  skeleton_text: ^3.0.0
 
   algolia: ^1.0.1
   intl: ^0.17.0

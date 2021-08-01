@@ -165,7 +165,20 @@ class _HomePageState extends State<HomePage> {
                           onTapDown: (TapDownDetails details) {
                             _showPopupMenu(details.globalPosition);
                           },
-                          child: CircleAvatar(
+                          child:     CircleAvatar(
+                            child: ClipRRect(
+                              child: Image.network(
+                                snapshot.data.toString(),
+                                //reels_objects[index].profilePic,
+                                width: w * 1,
+                                height: h * 1,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(w * 1),
+                            ),
+                            radius: 25,
+                          ),
+                          /*CircleAvatar(radius: 20,
                             child: ClipRRect(
                               child: Image.network(
                                 snapshot.data.toString(),
@@ -174,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                               borderRadius: BorderRadius.circular(w * 0.1),
                             ),
                             //backgroundColor: Colors.black,
-                          ),
+                          ),*/
                         );
                       } else {
                         return GestureDetector(
@@ -209,7 +222,7 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.video_label), label: "30s"),
-            BottomNavigationBarItem(icon: Icon(Icons.add), label: "Post video"),
+            BottomNavigationBarItem(icon: Icon(Icons.add), label: "Create"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.subscriptions), label: "Follow"),
             BottomNavigationBarItem(icon: Icon(Icons.photo), label: "Photos"),

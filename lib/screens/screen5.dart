@@ -112,16 +112,17 @@ class _Screen5State extends State<Screen5> {
           Container(
             child: AdPost(),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 5, left: 5),
-            child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Hello Anandu ',
-                  style:
-                      GoogleFonts.ubuntu(fontSize: 20, color: Colors.black54),
-                )),
-          ),
+          SizedBox(height: 10,),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 5, left: 5),
+          //   child: Align(
+          //       alignment: Alignment.center,
+          //       child: Text(
+          //         'Hello Anandu ',
+          //         style:
+          //             GoogleFonts.ubuntu(fontSize: 20, color: Colors.black54),
+          //       )),
+          // ),
           //where('channelId', isNotEqualTo: altUserId)
           _loadingVideos
               ? Center(
