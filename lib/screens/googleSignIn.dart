@@ -7,7 +7,6 @@ import 'package:millions/screens/complete_profile.dart';
 import 'package:millions/screens/createPost.dart';
 import 'package:millions/screens/home.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class GoogleSignIn extends StatefulWidget {
   @override
