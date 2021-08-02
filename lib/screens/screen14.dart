@@ -74,7 +74,7 @@ class _Screen14State extends State<Screen14> {
         .doc(altUserId)
         .get()
         .then((value) {
-      name = TextEditingController(text: value['realName']);
+      name = TextEditingController(text: value['name']);
       dname = TextEditingController(text: value['name']);
       tempPhone = value['phone'];
       phone = TextEditingController(text: tempPhone.substring(3));
@@ -240,7 +240,7 @@ class _Screen14State extends State<Screen14> {
                             ),
                             SizedBox(height: 15),
                             Text(
-                              'Video Country',
+                              'Country',
                               style: GoogleFonts.ubuntu(),
                             ),
                             Container(

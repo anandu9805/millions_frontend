@@ -159,9 +159,14 @@ class _MyWalletState extends State<MyWallet> {
                       );
                     }
                     if (snapshot.hasData && !snapshot.data.exists) {
-                      return Text(
-                        "Document does not exist",
-                        style: GoogleFonts.ubuntu(fontSize: 20),
+                      return Column(//mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children:[ Center(
+                          child: Text(
+                            "Wallet does not exist",
+                            style: GoogleFonts.ubuntu(fontSize: 20),
+                          ),
+                        ),]
                       );
                     }
 

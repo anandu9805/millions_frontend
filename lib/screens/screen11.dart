@@ -138,7 +138,11 @@ class _Screen11State extends State<Screen11> {
                   child: Text('No posts to show!',
                       style: GoogleFonts.ubuntu(fontSize: 15)),
                 ))
-              : Column(
+              : widget.postId != null?  Column(
+                children:[ SizedBox(height: 40,),Container(
+        child: Photos(post2),
+      ),]
+              ):Column(
                   children: [
                     Expanded(
                       child: ListView.builder(

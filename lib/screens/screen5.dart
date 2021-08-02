@@ -90,7 +90,7 @@ class _Screen5State extends State<Screen5> {
     _scrollController2.addListener(() {
       double maxScroll = _scrollController2.position.maxScrollExtent;
       double currentScroll = _scrollController2.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.50;
+      double delta = MediaQuery.of(context).size.height * 0.75;
       print(delta);
 
       if (maxScroll - currentScroll > delta) {

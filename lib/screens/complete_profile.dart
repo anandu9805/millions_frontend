@@ -221,8 +221,10 @@ class _CreateProfileState extends State<CreateProfile> {
                                   countrySelected = true;
                                   print(c.displayName);
                                   _selectedCountry = c;
+
                                   _selectedStateCode='KL';
                                   print(_selectedCountry.countryCode);
+
                                 });
                               },
                             );
@@ -443,6 +445,33 @@ class _CreateProfileState extends State<CreateProfile> {
                         'state': _selectedStateCode,
                         'timestamp': Timestamp.now(),
                         'uid': currentuser.uid,
+                      });
+                      await FirebaseFirestore.instance
+                          .collection('channels')
+                          .doc(currentuser.uid)
+                          .set({
+
+                        'accountStatus': 'active',
+                        'channelArt':"",
+                        'channelName':displayname.text,
+                        'channelScore':0,
+                        'country':
+                        countrySelected ? _selectedCountry.countryCode : '',
+                        'created': Timestamp.now(),
+                        'dateChanged':Timestamp.now(),
+                        'description':"",
+
+                        'email': currentuser.email,
+                        'id': currentuser.uid,
+
+                        'isVerified': false,
+                        'linkone':"",
+                        'linktwo':"",
+                        'profilePic': currentuser.photoURL,
+                        'realName':displayname.text,
+                        'subscribers':1,
+                        'videos':0
+
                       });
                       print("inside homepage");
 

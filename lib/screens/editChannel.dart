@@ -227,15 +227,15 @@ class _EditChannelState extends State<EditChannel> {
                                     ),
                                     Row(
                                       children: [
-                                        IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                profileremoved = true;
-                                                //profilechanged=true;
-                                              });
-                                            },
-                                            icon: Icon(
-                                                Icons.delete_forever_rounded)),
+                                        // IconButton(
+                                        //     onPressed: () {
+                                        //       setState(() {
+                                        //         profileremoved = true;
+                                        //         //profilechanged=true;
+                                        //       });
+                                        //     },
+                                        //     icon: Icon(
+                                        //         Icons.delete_forever_rounded)),
                                         IconButton(
                                             onPressed: () {
                                               showDialog<void>(
@@ -342,15 +342,15 @@ class _EditChannelState extends State<EditChannel> {
                                     ),
                                     Row(
                                       children: [
-                                        IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                artremoved = true;
-                                                //artchanged=true;
-                                              });
-                                            },
-                                            icon: Icon(
-                                                Icons.delete_forever_rounded)),
+                                        // IconButton(
+                                        //     onPressed: () {
+                                        //       setState(() {
+                                        //         artremoved = true;
+                                        //         //artchanged=true;
+                                        //       });
+                                        //     },
+                                        //     icon: Icon(
+                                        //         Icons.delete_forever_rounded)),
                                         IconButton(
                                             onPressed: () {
                                               showDialog<void>(

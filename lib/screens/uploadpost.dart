@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
+import 'package:millions/constants/tempResources.dart';
+import 'package:millions/model/channelModel.dart';
 import 'package:millions/screens/home.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io'; //to use json
@@ -24,18 +26,19 @@ class _UploadPostState extends State<UploadPost> {
   bool _isLoading = false;
   // var currentuserid =
   //     "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
-  var currentuserid ="Pon1uG0eNnhf9TLsps0jtScndtN2";
+  //var currentuserid ="Pon1uG0eNnhf9TLsps0jtScndtN2";
   PickedFile pickedImageFile;
   String fileName;
   List posts = [];
   File _imageFile;
   String url;
-List currentUserChannelDetails=[];
+//List currentUserChannelDetails=[];
+  ChannelModel channelDetails;
   bool uploadComplete = false;
   TextEditingController decsiptionController;
 
-  List<String> comments = ['Enabled', 'Disabled'];
-  String commentStatus = 'Enabled';
+  //List<String> comments = ['Enabled', 'Disabled'];
+  String commentStatus = 'Allowed';
   String description = " ";
   bool allowcomment = true;
   var percentage_uploaded = 0;
@@ -54,19 +57,15 @@ List currentUserChannelDetails=[];
     try {
       FirebaseFirestore.instance
           .collection('channels')
+          .doc(altUserId)
           .get()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          //print("in");
-          if (doc['id'] == currentuserid)
-            currentUserChannelDetails.add(doc);
-        });
-        print("currentUserChannelDetails");
-        print(currentUserChannelDetails[0]['email']);
+          .then((DocumentSnapshot documentSnapshot) {
+             Map<String, dynamic> data =
+                      documentSnapshot.data() as Map<String, dynamic>;
+                  channelDetails = ChannelModel.fromDoc(data);
       });
-
     } catch (e) {
-      return "Follow";
+      return "Channel Error";
     }
   }
 
@@ -125,7 +124,7 @@ List currentUserChannelDetails=[];
     print(fileName.split('.').last);
 
     firebase_storage.Reference ref =
-        storage.ref('assets/${currentuserid}/posts/${newId.id}.${fileName.split('.').last}');
+        storage.ref('assets/${altUserId}/posts/${newId.id}.${fileName.split('.').last}');
     firebase_storage.UploadTask uploadTask = ref.putFile(_imageFile);
     uploadTask.snapshotEvents.listen(
             (firebase_storage.TaskSnapshot snapshot) {
@@ -162,25 +161,25 @@ List currentUserChannelDetails=[];
           .doc(newId.id)
           .set({
         'category':"post",
-        'channelId':currentUserChannelDetails[0]['id'],
-        'channelName':currentUserChannelDetails[0]['channelName'],
+        'channelId':channelDetails.id,
+        'channelName':channelDetails.channelName,
         'comments': 0,
-        'country': currentUserChannelDetails[0]['country'],
+        'country': channelDetails.country,
         'date': DateTime.now(),
         'description':posts[0].description ,
         'disLikes': 0,
         'generatedThumbnail': " ",
         'id':newId.id,
         'isComments':posts[0].comment_enabled ,
-        'isVerified':currentUserChannelDetails[0]['isVerified'],
+        'isVerified':channelDetails.isVerified,
         'isVisible': "Public",
-        'language':"English",
+        'language':'English',
         'likes': 0,
         'photoSrc': url,
-        'profilePic':currentUserChannelDetails[0]['profilePic'] ,
-        'subscribers':0 ,
+        'profilePic':channelDetails.profilePic ,
+        'subscribers':channelDetails.subsribers ,
         'thumbnail':" " ,
-        'title':"Post by ${currentUserChannelDetails[0]['channelName']}",
+        'title':"Post by ${channelDetails.channelName}",
         'videoScore': 0,
         'views':0 ,
       });

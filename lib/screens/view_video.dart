@@ -245,33 +245,7 @@ class _ViewVideoState extends State<ViewVideo> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10, right: 10),
-            child: IconButton(
-              icon: Icon(
-                Icons.search_outlined,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                 Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SearchPage()),
-                    );
-                //go to search screen
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 10, right: 20),
-            child: InkWell(
-              child: CircleAvatar(
-                backgroundColor: Colors.black,
-              ),
-              onTap: () {},
-            ),
-          )
-        ],
+
       ),
       body: (_isLoading == false || widget.id == null)
           ? SingleChildScrollView(

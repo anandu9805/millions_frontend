@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final pages = [Screen5(0), Shorts(), CreatePage(), Screen9(), Screen11("")];
+  final pages = [Screen5(0), Shorts(), CreatePage(), Screen9(), Screen11(null)];
   int page = 0;
     var userDetalis;
   Future<String> userProfilePic;

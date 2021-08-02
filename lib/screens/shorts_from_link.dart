@@ -42,8 +42,7 @@ class _ShortsFromLinkState extends State<ShortsFromLink> {
 
   List<DocumentSnapshot> _reels_items = [];
   int index = 0;
-  var currentuserid =
-      "Pon1uG0eNnhf9TLsps0jtScndtN2"; //the id of the logged in user
+  var currentuserid = FirebaseAuth.instance.currentUser.uid; //the id of the logged in user
   // var currentuserid = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   List following_details = [];
   bool liked = false;
