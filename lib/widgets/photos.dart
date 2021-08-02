@@ -11,6 +11,7 @@ import 'package:millions/services/likeServices.dart';
 import 'package:millions/widgets/popUpMenu.dart';
 // import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
 import 'package:millions/screens/comment_screen.dart';
+import 'package:millions/widgets/reportPost.dart';
 import 'package:share_plus/share_plus.dart';
 import '../constants/colors.dart';
 import '../services/dynamiclinkservice.dart';
@@ -26,7 +27,6 @@ class Photos extends StatefulWidget {
 
   Photos(PostDetail pic) {
     this.photo = pic;
-
   }
 
   @override
@@ -195,35 +195,34 @@ class _PhotosState extends State<Photos> {
                     // PinchZoomImage(
                     //image:
                     Image.network(
-                      widget.photo.photoSrc == null
-                          ? altChannelArt
-                          : widget.photo.photoSrc,
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: primary,
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes
-                                : null,
-                          ),
-                        );
-                      },
+                  widget.photo.photoSrc == null
+                      ? altChannelArt
+                      : widget.photo.photoSrc,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: primary,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes
+                            : null,
+                      ),
+                    );
+                  },
 
-                      //content[this.widget.index].url,
-                      // fit: BoxFit.fill,
-                    ),
+                  //content[this.widget.index].url,
+                  // fit: BoxFit.fill,
+                ),
                 //  zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
                 //hideStatusBarWhileZooming: true,
                 //  ),
               ),
               SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-
                   Container(
                     child: FutureBuilder(
                       future: LikeServices().postLikeChecker(likeId),
@@ -296,27 +295,26 @@ class _PhotosState extends State<Photos> {
                     // ),
                   ),
                   SizedBox(width: 16),
-    IconButton(
-    onPressed: () async {
-    parameters = ['posts'];
-    parameters.add(widget.photo.id);
-    print(parameters);
-    await _dynamicLinkService
-        .createDynamicLink(parameters)
-        .then((value) {
-    dynamic_link = value;
-    });
-    //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
-    Share.share(dynamic_link);
-    },
-    icon: Icon(
-    Icons.share,
-    ),
-    ),
+                  IconButton(
+                    onPressed: () async {
+                      parameters = ['posts'];
+                      parameters.add(widget.photo.id);
+                      print(parameters);
+                      await _dynamicLinkService
+                          .createDynamicLink(parameters)
+                          .then((value) {
+                        dynamic_link = value;
+                      });
+                      //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
+                      Share.share(dynamic_link);
+                    },
+                    icon: Icon(
+                      Icons.share,
+                    ),
+                  ),
                   SizedBox(width: 16),
-                  Transform.rotate(
-                      angle: 5.5, child: Icon(Icons.send_outlined)),
-                  TextButton(
+                  IconButton(
+                    icon: Icon(Icons.comment_outlined),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -326,12 +324,38 @@ class _PhotosState extends State<Photos> {
                                 post: widget.photo)),
                       );
                     },
-                    child: Text(
-                      'View comments',
-                      style: GoogleFonts.ubuntu(color: Colors.black),
-                    ),
-
                   ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.flag_outlined),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReportPost(
+                            post: widget.photo,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  // TextButton(
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => PostComments(
+                  //               commentId: widget.photo.id,
+                  //               post: widget.photo)),
+                  //     );
+                  //   },
+                  //   child: Text(
+                  //     'View comments',
+                  //     style: GoogleFonts.ubuntu(color: Colors.black),
+                  //   ),
+                  // ),
                   widget.photo.channelId == altUserId
                       ? PopUpMenuIcon("posts", widget.photo.id)
                       : Row()

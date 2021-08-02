@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
-import 'package:millions/model/newpost_model.dart';
-import 'package:millions/model/video.dart';
+import 'package:millions/model/reels_model.dart';
 import 'package:millions/services/report-services.dart';
 
-class ReportPost extends StatefulWidget {
-  final PostDetail post;
+class ReportReels extends StatefulWidget {
+  final Reels reels;
 
-  const ReportPost({Key key, this.post}) : super(key: key);
+  const ReportReels({Key key, this.reels}) : super(key: key);
   @override
-  State<StatefulWidget> createState() => _ReportPostState();
+  State<StatefulWidget> createState() => _ReportReelsState();
 }
 
-class _ReportPostState extends State<ReportPost> {
+class _ReportReelsState extends State<ReportReels> {
   int selected = -1;
   List<String> reasons = [
     "Spam Content",
@@ -34,7 +33,7 @@ class _ReportPostState extends State<ReportPost> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text('Report Post'),
+          title: Text('Report Reel'),
           backgroundColor: primary,
         ),
         body: Container(
@@ -108,7 +107,7 @@ class _ReportPostState extends State<ReportPost> {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      "Back to Posts",
+                      "Back to Reels",
                       style: TextStyle(color: Colors.white),
                     ),
                     color: Colors.black,
@@ -118,7 +117,7 @@ class _ReportPostState extends State<ReportPost> {
                       // print(reasons[value].toString());
                       print(selectedreason);
                       ReportServices()
-                          .reportPost(widget.post, selectedreason.toString());
+                          .reportReels(widget.reels, selectedreason.toString());
                       setState(() {
                         selected = -1;
                       });

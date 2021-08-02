@@ -43,8 +43,25 @@ class ChannelModel {
         subsribers: map["subscribers"],
         videos: map["videos"]);
   }
-}
 
+  Map<String, dynamic> toJson() {
+    return {
+      "accountStatus": accountStatus,
+      "channelArt": channelArt,
+      "created": created,
+      "channelName": channelName,
+      "country": country,
+      "isVerified": isVerified,
+      "description": description,
+      "id": id,
+      "linkone": linkone,
+      "linktwo": linktwo,
+      "profilePic": profilePic,
+      "subsribers": subsribers,
+      "videos": videos
+    };
+  }
+}
 
 // FutureBuilder<DocumentSnapshot>(
 //                                       future: channelDetails,

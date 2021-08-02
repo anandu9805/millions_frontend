@@ -48,20 +48,38 @@ class PostDetail {
 
   factory PostDetail.fromMap(Map snapshot) {
     return PostDetail(
-      channelId: snapshot["channelId"],
-      channelName: snapshot["channelName"],
-      comments: snapshot["comments"],
-      country: snapshot["country"],
-      description: snapshot["description"],
-      disLikes: snapshot["disLikes"],
-      id: snapshot["id"],
-      isVisible: snapshot["isVisible"],
-      language: snapshot["language"],
-      likes: snapshot["likes"],
-      photoSrc: snapshot["photoSrc"],
-      profilePic: snapshot["profilePic"],
-      title: snapshot["title"],
-      isComments: snapshot["isComments"]
-    );
+        channelId: snapshot["channelId"],
+        channelName: snapshot["channelName"],
+        comments: snapshot["comments"],
+        country: snapshot["country"],
+        description: snapshot["description"],
+        disLikes: snapshot["disLikes"],
+        id: snapshot["id"],
+        isVisible: snapshot["isVisible"],
+        language: snapshot["language"],
+        likes: snapshot["likes"],
+        photoSrc: snapshot["photoSrc"],
+        profilePic: snapshot["profilePic"],
+        title: snapshot["title"],
+        isComments: snapshot["isComments"]);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "channelId": channelId,
+      "channelName": channelName,
+      "comments": comments,
+      "country": country,
+      "description": description,
+      "disLikes": disLikes,
+      "id": id,
+      "isVisible": isVisible,
+      "language": language,
+      "likes": likes,
+      "photoSrc": photoSrc,
+      "profilePic": profilePic,
+      "title": title,
+      "isComments": isComments
+    };
   }
 }

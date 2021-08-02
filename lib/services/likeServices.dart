@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LikeServices {
   Future<DocumentSnapshot> likeChecker(String likeId) async {
@@ -74,22 +75,15 @@ class LikeServices {
   //   });
   // }
 
-  Future<DocumentSnapshot> reelsLikeChecker(String likeId) async {
-    FirebaseFirestore.instance
+  Future<bool> reelsLikeChecker(String reelsId) async {
+    print(FirebaseAuth.instance.currentUser.uid + '_' + reelsId);
+    return FirebaseFirestore.instance
         .collection('reels-likes')
-        .doc(likeId)
+        .doc(FirebaseAuth.instance.currentUser.uid + '_' + reelsId)
         .get()
         .then((value) {
-      if(value.exists){
-        print(value.get('liked'));
-      }else{
-        print(false);
-      }
+      return value.exists;
     });
-    return await FirebaseFirestore.instance
-        .collection('reels-likes')
-        .doc(likeId)
-        .get();
   }
 
   likeReels(String reelId, String channelId, String userId) async {

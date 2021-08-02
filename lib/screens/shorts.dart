@@ -1,17 +1,19 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/size.dart';
 import 'package:millions/constants/tempResources.dart';
+import 'package:millions/model/reelsLike.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:millions/screens/uploadvideo.dart';
 import 'package:millions/services/likeServices.dart';
+import 'package:millions/widgets/reportReels.dart';
 import '../model/reels_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants/colors.dart';
-
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
@@ -28,7 +30,7 @@ class _ShortsState extends State<Shorts> {
 
   //ScrollController _scrollController=ScrollController();
   var currentuserid =
-      "Pon1uG0eNnhf9TLsps0jtScndtN2"; //the id of the logged in user
+      FirebaseAuth.instance.currentUser.uid; //the id of the logged in user
   // var currentuserid = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   List following_details = [];
 
@@ -41,32 +43,29 @@ class _ShortsState extends State<Shorts> {
   var _isLoading = true;
   int number_of_items, swiper_number_of_items;
   String dynamic_link;
-  List parameters=['30s'];
-
+  List parameters = ['30s'];
 
   @override
   void initState() {
     print("going to call");
 
-GetCurrentUserDetails();
+    GetCurrentUserDetails();
     _getReels();
     getFollowingdetails();
-
-
-
 
     super.initState();
   }
 
-
-
-  Future<String> GetCurrentUserDetails() async {//get current user details here
+  Future<String> GetCurrentUserDetails() async {
+    //get current user details here
     try {
-        print("hello---------------------------------------------------------------------------------------------");
-    await  FirebaseFirestore.instance
-          .collection('channels').doc(currentuserid)
-          .get().then((value) => print(value));
-
+      print(
+          "hello---------------------------------------------------------------------------------------------");
+      await FirebaseFirestore.instance
+          .collection('channels')
+          .doc(currentuserid)
+          .get()
+          .then((value) => print(value));
     } catch (e) {
       return "Follow";
     }
@@ -75,7 +74,7 @@ GetCurrentUserDetails();
   Future<String> getFollowingdetails() async {
     try {
       //  print("hello");
-     await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('followers')
           .get()
           .then((QuerySnapshot querySnapshot) {
@@ -93,7 +92,7 @@ GetCurrentUserDetails();
   _getReels() async {
     Query q = FirebaseFirestore.instance
         .collection('reels')
-        .orderBy("date" ,descending: true)
+        .orderBy("date", descending: true)
         .limit(_perpage);
     QuerySnapshot querySnapshot = await q.get();
     _reels_items = querySnapshot.docs;
@@ -131,18 +130,12 @@ GetCurrentUserDetails();
     }
   }
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     final DynamicLinkService _dynamicLinkService = DynamicLinkService();
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.height;
     return Scaffold(
-
       body: _isLoading == false
           ? Swiper(
               onIndexChanged: (int index) {
@@ -158,7 +151,6 @@ GetCurrentUserDetails();
               controller: _scrollController,
               containerWidth: MediaQuery.of(context).size.width,
               itemBuilder: (BuildContext context, int index) {
-
                 return Stack(children: [
                   ContentScreen(
                       src: _reels_items[index]
@@ -209,40 +201,46 @@ GetCurrentUserDetails();
                         ),
                         Row(
                           children: [
-                            _reels_items[index]["channelId"]!=currentuserid ? FlatButton(
-                              color: primary,
-                              onPressed: () {
-                                if (!following_details
-                                    .contains(_reels_items[index]["channelId"]
-                                        // reels_objects[index].channelId
-                                        )) {
-                                  setState(() {
-                                    following_details
-                                        .add(_reels_items[index]["channelId"]);
-                                  });
-                                  FirebaseFirestore.instance
-                                      .collection('followers')
-                                      .doc(currentuserid)
-                                      .set({
-                                    'channel': _reels_items[index]["channelId"],
-                                    'date': DateTime.now(),
-                                    'follower': currentuserid
-                                  });
-                                } else {
-                                  //                        print("already following");
-                                }
-                              },
-                              child: Text(
-                                !following_details.contains(
-                                        _reels_items[index]["channelId"])
-                                    ? 'Follow'
-                                    : 'Following',
-                                style: GoogleFonts.ubuntu(
-                                    color: Colors.white,
-                                    height: 1,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ):FlatButton(child:Text('Following'),color: Colors.black12,)
+                            _reels_items[index]["channelId"] != currentuserid
+                                ? FlatButton(
+                                    color: primary,
+                                    onPressed: () {
+                                      if (!following_details.contains(
+                                          _reels_items[index]["channelId"]
+                                          // reels_objects[index].channelId
+                                          )) {
+                                        setState(() {
+                                          following_details.add(
+                                              _reels_items[index]["channelId"]);
+                                        });
+                                        FirebaseFirestore.instance
+                                            .collection('followers')
+                                            .doc(currentuserid)
+                                            .set({
+                                          'channel': _reels_items[index]
+                                              ["channelId"],
+                                          'date': DateTime.now(),
+                                          'follower': currentuserid
+                                        });
+                                      } else {
+                                        //                        print("already following");
+                                      }
+                                    },
+                                    child: Text(
+                                      !following_details.contains(
+                                              _reels_items[index]["channelId"])
+                                          ? 'Follow'
+                                          : 'Following',
+                                      style: GoogleFonts.ubuntu(
+                                          color: Colors.white,
+                                          height: 1,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  )
+                                : FlatButton(
+                                    child: Text('Following'),
+                                    color: Colors.black12,
+                                  )
                           ],
                         ),
                         Text(
@@ -261,61 +259,71 @@ GetCurrentUserDetails();
                     bottom: h / 7,
                     child: Column(
                       children: [
-//<<<<<<< HEAD
-                        liked == true
-                            ? IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    liked = !liked;
-                                  });
-                                  LikeServices().unLikeReels(
-                                      _reels_items[index]["id"],
-                                      // reels_objects[index].id,
-                                      currentuserid,
-                                      currentuserid);
-                                }, //---------------------------------------------------
-                                icon: Icon(
-                                  Icons.favorite_rounded,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    liked = !liked;
-                                  });
-                                  LikeServices().likeReels(
-                                      _reels_items[index]["id"],
-                                      currentuserid,
-                                      currentuserid);
-                                }, //----------------------
-                                icon: IconButton(
-                                  icon: Icon(Icons.favorite_outline_rounded),
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    print("index");
-                                    print(index);
-                                  },
-                                ),
-                              ),
-//======= Some problem here..............................................
-                  /*      FutureBuilder(
-                          future: LikeServices().reelsLikeChecker(likeId),
+                        // liked == true
+                        //     ? IconButton(
+                        //         onPressed: () {
+                        //           setState(() {
+                        //             liked = !liked;
+                        //           });
+                        //           LikeServices().unLikeReels(
+                        //               _reels_items[index]["id"],
+                        //               // reels_objects[index].id,
+                        //               currentuserid,
+                        //               currentuserid);
+                        //         }, //---------------------------------------------------
+                        //         icon: Icon(
+                        //           Icons.favorite_rounded,
+                        //           color: Colors.white,
+                        //         ),
+                        //       )
+                        //     : IconButton(
+                        //         onPressed: () {
+                        //           setState(() {
+                        //             liked = !liked;
+                        //           });
+                        //           LikeServices().likeReels(
+                        //               _reels_items[index]["id"],
+                        //               _reels_items[index]["channelId"],
+                        //               currentuserid);
+                        //         }, //----------------------
+                        //         icon: IconButton(
+                        //           icon: Icon(Icons.favorite_outline_rounded),
+                        //           color: Colors.white,
+                        //           onPressed: () {
+                        //             print("index");
+                        //             print(index);
+                        //           },
+                        //         ),
+                        //       ),
+                        FutureBuilder(
+                          future: LikeServices()
+                              .reelsLikeChecker(_reels_items[index]["id"]),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
-                              print(1);
-                              return Icon(Icons.favorite);
+                              return IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    liked = !liked;
+                                  });
+                                  print(reels_objects[index].id +
+                                      reels_objects[index].channelId +
+                                      altUserId);
+                                  LikeServices().likeReels(
+                                      reels_objects[index].id,
+                                      reels_objects[index].channelId,
+                                      altUserId);
+                                },
+                                icon: Icon(
+                                  Icons.favorite_border,
+                                  color: primary,
+                                ),
+                              );
                             } else {
-                              if (snapshot == null) {
-                                print(10);
-                              }
-                              print(liked.toString()+DateTime.now().toString());
-                              // print(
-                              //     snapshot.data[FieldPath.fromString("liked")]);
-                              // print("snapshot.data");
-                              setState(() {
-                                liked = snapshot.data['liked']??false;
-                              });
+                              liked = snapshot.data;
+                              print(snapshot.data);
+                              // ReelsLike likeDetails =
+                              //     ReelsLike.fromMap(snapshot.data);
+                              // print(likeDetails.liked);
                               return liked == true
                                   ? IconButton(
                                       onPressed: () {
@@ -337,8 +345,8 @@ GetCurrentUserDetails();
                                         setState(() {
                                           liked = !liked;
                                         });
-                                        print(reels_objects[index].id+
-                                            reels_objects[index].channelId+
+                                        print(reels_objects[index].id +
+                                            reels_objects[index].channelId +
                                             altUserId);
                                         LikeServices().likeReels(
                                             reels_objects[index].id,
@@ -350,21 +358,19 @@ GetCurrentUserDetails();
                                         color: primary,
                                       ),
                                     );
-
-
                             }
-
                           },
-                        ),*/
-//>>>>>>> 9f2164bf502e9ec41dcc5db14c2606bd5ff2b1bc
+                        ),
                         SizedBox(height: 20),
                         IconButton(
-                          onPressed: () async{
-                            parameters=['30s'];
+                          onPressed: () async {
+                            parameters = ['30s'];
                             parameters.add(_reels_items[index]["id"]);
                             print(parameters);
-                           await _dynamicLinkService.createDynamicLink(parameters).then((value){
-                              dynamic_link=value;
+                            await _dynamicLinkService
+                                .createDynamicLink(parameters)
+                                .then((value) {
+                              dynamic_link = value;
                             });
                             //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
                             Share.share(dynamic_link);
@@ -378,7 +384,16 @@ GetCurrentUserDetails();
                         ),
                         SizedBox(height: 20),
                         IconButton(
-                          onPressed: () {}, //reels report function
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ReportReels(
+                                    reels: Reels.fromMap(
+                                        _reels_items[index].data()),
+                                  ),
+                                ));
+                          }, //reels report function
                           icon: Icon(
                             Icons.flag_outlined,
                             color: Colors.white,

@@ -32,24 +32,27 @@ class _CreateProfileState extends State<CreateProfile> {
   List _selectedLanguages;
   bool countrySelected, stateSelected;
   Country _selectedCountry;
-  String  _selectedGender, _selectedDistrict, _selectedState, _selectedStateCode;
+  String _selectedGender, _selectedDistrict, _selectedState, _selectedStateCode;
   TextEditingController place = TextEditingController();
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
-  
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-_selectedLanguages = ["English", "Malayalam", "Tamil"];
+    _selectedLanguages = ["English", "Malayalam", "Tamil"];
     countrySelected = false;
-    stateSelected=false;
-    _selectedGender="Male";
+    stateSelected = false;
+    _selectedGender = "Male";
+    print(widget.uid);
     Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore
         .instance
         .collection('users')
-        .where("uid", isEqualTo: widget.uid)
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser.uid)
         .get();
     result.then((value) {
+        print(value.docs.length);
+
       if (value.docs.length > 0) {
         Navigator.pushReplacement(
           context,
@@ -58,7 +61,6 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +238,8 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                           ),
                         ),
                       ),
-                      if (countrySelected&& _selectedCountry.countryCode == "IN")
+                      if (countrySelected &&
+                          _selectedCountry.countryCode == "IN")
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -262,19 +265,19 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                                   value: _selectedState,
                                   onChanged: (newValue) {
                                     setState(() {
-                                            stateSelected = true;
-                                            // _selectedState = newValue.toString();
-                                            _selectedStateCode =
-                                                indianStates.keys.firstWhere(
-                                                    (k) =>
-                                                        indianStates[k] ==
-                                                        newValue.toString(),
-                                                    orElse: () => null);
-                                            _selectedDistrict = indianDistricts[
-                                                    _selectedStateCode]
-                                                .first
-                                                .toString();
-                                          });
+                                      stateSelected = true;
+                                      // _selectedState = newValue.toString();
+                                      _selectedStateCode = indianStates.keys
+                                          .firstWhere(
+                                              (k) =>
+                                                  indianStates[k] ==
+                                                  newValue.toString(),
+                                              orElse: () => null);
+                                      _selectedDistrict =
+                                          indianDistricts[_selectedStateCode]
+                                              .first
+                                              .toString();
+                                    });
                                   },
                                   items: indianStates.values.map((stt) {
                                     return DropdownMenuItem(
@@ -313,7 +316,8 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                                       _selectedDistrict = newValue.toString();
                                     });
                                   },
-                                  items: indianDistricts[_selectedStateCode].map((distri) {
+                                  items: indianDistricts[_selectedStateCode]
+                                      .map((distri) {
                                     return DropdownMenuItem(
                                       child: new Text(
                                         distri,
@@ -377,7 +381,7 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                     ],
                   ),
                 ),
-                 SizedBox(height: 15),
+                SizedBox(height: 15),
                 RichText(
                   text: TextSpan(
                     text:
@@ -387,8 +391,7 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                     children: [
                       TextSpan(
                         text: 'Terms of Service',
-                        style: GoogleFonts.ubuntu(
-                            color: primary, fontSize: 12),
+                        style: GoogleFonts.ubuntu(color: primary, fontSize: 12),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => launch(
                               "https://docs.millionsofficial.in/docs/privacy/terms"),
@@ -400,8 +403,7 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                       ),
                       TextSpan(
                         text: 'Privacy Policy',
-                        style: GoogleFonts.ubuntu(
-                            color: primary, fontSize: 12),
+                        style: GoogleFonts.ubuntu(color: primary, fontSize: 12),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => launch(
                               "https://docs.millionsofficial.in/docs/privacy/privacy-policy"),
@@ -423,7 +425,8 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                           .set({
                         'accountCreatedFrom': 'Mobile',
                         'accountStatus': 'active',
-                        'country': countrySelected? _selectedCountry.countryCode:'',
+                        'country':
+                            countrySelected ? _selectedCountry.countryCode : '',
                         'created': Timestamp.now(),
                         'district': _selectedDistrict,
                         'email': currentuser.email,
@@ -431,7 +434,9 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                         'isVerified': currentuser.emailVerified,
                         'language': _selectedLanguages,
                         'name': displayname.text,
-                        'phone': countrySelected? '+'+_selectedCountry.phoneCode+phone.text: phone.text ,
+                        'phone': countrySelected
+                            ? '+' + _selectedCountry.phoneCode + phone.text
+                            : phone.text,
                         'place': place.text,
                         'profilePic': currentuser.photoURL,
                         'state': _selectedStateCode,
@@ -439,8 +444,8 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                         'uid': currentuser.uid,
                       });
                       print("inside homepage");
-                      
-                       String uid = widget.uid;
+
+                      String uid = widget.uid;
                       // FirebaseUser user = await _auth.currentUser();
 
                       // Get the token for this device
@@ -463,7 +468,6 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                         });
                       }
 
-                      
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (BuildContext context) => HomePage()));
                     },
