@@ -21,6 +21,7 @@ import 'package:millions/widgets/appDrawer.dart';
 import 'package:provider/provider.dart';
 import '../provider.dart';
 import 'myWallet.dart';
+import '../screens/explore.dart';
 
 // import 'package:millions/screens/uploadpage.dart';
 //import 'package:millions/screens/user_profile.dart';
@@ -94,7 +95,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final pages = [Screen5(), Shorts(), CreatePage(), Screen9(), Screen11("")];
+  final pages = [Screen5(0), Shorts(), CreatePage(), Screen9(), Screen11("")];
   int page = 0;
     var userDetalis;
   Future<String> userProfilePic;
@@ -141,11 +142,12 @@ class _HomePageState extends State<HomePage> {
             ),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(top: 10, right: 10),
+
+                padding: const EdgeInsets.only(top: 10,),
                 child: IconButton(
                   icon: Icon(
                     Icons.search_outlined,
-                    color: Colors.black,
+                    color:primary,
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -155,6 +157,23 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
+              Padding(
+
+                padding: const EdgeInsets.only(top: 10,right: 10),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.explore,
+                    color:primary,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Explore()),
+                    );
+                  },
+                ),
+              ),
+
               Padding(
                 padding: const EdgeInsets.only(top: 10, right: 20),
                 child: FutureBuilder(

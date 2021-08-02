@@ -36,7 +36,7 @@ class SkeletonContainer extends StatelessWidget {
   Widget build(BuildContext context) => SkeletonAnimation(
     //gradientColor: Colors.orange,
     //shimmerColor: Colors.red,
-    curve: Curves.easeIn,
+    curve: Curves.easeInOutQuad,
     child: Container(
       width: width,
       height: height,
