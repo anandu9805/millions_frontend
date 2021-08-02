@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:millions/constants/tempResources.dart';
+import 'package:millions/model/channelModel.dart';
 import 'package:millions/screens/home.dart';
 import '../model/newvideo_model.dart';
 import 'dart:io';
@@ -33,19 +35,20 @@ class _UploadPageState extends State<UploadPage> {
   var currentuserid = "Pon1uG0eNnhf9TLsps0jtScndtN2";
   String fileName;
   String url;
-  List currentUserChannelDetails = [];
+  //List currentUserChannelDetails = [];
+    ChannelModel channelDetails;
   List videoslist = [];
   File _videoFile;
   bool uploadComplete = false;
   TextEditingController decsiptionController;
   TextEditingController titleController;
   String selectedCountry = 'Choose Your Country';
-  List<String> lanuages = ['Malayalam', 'English', 'Hindi'];
-  List<String> comments = ['Enabled', 'Disabled'];
-  List<String> category = ['All Videos', 'Entertainment', 'Comedy'];
+  //List<String> lanuages = ['Malayalam', 'English', 'Hindi'];
+  //List<String> comments = ['Enabled', 'Disabled'];
+  //List<String> category = ['All Videos', 'Entertainment', 'Comedy'];
 
   String selectedLanguage = 'English';
-  String commentStatus = 'Enabled';
+  String commentStatus = 'Allowed';
   String selectedCategory = 'All Videos';
 
   ImageFormat _format = ImageFormat.JPEG;
@@ -146,18 +149,15 @@ class _UploadPageState extends State<UploadPage> {
     try {
       FirebaseFirestore.instance
           .collection('channels')
+          .doc(currentuserid)
           .get()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          print("doc['id]");
-          print(doc['id']);
-          if (doc['id'] == currentuserid) currentUserChannelDetails.add(doc);
-        });
-        print("currentUserChannelDetails");
-        print(currentUserChannelDetails[0]['email']);
+          .then((DocumentSnapshot documentSnapshot) {
+             Map<String, dynamic> data =
+                      documentSnapshot.data() as Map<String, dynamic>;
+                  channelDetails = ChannelModel.fromDoc(data);
       });
     } catch (e) {
-      return "Follow";
+      return "Channel Error";
     }
   }
 
@@ -258,17 +258,17 @@ class _UploadPageState extends State<UploadPage> {
 
         print("hello2");
         print("currentUserChannelDetails");
-        print(currentUserChannelDetails);
-        print(currentUserChannelDetails[0]['channelName']);
+        //print(channelDetails);
+        print(channelDetails.channelName);
         await FirebaseFirestore.instance
             .collection('videos')
             .doc(newId.id)
             .set({
           'category': videoslist[0].category,
-          'channelId': currentUserChannelDetails[0]['id'],
-          'channelName': currentUserChannelDetails[0]['channelName'],
+          'channelId': channelDetails.id,
+          'channelName': channelDetails.channelName,
           'comments': 0,
-          'country': currentUserChannelDetails[0]['country'],
+          'country': videoslist[0]['country'],
           'date': DateTime.now(),
           'description': videoslist[0].description,
           'disLikes': 0,
@@ -276,14 +276,14 @@ class _UploadPageState extends State<UploadPage> {
           'generatedThumbnail': thumbnail_url, //generate
           'id': newId.id,
           'isComments': videoslist[0].commentallowed,
-          'isVerified': currentUserChannelDetails[0]['isVerified'],
+          'isVerified': channelDetails.isVerified,
           'isVisible': videoslist[0].visibility,
-          'language': "English",
+          'language': selectedLanguage,
           'likes': 0,
 
-          'profilePic': currentUserChannelDetails[0]['profilePic'],
+          'profilePic': channelDetails.profilePic,
           'shortLink': " ", //to be filled
-          'subscribers': 0,
+          'subscribers': channelDetails.subsribers,
           'thumbnail': thumbnail_url,
           'title': videoslist[0].title,
           'updated': DateTime.now(),
@@ -600,7 +600,7 @@ class _UploadPageState extends State<UploadPage> {
                           onSelect: (Country country) {
                             //print('Select country: ${country.displayName}');
                             setState(() {
-                              selectedCountry = country.displayName;
+                              selectedCountry = country.countryCode;
                             });
                           },
                         );
@@ -651,7 +651,7 @@ class _UploadPageState extends State<UploadPage> {
                             selectedLanguage = newValue.toString();
                           });
                         },
-                        items: lanuages.map((lang) {
+                        items: languages.map((lang) {
                           return DropdownMenuItem(
                             child: new Text(
                               lang,
@@ -777,7 +777,7 @@ class _UploadPageState extends State<UploadPage> {
                             selectedCategory = newValue.toString();
                           });
                         },
-                        items: category.map((catg) {
+                        items: categories.map((catg) {
                           return DropdownMenuItem(
                             child: new Text(
                               catg,

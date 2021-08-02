@@ -181,9 +181,33 @@ class _SearchPageState extends State<SearchPage> {
                                       Container(
                                           height: 100,
                                           child: Image.network(
+                                            
                                               snap.data['thumbnail'] == null
                                                   ? altChannelArt
-                                                  : snap.data['thumbnail'])),
+                                                  : snap.data['thumbnail'],
+                                                 loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Container(
+                                  //padding: const EdgeInsets.only(top: 20, bottom:20),
+                                  //height: MediaQuery.of(context).size.height * 0.25,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: primary,
+                                      value: loadingProgress.expectedTotalBytes !=
+                                              null
+                                          ? loadingProgress
+                                                  .cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes
+                                          : null,
+                                    ),
+                                  ),
+                                );
+                              },
+                                                  
+                                                  ),
+                                                  ),
                                       SizedBox(
                                         width: 20,
                                       ),

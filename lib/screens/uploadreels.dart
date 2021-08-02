@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:millions/constants/tempResources.dart';
+import 'package:millions/model/channelModel.dart';
 import 'package:millions/screens/home.dart';
 import '../model/newreels_model.dart';
 import 'dart:io';
@@ -36,22 +38,23 @@ class _UploadReelState extends State<UploadReel> {
 
   // var currentuserid =
   //     "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
-  var currentuserid = "Pon1uG0eNnhf9TLsps0jtScndtN2";
+  //var currentuserid = "Pon1uG0eNnhf9TLsps0jtScndtN2";
   String fileName = null;
   String url;
-  List currentUserChannelDetails = [];
+  //List currentUserChannelDetails = [];
+  ChannelModel channelDetails;
   List reelslist = [];
   File _videoFile;
   bool uploadComplete = false;
   TextEditingController decsiptionController;
   TextEditingController titleController;
   String selectedCountry = 'Choose Your Country';
-  List<String> lanuages = ['Malayalam', 'English', 'Hindi'];
-  List<String> comments = ['Enabled', 'Disabled'];
-  List<String> category = ['All Videos', 'Entertainment', 'Comedy'];
+  //List<String> lanuages = ['Malayalam', 'English', 'Hindi'];
+  //List<String> comments = ['Enabled', 'Disabled'];
+  //List<String> category = ['All Videos', 'Entertainment', 'Comedy'];
 
   String selectedLanguage = 'English';
-  String commentStatus = 'Enabled';
+  String commentStatus = 'Allowed';
   String selectedCategory = 'All Videos';
 
   ImageFormat _format = ImageFormat.JPEG;
@@ -145,17 +148,15 @@ class _UploadReelState extends State<UploadReel> {
     try {
       FirebaseFirestore.instance
           .collection('channels')
+          .doc(altUserId)
           .get()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          //print("in");
-          if (doc['id'] == currentuserid) currentUserChannelDetails.add(doc);
-        });
-        print("currentUserChannelDetails");
-        print(currentUserChannelDetails[0]['email']);
+          .then((DocumentSnapshot documentSnapshot) {
+             Map<String, dynamic> data =
+                      documentSnapshot.data() as Map<String, dynamic>;
+                  channelDetails = ChannelModel.fromDoc(data);
       });
     } catch (e) {
-      return "Follow";
+      return "Channel Error";
     }
   }
 
@@ -184,14 +185,14 @@ class _UploadReelState extends State<UploadReel> {
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
     firebase_storage.Reference ref_thumbnail = storage
-        .ref('test-reels/${currentuserid}/thumbnails/${thumnail_image_name}');
+        .ref('test-reels/${altUserId}/thumbnails/${thumnail_image_name}');
     firebase_storage.UploadTask uploadTask_thumbnail =
         ref_thumbnail.putFile(thumbanil);
     uploadTask_thumbnail.whenComplete(() async {
       thumbnail_url = await ref_thumbnail.getDownloadURL();
 
       firebase_storage.Reference ref =
-          storage.ref('test-reels/${currentuserid}/${fileName}');
+          storage.ref('test-reels/${altUserId}/${fileName}');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
       uploadTask.snapshotEvents.listen(
               (firebase_storage.TaskSnapshot snapshot) {
@@ -229,16 +230,16 @@ class _UploadReelState extends State<UploadReel> {
         print("reels: $reelslist");
 
         var newId = FirebaseFirestore.instance
-            .collection('videos')
+            .collection('reels')
             .doc(); //to get the id of the document we are going to create in the collection
         print("hello2");
-        print(currentUserChannelDetails[0]['channelName']);
+        print(channelDetails.channelName);
         await FirebaseFirestore.instance.collection('reels').doc(newId.id).set({
           'category': reelslist[0].category,
-          'channelId': currentUserChannelDetails[0]['id'],
-          'channelName': currentUserChannelDetails[0]['channelName'],
+          'channelId': channelDetails.id,
+          'channelName': channelDetails.channelName,
           'comments': 0,
-          'country': currentUserChannelDetails[0]['country'],
+          'country': selectedCountry,
           'date': DateTime.now(),
           'description': reelslist[0].description,
           'disLikes': 0,
@@ -246,14 +247,14 @@ class _UploadReelState extends State<UploadReel> {
           'generatedThumbnail': thumbnail_url, //generate
           'id': newId.id,
           'isComments': reelslist[0].commentallowed,
-          'isVerified': currentUserChannelDetails[0]['isVerified'],
+          'isVerified': channelDetails.isVerified,
           'isVisible': reelslist[0].visibility,
-          'language': "English",
+          'language': selectedLanguage,
           'likes': 0,
 
-          'profilePic': currentUserChannelDetails[0]['profilePic'],
+          'profilePic': channelDetails.profilePic,
           'shortLink': url, //to be filled
-          'subscribers': 0,
+          'subscribers': channelDetails.subsribers,
           'thumbnail': thumbnail_url,
           'title': reelslist[0].title,
 
@@ -581,7 +582,7 @@ class _UploadReelState extends State<UploadReel> {
                           onSelect: (Country country) {
                             //print('Select country: ${country.displayName}');
                             setState(() {
-                              selectedCountry = country.displayName;
+                              selectedCountry = country.countryCode;
                             });
                           },
                         );
@@ -632,7 +633,7 @@ class _UploadReelState extends State<UploadReel> {
                             selectedLanguage = newValue.toString();
                           });
                         },
-                        items: lanuages.map((lang) {
+                        items: languages.map((lang) {
                           return DropdownMenuItem(
                             child: new Text(
                               lang,
@@ -758,7 +759,7 @@ class _UploadReelState extends State<UploadReel> {
                             selectedCategory = newValue.toString();
                           });
                         },
-                        items: category.map((catg) {
+                        items: categories.map((catg) {
                           return DropdownMenuItem(
                             child: new Text(
                               catg,

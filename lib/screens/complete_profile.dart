@@ -263,7 +263,7 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                                   dropdownColor: Colors.white,
                                   elevation: 0,
                                   style: GoogleFonts.ubuntu(),
-                                  value: _selectedState,
+                                  value: indianStates[_selectedStateCode],
                                   onChanged: (newValue) {
                                     setState(() {
                                             stateSelected = true;

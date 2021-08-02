@@ -7,16 +7,21 @@ class ChannelModel {
       country,
       description,
       id,
+      email,
+      realName,
       linkone,
       linktwo,
       profilePic;
-  int subsribers, videos;
+  int subsribers, videos, channelScore;
   bool isVerified;
   Timestamp created;
   ChannelModel(
       {this.accountStatus,
+      this.email,
+      this.channelScore,
       this.channelArt,
       this.channelName,
+      this.realName,
       this.country,
       this.description,
       this.id,
@@ -30,10 +35,13 @@ class ChannelModel {
   factory ChannelModel.fromDoc(Map<String, dynamic> map) {
     return ChannelModel(
         accountStatus: map["accountStatus"],
+        channelScore: map['channelScore'],
         channelArt: map["channelArt"],
         created: map['created'],
         channelName: map["channelName"],
         country: map["country"],
+        email: map['email'],
+        realName: map['realName'],
         isVerified: map['isVerified'],
         description: map["description"],
         id: map["id"],
