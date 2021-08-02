@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:millions/screens/complete_profile.dart';
 import 'package:millions/screens/login.dart';
 import '../constants/colors.dart';
 import '../auth.dart';
 import 'home.dart';
 import 'googleSignIn.dart';
+
 class Screen1 extends StatefulWidget {
   @override
   _Screen1State createState() => _Screen1State();
@@ -15,7 +18,8 @@ class _Screen1State extends State<Screen1> {
   void initState() {
     super.initState();
   }
-  var _isLogin=false;
+
+  var _isLogin = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,7 @@ class _Screen1State extends State<Screen1> {
       child: Scaffold(
         backgroundColor: primary, //Color(0xffa31545),
         body: Container(
-          padding: EdgeInsets.symmetric(vertical:h*0.1),
+          padding: EdgeInsets.symmetric(vertical: h * 0.1),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -40,7 +44,7 @@ class _Screen1State extends State<Screen1> {
                           Row(
                             children: [
                               Container(
-                                padding: EdgeInsets.symmetric(vertical:20),
+                                padding: EdgeInsets.symmetric(vertical: 20),
                                 child: Image.asset(
                                   'images/white millions logo with millions.png',
                                   height: 100,
@@ -58,7 +62,7 @@ class _Screen1State extends State<Screen1> {
                                   style: GoogleFonts.ubuntu(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
-                                    fontSize: h*0.06,
+                                    fontSize: h * 0.06,
                                   ),
                                   maxLines: 5,
                                 ),
@@ -76,11 +80,22 @@ class _Screen1State extends State<Screen1> {
                       ),
                       TextButton(
                         onPressed: () {
+                          if (FirebaseAuth.instance.currentUser != null) {
+                            print("user loggedin");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateProfile(
+                                  uid: FirebaseAuth.instance.currentUser.uid,
+                                ),
+                              ),
+                            );
+                          }else{
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => LoginPage()),
-                          );
+                          );}
                         },
                         child: Icon(
                           Icons.arrow_forward,

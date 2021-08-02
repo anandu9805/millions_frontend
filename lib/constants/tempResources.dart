@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 const String altProfilePic =
     "https://www.worldfuturecouncil.org/wp-content/uploads/2020/02/dummy-profile-pic-300x300-1.png";
 const String altChannelArt =
     "https://images.unsplash.com/photo-1526655805340-274e69922288?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80";
-const String altUserId = "Pon1uG0eNnhf9TLsps0jtScndtN2";
+String altUserId = FirebaseAuth.instance.currentUser.uid;
+// const String altUserId = "Pon1uG0eNnhf9TLsps0jtScndtN2";
 List<String> languages = [
   "English",
   "Malayalam",

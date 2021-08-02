@@ -13,6 +13,7 @@ import 'package:millions/model/video.dart';
 import 'package:millions/screens/editChannel.dart';
 import 'package:millions/screens/myShorts.dart';
 import 'package:millions/widgets/appDrawer.dart';
+import 'package:millions/widgets/channelReport.dart';
 import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/widgets/photos.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -81,9 +82,9 @@ class _Page8State extends State<Page8> {
         _showToast(context, "Unfollowed " + cname);
         FirebaseMessaging.instance.unsubscribeFromTopic(widget.channelId);
         setState(() {
-          followStatus="Follow";
+          followStatus = "Follow";
         });
-       // checkExist(widget.channelId);
+        // checkExist(widget.channelId);
       }).catchError(
               (error) => _showToast(context, "Failed to unfollow: $error"));
     } catch (e) {
@@ -91,29 +92,22 @@ class _Page8State extends State<Page8> {
     }
   }
 
-   void follow(String docID, Map details) async {
-     try{
-       await FirebaseFirestore.instance
-        .doc("followers/$docID")
-        .set({
-          'channel': details['channel'],
-          'date': details['date'],
-          'follower': details['follower']
-        })
-        .whenComplete(() {
+  void follow(String docID, Map details) async {
+    try {
+      await FirebaseFirestore.instance.doc("followers/$docID").set({
+        'channel': details['channel'],
+        'date': details['date'],
+        'follower': details['follower']
+      }).whenComplete(() {
         _showToast(context, "Following " + cname);
         FirebaseMessaging.instance.subscribeToTopic(widget.channelId);
         setState(() {
-          followStatus="Unfollow";
+          followStatus = "Unfollow";
         });
-      }).catchError(
-              (error) => _showToast(context, "Failed to follow: $error"));
-
-     }
-     catch (e) {
-      print("Error"+e.toString());
+      }).catchError((error) => _showToast(context, "Failed to follow: $error"));
+    } catch (e) {
+      print("Error" + e.toString());
     }
-    
   }
 
   void _showToast(BuildContext context, String message) {
@@ -342,11 +336,10 @@ class _Page8State extends State<Page8> {
                                                     'follower': altUserId
                                                   };
                                                   follow(
-                                                          altUserId +
-                                                              "_" +
-                                                              channel.id,
-                                                          details);
-                                                     
+                                                      altUserId +
+                                                          "_" +
+                                                          channel.id,
+                                                      details);
                                                 }
                                               });
                                             }
@@ -674,7 +667,16 @@ class _Page8State extends State<Page8> {
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                         primary: primary),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ReportChannel(
+                                            channel: channelmodel,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     child: Text(
                                       "Report Channel",
                                       style: GoogleFonts.ubuntu(fontSize: 15),

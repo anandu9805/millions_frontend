@@ -20,9 +20,9 @@
 //     super.initState();
 //     // flickManager = FlickManager(
 //     //   videoPlayerController:
-//     //       VideoPlayerController.network(this.widget.videoSrc),
+//     //       VideoPlayerController.network(this.widget.video.videoSrc),
 //     // );
-//     _controller = VideoPlayerController.network(this.widget.videoSrc)
+//     _controller = VideoPlayerController.network(this.widget.video.videoSrc)
 //       ..initialize().then((_) {
 //         setState(() {});
 //       });
@@ -106,17 +106,22 @@
 //   }
 // }
 
+import 'dart:async';
+
 import 'package:chewie/chewie.dart';
 import 'package:chewie/src/chewie_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/admodel.dart';
+import 'package:millions/model/video.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayVideo extends StatefulWidget {
-  final String videoSrc;
-  const PlayVideo({Key key, this.videoSrc}) : super(key: key);
+  final Video video;
+  final double duration;
+  const PlayVideo({Key key, this.video, this.duration}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _PlayVideoState();
@@ -130,19 +135,23 @@ class _PlayVideoState extends State<PlayVideo> {
   ChewieController _chewieController;
   bool isAdOpen = true;
   dynamic adSrc;
+  bool _isPlaying = false;
+  Duration _duration;
+  Duration _position;
+  bool _isEnd = false;
 
   Future<dynamic> getAdVideo() {
     FirebaseFirestore.instance
         .collection('ads')
         .limit(1)
-        .where("showAdIn", whereIn: ["Kollam"])
+        .where("showAdIn", whereIn: ["Kollam","IN"])
         .get()
         .then((value) {
           print(value.docs.single['videoSrc']);
           // setState(() {
-            adSrc = value.docs.single['videoSrc'];
-            print(123);
-            print(adSrc);
+          adSrc = value.docs.single['videoSrc'];
+          print(123);
+          print(adSrc);
           // });
         });
     return adSrc;
@@ -151,12 +160,66 @@ class _PlayVideoState extends State<PlayVideo> {
   @override
   void initState() {
     super.initState();
+    print(widget.video.duration);
     Future<String> adSrc = getAdVideo();
     print(adSrc);
     // print(adSrc);
     _videoPlayerController2 =
-        VideoPlayerController.network(this.widget.videoSrc);
-    _videoPlayerController1 = VideoPlayerController.network("https://firebasestorage.googleapis.com/v0/b/millions-video.appspot.com/o/ads%2Fupload-1622827623432.webm?alt=media&token=5a617958-4ab6-4f1b-b2ac-89ab2c99cf0a");
+        VideoPlayerController.network(this.widget.video.videoSrc)
+          ..addListener(() {
+            //   final bool isPlaying = _videoPlayerController2.value.isPlaying;
+            //   if (isPlaying != _isPlaying) {
+            //     setState(() {
+            //       _isPlaying = isPlaying;
+            //     });
+            //   }
+            //   Timer.run(() {
+            //     this.setState(() {
+            //       _position = _videoPlayerController2.value.position;
+            //     });
+            //   });
+            //   setState(() {
+            //     _duration = _videoPlayerController2.value.duration;
+            //   });
+            //   _duration?.compareTo(_position) == 0 ||
+            //           _duration?.compareTo(_position) == -1
+            //       ? this.setState(() {
+            //           _isEnd = true;
+            //         })
+            //       : this.setState(() {
+            //           _isEnd = false;
+            //         });
+            // })
+
+            setState(() {
+              _position = _videoPlayerController2.value.position;
+            });
+            print((_position.inSeconds / widget.video.duration));
+
+            if ((_position.inSeconds / widget.video.duration) > 0.7) {
+              FirebaseFirestore.instance
+                  .collection('views')
+                  .doc(altUserId + '_' + widget.video.id)
+                  .set(
+                {
+                  'channel': widget.video.channelId,
+                  'itemId': widget.video.id,
+                  'percentage': 70,
+                  'time': DateTime.now(),
+                  'user': altUserId
+                },
+                SetOptions(
+                  merge: true,
+                ),
+              );
+              print((_position.inSeconds / widget.video.duration).toString() +
+                  "reached");
+              print("update views count");
+            }
+          })
+          ..initialize();
+    _videoPlayerController1 = VideoPlayerController.network(
+        "https://firebasestorage.googleapis.com/v0/b/millions-video.appspot.com/o/ads%2Fupload-1622827623432.webm?alt=media&token=5a617958-4ab6-4f1b-b2ac-89ab2c99cf0a");
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController1,
       aspectRatio: _videoPlayerController1.value.aspectRatio,
@@ -182,42 +245,41 @@ class _PlayVideoState extends State<PlayVideo> {
         children: <Widget>[
           AspectRatio(
             aspectRatio: _chewieController.aspectRatio,
-            child: Expanded(
-              child: Chewie(
-                controller: _chewieController,
-              ),
+            child: Chewie(
+              controller: _chewieController,
             ),
           ),
           Positioned(
-              right: 0,
-              bottom: 0,
-              child: isAdOpen
-                  ? FlatButton(
-                      onPressed: () {
-                        setState(() {
-                          isAdOpen = false;
-                          _chewieController.dispose();
-                          _videoPlayerController1.pause();
-                          _videoPlayerController1.seekTo(Duration(seconds: 0));
-                          _chewieController = ChewieController(
-                            videoPlayerController: _videoPlayerController2,
-                            aspectRatio:
-                                _videoPlayerController2.value.aspectRatio,
-                            autoPlay: true,
-                            looping: true,
-                            autoInitialize: true,
-                          );
-                        });
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: Text(
-                          "Skip",
-                          style: TextStyle(color: Colors.white),
-                        ),
+            right: 0,
+            bottom: 0,
+            child: isAdOpen
+                ? FlatButton(
+                    onPressed: () {
+                      setState(() {
+                        isAdOpen = false;
+                        _chewieController.dispose();
+                        _videoPlayerController1.pause();
+                        _videoPlayerController1.seekTo(Duration(seconds: 0));
+                        _chewieController = ChewieController(
+                          videoPlayerController: _videoPlayerController2,
+                          aspectRatio:
+                              _videoPlayerController2.value.aspectRatio,
+                          autoPlay: true,
+                          looping: true,
+                          autoInitialize: true,
+                        );
+                      });
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        "Skip",
+                        style: TextStyle(color: Colors.white),
                       ),
-                    )
-                  : Container()),
+                    ),
+                  )
+                : Container(),
+          ),
         ],
       ),
     );

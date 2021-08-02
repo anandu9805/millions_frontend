@@ -17,6 +17,13 @@ class _GoogleSignInState extends State<GoogleSignIn> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    // TODO: implement initState
+   
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
@@ -77,7 +84,7 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                               final millionsprovider =
                                   Provider.of<MillionsProvider>(context,
                                       listen: false);
-                              millionsprovider.googleLogin();
+                              millionsprovider.googleLogin(context);
                             },
                             icon: Image.asset('images/google.png'),
                           ),
@@ -92,14 +99,13 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                         final millionsprovider = Provider.of<MillionsProvider>(
                             context,
                             listen: false);
-                        User user = await millionsprovider.googleLogin(
-                            context: context);
+                        User user = await millionsprovider.googleLogin(context);
                         print(user);
                         if (user != null) {
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) => CreateProfile(
-                                user: user,
+                                uid: user.uid,
                               ),
                             ),
                           );

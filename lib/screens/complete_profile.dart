@@ -16,9 +16,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 
 class CreateProfile extends StatefulWidget {
-  final User user;
+  final String uid;
 
-  const CreateProfile({Key key, this.user}) : super(key: key);
+  const CreateProfile({Key key, this.uid}) : super(key: key);
   @override
   _CreateProfileState createState() => _CreateProfileState();
 }
@@ -32,37 +32,35 @@ class _CreateProfileState extends State<CreateProfile> {
   List _selectedLanguages;
   bool countrySelected, stateSelected;
   Country _selectedCountry;
-  String  _selectedGender, _selectedDistrict, _selectedState, _selectedStateCode;
+  String _selectedGender, _selectedDistrict, _selectedState, _selectedStateCode;
   TextEditingController place = TextEditingController();
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
-  
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-_selectedLanguages = ["English", "Malayalam", "Tamil"];
+    _selectedLanguages = ["English", "Malayalam", "Tamil"];
     countrySelected = false;
-    stateSelected=false;
-    _selectedGender="Male";
-    if (widget.user != null) {
-      print(widget.user.displayName);
-    }
-
+    stateSelected = false;
+    _selectedGender = "Male";
+    print(widget.uid);
     Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore
         .instance
         .collection('users')
-        .where("uid", isEqualTo: widget.user.uid)
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser.uid)
         .get();
     result.then((value) {
+        print(value.docs.length);
+
       if (value.docs.length > 0) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +238,8 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                           ),
                         ),
                       ),
-                      if (countrySelected&& _selectedCountry.countryCode == "IN")
+                      if (countrySelected &&
+                          _selectedCountry.countryCode == "IN")
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -266,19 +265,19 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                                   value: indianStates[_selectedStateCode],
                                   onChanged: (newValue) {
                                     setState(() {
-                                            stateSelected = true;
-                                            // _selectedState = newValue.toString();
-                                            _selectedStateCode =
-                                                indianStates.keys.firstWhere(
-                                                    (k) =>
-                                                        indianStates[k] ==
-                                                        newValue.toString(),
-                                                    orElse: () => null);
-                                            _selectedDistrict = indianDistricts[
-                                                    _selectedStateCode]
-                                                .first
-                                                .toString();
-                                          });
+                                      stateSelected = true;
+                                      // _selectedState = newValue.toString();
+                                      _selectedStateCode = indianStates.keys
+                                          .firstWhere(
+                                              (k) =>
+                                                  indianStates[k] ==
+                                                  newValue.toString(),
+                                              orElse: () => null);
+                                      _selectedDistrict =
+                                          indianDistricts[_selectedStateCode]
+                                              .first
+                                              .toString();
+                                    });
                                   },
                                   items: indianStates.values.map((stt) {
                                     return DropdownMenuItem(
@@ -317,7 +316,8 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                                       _selectedDistrict = newValue.toString();
                                     });
                                   },
-                                  items: indianDistricts[_selectedStateCode].map((distri) {
+                                  items: indianDistricts[_selectedStateCode]
+                                      .map((distri) {
                                     return DropdownMenuItem(
                                       child: new Text(
                                         distri,
@@ -381,7 +381,7 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                     ],
                   ),
                 ),
-                 SizedBox(height: 15),
+                SizedBox(height: 15),
                 RichText(
                   text: TextSpan(
                     text:
@@ -391,8 +391,7 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                     children: [
                       TextSpan(
                         text: 'Terms of Service',
-                        style: GoogleFonts.ubuntu(
-                            color: primary, fontSize: 12),
+                        style: GoogleFonts.ubuntu(color: primary, fontSize: 12),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => launch(
                               "https://docs.millionsofficial.in/docs/privacy/terms"),
@@ -404,8 +403,7 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                       ),
                       TextSpan(
                         text: 'Privacy Policy',
-                        style: GoogleFonts.ubuntu(
-                            color: primary, fontSize: 12),
+                        style: GoogleFonts.ubuntu(color: primary, fontSize: 12),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => launch(
                               "https://docs.millionsofficial.in/docs/privacy/privacy-policy"),
@@ -427,7 +425,8 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                           .set({
                         'accountCreatedFrom': 'Mobile',
                         'accountStatus': 'active',
-                        'country': countrySelected? _selectedCountry.countryCode:'',
+                        'country':
+                            countrySelected ? _selectedCountry.countryCode : '',
                         'created': Timestamp.now(),
                         'district': _selectedDistrict,
                         'email': currentuser.email,
@@ -435,7 +434,9 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                         'isVerified': currentuser.emailVerified,
                         'language': _selectedLanguages,
                         'name': displayname.text,
-                        'phone': countrySelected? '+'+_selectedCountry.phoneCode+phone.text: phone.text ,
+                        'phone': countrySelected
+                            ? '+' + _selectedCountry.phoneCode + phone.text
+                            : phone.text,
                         'place': place.text,
                         'profilePic': currentuser.photoURL,
                         'state': _selectedStateCode,
@@ -443,8 +444,8 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                         'uid': currentuser.uid,
                       });
                       print("inside homepage");
-                      
-                       String uid = widget.user.uid;
+
+                      String uid = widget.uid;
                       // FirebaseUser user = await _auth.currentUser();
 
                       // Get the token for this device
@@ -463,11 +464,10 @@ _selectedLanguages = ["English", "Malayalam", "Tamil"];
                         await tokens.set({
                           'token': fcmToken,
                           'createdAt': FieldValue.serverTimestamp(), // optional
-                          'platform': TargetPlatform.android // optional
+                          // 'platform': TargetPlatform.android // optional
                         });
                       }
 
-                      
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (BuildContext context) => HomePage()));
                     },

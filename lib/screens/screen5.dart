@@ -90,7 +90,7 @@ class _Screen5State extends State<Screen5> {
       double currentScroll = _scrollController2.position.pixels;
       double delta = MediaQuery.of(context).size.height * 0.25;
 
-      if (maxScroll - currentScroll <= delta) {
+      if (maxScroll - currentScroll > delta) {
         _getMoreVideos();
       }
     });
@@ -103,10 +103,8 @@ class _Screen5State extends State<Screen5> {
   //   if(l)
   // }
 
-
   @override
   Widget build(BuildContext context) {
-
     // final currentuser=FirebaseAuth.instance.currentUser;
     // CollectionReference users = FirebaseFirestore.instance.collection('users');
     // final currentUserDetails =users.where('email',isEqualTo:currentuser.email );

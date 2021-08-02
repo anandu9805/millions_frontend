@@ -103,6 +103,9 @@ class _HomePageState extends State<HomePage> {
   initState() {
     userProfilePic = UserServices().getUserDetails(altUserId);
     super.initState();
+    
+    print(FirebaseAuth.instance.currentUser);
+    print(FirebaseAuth.instance.currentUser.displayName+"132");
   }
 
   @override
@@ -113,6 +116,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final currentuser = FirebaseAuth.instance.currentUser;
+
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
