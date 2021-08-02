@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
 
 import 'package:video_player/video_player.dart';
+import '../widgets/skeletol_loader.dart';
 
 class ContentScreen extends StatefulWidget {
   final String src;
@@ -17,6 +18,7 @@ class _ContentScreenState extends State<ContentScreen> {
   VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
   bool _liked = false;
+
   @override
   void initState() {
     print("hello we are in content screen");
@@ -29,8 +31,8 @@ class _ContentScreenState extends State<ContentScreen> {
     await Future.wait([_videoPlayerController.initialize()]);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      autoPlay:false,
-      showControls:true,
+      autoPlay: false,
+      showControls: true,
       looping: true,
     );
     setState(() {});
@@ -42,33 +44,41 @@ class _ContentScreenState extends State<ContentScreen> {
     _chewieController.dispose();
     super.dispose();
   }
+
   // height: MediaQuery.of(context).size.height,
   // width: MediaQuery.of(context).size.height,
   @override
   Widget build(BuildContext context) {
-
-   return  _chewieController != null &&
-              _chewieController.videoPlayerController.value.isInitialized
-          ?  Container(color: Colors.black,
+    return _chewieController != null &&
+            _chewieController.videoPlayerController.value.isInitialized
+        ? Container(
+            color: Colors.black,
             child: Chewie(
-                  controller: _chewieController,
-                ),
+              controller: _chewieController,
+            ),
           )
-
-
-          : Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: primary,
+        : Center(
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child:
+                  SkeletonContainer.square(
+                    width: double.infinity,
+                    height: double.infinity,
                   ),
-                  SizedBox(height: 10),
-                ],
-              ),
+
+
+
+            ),
+            // child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       CircularProgressIndicator(
+            //         color: primary,
+            //       ),
+            //       SizedBox(height: 10),
+            //     ],
+            //   ),
           );
     //)
-
   }
 }
-

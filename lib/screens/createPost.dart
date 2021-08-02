@@ -218,7 +218,7 @@ class _CreatePageState extends State<CreatePage> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                'Upload\nReels',
+                                'Upload\n30s',
                                 style: GoogleFonts.ubuntu(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,

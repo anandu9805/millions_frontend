@@ -535,13 +535,14 @@ class _ViewVideoState extends State<ViewVideo> {
                                                 child: ClipRRect(
                                                   child: Image.network(
                                                     snapshot.data.toString(),
+                                                    //reels_objects[index].profilePic,
+                                                    width: w * 1,
+                                                    height: h * 1,
                                                     fit: BoxFit.cover,
                                                   ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          w * 0.1),
+                                                  borderRadius: BorderRadius.circular(w * 1),
                                                 ),
-                                                //backgroundColor: Colors.black,
+                                                radius: 25,
                                               );
                                             } else {
                                               return CircleAvatar(

@@ -13,8 +13,13 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import '../services/userService.dart';
 
 class Screen5 extends StatefulWidget {
+   int flag=0;//0 means home page and 1 means explore page
   @override
   _Screen5State createState() => _Screen5State();
+  Screen5(int f)
+  {
+    this.flag=f;
+  }
 }
 
 class _Screen5State extends State<Screen5> {
@@ -26,11 +31,12 @@ class _Screen5State extends State<Screen5> {
   DocumentSnapshot _lastDocument;
 
   ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController2 = ScrollController();
   _getVideos() async {
     Query q = FirebaseFirestore.instance
         .collection("videos")
         .where("isVisible", isEqualTo: "Public")
-        .orderBy("date", descending: true)
+        .orderBy(widget.flag==0?"date":"videoScore", descending: true)
         .limit(_perPage);
 
     setState(() {
@@ -45,6 +51,7 @@ class _Screen5State extends State<Screen5> {
   }
 
   _getMoreVideos() async {
+    print("Hello from getmorevideos");
     if (!_moreVideosAvailable) {
       print("No more products");
       return;
@@ -57,7 +64,7 @@ class _Screen5State extends State<Screen5> {
     Query q = FirebaseFirestore.instance
         .collection("videos")
         .where("isVisible", isEqualTo: "Public")
-        .orderBy("date", descending: true)
+         .orderBy(widget.flag==0?"date":"videoScore", descending:true)
         .limit(_perPage)
         .startAfterDocument(_lastDocument);
     QuerySnapshot querySnapshot = await q.get();
@@ -78,9 +85,9 @@ class _Screen5State extends State<Screen5> {
 
     UserServices().getUserDetails('XIi08ww5Fmgkv7FXOSTkOcmVh2C3');
     _getVideos();
-    _scrollController.addListener(() {
-      double maxScroll = _scrollController.position.maxScrollExtent;
-      double currentScroll = _scrollController.position.pixels;
+    _scrollController2.addListener(() {
+      double maxScroll = _scrollController2.position.maxScrollExtent;
+      double currentScroll = _scrollController2.position.pixels;
       double delta = MediaQuery.of(context).size.height * 0.25;
 
       if (maxScroll - currentScroll > delta) {
@@ -105,23 +112,16 @@ class _Screen5State extends State<Screen5> {
     // var ifphotos = true;
     var h = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
-      // physics: NeverScrollableScrollPhysics(),
+      controller: _scrollController2,
       child: Column(
         children: [
+          if(widget.flag==0)
           Container(
             child: AdPost(),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 5, left: 5),
-            child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Hello Anandu ',
-                  style:
-                      GoogleFonts.ubuntu(fontSize: 20, color: Colors.black54),
-                )),
-          ),
-          //where('channelId', isNotEqualTo: altUserId)
+          if(widget.flag==0)
+          SizedBox(height: 10,),
+
           _loadingVideos
               ? Center(
                   child: Container(

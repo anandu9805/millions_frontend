@@ -21,6 +21,7 @@ import 'package:millions/widgets/appDrawer.dart';
 import 'package:provider/provider.dart';
 import '../provider.dart';
 import 'myWallet.dart';
+import '../screens/explore.dart';
 
 // import 'package:millions/screens/uploadpage.dart';
 //import 'package:millions/screens/user_profile.dart';
@@ -94,7 +95,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final pages = [Screen5(), Shorts(), CreatePage(), Screen9(), Screen11("")];
+  final pages = [Screen5(0), Shorts(), CreatePage(), Screen9(), Screen11("")];
   int page = 0;
     var userDetalis;
   Future<String> userProfilePic;
@@ -145,11 +146,12 @@ class _HomePageState extends State<HomePage> {
             ),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(top: 10, right: 10),
+
+                padding: const EdgeInsets.only(top: 10,),
                 child: IconButton(
                   icon: Icon(
                     Icons.search_outlined,
-                    color: Colors.black,
+                    color:primary,
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -160,6 +162,23 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
+
+                padding: const EdgeInsets.only(top: 10,right: 10),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.explore,
+                    color:primary,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Explore()),
+                    );
+                  },
+                ),
+              ),
+
+              Padding(
                 padding: const EdgeInsets.only(top: 10, right: 20),
                 child: FutureBuilder(
                     future: UserServices().getUserDetails(altUserId),
@@ -169,7 +188,20 @@ class _HomePageState extends State<HomePage> {
                           onTapDown: (TapDownDetails details) {
                             _showPopupMenu(details.globalPosition);
                           },
-                          child: CircleAvatar(
+                          child:     CircleAvatar(
+                            child: ClipRRect(
+                              child: Image.network(
+                                snapshot.data.toString(),
+                                //reels_objects[index].profilePic,
+                                width: w * 1,
+                                height: h * 1,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(w * 1),
+                            ),
+                            radius: 25,
+                          ),
+                          /*CircleAvatar(radius: 20,
                             child: ClipRRect(
                               child: Image.network(
                                 snapshot.data.toString(),
@@ -178,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                               borderRadius: BorderRadius.circular(w * 0.1),
                             ),
                             //backgroundColor: Colors.black,
-                          ),
+                          ),*/
                         );
                       } else {
                         return GestureDetector(
@@ -213,7 +245,7 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.video_label), label: "30s"),
-            BottomNavigationBarItem(icon: Icon(Icons.add), label: "Post video"),
+            BottomNavigationBarItem(icon: Icon(Icons.add), label: "Create"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.subscriptions), label: "Follow"),
             BottomNavigationBarItem(icon: Icon(Icons.photo), label: "Photos"),
