@@ -6,6 +6,7 @@ import 'package:millions/screens/myWallet.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/screen14.dart';
 import 'package:provider/provider.dart';
+import '../screens/screen1.dart';
 
 class UserOptions extends StatefulWidget {
   // const UserOptions({ Key? key }) : super(key: key);
@@ -42,8 +43,11 @@ class _UserOptionsState extends State<UserOptions> {
     }, onSelected: (value) {
       if (value == 'logout') {
         final millionsprovider =
-            Provider.of<MillionsProvider>(context, listen: false);
-        millionsprovider.logout();
+            Provider.of<MillionsProvider>(context, listen:true);
+        millionsprovider.logout(context);
+
+
+
       } else if (value == 'mywallet') {
         Navigator.push(
           context,

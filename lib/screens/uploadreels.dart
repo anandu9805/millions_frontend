@@ -229,7 +229,7 @@ class _UploadReelState extends State<UploadReel> {
         print("reels: $reelslist");
 
         var newId = FirebaseFirestore.instance
-            .collection('videos')
+            .collection('reels')
             .doc(); //to get the id of the document we are going to create in the collection
         print("hello2");
         print(currentUserChannelDetails[0]['channelName']);

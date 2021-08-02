@@ -189,7 +189,7 @@ class _CreateProfileState extends State<CreateProfile> {
                       ),
                       SizedBox(height: 15),
                       Text(
-                        'Video Country',
+                        'Country',
                         style: GoogleFonts.ubuntu(),
                       ),
                       Container(
@@ -219,9 +219,10 @@ class _CreateProfileState extends State<CreateProfile> {
                                 //print('Select country: ${country.displayName}');
                                 setState(() {
                                   countrySelected = true;
-                                  //print(c.displayName);
+                                  print(c.displayName);
                                   _selectedCountry = c;
-                                  //print(_selectedCountry.countryCode);
+                                  _selectedStateCode='KL';
+                                  print(_selectedCountry.countryCode);
                                 });
                               },
                             );
@@ -262,7 +263,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                   dropdownColor: Colors.white,
                                   elevation: 0,
                                   style: GoogleFonts.ubuntu(),
-                                  value: _selectedState,
+                                  value: indianStates[_selectedStateCode],
                                   onChanged: (newValue) {
                                     setState(() {
                                       stateSelected = true;

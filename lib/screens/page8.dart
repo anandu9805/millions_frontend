@@ -579,6 +579,14 @@ class _Page8State extends State<Page8> {
                       future: channelDetails,
                       builder: (BuildContext context,
                           AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        // if(snapshot.data.exists==false){
+                        //   return Container(
+                        //       height: MediaQuery.of(context).size.height * 0.25,
+                        //       child: Center(
+                        //           child: Text("Nothing to show",
+                        //               style:
+                        //               GoogleFonts.ubuntu(fontSize: 15))));
+                        // }
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Container(
@@ -588,7 +596,7 @@ class _Page8State extends State<Page8> {
                                 color: primary,
                               )));
                         }
-                        if (snapshot.hasData) {
+                        if (snapshot.hasData&&snapshot.data.exists) {
                           ChannelModel channelmodel =
                               ChannelModel.fromDoc(snapshot.data.data());
                           return Container(
@@ -688,7 +696,7 @@ class _Page8State extends State<Page8> {
                           return Container(
                               height: MediaQuery.of(context).size.height * 0.25,
                               child: Center(
-                                  child: Text("Unknown Error Occured!",
+                                  child: Text("Nothing to show",
                                       style:
                                           GoogleFonts.ubuntu(fontSize: 15))));
                         }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flick_video_player/flick_video_player.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:millions/constants/colors.dart';
@@ -274,9 +275,8 @@ class _ViewVideoState extends State<ViewVideo> {
       ),
       body: (_isLoading == false || widget.id == null)
           ? SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Expanded(
+              child: Flex(direction: Axis.horizontal,
+                children:[ Expanded(
                   child: Column(
                     children: [
                       PlayVideo(
@@ -759,7 +759,7 @@ class _ViewVideoState extends State<ViewVideo> {
                       ),
                     ],
                   ),
-                ),
+                ),]
               ),
             )
           : Container(

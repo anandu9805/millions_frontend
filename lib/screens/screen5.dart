@@ -45,6 +45,7 @@ class _Screen5State extends State<Screen5> {
     QuerySnapshot querySnapshot = await q.get();
     _videos = querySnapshot.docs;
     _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    print( _videos);
     setState(() {
       _loadingVideos = false;
     });
@@ -73,6 +74,7 @@ class _Screen5State extends State<Screen5> {
     }
     _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
     _videos.addAll(querySnapshot.docs);
+    print( _videos);
 
     setState(() {
       _gettingMoreVideos = false;
@@ -88,7 +90,8 @@ class _Screen5State extends State<Screen5> {
     _scrollController2.addListener(() {
       double maxScroll = _scrollController2.position.maxScrollExtent;
       double currentScroll = _scrollController2.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.25;
+      double delta = MediaQuery.of(context).size.height * 0.50;
+      print(delta);
 
       if (maxScroll - currentScroll > delta) {
         _getMoreVideos();

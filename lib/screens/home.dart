@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         if (value == 'logout') {
           final millionsprovider =
               Provider.of<MillionsProvider>(context, listen: false);
-          millionsprovider.logout();
+          millionsprovider.logout(context);
         } else if (value == 'mywallet') {
           Navigator.push(
             context,

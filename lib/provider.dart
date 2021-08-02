@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import './screens/screen1.dart';
 
 class MillionsProvider<context> extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
@@ -26,9 +27,17 @@ class MillionsProvider<context> extends ChangeNotifier {
     return FirebaseAuth.instance.currentUser;
   }
 
-  Future logout() async {
+  Future logout(BuildContext context) async {
     await googleSignIn.disconnect();
-    FirebaseAuth.instance.signOut();
+   await FirebaseAuth.instance.signOut().whenComplete(() {
+
+     print("Logged out");
+     Navigator.pop(context);
+     Navigator.push(
+         context,
+         MaterialPageRoute(builder: (context) => Screen1()));
+   });
     notifyListeners();
+
   }
 }
