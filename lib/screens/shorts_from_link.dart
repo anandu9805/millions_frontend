@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -220,42 +221,81 @@ class _ShortsFromLinkState extends State<ShortsFromLink> {
                 bottom: h / 7,
                 child: Column(
                   children: [
-                    liked == true
-                        ? IconButton(
+                    FutureBuilder(
+                      future: LikeServices()
+                          .reelsLikeChecker(_reels_items[index]["id"]),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return IconButton(
                             onPressed: () {
                               setState(() {
                                 liked = !liked;
                               });
-                              LikeServices().unLikeReels(
-                                  _reels_items[index]["id"],
-                                  // reels_objects[index].id,
-                                  currentuserid,
-                                  currentuserid);
-                            }, //---------------------------------------------------
-                            icon: Icon(
-                              Icons.favorite_rounded,
-                              color: Colors.white,
-                            ),
-                          )
-                        : IconButton(
-                            onPressed: () {
-                              setState(() {
-                                liked = !liked;
-                              });
+                              print(_reels_items[index]["id"] +
+                                  _reels_items[index]["channelId"] +
+                                  FirebaseAuth.instance.currentUser.uid);
                               LikeServices().likeReels(
                                   _reels_items[index]["id"],
-                                  currentuserid,
-                                  currentuserid);
-                            }, //----------------------
-                            icon: IconButton(
-                              icon: Icon(Icons.favorite_outline_rounded),
-                              color: Colors.white,
-                              onPressed: () {
-                                print("index");
-                                print(index);
-                              },
+                                  _reels_items[index]["channelId"],
+                                  FirebaseAuth.instance.currentUser.uid);
+                            },
+                            icon: Icon(
+                              Icons.favorite_border,
+                              color: primary,
                             ),
-                          ),
+                          );
+                        } else {
+                          // liked = ReelsLike.fromDoc(snapshot.data);
+                          print(snapshot.data);
+                          liked = snapshot.data;
+                          // ReelsLike likeDetails =
+                          //     ReelsLike.fromMap(snapshot.data);
+                          // print(likeDetails.liked);
+                          return liked == true
+                              ? IconButton(
+                                  onPressed: () {
+                                    print("disliked");
+                                    setState(() {
+                                      liked = !liked;
+                                    });
+                                    print(liked);
+                                    LikeServices().unLikeReels(
+                                        _reels_items[index]["id"],
+                                        _reels_items[index]["channelId"],
+                                        FirebaseAuth.instance.currentUser.uid);
+                                  },
+                                  icon: Icon(
+                                    Icons.favorite,
+                                    color: primary,
+                                  ),
+                                )
+                              :
+                              // } else {
+                              // return
+                              IconButton(
+                                  onPressed: () {
+                                    print("like");
+                                    setState(() {
+                                      liked = !liked;
+                                    });
+                                    print(liked);
+                                    // print(_reels_items[index].id +
+                                    //     _reels_items[index].channelId +
+                                    //     altUserId);
+                                    LikeServices().likeReels(
+                                        _reels_items[index]["id"],
+                                        _reels_items[index]["channelId"],
+                                        FirebaseAuth.instance.currentUser.uid);
+                                  },
+                                  icon: Icon(
+                                    Icons.favorite_border,
+                                    color: primary,
+                                  ),
+                                );
+                        }
+                        // }
+                      },
+                    ),
                     SizedBox(height: 20),
                     IconButton(
                       onPressed: () async {

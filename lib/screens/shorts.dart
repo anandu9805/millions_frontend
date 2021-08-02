@@ -305,13 +305,13 @@ class _ShortsState extends State<Shorts> {
                                   setState(() {
                                     liked = !liked;
                                   });
-                                  print(reels_objects[index].id +
-                                      reels_objects[index].channelId +
+                                  print(_reels_items[index]["id"] +
+                                      _reels_items[index]["channelId"] +
                                       altUserId);
                                   LikeServices().likeReels(
-                                      reels_objects[index].id,
-                                      reels_objects[index].channelId,
-                                      altUserId);
+                                      _reels_items[index]["id"],
+                                      _reels_items[index]["channelId"],
+                                      FirebaseAuth.instance.currentUser.uid);
                                 },
                                 icon: Icon(
                                   Icons.favorite_border,
@@ -319,39 +319,49 @@ class _ShortsState extends State<Shorts> {
                                 ),
                               );
                             } else {
-                              liked = snapshot.data;
+                              // liked = ReelsLike.fromDoc(snapshot.data);
                               print(snapshot.data);
+                              liked=snapshot.data;
                               // ReelsLike likeDetails =
                               //     ReelsLike.fromMap(snapshot.data);
                               // print(likeDetails.liked);
                               return liked == true
                                   ? IconButton(
                                       onPressed: () {
+                                        print("disliked");
                                         setState(() {
                                           liked = !liked;
                                         });
+                                        print(liked);
                                         LikeServices().unLikeReels(
-                                            reels_objects[index].id,
-                                            reels_objects[index].channelId,
-                                            altUserId);
+                                            _reels_items[index]["id"],
+                                            _reels_items[index]["channelId"],
+                                            FirebaseAuth
+                                                .instance.currentUser.uid);
                                       },
                                       icon: Icon(
                                         Icons.favorite,
                                         color: primary,
                                       ),
                                     )
-                                  : IconButton(
+                                  :
+                                  // } else {
+                                  // return
+                                  IconButton(
                                       onPressed: () {
+                                        print("like");
                                         setState(() {
                                           liked = !liked;
                                         });
-                                        print(reels_objects[index].id +
-                                            reels_objects[index].channelId +
-                                            altUserId);
+                                        print(liked);
+                                        // print(_reels_items[index].id +
+                                        //     _reels_items[index].channelId +
+                                        //     altUserId);
                                         LikeServices().likeReels(
-                                            reels_objects[index].id,
-                                            reels_objects[index].channelId,
-                                            altUserId);
+                                            _reels_items[index]["id"],
+                                            _reels_items[index]["channelId"],
+                                            FirebaseAuth
+                                                .instance.currentUser.uid);
                                       },
                                       icon: Icon(
                                         Icons.favorite_border,
@@ -359,6 +369,7 @@ class _ShortsState extends State<Shorts> {
                                       ),
                                     );
                             }
+                            // }
                           },
                         ),
                         SizedBox(height: 20),

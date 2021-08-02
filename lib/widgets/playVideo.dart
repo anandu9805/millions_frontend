@@ -144,7 +144,7 @@ class _PlayVideoState extends State<PlayVideo> {
     FirebaseFirestore.instance
         .collection('ads')
         .limit(1)
-        .where("showAdIn", whereIn: ["Kollam"])
+        .where("showAdIn", whereIn: ["Kollam","IN"])
         .get()
         .then((value) {
           print(value.docs.single['videoSrc']);

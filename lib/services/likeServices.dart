@@ -82,11 +82,13 @@ class LikeServices {
         .doc(FirebaseAuth.instance.currentUser.uid + '_' + reelsId)
         .get()
         .then((value) {
-      return value.exists;
+      return value.get('liked');
     });
   }
 
   likeReels(String reelId, String channelId, String userId) async {
+    print(reelId);
+    print("userId");
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
     await FirebaseFirestore.instance
         .collection('reels-likes')
@@ -107,21 +109,22 @@ class LikeServices {
     );
   }
 
-  unLikeReels(String videoId, String channelId, String userId) async {
+  unLikeReels(String reelId, String channelId, String userId) async {
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
-    // print(userId + '_' + videoId);
+    print("disliked");
+print(userId + '_' + reelId);
     await FirebaseFirestore.instance
         .collection('reels-likes')
-        .doc(userId + '_' + videoId)
+        .doc(userId + '_' + reelId)
         .set(
       {
         'channel': channelId,
         'date': DateTime.now(),
         'follower': userId,
         'liked': false,
-        'link': "reels/" + videoId,
+        'link': "reels/" + reelId,
         'source': "videos",
-        'video': videoId
+        'video': reelId
       },
       SetOptions(
         merge: true,
