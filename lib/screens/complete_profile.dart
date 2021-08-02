@@ -221,6 +221,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                   countrySelected = true;
                                   //print(c.displayName);
                                   _selectedCountry = c;
+                                  _selectedStateCode="KL";
                                   //print(_selectedCountry.countryCode);
                                 });
                               },
