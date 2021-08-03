@@ -6,6 +6,7 @@ import 'package:millions/widgets/popUpMenu.dart';
 import 'package:numeral/numeral.dart';
 import 'package:flutter_time_ago/flutter_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class VideoCard extends StatefulWidget {
   final Video video;
@@ -85,30 +86,40 @@ class _VideoCardState extends State<VideoCard> {
                                   alignment: Alignment(-0.5, -0.2),
                                   widthFactor: 1,
                                   heightFactor: 1,
-                                  child: Image.network(
-                                    widget.video.thumbnailUrl == null
+                                  child: CachedNetworkImage(
+                                    // placeholder: (context, thumbnailUrl) =>
+                                    //     CircularProgressIndicator(),
+                                    imageUrl: widget.video.thumbnailUrl == null
                                         ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
                                         :
                                         // "",
-                                        widget.video.thumbnailUrl,
-                                    // fit: BoxFit.cover,
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent loadingProgress) {
-                                      return Center(child: child);
-                                    },
-                                    frameBuilder: (BuildContext context,
-                                        Widget child,
-                                        int frame,
-                                        bool wasSynchronouslyLoaded) {
-                                      return Padding(
-                                        padding: EdgeInsets.all(0.0),
-                                        child: child,
-                                      );
-                                    },
-                                    errorBuilder: (context, url, error) =>
-                                        new Icon(Icons.error),
+                                        widget.video?.thumbnailUrl,
                                   ),
+
+                                  // Image.network(
+                                  //   widget.video.thumbnailUrl == null
+                                  //       ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
+                                  //       :
+                                  //       // "",
+                                  //       widget.video?.thumbnailUrl,
+                                  //   // fit: BoxFit.cover,
+                                  //   loadingBuilder: (BuildContext context,
+                                  //       Widget child,
+                                  //       ImageChunkEvent loadingProgress) {
+                                  //     return Center(child: child);
+                                  //   },
+                                  //   frameBuilder: (BuildContext context,
+                                  //       Widget child,
+                                  //       int frame,
+                                  //       bool wasSynchronouslyLoaded) {
+                                  //     return Padding(
+                                  //       padding: EdgeInsets.all(0.0),
+                                  //       child: child,
+                                  //     );
+                                  //   },
+                                  //   errorBuilder: (context, url, error) =>
+                                  //       new Icon(Icons.error),
+                                  // ),
                                 ),
                               ),
                             )),
@@ -135,7 +146,10 @@ class _VideoCardState extends State<VideoCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
-                    foregroundImage: NetworkImage(widget.video.profilePic),
+                    foregroundImage: NetworkImage(
+                        widget.video?.profilePic == null
+                            ? altProfilePic
+                            : widget.video.profilePic),
                   ),
                   const SizedBox(width: 8.0),
                   Expanded(
