@@ -76,7 +76,7 @@ class _VideoCardState extends State<VideoCard> {
                       //TODO thumbnail
                       child: Container(
                         height: 400,
-                        width: double.infinity,
+                        width: MediaQuery.of(context).size.width,
                         child: FittedBox(
                             fit: BoxFit.fill,
                             child: ClipRect(

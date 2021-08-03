@@ -138,23 +138,41 @@ class _Screen11State extends State<Screen11> {
                   child: Text('No posts to show!',
                       style: GoogleFonts.ubuntu(fontSize: 15)),
                 ))
-              : widget.postId != null?  Column(
-                children:[ SizedBox(height: 40,),Container(
-        child: Photos(post2),
-      ),]
-              ):Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                          itemCount: _posts.length,
-                          controller: _scrollController,
-                          itemBuilder: (BuildContext ctx, int index) {
-                            return Photos(
-                                PostDetail.fromMap(_posts[index].data()));
-                          }),
-                    )
-                  ],
-                ),
+              : widget.postId != null
+                  ? Column(children: [
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Container(
+                        child: Photos(post2),
+                      ),
+                    ])
+                  : Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 20, left: 8, bottom: 12),
+                          child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                'Posts',
+                                style: GoogleFonts.ubuntu(
+                                    fontSize: 25,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w800),
+                              )),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: _posts.length,
+                              controller: _scrollController,
+                              itemBuilder: (BuildContext ctx, int index) {
+                                return Photos(
+                                    PostDetail.fromMap(_posts[index].data()));
+                              }),
+                        )
+                      ],
+                    ),
     );
   }
 }

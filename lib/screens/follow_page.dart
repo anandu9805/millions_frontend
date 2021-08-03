@@ -165,14 +165,15 @@ class _Screen9State extends State<Screen9> {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 9, left: 5, bottom: 9),
+                    padding:
+                        const EdgeInsets.only(top: 20, left: 8, bottom: 12),
                     child: Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
                           'Following',
                           style: GoogleFonts.ubuntu(
                               fontSize: 25,
-                              color: Colors.black54,
+                              color: Colors.black,
                               fontWeight: FontWeight.w800),
                         )),
                   ),

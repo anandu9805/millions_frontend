@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class NewPost {
   String description;
   File image;
@@ -28,7 +30,10 @@ class PostDetail {
       title,
       isVisible,
       isComments;
+
   int likes, disLikes, postScore, comments;
+  Timestamp date;
+  bool isVerified;
   PostDetail(
       {this.channelId,
       this.channelName,
@@ -44,7 +49,9 @@ class PostDetail {
       this.postScore,
       this.profilePic,
       this.isComments,
-      this.title});
+      this.title,
+      this.isVerified,
+      this.date});
 
   factory PostDetail.fromMap(Map snapshot) {
     return PostDetail(
@@ -61,6 +68,8 @@ class PostDetail {
         photoSrc: snapshot["photoSrc"],
         profilePic: snapshot["profilePic"],
         title: snapshot["title"],
+        date: snapshot["date"],
+        isVerified: snapshot["isVerified"],
         isComments: snapshot["isComments"]);
   }
 
@@ -79,7 +88,9 @@ class PostDetail {
       "photoSrc": photoSrc,
       "profilePic": profilePic,
       "title": title,
-      "isComments": isComments
+      "isComments": isComments,
+      "date": date,
+      "isVerified": isVerified
     };
   }
 }
