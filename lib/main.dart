@@ -240,7 +240,7 @@ print("to get message data while app is in background and opened by clicking on 
       child: MaterialApp(
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => isConnected == true
-              ? Screen1() //Screen1()
+              ? HomePage() //Screen1()
               : NoInternet(),
           'Posts': (BuildContext context) => Screen11(null),
         },

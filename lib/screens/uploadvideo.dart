@@ -33,17 +33,19 @@ class _UploadPageState extends State<UploadPage> {
 
   // var currentuserid =
   //     "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
-  var currentuserid =FirebaseAuth.instance.currentUser.uid;
+  var currentuserid = FirebaseAuth.instance.currentUser.uid;
   String fileName;
   String url;
+
   //List currentUserChannelDetails = [];
-    ChannelModel channelDetails;
+  ChannelModel channelDetails;
   List videoslist = [];
   File _videoFile;
   bool uploadComplete = false;
   TextEditingController decsiptionController;
   TextEditingController titleController;
   String selectedCountry = 'Choose Your Country';
+
   //List<String> lanuages = ['Malayalam', 'English', 'Hindi'];
   //List<String> comments = ['Enabled', 'Disabled'];
   //List<String> category = ['All Videos', 'Entertainment', 'Comedy'];
@@ -60,7 +62,7 @@ class _UploadPageState extends State<UploadPage> {
   String thumnailpath;
   String thumnail_image_name;
   String thumbnail_url;
-
+int stop=0;
   final videoInfo = FlutterVideoInfo();
   var info;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -111,9 +113,14 @@ class _UploadPageState extends State<UploadPage> {
     info = await videoInfo.getVideoInfo(pickedImageFile.path);
     print("duration");
     print(info.duration);
-    setState(() {
+    if(info.duration<60000.0)
+    {
+      setState(() {
+        stop=1;
+      });
+    }
+    else{    setState(() {
       _videoFile = File(pickedImageFile.path);
-
       // controller = new VideoPlayerController.file(_videoFile);
       // print("controller.value.duration");
       // print(controller.value.duration.toString());
@@ -121,7 +128,7 @@ class _UploadPageState extends State<UploadPage> {
       thumbanil = thumbanil_temp;
 
       uploadComplete = true;
-    });
+    });}
   }
 
   void _selectVideo() async {
@@ -134,7 +141,13 @@ class _UploadPageState extends State<UploadPage> {
     info = await videoInfo.getVideoInfo(pickedImageFile.path);
     print("duration");
     print(info.duration);
-    setState(() {
+    if(info.duration<60000.0)
+      {
+        setState(() {
+          stop=1;
+        });
+      }
+    else{    setState(() {
       _videoFile = File(pickedImageFile.path);
       // controller = new VideoPlayerController.file(_videoFile);
       // print("controller.value.duration");
@@ -143,7 +156,8 @@ class _UploadPageState extends State<UploadPage> {
       thumbanil = thumbanil_temp;
 
       uploadComplete = true;
-    });
+    });}
+
   }
 
   Future<String> getCurrentUserChannelDetails() async {
@@ -153,9 +167,9 @@ class _UploadPageState extends State<UploadPage> {
           .doc(currentuserid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
-             Map<String, dynamic> data =
-                      documentSnapshot.data() as Map<String, dynamic>;
-                  channelDetails = ChannelModel.fromDoc(data);
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+        channelDetails = ChannelModel.fromDoc(data);
       });
     } catch (e) {
       return "Channel Error";
@@ -313,23 +327,26 @@ class _UploadPageState extends State<UploadPage> {
     //print("_videoFile $_videoFile");
     return Scaffold(
       key: scaffoldKey,
-      body: _isLoading
-          ? Center(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height / 4,
-                width: MediaQuery.of(context).size.width / 4,
-                child: LiquidCircularProgressIndicator(
-                  value: percentage_uploaded / 100,
-                  // Defaults to 0.5.
-                  valueColor: AlwaysStoppedAnimation(primary),
-                  // Defaults to the current Theme's accentColor.
-                  backgroundColor: Colors.white,
-                  // Defaults to the current Theme's backgroundColor.
-                  borderColor: primary,
-                  borderWidth: 5.0,
-                  direction: Axis.vertical,
-                  // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
-                  center: FittedBox(
+      body: stop==1?Center(child: Text("Min upload duration is 1min!!!")):_isLoading
+          ?
+
+          Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                      child: LoadingBouncingGrid.circle(
+                    borderColor: primary,
+                    backgroundColor: Colors.white,
+                    borderSize: 10,
+                    size: 100,
+                    duration: Duration(milliseconds: 1800),
+                  )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FittedBox(
                     fit: BoxFit.contain,
                     child: Text(
                       "$percentage_uploaded%",
@@ -337,17 +354,9 @@ class _UploadPageState extends State<UploadPage> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                   ),
-                ),
+                ],
               ),
             )
-          // Center(
-          //     child: LoadingBouncingGrid.circle(
-          //     borderColor: primary,
-          //     backgroundColor: Colors.white,
-          //     borderSize: 10,
-          //     size: 100,
-          //     duration: Duration(milliseconds: 1800),
-          //   ))
           : SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
