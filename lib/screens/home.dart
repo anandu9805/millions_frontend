@@ -47,8 +47,12 @@ class _HomePageState extends State<HomePage> {
           MediaQuery.of(context).size.height - offset.dy),
       items: [
         PopupMenuItem(
+          child: Text("My Channel", style: GoogleFonts.ubuntu()),
+          value: 'mychannel',
+        ),
+        PopupMenuItem(
           child: Text(
-            "Edit Profile",
+            "My Account",
             style: GoogleFonts.ubuntu(),
           ),
           value: 'editprofile',
@@ -56,10 +60,6 @@ class _HomePageState extends State<HomePage> {
         PopupMenuItem(
           child: Text("My Wallet", style: GoogleFonts.ubuntu()),
           value: 'mywallet',
-        ),
-        PopupMenuItem(
-          child: Text("My Channel", style: GoogleFonts.ubuntu()),
-          value: 'mychannel',
         ),
         PopupMenuItem(
           child: Text("Logout", style: GoogleFonts.ubuntu()),
@@ -97,15 +97,15 @@ class _HomePageState extends State<HomePage> {
 
   final pages = [Screen5(0), Shorts(), CreatePage(), Screen9(), Screen11(null)];
   int page = 0;
-    var userDetalis;
+  var userDetalis;
   Future<String> userProfilePic;
   @override
   initState() {
     userProfilePic = UserServices().getUserDetails(altUserId);
     super.initState();
-    
+
     print(FirebaseAuth.instance.currentUser);
-    print(FirebaseAuth.instance.currentUser.displayName+"132");
+    print(FirebaseAuth.instance.currentUser.displayName + "132");
   }
 
   @override
@@ -146,12 +146,13 @@ class _HomePageState extends State<HomePage> {
             ),
             actions: [
               Padding(
-
-                padding: const EdgeInsets.only(top: 10,),
+                padding: const EdgeInsets.only(
+                  top: 10,
+                ),
                 child: IconButton(
                   icon: Icon(
                     Icons.search_outlined,
-                    color:primary,
+                    color: primary,
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -162,12 +163,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-
-                padding: const EdgeInsets.only(top: 10,right: 10),
+                padding: const EdgeInsets.only(top: 10, right: 10),
                 child: IconButton(
                   icon: Icon(
                     Icons.explore,
-                    color:primary,
+                    color: primary,
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -177,7 +177,6 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.only(top: 10, right: 20),
                 child: FutureBuilder(
@@ -188,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                           onTapDown: (TapDownDetails details) {
                             _showPopupMenu(details.globalPosition);
                           },
-                          child:     CircleAvatar(
+                          child: CircleAvatar(
                             child: ClipRRect(
                               child: Image.network(
                                 snapshot.data.toString(),

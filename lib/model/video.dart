@@ -42,6 +42,7 @@ class Video {
     this.isVisible,
     this.language,
     this.likes,
+    this.profilePic,
     this.subscribers,
     this.thumbnailUrl,
     this.title,
@@ -70,6 +71,7 @@ class Video {
   int videoScore;
   String videoSrc;
   int views;
+  String profilePic;
 
   factory Video.fromMap(Map snapshot) {
     // print(snapshot["id"]);
@@ -88,6 +90,7 @@ class Video {
       isVisible: snapshot["isVisible"],
       language: snapshot["language"],
       likes: snapshot["likes"],
+      profilePic: snapshot["profilePic"],
       subscribers: snapshot["subscribers"],
       thumbnailUrl: snapshot["thumbnail"],
       title: snapshot["title"],
@@ -113,6 +116,7 @@ class Video {
       "isVisible": isVisible,
       "language": language,
       "likes": likes,
+      "profilePic": profilePic,
       "subscribers": subscribers,
       "thumbnailUrl": thumbnailUrl,
       "title": title,
