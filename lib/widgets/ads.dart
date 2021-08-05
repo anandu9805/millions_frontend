@@ -18,18 +18,6 @@ class _AdPostState extends State<AdPost> {
   String randomAdId;
   bool _isLoading = false;
 
-  Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   Future<void> getDetails() async {
     return FirebaseFirestore.instance
         .collection('post-ads')
@@ -106,7 +94,7 @@ class _AdPostState extends State<AdPost> {
                     children: [
                       InkWell(
                         onTap: () {
-                          _launchInBrowser(adpost.adLink);
+                          launch(adpost.adLink);
                         },
                         child: Card(
                             clipBehavior: Clip.antiAliasWithSaveLayer,

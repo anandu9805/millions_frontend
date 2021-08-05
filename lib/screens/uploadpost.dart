@@ -198,21 +198,22 @@ class _UploadPostState extends State<UploadPost> {
       key: scaffoldKey,
       body: _isLoading
           ? Center(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height / 4,
-                width: MediaQuery.of(context).size.width / 4,
-                child: LiquidCircularProgressIndicator(
-                  value: percentage_uploaded / 100,
-                  // Defaults to 0.5.
-                  valueColor: AlwaysStoppedAnimation(primary),
-                  // Defaults to the current Theme's accentColor.
-                  backgroundColor: Colors.white,
-                  // Defaults to the current Theme's backgroundColor.
-                  borderColor: primary,
-                  borderWidth: 5.0,
-                  direction: Axis.vertical,
-                  // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
-                  center: FittedBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                      child: LoadingBouncingGrid.circle(
+                    borderColor: primary,
+                    backgroundColor: Colors.white,
+                    borderSize: 10,
+                    size: 100,
+                    duration: Duration(milliseconds: 1800),
+                  )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FittedBox(
                     fit: BoxFit.contain,
                     child: Text(
                       "$percentage_uploaded%",
@@ -220,7 +221,7 @@ class _UploadPostState extends State<UploadPost> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                   ),
-                ),
+                ],
               ),
             )
           // Center(
