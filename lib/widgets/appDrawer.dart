@@ -13,18 +13,6 @@ class DefaultDrawer extends StatefulWidget {
 }
 
 class _DefaultDrawerState extends State<DefaultDrawer> {
-  Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -58,34 +46,34 @@ class _DefaultDrawerState extends State<DefaultDrawer> {
             ListTile(
               title: Text('Help'),
               onTap: () {
-                _launchInBrowser('https://docs.millionsofficial.in/docs/intro');
+                launch('https://docs.millionsofficial.in/docs/intro');
               },
             ),
             ListTile(
               title: Text('Report Bug'),
               onTap: () {
-                _launchInBrowser(
+                launch(
                     'https://docs.millionsofficial.in/docs/bugs/report-bugs');
               },
             ),
             ListTile(
               title: Text('Privacy Policy'),
               onTap: () {
-                _launchInBrowser(
+                launch(
                     'https://docs.millionsofficial.in/docs/privacy/privacy-policy');
               },
             ),
             ListTile(
               title: Text('Terms Of Service'),
               onTap: () {
-                _launchInBrowser(
+                launch(
                     'https://docs.millionsofficial.in/docs/privacy/terms');
               },
             ),
             ListTile(
               title: Text('Support'),
               onTap: () {
-                _launchInBrowser(
+                launch(
                     'https://docs.millionsofficial.in/docs/bugs/support');
               },
             ),

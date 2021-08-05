@@ -38,17 +38,6 @@ class _Page8State extends State<Page8> {
     _drawerKey.currentState.openDrawer();
   }
 
-  Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
   Future<String> checkExist(String docID) async {
     try {
@@ -631,7 +620,7 @@ class _Page8State extends State<Page8> {
                                   if (snapshot.data['linkone'] != '')
                                     InkWell(
                                         onTap: () {
-                                          _launchInBrowser(
+                                          launch(
                                               snapshot.data['linkone']);
                                         },
                                         child: Text(snapshot.data['linkone'],
@@ -641,7 +630,7 @@ class _Page8State extends State<Page8> {
                                   if (snapshot.data['linktwo'] != '')
                                     InkWell(
                                         onTap: () {
-                                          _launchInBrowser(
+                                          launch(
                                               snapshot.data['linktwo']);
                                         },
                                         child: Text(snapshot.data['linktwo'],
