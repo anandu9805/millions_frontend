@@ -151,9 +151,9 @@ class _UploadReelState extends State<UploadReel> {
           .doc(altUserId)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
-             Map<String, dynamic> data =
-                      documentSnapshot.data() as Map<String, dynamic>;
-                  channelDetails = ChannelModel.fromDoc(data);
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+        channelDetails = ChannelModel.fromDoc(data);
       });
     } catch (e) {
       return "Channel Error";
@@ -195,17 +195,17 @@ class _UploadReelState extends State<UploadReel> {
           storage.ref('test-reels/${altUserId}/${fileName}');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
       uploadTask.snapshotEvents.listen(
-              (firebase_storage.TaskSnapshot snapshot) {
-            print('Task state: ${snapshot.state}');
-            print(
-                'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
+          (firebase_storage.TaskSnapshot snapshot) {
+        print('Task state: ${snapshot.state}');
+        print(
+            'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
 
-            setState(() {
-              _isLoading = true;
-              percentage_uploaded =
-                  ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).round();
-            });
-          }, onError: (e) {
+        setState(() {
+          _isLoading = true;
+          percentage_uploaded =
+              ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).round();
+        });
+      }, onError: (e) {
         // The final snapshot is also available on the task via `.snapshot`,
         // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
         print(uploadTask.snapshot);
@@ -283,33 +283,33 @@ class _UploadReelState extends State<UploadReel> {
     return Scaffold(
       key: scaffoldKey,
       body: _isLoading
-           ?Center(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height / 4,
-          width: MediaQuery.of(context).size.width / 4,
-          child: LiquidCircularProgressIndicator(
-            value: percentage_uploaded / 100,
-            // Defaults to 0.5.
-            valueColor: AlwaysStoppedAnimation(primary),
-            // Defaults to the current Theme's accentColor.
-            backgroundColor: Colors.white,
-            // Defaults to the current Theme's backgroundColor.
-            borderColor: primary,
-            borderWidth: 5.0,
-            direction: Axis.vertical,
-            // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
-            center: FittedBox(
-              fit: BoxFit.contain,
-              child: Text(
-                "$percentage_uploaded%",
-                style:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ? Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height / 4,
+                width: MediaQuery.of(context).size.width / 4,
+                child: LiquidCircularProgressIndicator(
+                  value: percentage_uploaded / 100,
+                  // Defaults to 0.5.
+                  valueColor: AlwaysStoppedAnimation(primary),
+                  // Defaults to the current Theme's accentColor.
+                  backgroundColor: Colors.white,
+                  // Defaults to the current Theme's backgroundColor.
+                  borderColor: primary,
+                  borderWidth: 5.0,
+                  direction: Axis.vertical,
+                  // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
+                  center: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      "$percentage_uploaded%",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-      )
-      // Center(
+            )
+          // Center(
           //     child: LoadingBouncingGrid.circle(
           //     borderColor: primary,
           //     backgroundColor: Colors.white,
@@ -324,15 +324,14 @@ class _UploadReelState extends State<UploadReel> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 0, 20),
-                    child: Text(
-                      'Upload',
-                      style: GoogleFonts.ubuntu(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 30,
-                      ),
-                    ),
-                  ),
+                      padding: EdgeInsets.fromLTRB(20, 60, 0, 30),
+                      child: Text(
+                        'Upload 30s',
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800),
+                      )),
 
                   //----------------------
                   // thumbanil != null?
@@ -376,29 +375,42 @@ class _UploadReelState extends State<UploadReel> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: const Text(
-                                        'Millions',
+                                        'Select a video',
                                         style: TextStyle(color: primary),
-                                        textAlign: TextAlign.center,
+                                        textAlign: TextAlign.left,
                                       ),
                                       content: SingleChildScrollView(
                                         child: ListBody(
                                           children: const <Widget>[
-                                            Text('Upload 30s from:'),
+                                            Text(
+                                                'Please select a video from your gallery or capture one.'),
                                           ],
                                         ),
                                       ),
                                       actions: <Widget>[
                                         TextButton(
-                                          child: const Text('Gallery'),
+                                          child: Text(
+                                            'Record 30s',
+                                            style: GoogleFonts.ubuntu(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w400),
+                                          ),
                                           onPressed: () {
-                                            _fromgallery();
+                                            _selectVideo();
                                             Navigator.of(context).pop();
                                           },
                                         ),
                                         TextButton(
-                                          child: const Text('Record a 30s'),
+                                          child: Text(
+                                            'Gallery',
+                                            style: GoogleFonts.ubuntu(
+                                                fontSize: 16,
+                                                color: primary,
+                                                fontWeight: FontWeight.w400),
+                                          ),
                                           onPressed: () {
-                                            _selectVideo();
+                                            _fromgallery();
                                             Navigator.of(context).pop();
                                           },
                                         ),
@@ -423,24 +435,17 @@ class _UploadReelState extends State<UploadReel> {
                                   children: [
                                     Padding(
                                       padding:
-                                          EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                          EdgeInsets.fromLTRB(0, 20, 0, 20),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Image.network(
-                                            'https://image.flaticon.com/icons/png/512/262/262530.png',
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
-                                            fit: BoxFit.cover,
-                                          ),
+                                          Icon(
+                                            Icons.cloud_upload,
+                                            color: primary,
+                                            size: 40,
+                                          )
                                         ],
                                       ),
                                     ),
@@ -453,16 +458,28 @@ class _UploadReelState extends State<UploadReel> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Upload 30s',
+                                            'Select a 30s video',
                                             textAlign: TextAlign.start,
                                             style: GoogleFonts.ubuntu(
                                               color: primary,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 30,
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 20,
                                             ),
                                           ),
                                         ],
                                       ),
+                                    ),
+                                    Text(
+                                      'Your 30s will be public after you publish them',
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.ubuntu(
+                                        // color: primary,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 25,
                                     ),
                                   ],
                                 ),
@@ -499,6 +516,8 @@ class _UploadReelState extends State<UploadReel> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -509,6 +528,8 @@ class _UploadReelState extends State<UploadReel> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                       ),
@@ -547,6 +568,8 @@ class _UploadReelState extends State<UploadReel> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -557,6 +580,8 @@ class _UploadReelState extends State<UploadReel> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                       ),
@@ -797,6 +822,9 @@ class _UploadReelState extends State<UploadReel> {
                             ),
                           ),
                         ),
+                  SizedBox(
+                    height: 45,
+                  ),
                 ],
               ),
             ),

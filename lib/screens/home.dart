@@ -193,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                                 snapshot.data.toString(),
                                 //reels_objects[index].profilePic,
                                 width: w * 1,
-                                height: h * 1,
+                                height: w * 1,
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(w * 1),
@@ -218,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: InkWell(
                             child: CircleAvatar(
-                              radius: w * 0.1,
+                              radius: w * 0.3,
                               backgroundColor: Colors.black,
                             ),
                           ),
@@ -243,10 +243,10 @@ class _HomePageState extends State<HomePage> {
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.video_label), label: "30s"),
+                icon: Icon(Icons.music_video), label: "30s"),
             BottomNavigationBarItem(icon: Icon(Icons.add), label: "Create"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.subscriptions), label: "Follow"),
+                icon: Icon(Icons.video_library), label: "Follow"),
             BottomNavigationBarItem(icon: Icon(Icons.photo), label: "Photos"),
           ],
           onTap: (index) {

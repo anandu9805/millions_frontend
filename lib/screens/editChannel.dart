@@ -28,7 +28,10 @@ class _EditChannelState extends State<EditChannel> {
       artchanged = false,
       uploadComplete = false,
       _isLoading = false;
-  TextEditingController namecontroller, descontroller, linkOneController, linkTwoController;
+  TextEditingController namecontroller,
+      descontroller,
+      linkOneController,
+      linkTwoController;
   String profileFileName, artFileName, channelArtUrl, profileUrl;
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -114,7 +117,8 @@ class _EditChannelState extends State<EditChannel> {
       print(onError);
     });
   }
-    void _showToast(BuildContext context, String message) {
+
+  void _showToast(BuildContext context, String message) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
@@ -140,8 +144,8 @@ class _EditChannelState extends State<EditChannel> {
           .doc(widget.myChannel.id)
           .update({
         'channelName': namecontroller.text,
-        'linkone' : linkOneController.text,
-        'linktwo' : linkTwoController.text,
+        'linkone': linkOneController.text,
+        'linktwo': linkTwoController.text,
         'description': descontroller.text.isEmpty ? " " : descontroller.text,
         'channelArt': artchanged
             ? channelArtUrl
@@ -151,10 +155,10 @@ class _EditChannelState extends State<EditChannel> {
             : widget.myChannel.profilePic,
       }).then((value) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) =>
-                Page8(widget.myChannel.id)));
+            builder: (BuildContext context) => Page8(widget.myChannel.id)));
         _showToast(context, "Channel Updated Successfully");
-      }).catchError((error) => _showToast(context, "Failed to update channel: $error"));
+      }).catchError((error) =>
+              _showToast(context, "Failed to update channel: $error"));
     } catch (e) {
       print("Error");
     }
@@ -166,8 +170,8 @@ class _EditChannelState extends State<EditChannel> {
     _isLoading = false;
     namecontroller = TextEditingController(text: widget.myChannel.channelName);
     descontroller = TextEditingController(text: widget.myChannel.description);
-    linkOneController=TextEditingController(text: widget.myChannel.linkone);
-    linkTwoController=TextEditingController(text: widget.myChannel.linktwo);
+    linkOneController = TextEditingController(text: widget.myChannel.linkone);
+    linkTwoController = TextEditingController(text: widget.myChannel.linktwo);
   }
 
   @override
@@ -209,6 +213,7 @@ class _EditChannelState extends State<EditChannel> {
                     Column(
                       children: [
                         Card(
+                          color: Colors.white,
                           shape: RoundedRectangleBorder(
                             side: BorderSide(color: primary, width: 1),
                             borderRadius: BorderRadius.circular(4),
@@ -299,7 +304,7 @@ class _EditChannelState extends State<EditChannel> {
                                         : Image.file(_profileImageFile))
                                     : ((widget.myChannel.profilePic == null ||
                                             widget.myChannel.profilePic.isEmpty)
-                                        ?  Text(
+                                        ? Text(
                                             "No Profile Picture",
                                             style: GoogleFonts.ubuntu(),
                                           )
@@ -315,10 +320,10 @@ class _EditChannelState extends State<EditChannel> {
                         SizedBox(
                             height: MediaQuery.of(context).size.height * 0.05),
                         InputField("Channel Description", descontroller, 4),
-                                                SizedBox(
+                        SizedBox(
                             height: MediaQuery.of(context).size.height * 0.05),
                         InputField("Featured Link 1", linkOneController, 1),
-                                                SizedBox(
+                        SizedBox(
                             height: MediaQuery.of(context).size.height * 0.05),
                         InputField("Featured Link 2", linkTwoController, 1),
                         SizedBox(
@@ -416,10 +421,10 @@ class _EditChannelState extends State<EditChannel> {
                                                     null ||
                                                 widget.myChannel.channelArt
                                                     .isEmpty)
-                                            ?Text(
-                                            "No Channel Art",
-                                            style: GoogleFonts.ubuntu(),
-                                          )
+                                            ? Text(
+                                                "No Channel Art",
+                                                style: GoogleFonts.ubuntu(),
+                                              )
                                             : Image.network(
                                                 widget.myChannel.channelArt)))
                               ],

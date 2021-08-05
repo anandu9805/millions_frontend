@@ -6,6 +6,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:millions/screens/edit30s.dart';
 import 'package:millions/services/dynamiclinkservice.dart';
 import 'package:millions/services/likeServices.dart';
+import 'package:numeral/numeral.dart';
 import 'package:share_plus/share_plus.dart';
 import '../model/reels_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -70,7 +71,7 @@ class _ShortsState extends State<ChannelShorts> {
 
   @override
   void initState() {
-   // GetCurrentUserDetails();
+    // GetCurrentUserDetails();
     _getReels();
     super.initState();
   }
@@ -156,8 +157,9 @@ class _ShortsState extends State<ChannelShorts> {
               itemBuilder: (BuildContext context, int index) {
                 return Stack(children: [
                   ContentScreen(
-                      src: _reels_items[index]
-                          ["videoSrc"] //reels_objects[index].videoSrc,
+                      src: _reels_items[index]["videoSrc"],
+                      cover: _reels_items[index]
+                          ["thumbnail"] //reels_objects[index].videoSrc,
                       ),
                   Positioned(
                     left: w / 30,
@@ -165,30 +167,52 @@ class _ShortsState extends State<ChannelShorts> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          child: ClipRRect(
-                            child: Image.network(
-                              _reels_items[index]["profilePic"],
-                              //reels_objects[index].profilePic,
-                              width: w * 1,
-                              height: h * 1,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(w * 1),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: Text(
+                            _reels_items[index]["description"] + "\n ",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            // reels_objects[index].description,
+                            style: GoogleFonts.ubuntu(
+                                color: Colors.white,
+                                height: 2,
+                                fontWeight: FontWeight.w100),
                           ),
-                          radius: 20,
-                        ),
-                        SizedBox(
-                          height: 5,
                         ),
                         Row(
                           children: [
-                            Text(
-                              _reels_items[index]["channelName"],
-                              //  reels_objects[index].channelName,
-                              style: GoogleFonts.ubuntu(color: Colors.white),
+                            SizedBox(
+                              height: 12,
                             ),
-                            SizedBox(width: 10),
+                            CircleAvatar(
+                              child: ClipRRect(
+                                child: Image.network(
+                                  _reels_items[index]["profilePic"],
+                                  //reels_objects[index].profilePic,
+                                  width: w * 0.5,
+                                  height: h * 0.5,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(w * 1),
+                              ),
+                              radius: 14,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Container(
+                              constraints: BoxConstraints(maxWidth: h * 0.27),
+                              padding: EdgeInsets.only(right: 1.0),
+                              child: Text(
+                                _reels_items[index]["channelName"],
+                                //  reels_objects[index].channelName,
+                                style: GoogleFonts.ubuntu(color: Colors.white),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(width: 1),
                             if (_reels_items[index]["isVerified"]
                             //reels_objects[index].isVerified
                             )
@@ -197,18 +221,17 @@ class _ShortsState extends State<ChannelShorts> {
                                 size: 15,
                                 color: Colors.blue,
                               ),
+                            SizedBox(width: 2),
                           ],
+                        ),
+                        Row(
+                          children: [],
                         ),
                         SizedBox(
                           height: 5,
                         ),
-                        Text(
-                          _reels_items[index]["description"],
-                          // reels_objects[index].description,
-                          style: GoogleFonts.ubuntu(
-                              color: Colors.white,
-                              height: 1,
-                              fontWeight: FontWeight.w500),
+                        Row(
+                          children: [],
                         ),
                       ],
                     ),
@@ -255,6 +278,13 @@ class _ShortsState extends State<ChannelShorts> {
                                   },
                                 ),
                               ),
+                        Text(
+                          Numeral(_reels_items[index]["likes"]).value(),
+                          style: GoogleFonts.ubuntu(
+                              color: Colors.white,
+                              height: 1,
+                              fontWeight: FontWeight.w100),
+                        ),
 //======= Some problem here..............................................
                         /*      FutureBuilder(
                           future: LikeServices().reelsLikeChecker(likeId),
@@ -356,7 +386,7 @@ class _ShortsState extends State<ChannelShorts> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Text(
-                                      "Millions",
+                                      "Are you sure?",
                                       style: GoogleFonts.ubuntu(
                                           fontWeight: FontWeight.bold),
                                     ),

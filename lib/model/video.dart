@@ -49,6 +49,7 @@ class Video {
     this.videoScore,
     this.videoSrc,
     this.views,
+    this.isVerified,
   });
 
   String category;
@@ -72,6 +73,7 @@ class Video {
   String videoSrc;
   int views;
   String profilePic;
+  bool isVerified;
 
   factory Video.fromMap(Map snapshot) {
     // print(snapshot["id"]);
@@ -97,6 +99,7 @@ class Video {
       videoScore: snapshot["videoScore"],
       videoSrc: snapshot["videoSrc"],
       views: snapshot["views"],
+      isVerified: snapshot["isVerified"],
     );
   }
 
@@ -123,6 +126,7 @@ class Video {
       "videoScore": videoScore,
       "videoSrc": videoSrc,
       "views": views,
+      "isVerified": isVerified,
     };
   }
 }

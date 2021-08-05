@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,7 +59,7 @@ class _Page8State extends State<Page8> {
           .then((doc) {
         if (doc.exists) {
           setState(() {
-            followStatus = "Unfollow";
+            followStatus = "Following";
           });
         } else {
           setState(() {
@@ -79,7 +80,7 @@ class _Page8State extends State<Page8> {
           .doc("followers/$docID")
           .delete()
           .whenComplete(() {
-        _showToast(context, "Unfollowed " + cname);
+        _showToast(context, "Following " + cname);
         FirebaseMessaging.instance.unsubscribeFromTopic(widget.channelId);
         setState(() {
           followStatus = "Follow";
@@ -102,7 +103,7 @@ class _Page8State extends State<Page8> {
         _showToast(context, "Following " + cname);
         FirebaseMessaging.instance.subscribeToTopic(widget.channelId);
         setState(() {
-          followStatus = "Unfollow";
+          followStatus = "Following";
         });
       }).catchError((error) => _showToast(context, "Failed to follow: $error"));
     } catch (e) {
@@ -156,6 +157,7 @@ class _Page8State extends State<Page8> {
         drawer: DefaultDrawer(),
         appBar: AppBar(
           backgroundColor: Colors.white,
+          title: Text("Video Search", style: GoogleFonts.ubuntu()),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
@@ -228,14 +230,14 @@ class _Page8State extends State<Page8> {
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: Container(
                       color: Colors.white,
-                      height: 160,
-                      width: MediaQuery.of(context).size.width * 0.90,
+                      height: 170,
+                      width: MediaQuery.of(context).size.width * 0.95,
                       child: Card(
                         elevation: 0,
                         child: Container(
-                          //color: Colors.white,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.0),
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8.0),
                             image: DecorationImage(
                               image: NetworkImage(
                                 (channel.channelArt == null ||
@@ -297,6 +299,9 @@ class _Page8State extends State<Page8> {
                                             ),
                                         ],
                                       ),
+                                      SizedBox(
+                                        height: 1,
+                                      ),
                                       Text(
                                         NumberFormat.compact()
                                                 .format(channel.subsribers)
@@ -309,7 +314,7 @@ class _Page8State extends State<Page8> {
                                       ),
                                       Padding(
                                         padding:
-                                            EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                            EdgeInsets.fromLTRB(0, 8, 0, 0),
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             primary: primary,
@@ -324,7 +329,7 @@ class _Page8State extends State<Page8> {
                                               );
                                             else {
                                               setState(() {
-                                                if (followStatus == "Unfollow")
+                                                if (followStatus == "Following")
                                                   unfollow(altUserId +
                                                       "_" +
                                                       channel.id);
@@ -373,14 +378,19 @@ class _Page8State extends State<Page8> {
                     child: Card(
                       elevation: 0,
                       color: Colors.white,
-                      child: Center(
-                          child: Text(
-                        "Loading Channel Details...",
-                        style: GoogleFonts.ubuntu(
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      )),
+                      child: Container(
+                        height: 170.0,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.grey,
+                        child: Center(
+                            child: Text(
+                          "Loading Channel Details...",
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 10,
+                            color: Colors.black,
+                          ),
+                        )),
+                      ),
                     ),
                   ),
                 );
@@ -544,25 +554,34 @@ class _Page8State extends State<Page8> {
                         }
                         if (snapshot.hasData) {
                           return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      primary: primary),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ChannelShorts(widget.channelId)),
-                                    );
-                                  },
-                                  child: Text(
-                                    "View all 30s of this channel",
-                                    style: GoogleFonts.ubuntu(fontSize: 15),
-                                  ),
+                              // height: MediaQuery.of(context).size.height * 0.25,
+                              child: Column(children: [
+                            CachedNetworkImage(
+                              imageUrl:
+                                  "https://millionsofficial.github.io/static/search.jpg",
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                            ),
+                            Center(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: primary, elevation: 0),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ChannelShorts(
+                                              widget.channelId,
+                                            )),
+                                  );
+                                },
+                                child: Text(
+                                  "View all 30s of this channel",
+                                  style: GoogleFonts.ubuntu(fontSize: 15),
                                 ),
-                              ));
+                              ),
+                            )
+                          ]));
                         } else {
                           return Container(
                               height: MediaQuery.of(context).size.height * 0.25,
@@ -596,7 +615,7 @@ class _Page8State extends State<Page8> {
                                 color: primary,
                               )));
                         }
-                        if (snapshot.hasData&&snapshot.data.exists) {
+                        if (snapshot.hasData && snapshot.data.exists) {
                           ChannelModel channelmodel =
                               ChannelModel.fromDoc(snapshot.data.data());
                           return Container(

@@ -13,6 +13,7 @@ import 'package:millions/widgets/popUpMenu.dart';
 // import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
 import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/widgets/reportPost.dart';
+import 'package:millions/widgets/skeletol_loader.dart';
 import 'package:numeral/numeral.dart';
 import 'package:share_plus/share_plus.dart';
 import '../constants/colors.dart';
@@ -150,14 +151,25 @@ class _PhotosState extends State<Photos> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              widget.photo.channelName,
-                              //content[this.widget.index].userName,
-                              style: GoogleFonts.ubuntu(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  height: 1.2,
-                                  fontWeight: FontWeight.bold),
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.57),
+
+                              // alignment: Alignment.bottomLeft,
+                              padding: EdgeInsets.only(right: 1.0),
+                              child: Text(
+                                widget.photo.channelName,
+
+                                //content[this.widget.index].userName,
+                                style: GoogleFonts.ubuntu(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    height: 1.2,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                             if (widget.photo.isVerified)
                               Icon(
@@ -218,7 +230,7 @@ class _PhotosState extends State<Photos> {
                   },
                   child: Container(
                     // height: 400,
-                    color: Colors.grey,
+                    // color: Colors.grey,
                     width: MediaQuery.of(context).size.width,
                     child: FittedBox(
                         fit: BoxFit.fill,
@@ -231,13 +243,14 @@ class _PhotosState extends State<Photos> {
                               heightFactor: 1,
                               child: CachedNetworkImage(
                                 placeholder: (context, thumbnailUrl) =>
-                                    Container(
-                                  height: 500.0,
+                                    SkeletonContainer.square(
                                   width: MediaQuery.of(context).size.width,
-                                  color: Colors.grey,
+                                  height: 500,
                                 ),
-                                errorWidget: (context, url, error) =>
-                                    SizedBox(width: 16),
+                                errorWidget: (context, url, error) => Container(
+                                  height: 1,
+                                  child: Text("hi"),
+                                ),
                                 imageUrl: widget.photo?.photoSrc == null
                                     ? altChannelArt
                                     : widget.photo?.photoSrc,

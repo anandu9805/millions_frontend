@@ -77,6 +77,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                         focusedBorder: UnderlineInputBorder(
@@ -86,6 +88,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                       ),
@@ -121,6 +125,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                         focusedBorder: UnderlineInputBorder(
@@ -130,6 +136,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                       ),
@@ -165,6 +173,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                         focusedBorder: UnderlineInputBorder(
@@ -174,6 +184,8 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                       ),
@@ -252,9 +264,6 @@ class _OTPPageWidgetState extends State<OTPPageWidget> {
                   )
                 ],
               ),
-              
-
-
             ],
           ),
         ),

@@ -33,11 +33,11 @@ class _UploadPageState extends State<UploadPage> {
 
   // var currentuserid =
   //     "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
-  var currentuserid =FirebaseAuth.instance.currentUser.uid;
+  var currentuserid = FirebaseAuth.instance.currentUser.uid;
   String fileName;
   String url;
   //List currentUserChannelDetails = [];
-    ChannelModel channelDetails;
+  ChannelModel channelDetails;
   List videoslist = [];
   File _videoFile;
   bool uploadComplete = false;
@@ -153,9 +153,9 @@ class _UploadPageState extends State<UploadPage> {
           .doc(currentuserid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
-             Map<String, dynamic> data =
-                      documentSnapshot.data() as Map<String, dynamic>;
-                  channelDetails = ChannelModel.fromDoc(data);
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+        channelDetails = ChannelModel.fromDoc(data);
       });
     } catch (e) {
       return "Channel Error";
@@ -355,15 +355,14 @@ class _UploadPageState extends State<UploadPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 0, 20),
-                    child: Text(
-                      'Upload',
-                      style: GoogleFonts.ubuntu(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 30,
-                      ),
-                    ),
-                  ),
+                      padding: EdgeInsets.fromLTRB(20, 60, 0, 30),
+                      child: Text(
+                        'Upload Video',
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800),
+                      )),
 
                   //----------------------
                   thumbanil != null
@@ -382,29 +381,42 @@ class _UploadPageState extends State<UploadPage> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: const Text(
-                                      'Millions',
+                                      'Select a video',
                                       style: TextStyle(color: primary),
-                                      textAlign: TextAlign.center,
+                                      textAlign: TextAlign.left,
                                     ),
                                     content: SingleChildScrollView(
                                       child: ListBody(
                                         children: const <Widget>[
-                                          Text('Upload Post from:'),
+                                          Text(
+                                              'Please select a video from your gallery or capture one.'),
                                         ],
                                       ),
                                     ),
                                     actions: <Widget>[
                                       TextButton(
-                                        child: const Text('Gallery'),
+                                        child: Text(
+                                          'Record a video',
+                                          style: GoogleFonts.ubuntu(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w400),
+                                        ),
                                         onPressed: () {
-                                          _fromgallery();
+                                          _selectVideo();
                                           Navigator.of(context).pop();
                                         },
                                       ),
                                       TextButton(
-                                        child: const Text('Record a video'),
+                                        child: Text(
+                                          'Gallery',
+                                          style: GoogleFonts.ubuntu(
+                                              fontSize: 16,
+                                              color: primary,
+                                              fontWeight: FontWeight.w400),
+                                        ),
                                         onPressed: () {
-                                          _selectVideo();
+                                          _fromgallery();
                                           Navigator.of(context).pop();
                                         },
                                       ),
@@ -418,7 +430,7 @@ class _UploadPageState extends State<UploadPage> {
                             _showMyDialog();
                           },
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                             child: Card(
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               color: Color(0xFFF5F5F5),
@@ -428,45 +440,49 @@ class _UploadPageState extends State<UploadPage> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                    padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                                     child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Image.network(
-                                          'https://image.flaticon.com/icons/png/512/262/262530.png',
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ],
-                                    ),
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Icon(
+                                            Icons.cloud_upload,
+                                            color: primary,
+                                            size: 40,
+                                          )
+                                        ]),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Upload Video',
+                                          'Select a video',
                                           textAlign: TextAlign.start,
                                           style: GoogleFonts.ubuntu(
                                             color: primary,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 30,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 20,
                                           ),
                                         ),
                                       ],
                                     ),
+                                  ),
+                                  Text(
+                                    'Your videos will be public after you publish them',
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.ubuntu(
+                                      // color: primary,
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 25,
                                   ),
                                 ],
                               ),
@@ -518,6 +534,8 @@ class _UploadPageState extends State<UploadPage> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -528,6 +546,8 @@ class _UploadPageState extends State<UploadPage> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                       ),
@@ -566,6 +586,8 @@ class _UploadPageState extends State<UploadPage> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -576,6 +598,8 @@ class _UploadPageState extends State<UploadPage> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                       ),
@@ -816,6 +840,9 @@ class _UploadPageState extends State<UploadPage> {
                             ),
                           ),
                         ),
+                  SizedBox(
+                    height: 45,
+                  ),
                 ],
               ),
             ),

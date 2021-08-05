@@ -345,28 +345,36 @@ class _Screen9State extends State<Screen9> {
                               }
                               if (snapshot.hasData) {
                                 return Container(
+                                    // height: MediaQuery.of(context).size.height *
+                                    //     0.25,
+                                    child: Column(children: [
+                                  CachedNetworkImage(
+                                    imageUrl:
+                                        "https://millionsofficial.github.io/static/search.jpg",
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
                                     height: MediaQuery.of(context).size.height *
-                                        0.25,
-                                    child: Center(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            primary: primary),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FollowersShorts(
-                                                        followersId)),
-                                          );
-                                        },
-                                        child: Text(
-                                          "View all 30s of your followers",
-                                          style:
-                                              GoogleFonts.ubuntu(fontSize: 15),
-                                        ),
+                                        0.4,
+                                  ),
+                                  Center(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: primary, elevation: 0),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FollowersShorts(followersId)),
+                                        );
+                                      },
+                                      child: Text(
+                                        "View all 30s of your followers",
+                                        style: GoogleFonts.ubuntu(fontSize: 15),
                                       ),
-                                    ));
+                                    ),
+                                  )
+                                ]));
                               } else {
                                 return Container(
                                     height: MediaQuery.of(context).size.height *
