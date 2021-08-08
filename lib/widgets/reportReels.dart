@@ -30,6 +30,11 @@ class _ReportReelsState extends State<ReportReels> {
     });
   }
 
+  TextEditingController _reportDetail = TextEditingController();
+  OutlineInputBorder outlineInputBorder = const OutlineInputBorder(
+    borderSide: const BorderSide(color: primary, width: 0.0),
+  );
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -98,6 +103,28 @@ class _ReportReelsState extends State<ReportReels> {
               SizedBox(
                 height: 30,
               ),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: TextField(
+                  controller: _reportDetail,
+                  decoration: InputDecoration(
+                    fillColor: primary,
+                    focusColor: primary,
+                    labelText: "Comment your reason",
+                    enabledBorder: outlineInputBorder,
+                    focusedBorder: outlineInputBorder,
+                    labelStyle: TextStyle(
+                      color: primary,
+                    ),
+                    // hintStyle: TextStyle(color: Colors.white),
+                    border: outlineInputBorder,
+                  ),
+                  cursorColor: primary,
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -116,8 +143,9 @@ class _ReportReelsState extends State<ReportReels> {
                     onPressed: () {
                       // print(reasons[value].toString());
                       print(selectedreason);
-                      ReportServices()
-                          .reportReels(widget.reels, selectedreason.toString());
+                      ReportServices().reportReels(widget.reels,
+                          selectedreason.toString(), _reportDetail.text);
+                      _reportDetail.clear();
                       setState(() {
                         selected = -1;
                       });

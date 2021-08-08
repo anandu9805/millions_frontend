@@ -19,7 +19,7 @@ class Comment extends StatefulWidget {
 class _CommentState extends State<Comment> {
   TextEditingController replyController = TextEditingController();
   bool liked = false;
-  bool disliked =false;
+  bool disliked = false;
   // @override
   // void initState() {
 
@@ -30,7 +30,7 @@ class _CommentState extends State<Comment> {
   void initState() {
     likeId = altUserId + '_' + widget.comment.commentId;
     Future<DocumentSnapshot> likedData =
-    CommentServices().commentLikeChecker(likeId);
+        CommentServices().commentLikeChecker(likeId);
     likedData.then((value) {
       if (value == null) {
         setState(() {
@@ -186,13 +186,13 @@ class _CommentState extends State<Comment> {
               splashColor: primary,
               icon: liked
                   ? Icon(
-                Icons.thumb_up,
-                color: primary,
-              )
+                      Icons.thumb_up,
+                      color: primary,
+                    )
                   : Icon(
-                Icons.thumb_up_outlined,
-                color: primary,
-              ),
+                      Icons.thumb_up_outlined,
+                      color: primary,
+                    ),
               onPressed: () {
                 print("pressed like");
                 CommentServices().likeComment(
@@ -208,6 +208,7 @@ class _CommentState extends State<Comment> {
                     widget.comment.videoId,
                     widget.comment.videoTitle);
                 setState(() {
+                  widget.comment.likes++;
                   liked = true;
                   disliked = false;
                 });
@@ -238,13 +239,13 @@ class _CommentState extends State<Comment> {
               splashColor: primary,
               icon: disliked
                   ? Icon(
-                Icons.thumb_down,
-                color: primary,
-              )
+                      Icons.thumb_down,
+                      color: primary,
+                    )
                   : Icon(
-                Icons.thumb_down_alt_outlined,
-                color: primary,
-              ),
+                      Icons.thumb_down_alt_outlined,
+                      color: primary,
+                    ),
               onPressed: () {
                 print("pressed dislike");
                 CommentServices().dislikeComment(

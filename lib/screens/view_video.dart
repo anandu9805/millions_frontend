@@ -132,100 +132,6 @@ class _ViewVideoState extends State<ViewVideo> {
 
   int selected = -1;
 
-  void onChanged(int value) {
-    setState(() {
-      this.selected = value;
-      print('Pilihan: ${this.selected}');
-    });
-  }
-
-  reportPopUp(h, context) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            insetPadding:
-                EdgeInsets.symmetric(vertical: h * 0.15, horizontal: 20),
-            actions: [
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  "Report",
-                  style: TextStyle(color: primary),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(color: primary),
-                ),
-              ),
-            ],
-            title: Text("Report video"),
-            content: Column(
-              children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                          "If you belive this content is against our guidelines, kindly report. Your identity will not be revealed"),
-                    )
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    RadioListTile(
-                      value: 0,
-                      groupValue: this.selected,
-                      onChanged: (int value) {
-                        onChanged(value);
-                      },
-                      title: Text('Pria'),
-                      activeColor: Colors.red,
-                      secondary: Icon(Icons.group),
-                    ),
-                    RadioListTile(
-                      value: 1,
-                      groupValue: this.selected,
-                      onChanged: (int value) {
-                        onChanged(value);
-                      },
-                      title: Text('Wanita'),
-                      activeColor: Colors.red,
-                      secondary: Icon(Icons.group),
-                    )
-                    // RadioListTile<SingingCharacter>(
-                    //   title: const Text('Lafayette'),
-                    //   value: SingingCharacter.lafayette,
-                    //   groupValue: _character,
-                    //   onChanged: (SingingCharacter value) {
-                    //     setState(() {
-                    //       _character = value;
-                    //     });
-                    //   },
-                    // ),
-                    // RadioListTile<SingingCharacter>(
-                    //   title: const Text('Thomas Jefferson'),
-                    //   value: SingingCharacter.jefferson,
-                    //   groupValue: _character,
-                    //   onChanged: (SingingCharacter value) {
-                    //     setState(() {
-                    //       _character = value;
-                    //     });
-                    //   },
-                    // ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        });
-    ReportServices().reportVideo(widget.video, "Against law");
-  }
-
   @override
   void dispose() {
     // flickManager.dispose();
@@ -612,6 +518,7 @@ class _ViewVideoState extends State<ViewVideo> {
                             ),
                             TextButton(
                               onPressed: () {
+                                
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

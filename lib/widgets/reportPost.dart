@@ -31,8 +31,13 @@ class _ReportPostState extends State<ReportPost> {
     });
   }
 
+  TextEditingController _reportDetail = TextEditingController();
+  OutlineInputBorder outlineInputBorder = const OutlineInputBorder(
+    borderSide: const BorderSide(color: primary, width: 0.0),
+  );
   @override
   Widget build(BuildContext context) => Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Report Post'),
           backgroundColor: primary,
@@ -99,6 +104,28 @@ class _ReportPostState extends State<ReportPost> {
               SizedBox(
                 height: 30,
               ),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: TextField(
+                  controller: _reportDetail,
+                  decoration: InputDecoration(
+                    fillColor: primary,
+                    focusColor: primary,
+                    labelText: "Comment your reason",
+                    enabledBorder: outlineInputBorder,
+                    focusedBorder: outlineInputBorder,
+                    labelStyle: TextStyle(
+                      color: primary,
+                    ),
+                    // hintStyle: TextStyle(color: Colors.white),
+                    border: outlineInputBorder,
+                  ),
+                  cursorColor: primary,
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -117,8 +144,10 @@ class _ReportPostState extends State<ReportPost> {
                     onPressed: () {
                       // print(reasons[value].toString());
                       print(selectedreason);
-                      ReportServices()
-                          .reportPost(widget.post, selectedreason.toString());
+                      ReportServices().reportPost(widget.post,
+                          selectedreason.toString(), _reportDetail.text);
+                      _reportDetail.clear();
+
                       setState(() {
                         selected = -1;
                       });

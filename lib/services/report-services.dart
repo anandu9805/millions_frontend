@@ -6,7 +6,7 @@ import 'package:millions/model/video.dart';
 import 'package:millions/screens/shorts.dart';
 
 class ReportServices {
-  reportVideo(Video video, String reason) async {
+  reportVideo(Video video, String reason,String reportDetail) async {
     print(reason);
     print(video.id);
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
@@ -14,7 +14,8 @@ class ReportServices {
       {
         'lastReported': DateTime.now(),
         'metaData': video.toJson(),
-        'reasonDetail': FieldValue.arrayUnion([reason]),
+       'reason': FieldValue.arrayUnion([reason]),
+        'reasonDetail': FieldValue.arrayUnion([reportDetail]),
         'reportCount': FieldValue.increment(1),
         'reportType': "videos",
         'reportStatus': "Active"
@@ -26,7 +27,7 @@ class ReportServices {
     print(reason);
   }
 
-  reportPost(PostDetail post, String reason) async {
+  reportPost(PostDetail post, String reason,String reportDetail) async {
     print(reason);
     print(post.id);
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
@@ -34,7 +35,8 @@ class ReportServices {
       {
         'lastReported': DateTime.now(),
         'metaData': post.toJson(),
-        'reasonDetail': FieldValue.arrayUnion([reason]),
+        'reason': FieldValue.arrayUnion([reason]),
+        'reasonDetail': FieldValue.arrayUnion([reportDetail]),
         'reportCount': FieldValue.increment(1),
         'reportType': "posts",
         'reportStatus': "Active"
@@ -46,7 +48,7 @@ class ReportServices {
     print(reason);
   }
 
-  reportReels(Reels reel, String reason) async {
+  reportReels(Reels reel, String reason,String reportDetail) async {
     print(reason);
     print(reel.id);
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
@@ -54,7 +56,8 @@ class ReportServices {
       {
         'lastReported': DateTime.now(),
         'metaData': reel.toJson(),
-        'reasonDetail': FieldValue.arrayUnion([reason]),
+        'reason': FieldValue.arrayUnion([reason]),
+        'reasonDetail': FieldValue.arrayUnion([reportDetail]),
         'reportCount': FieldValue.increment(1),
         'reportType': "30s",
         'reportStatus': "Active"
@@ -66,7 +69,7 @@ class ReportServices {
     print(reason);
   }
 
-  reportChannel(ChannelModel channel, String reason) async {
+  reportChannel(ChannelModel channel, String reason,String reportDetail) async {
     print(reason);
     print(channel.id);
     // var newId = FirebaseFirestore.instance.collection('reports').doc();
@@ -74,7 +77,8 @@ class ReportServices {
       {
         'lastReported': DateTime.now(),
         'metaData': channel.toJson(),
-        'reasonDetail': FieldValue.arrayUnion([reason]),
+        'reason': FieldValue.arrayUnion([reason]),
+        'reasonDetail': FieldValue.arrayUnion([reportDetail]),
         'reportCount': FieldValue.increment(1),
         'reportType': "channel",
         'reportStatus': "Active"

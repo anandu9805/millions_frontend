@@ -8,8 +8,10 @@ import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/reelsLike.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:millions/screens/reelsComments.dart';
 import 'package:millions/screens/uploadvideo.dart';
 import 'package:millions/services/likeServices.dart';
+import 'package:millions/widgets/comments.dart';
 import 'package:millions/widgets/reportReels.dart';
 import 'package:numeral/numeral.dart';
 import '../model/reels_model.dart';
@@ -402,7 +404,7 @@ class _ShortsState extends State<Shorts> {
                                 height: 1,
                                 fontWeight: FontWeight.w100),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 10),
                           IconButton(
                             onPressed: () async {
                               parameters = ['30s'];
@@ -423,7 +425,7 @@ class _ShortsState extends State<Shorts> {
                               color: Colors.white,
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 10),
                           IconButton(
                             onPressed: () {
                               Navigator.push(
@@ -437,6 +439,25 @@ class _ShortsState extends State<Shorts> {
                             }, //reels report function
                             icon: Icon(
                               Icons.flag_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ShortsComments(
+                                            commentId: _reels_items[index]
+                                                ["id"],
+                                            post: Reels.fromMap(
+                                              _reels_items[index].data(),
+                                            ),
+                                          )));
+                            }, //reels report function
+                            icon: Icon(
+                              Icons.comment_outlined,
                               color: Colors.white,
                             ),
                           ),

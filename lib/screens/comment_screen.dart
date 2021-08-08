@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,6 +44,7 @@ class _CommentsState extends State<Comments> {
   _getComments() async {
     Query q = FirebaseFirestore.instance
         .collection("comments")
+        .where('videoId', isEqualTo: widget.videoId)
         .orderBy("date", descending: true)
         .limit(_perPage);
 
@@ -51,7 +53,9 @@ class _CommentsState extends State<Comments> {
     });
     QuerySnapshot querySnapshot = await q.get();
     _comments = querySnapshot.docs;
-    _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    _lastDocument = querySnapshot.docs.length.toInt() == 0
+        ? null
+        : querySnapshot.docs[querySnapshot.docs.length - 1];
     setState(() {
       _loadingComments = false;
     });
@@ -87,7 +91,7 @@ class _CommentsState extends State<Comments> {
   @override
   void initState() {
     super.initState();
-  
+
     profilePic = UserServices().getUserDetails(altUserId);
     _getComments();
     _scrollController.addListener(() {
@@ -99,6 +103,11 @@ class _CommentsState extends State<Comments> {
         _getMoreComments();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -159,11 +168,15 @@ class _CommentsState extends State<Comments> {
                             widget.video.channelId,
                             widget.video.channelName,
                             getcomment.text,
-                            commentId,
+                            altUserId +
+                                '-' +
+                                DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
                             isOwner,
                             "watch/" + widget.video.id,
-                            widget.video.channelName,
-                            altProfilePic,
+                            FirebaseAuth.instance.currentUser.displayName,
+                            FirebaseAuth.instance.currentUser.photoURL,
                             "main-comment",
                             uniqueId,
                             "video",
@@ -208,45 +221,45 @@ class _CommentsState extends State<Comments> {
             Container(
               child: _loadingComments
                   ? Center(
-                  child: Container(
-                    child: CircularProgressIndicator(
-                      color: primary,
-                    ),
-                  ))
+                      child: Container(
+                      child: CircularProgressIndicator(
+                        color: primary,
+                      ),
+                    ))
                   : _comments.length == 0
-                  ? Center(
-                  child: Container(
-                    child: Text('No posts to show!',
-                        style: GoogleFonts.ubuntu(fontSize: 15)),
-                  ))
-                  : Column(
-                children: [
-                  ListView.builder(
-                      itemCount: _comments.length,
-                      controller: _scrollController,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext ctx, int index) {
-                        CommentModel comment = CommentModel.fromMap(
-                            _comments[index].data());
-                        List<QueryDocumentSnapshot<Object>>
-                        replyComments = _comments
-                            .where((o) =>
-                        o['commentId'] ==
-                            'reply-' + comment.commentId)
-                            .toList();
-                        if (comment.commentId
-                            .contains(new RegExp(r'reply'))) {
-                          print(123);
-                          return Container();
-                        } else {
-                          return Comment(
-                              comment: comment,
-                              replies: replyComments);
-                        }
-                      })
-                ],
-              ),
+                      ? Center(
+                          child: Container(
+                          child: Text('No posts to show!',
+                              style: GoogleFonts.ubuntu(fontSize: 15)),
+                        ))
+                      : Column(
+                          children: [
+                            ListView.builder(
+                                itemCount: _comments.length,
+                                controller: _scrollController,
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext ctx, int index) {
+                                  CommentModel comment = CommentModel.fromMap(
+                                      _comments[index].data());
+                                  List<QueryDocumentSnapshot<Object>>
+                                      replyComments = _comments
+                                          .where((o) =>
+                                              o['commentId'] ==
+                                              'reply-' + comment.commentId)
+                                          .toList();
+                                  if (comment.commentId
+                                      .contains(new RegExp(r'reply'))) {
+                                    print(123);
+                                    return Container();
+                                  } else {
+                                    return Comment(
+                                        comment: comment,
+                                        replies: replyComments);
+                                  }
+                                })
+                          ],
+                        ),
               // child: StreamBuilder(
               //   stream: CommentServices()
               //       .getVideoComments(widget.videoId.toString()),

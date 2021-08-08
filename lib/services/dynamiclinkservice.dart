@@ -90,7 +90,7 @@ class DynamicLinkService {
           title: 'Millions',
           description: 'Watch Stream Earn Anywhere Anytime',
           imageUrl: Uri.parse(
-              "https://images.pexels.com/photos/3841338/pexels-photo-3841338.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260")
+              "https://firebasestorage.googleapis.com/v0/b/millions-video.appspot.com/o/shareimage%2Fshareimage.png?alt=media&token=4cf9813c-b16e-49b6-ae19-ef1e91867ce9")
       ),
       // ),
     );

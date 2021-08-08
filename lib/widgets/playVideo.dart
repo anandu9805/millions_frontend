@@ -136,15 +136,17 @@ class _PlayVideoState extends State<PlayVideo> {
   bool isAdOpen = true;
   dynamic adSrc;
   bool _isPlaying = false;
+  bool _showSkip = false;
   Duration _duration;
   Duration _position;
+  Duration _adPosition;
   bool _isEnd = false;
 
   Future<dynamic> getAdVideo() {
     FirebaseFirestore.instance
         .collection('ads')
         .limit(1)
-        .where("showAdIn", whereIn: ["Kollam","IN"])
+        .where("showAdIn", whereIn: ["Kollam", "IN"])
         .get()
         .then((value) {
           print(value.docs.single['videoSrc']);
@@ -194,7 +196,6 @@ class _PlayVideoState extends State<PlayVideo> {
             setState(() {
               _position = _videoPlayerController2.value.position;
             });
-            print((_position.inSeconds / widget.video.duration));
 
             if ((_position.inSeconds / widget.video.duration) > 0.7) {
               FirebaseFirestore.instance
@@ -219,14 +220,27 @@ class _PlayVideoState extends State<PlayVideo> {
           })
           ..initialize();
     _videoPlayerController1 = VideoPlayerController.network(
-        "https://firebasestorage.googleapis.com/v0/b/millions-video.appspot.com/o/ads%2Fupload-1622827623432.webm?alt=media&token=5a617958-4ab6-4f1b-b2ac-89ab2c99cf0a");
+      "https://firebasestorage.googleapis.com/v0/b/millions-video.appspot.com/o/ads%2Fupload-1622827623432.webm?alt=media&token=5a617958-4ab6-4f1b-b2ac-89ab2c99cf0a",
+    )..addListener(() {
+        setState(() {
+          _position = _videoPlayerController1.value.position;
+        });
+        if (_position.inSeconds == 10) {
+          setState(() {
+            _showSkip = true;
+          });
+        }
+      });
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController1,
       aspectRatio: _videoPlayerController1.value.aspectRatio,
       autoPlay: true,
       looping: false,
       showControls: false,
+      showOptions: false,
       autoInitialize: true,
+      
+      allowPlaybackSpeedChanging: false,
     );
   }
 
@@ -265,18 +279,23 @@ class _PlayVideoState extends State<PlayVideo> {
                           aspectRatio:
                               _videoPlayerController2.value.aspectRatio,
                           autoPlay: true,
-                          looping: true,
+                          showOptions: false,
+                          looping: false,
+                          allowPlaybackSpeedChanging: true,
+                          playbackSpeeds: [0.5, 0.75, 1, 1.5, 2],
                           autoInitialize: true,
                         );
                       });
                     },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text(
-                        "Skip",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    child: _showSkip
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(vertical: 100.0),
+                            child: Text(
+                              "Skip",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        : Container(),
                   )
                 : Container(),
           ),

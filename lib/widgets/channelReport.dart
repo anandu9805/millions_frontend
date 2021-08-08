@@ -32,6 +32,11 @@ class _ReportChannelState extends State<ReportChannel> {
     });
   }
 
+  TextEditingController _reportDetail = TextEditingController();
+  OutlineInputBorder outlineInputBorder = const OutlineInputBorder(
+    borderSide: const BorderSide(color: primary, width: 0.0),
+  );
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -100,6 +105,28 @@ class _ReportChannelState extends State<ReportChannel> {
               SizedBox(
                 height: 30,
               ),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: TextField(
+                  controller: _reportDetail,
+                  decoration: InputDecoration(
+                    fillColor: primary,
+                    focusColor: primary,
+                    labelText: "Comment your reason",
+                    enabledBorder: outlineInputBorder,
+                    focusedBorder: outlineInputBorder,
+                    labelStyle: TextStyle(
+                      color: primary,
+                    ),
+                    // hintStyle: TextStyle(color: Colors.white),
+                    border: outlineInputBorder,
+                  ),
+                  cursorColor: primary,
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -119,7 +146,8 @@ class _ReportChannelState extends State<ReportChannel> {
                       // print(reasons[value].toString());
                       print(selectedreason);
                       ReportServices().reportChannel(
-                          widget.channel, selectedreason.toString());
+                          widget.channel, selectedreason.toString(),_reportDetail.text);
+                          _reportDetail.clear();
                       setState(() {
                         selected = -1;
                       });

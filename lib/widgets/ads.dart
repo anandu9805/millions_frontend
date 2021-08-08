@@ -106,11 +106,13 @@ class _AdPostState extends State<AdPost> {
                                 if (loadingProgress == null) return child;
                                 return Container(
                                   //padding: const EdgeInsets.only(top: 20, bottom:20),
-                                  height: MediaQuery.of(context).size.height * 0.25,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.25,
                                   child: Center(
                                     child: CircularProgressIndicator(
                                       color: primary,
-                                      value: loadingProgress.expectedTotalBytes !=
+                                      value: loadingProgress
+                                                  .expectedTotalBytes !=
                                               null
                                           ? loadingProgress
                                                   .cumulativeBytesLoaded /

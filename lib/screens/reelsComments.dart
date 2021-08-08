@@ -5,22 +5,24 @@ import 'package:millions/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/newpost_model.dart';
+import 'package:millions/model/reels_model.dart';
 import 'package:millions/model/video.dart';
+import 'package:millions/screens/shorts.dart';
 import 'package:millions/services/commentServices.dart';
 import 'package:millions/services/userService.dart';
 import 'package:millions/widgets/comments.dart';
 import 'package:millions/model/comment_model.dart';
 
-class PostComments extends StatefulWidget {
+class ShortsComments extends StatefulWidget {
   final String commentId;
-  final PostDetail post;
+  final Reels post;
 
-  const PostComments({Key key, this.commentId, this.post}) : super(key: key);
+  const ShortsComments({Key key, this.commentId, this.post}) : super(key: key);
   @override
-  _PostCommentsState createState() => _PostCommentsState();
+  _ShortsCommentsState createState() => _ShortsCommentsState();
 }
 
-class _PostCommentsState extends State<PostComments> {
+class _ShortsCommentsState extends State<ShortsComments> {
   // void like(int id) {
   //   setState(() {
   //     print(id);
@@ -98,13 +100,13 @@ class _PostCommentsState extends State<PostComments> {
                             getcomment.text,
                             altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString(),
                             isOwner,
-                            "posts/" + widget.post.id,
+                            "reels/" + widget.post.id,
                             FirebaseAuth.instance.currentUser.displayName,
                             FirebaseAuth.instance.currentUser.photoURL,
                             "main-comment",
                             uniqueId,
-                            "posts",
-                            FirebaseAuth.instance.currentUser.uid,
+                            "reels",
+                            altUserId,
                             widget.post.id,
                             widget.post.title);
                       }
