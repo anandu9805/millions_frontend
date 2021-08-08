@@ -125,11 +125,11 @@ class _HomePageState extends State<HomePage> {
       home: Scaffold(
         key: _drawerKey,
         drawer: DefaultDrawer(),
-        appBar: PreferredSize(
+        appBar: page!=1? PreferredSize(
           preferredSize: Size.fromHeight(
             (h) * (1 / 13),
           ),
-          child: AppBar(
+          child:  AppBar(
             leading: Container(
               color: Colors.white,
               width: w / 4,
@@ -229,7 +229,7 @@ class _HomePageState extends State<HomePage> {
             ],
             backgroundColor: Colors.white,
           ),
-        ),
+        ):SizedBox(),
         body: pages[page],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: page,

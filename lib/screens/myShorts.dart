@@ -6,6 +6,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:millions/screens/edit30s.dart';
 import 'package:millions/services/dynamiclinkservice.dart';
 import 'package:millions/services/likeServices.dart';
+import 'package:millions/widgets/reportReels.dart';
 import 'package:numeral/numeral.dart';
 import 'package:share_plus/share_plus.dart';
 import '../model/reels_model.dart';
@@ -363,21 +364,22 @@ class _ShortsState extends State<ChannelShorts> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      Edit30s(_reels_items[index]["id"])),
-                            );
-                          }, //reels edit function
-                          icon: Icon(
-                            Icons.edit,
-                            color: Colors.white,
+                        if (widget.channelId == altUserId)
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Edit30s(_reels_items[index]["id"])),
+                              );
+                            }, //reels edit function
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20),
+                        if (widget.channelId == altUserId) SizedBox(height: 20),
                         IconButton(
                           onPressed: () {
                             if (widget.channelId == altUserId) {
@@ -425,6 +427,15 @@ class _ShortsState extends State<ChannelShorts> {
                                   );
                                 },
                               );
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ReportReels(
+                                      reels: Reels.fromMap(
+                                          _reels_items[index].data()),
+                                    ),
+                                  ));
                             }
                           }, //reels report/delete function
                           icon: Icon(
