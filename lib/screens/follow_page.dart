@@ -22,7 +22,7 @@ class Screen9 extends StatefulWidget {
 
 class _Screen9State extends State<Screen9> {
   UserDetail user;
-  List followersId = [];
+  List<String> followersId = [];
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
