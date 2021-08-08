@@ -9,7 +9,7 @@ import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/post_coments.dart';
 import 'package:millions/services/likeServices.dart';
 import 'package:millions/widgets/popUpMenu.dart';
-// import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
+import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
 import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/widgets/reportPost.dart';
 import 'package:share_plus/share_plus.dart';
@@ -38,7 +38,7 @@ class _PhotosState extends State<Photos> {
 
   IconData like = Icons.favorite_border;
   bool liked = false;
-  String currentuserid = "4C4iLByizTPLBBlP4rssrwGTISb2";
+  //String altUserId = "4C4iLByizTPLBBlP4rssrwGTISb2";
   String likeId;
 
   String dynamic_link;
@@ -192,8 +192,8 @@ class _PhotosState extends State<Photos> {
                   // );
                 },
                 child:
-                    // PinchZoomImage(
-                    //image:
+                     InteractiveViewer(
+                    child:
                     Image.network(
                   widget.photo.photoSrc == null
                       ? altChannelArt
@@ -215,9 +215,9 @@ class _PhotosState extends State<Photos> {
                   //content[this.widget.index].url,
                   // fit: BoxFit.fill,
                 ),
-                //  zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
+                // zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
                 //hideStatusBarWhileZooming: true,
-                //  ),
+                  ),
               ),
               SizedBox(height: 10),
               Row(
