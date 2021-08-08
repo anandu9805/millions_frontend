@@ -11,10 +11,9 @@ import 'package:millions/screens/followersShorts.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/widgets/photos.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 
 // import 'package:millions/screens/page8.dart';
-
 
 class Screen9 extends StatefulWidget {
   @override
@@ -22,7 +21,7 @@ class Screen9 extends StatefulWidget {
 }
 
 class _Screen9State extends State<Screen9> {
- UserDetail user;
+  UserDetail user;
   List followersId = [];
   @override
   Widget build(BuildContext context) {
@@ -52,8 +51,12 @@ class _Screen9State extends State<Screen9> {
                 temp = temp - 1;
               }
               //print(followersId);
-              if(followersId.isEmpty)
-              return Center(child: Text("You are not following any channels!", style: GoogleFonts.ubuntu(fontSize: 20),));
+              if (followersId.isEmpty)
+                return Center(
+                    child: Text(
+                  "You are not following any channels!",
+                  style: GoogleFonts.ubuntu(fontSize: 20),
+                ));
               CollectionReference channels =
                   FirebaseFirestore.instance.collection('channels');
               return Column(
@@ -62,7 +65,6 @@ class _Screen9State extends State<Screen9> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        
                         width: MediaQuery.of(context).size.width,
                         height: h * 0.16,
                         child: ListView.builder(
@@ -77,6 +79,7 @@ class _Screen9State extends State<Screen9> {
                                 }
 
                                 if (snapshot.connectionState ==
+                                    // ""
                                     ConnectionState.done) {
                                   //   flag=1;
                                   channeldata = snapshot.data.data()
@@ -87,16 +90,15 @@ class _Screen9State extends State<Screen9> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                            top: 5,
+                                            top: 8,
                                           ),
                                           child: InkWell(
                                             onTap: () {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Page8(d[index]
-                                                            ['channel'])),
+                                                    builder: (context) => Page8(
+                                                        d[index]['channel'])),
                                               );
                                             },
                                             child: CircleAvatar(
@@ -120,8 +122,16 @@ class _Screen9State extends State<Screen9> {
                                             ),
                                           ),
                                         ),
-                                        Text(channeldata['channelName'],
-                                            style: GoogleFonts.ubuntu())
+                                        Container(
+                                            width: w * 0.2,
+                                            alignment: Alignment.center,
+                                            padding:
+                                                EdgeInsets.only(right: 1.0),
+                                            child: Text(
+                                                channeldata['channelName'],
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.ubuntu(
+                                                    fontSize: 12)))
                                       ],
                                     ),
                                     SizedBox(
@@ -131,9 +141,21 @@ class _Screen9State extends State<Screen9> {
                                 }
 
                                 return Center(
-                                    child: Text("Loading..",
-                                        style:
-                                            GoogleFonts.ubuntu(fontSize: 15)));
+                                  child: CircleAvatar(
+                                    radius: w * 0.1,
+                                    child: ClipRRect(
+                                      child: Image.network(
+                                        altProfilePic,
+                                        width: w * 0.16,
+                                        height: w * 0.16,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.circular(w * 0.1),
+                                    ),
+                                    backgroundColor: Colors.white,
+                                  ),
+                                );
                               },
                             );
                           },
@@ -143,16 +165,22 @@ class _Screen9State extends State<Screen9> {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 9, left: 5),
+                    padding:
+                        const EdgeInsets.only(top: 20, left: 8, bottom: 12),
                     child: Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          'Follow',
+                          'Following',
                           style: GoogleFonts.ubuntu(
-                              fontSize: 25, color: Colors.black54),
+                              fontSize: 25,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w800),
                         )),
                   ),
-                  Divider(color: primary,thickness: 1.5,),
+                  Divider(
+                    color: primary,
+                    thickness: 1.5,
+                  ),
                   SizedBox(
                     height: 50,
                     child: AppBar(
@@ -289,62 +317,76 @@ class _Screen9State extends State<Screen9> {
                           ),
                         ),
                         SingleChildScrollView(
-                    child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('reels')
-                          .where('channelId', whereIn: followersId)
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                  child: CircularProgressIndicator(
-                                color: primary,
-                              )));
-                        }
-                        if (snapshot.data.docs.isEmpty) {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                  child: Text("No 30s videos to show!",
-                                      style:
-                                          GoogleFonts.ubuntu(fontSize: 15))));
-                        }
-                        if (snapshot.hasData) {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      primary: primary),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              FollowersShorts(followersId)),
-                                    );
-                                  },
-                                  child: Text(
-                                    "View all 30s of your followers",
-                                    style: GoogleFonts.ubuntu(fontSize: 15),
+                          child: StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('reels')
+                                .where('channelId', whereIn: followersId)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    child: Center(
+                                        child: CircularProgressIndicator(
+                                      color: primary,
+                                    )));
+                              }
+                              if (snapshot.data.docs.isEmpty) {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    child: Center(
+                                        child: Text("No 30s videos to show!",
+                                            style: GoogleFonts.ubuntu(
+                                                fontSize: 15))));
+                              }
+                              if (snapshot.hasData) {
+                                return Container(
+                                    // height: MediaQuery.of(context).size.height *
+                                    //     0.25,
+                                    child: Column(children: [
+                                  CachedNetworkImage(
+                                    imageUrl:
+                                        "https://millionsofficial.github.io/static/search.jpg",
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.4,
                                   ),
-                                ),
-                              ));
-                        } else {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                  child: Text("Unknown Error Occured!",
-                                      style:
-                                          GoogleFonts.ubuntu(fontSize: 15))));
-                        }
-                      },
-                    ),
-                  ),
+                                  Center(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: primary, elevation: 0),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FollowersShorts(followersId)),
+                                        );
+                                      },
+                                      child: Text(
+                                        "View all 30s of your followers",
+                                        style: GoogleFonts.ubuntu(fontSize: 15),
+                                      ),
+                                    ),
+                                  )
+                                ]));
+                              } else {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    child: Center(
+                                        child: Text("Unknown Error Occured!",
+                                            style: GoogleFonts.ubuntu(
+                                                fontSize: 15))));
+                              }
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),

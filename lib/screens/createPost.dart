@@ -17,7 +17,8 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
-  File dummy1=null, dummy2=null;var dummy3;
+  File dummy1 = null, dummy2 = null;
+  var dummy3;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -30,18 +31,17 @@ class _CreatePageState extends State<CreatePage> {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-          //  AppBarOthers(),
+            //  AppBarOthers(),
 
             Padding(
-              padding: EdgeInsets.fromLTRB(35, 30, 0, 20),
-              child: Text(
-                'Create',
-                style: GoogleFonts.ubuntu(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+                padding: EdgeInsets.fromLTRB(20, 60, 0, 30),
+                child: Text(
+                  'Create',
+                  style: GoogleFonts.ubuntu(
+                      fontSize: 25,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w800),
+                )),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: InkWell(
@@ -96,7 +96,8 @@ class _CreatePageState extends State<CreatePage> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => UploadPage()),
+                                      MaterialPageRoute(
+                                          builder: (context) => UploadPage()),
                                     );
                                   },
                                   icon: Icon(
@@ -170,7 +171,8 @@ class _CreatePageState extends State<CreatePage> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => UploadPost()),
+                                      MaterialPageRoute(
+                                          builder: (context) => UploadPost()),
                                     );
                                   },
                                   icon: Icon(
@@ -190,14 +192,18 @@ class _CreatePageState extends State<CreatePage> {
                 ),
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: InkWell(
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UploadReel(dummy1,dummy2,dummy3)),//-----------------------------------------------------------
+                    MaterialPageRoute(
+                        builder: (context) => UploadReel(dummy1, dummy2,
+                            dummy3)), //-----------------------------------------------------------
                   );
                 },
                 child: Container(
@@ -245,7 +251,11 @@ class _CreatePageState extends State<CreatePage> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => UploadReel(dummy1,dummy2,dummy3)),//-----------------------------------------------------------
+                                      MaterialPageRoute(
+                                          builder: (context) => UploadReel(
+                                              dummy1,
+                                              dummy2,
+                                              dummy3)), //-----------------------------------------------------------
                                     );
                                   },
                                   icon: Icon(
@@ -265,7 +275,9 @@ class _CreatePageState extends State<CreatePage> {
                 ),
               ),
             ),
-            SizedBox(height: 40,),
+            SizedBox(
+              height: 40,
+            ),
           ],
         ),
       ),

@@ -42,12 +42,14 @@ class Video {
     this.isVisible,
     this.language,
     this.likes,
+    this.profilePic,
     this.subscribers,
     this.thumbnailUrl,
     this.title,
     this.videoScore,
     this.videoSrc,
     this.views,
+    this.isVerified,
   });
 
   String category;
@@ -70,6 +72,8 @@ class Video {
   int videoScore;
   String videoSrc;
   int views;
+  String profilePic;
+  bool isVerified;
 
   factory Video.fromMap(Map snapshot) {
     // print(snapshot["id"]);
@@ -88,12 +92,14 @@ class Video {
       isVisible: snapshot["isVisible"],
       language: snapshot["language"],
       likes: snapshot["likes"],
+      profilePic: snapshot["profilePic"],
       subscribers: snapshot["subscribers"],
       thumbnailUrl: snapshot["thumbnail"],
       title: snapshot["title"],
       videoScore: snapshot["videoScore"],
       videoSrc: snapshot["videoSrc"],
       views: snapshot["views"],
+      isVerified: snapshot["isVerified"],
     );
   }
 
@@ -113,12 +119,14 @@ class Video {
       "isVisible": isVisible,
       "language": language,
       "likes": likes,
+      "profilePic": profilePic,
       "subscribers": subscribers,
       "thumbnailUrl": thumbnailUrl,
       "title": title,
       "videoScore": videoScore,
       "videoSrc": videoSrc,
       "views": views,
+      "isVerified": isVerified,
     };
   }
 }

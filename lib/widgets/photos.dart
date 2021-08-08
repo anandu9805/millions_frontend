@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_time_ago/flutter_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
@@ -9,13 +10,14 @@ import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/post_coments.dart';
 import 'package:millions/services/likeServices.dart';
 import 'package:millions/widgets/popUpMenu.dart';
-import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
 import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/widgets/reportPost.dart';
+import 'package:millions/widgets/skeletol_loader.dart';
+import 'package:numeral/numeral.dart';
 import 'package:share_plus/share_plus.dart';
 import '../constants/colors.dart';
 import '../services/dynamiclinkservice.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import '../services/dynamiclinkservice.dart';
 
 //import 'package:millions/screens/view_video.dart';
@@ -146,21 +148,35 @@ class _PhotosState extends State<Photos> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.photo.channelName,
-                          //content[this.widget.index].userName,
-                          style: GoogleFonts.ubuntu(
-                              color: Colors.black,
-                              fontSize: 15,
-                              height: 1.2,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          widget.photo.description,
-                          //widget.photo.title,
+                        Row(
+                          children: [
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.57),
 
-                          //content[this.widget.index].tagLine,
-                          style: GoogleFonts.ubuntu(),
+                              // alignment: Alignment.bottomLeft,
+                              padding: EdgeInsets.only(right: 1.0),
+                              child: Text(
+                                widget.photo.channelName,
+
+                                //content[this.widget.index].userName,
+                                style: GoogleFonts.ubuntu(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    height: 1.2,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (widget.photo.isVerified)
+                              Icon(
+                                Icons.verified_user,
+                                size: 20,
+                                color: Colors.grey,
+                              ),
+                          ],
                         ),
                       ],
                     ),
@@ -168,58 +184,122 @@ class _PhotosState extends State<Photos> {
                 ),
               ),
               SizedBox(height: 5),
-              InkWell(
-                onDoubleTap: () {
-                  if (liked == true) {
-                    //print(0);
-                    setState(() {
-                      liked = !liked;
-                    });
-                    LikeServices().unLikePost(
-                        widget.photo.id, widget.photo.channelId, altUserId);
-                  } else {
-                    //print(1);
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.92,
+                    // height: 200.0,
 
-                    setState(() {
-                      liked = !liked;
-                    });
-                    LikeServices().likePost(
-                        widget.photo.id, widget.photo.channelId, altUserId);
-                  }
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => ViewVideo()),
-                  // );
-                },
-                child:
-                     InteractiveViewer(
-                    child:
-                    Image.network(
-                  widget.photo.photoSrc == null
-                      ? altChannelArt
-                      : widget.photo.photoSrc,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: primary,
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes
-                            : null,
-                      ),
-                    );
-                  },
+                    child: Text(
+                      widget.photo.description,
+                      textAlign: TextAlign.left,
 
-                  //content[this.widget.index].url,
-                  // fit: BoxFit.fill,
-                ),
-                // zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
-                //hideStatusBarWhileZooming: true,
-                  ),
+                      //content[this.widget.index].tagLine,
+                      style: GoogleFonts.ubuntu(),
+                    ),
+                  )
+                ],
               ),
+
+              SizedBox(height: 5),
+
+              InkWell(
+                  onDoubleTap: () {
+                    if (liked == true) {
+                      //print(0);
+                      setState(() {
+                        liked = !liked;
+                      });
+                      LikeServices().unLikePost(
+                          widget.photo.id, widget.photo.channelId, altUserId);
+                    } else {
+                      //print(1);
+
+                      setState(() {
+                        liked = !liked;
+                      });
+                      LikeServices().likePost(
+                          widget.photo.id, widget.photo.channelId, altUserId);
+                    }
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => ViewVideo()),
+                    // );
+                  },
+                  child: Container(
+                    // height: 400,
+                    // color: Colors.grey,
+                    width: MediaQuery.of(context).size.width,
+                    child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: ClipRect(
+                          // clipBehavior: Clip.hardEdge,
+                          child: Container(
+                            child: Align(
+                              alignment: Alignment(-0.5, -0.2),
+                              widthFactor: 1,
+                              heightFactor: 1,
+                              child: CachedNetworkImage(
+                                placeholder: (context, thumbnailUrl) =>
+                                    SkeletonContainer.square(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 500,
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  height: 1,
+                                  child: Text("hi"),
+                                ),
+                                imageUrl: widget.photo?.photoSrc == null
+                                    ? altChannelArt
+                                    : widget.photo?.photoSrc,
+                              ),
+                            ),
+                          ),
+                        )),
+                  )
+                  // PinchZoomImage(
+                  //image:
+                  //     Image.network(
+                  //   widget.photo.photoSrc == null
+                  //       ? altChannelArt
+                  //       : widget.photo.photoSrc,
+                  //   loadingBuilder: (BuildContext context, Widget child,
+                  //       ImageChunkEvent loadingProgress) {
+                  //     if (loadingProgress == null) return child;
+                  //     return Center(
+                  //       child: CircularProgressIndicator(
+                  //         color: primary,
+                  //         value: loadingProgress.expectedTotalBytes != null
+                  //             ? loadingProgress.cumulativeBytesLoaded /
+                  //                 loadingProgress.expectedTotalBytes
+                  //             : null,
+                  //       ),
+                  //     );
+                  //   },
+
+                  //   //content[this.widget.index].url,
+                  //   // fit: BoxFit.fill,
+                  // ),
+                  // //  zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
+                  //hideStatusBarWhileZooming: true,
+                  //  ),
+                  ),
               SizedBox(height: 10),
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  '${Numeral(widget.photo?.likes).value()} Likes • ${Numeral(widget.photo?.comments).value()} Comments • ${FlutterTimeAgo.parse(widget.photo?.date.toDate(), lang: 'en')}',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontFamily: "ubuntu",
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black54,
+                  ),
+                ),
+              ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

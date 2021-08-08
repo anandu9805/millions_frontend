@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
@@ -245,12 +246,11 @@ class _ViewVideoState extends State<ViewVideo> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-
       ),
       body: (_isLoading == false || widget.id == null)
           ? SingleChildScrollView(
-              child: Flex(direction: Axis.horizontal,
-                children:[ Expanded(
+              child: Flex(direction: Axis.horizontal, children: [
+                Expanded(
                   child: Column(
                     children: [
                       PlayVideo(
@@ -295,7 +295,7 @@ class _ViewVideoState extends State<ViewVideo> {
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child: Text(
-                              "${widget.id == null ? widget.video.views : video2.views} views  | ${widget.id == null ? timeAgo(DateTime.fromMicrosecondsSinceEpoch(widget.video.date.microsecondsSinceEpoch)) : timeAgo(DateTime.fromMicrosecondsSinceEpoch(video2.date.microsecondsSinceEpoch))}",
+                              "${widget.id == null ? widget.video.views : video2.views} views • ${widget.id == null ? timeAgo(DateTime.fromMicrosecondsSinceEpoch(widget.video.date.microsecondsSinceEpoch)) : timeAgo(DateTime.fromMicrosecondsSinceEpoch(video2.date.microsecondsSinceEpoch))}",
                               style: TextStyle(
                                   fontWeight: FontWeight.normal, fontSize: 12),
                             ),
@@ -514,9 +514,11 @@ class _ViewVideoState extends State<ViewVideo> {
                                                     height: h * 1,
                                                     fit: BoxFit.cover,
                                                   ),
-                                                  borderRadius: BorderRadius.circular(w * 1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          w * 0.5),
                                                 ),
-                                                radius: 25,
+                                                radius: 17,
                                               );
                                             } else {
                                               return CircleAvatar(
@@ -527,8 +529,47 @@ class _ViewVideoState extends State<ViewVideo> {
                                           }),
                                     ),
                                     SizedBox(width: 10),
-                                    Text(
-                                        "${widget.id == null ? widget.video.channelName : video2.channelName}"),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              constraints: BoxConstraints(
+                                                  maxWidth:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.37),
+
+                                              // alignment: Alignment.bottomLeft,
+                                              padding:
+                                                  EdgeInsets.only(right: 1.0),
+                                              child: Text(
+                                                "${widget.id == null ? widget.video.channelName : video2.channelName}",
+
+                                                //content[this.widget.index].userName,
+                                                style: GoogleFonts.ubuntu(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    height: 1.2,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            if (widget.video.isVerified)
+                                              Icon(
+                                                Icons.verified_user,
+                                                size: 20,
+                                                color: Colors.grey,
+                                              ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
@@ -733,8 +774,8 @@ class _ViewVideoState extends State<ViewVideo> {
                       ),
                     ],
                   ),
-                ),]
-              ),
+                ),
+              ]),
             )
           : Container(
               child: Center(

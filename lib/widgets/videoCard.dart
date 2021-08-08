@@ -3,6 +3,10 @@ import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/view_video.dart';
 import 'package:millions/widgets/popUpMenu.dart';
+import 'package:numeral/numeral.dart';
+import 'package:flutter_time_ago/flutter_time_ago.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class VideoCard extends StatefulWidget {
   final Video video;
@@ -46,7 +50,6 @@ class _VideoCardState extends State<VideoCard> {
 
   @override
   Widget build(BuildContext context) {
-
     var h = MediaQuery.of(context).size.height;
     String dummyId = null;
 
@@ -55,12 +58,7 @@ class _VideoCardState extends State<VideoCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ViewVideo(
-
-              video: widget.video,
-              id:dummyId
-
-            ),
+            builder: (context) => ViewVideo(video: widget.video, id: dummyId),
           ),
         );
       },
@@ -69,31 +67,63 @@ class _VideoCardState extends State<VideoCard> {
           children: [
             Container(
               height: h * 0.3,
-              color: Colors.black,
+              width: double.infinity,
+              color: Colors.grey,
               child: Stack(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(),
-                    child: Image.network(
-                      widget.video.thumbnailUrl == null
-                          ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
-                          : widget.video.thumbnailUrl,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent loadingProgress) {
-                        return Center(child: child);
-                      },
-                      frameBuilder: (BuildContext context, Widget child,
-                          int frame, bool wasSynchronouslyLoaded) {
-                        return Padding(
-                          padding: EdgeInsets.all(0.0),
-                          child: child,
-                        );
-                      },
-                      errorBuilder: (context, url, error) =>
-                          new Icon(Icons.error),
-                    ),
-                  ),
+                      padding: EdgeInsets.symmetric(),
+                      //TODO thumbnail
+                      child: Container(
+                        height: 400,
+                        width: MediaQuery.of(context).size.width,
+                        child: FittedBox(
+                            fit: BoxFit.fill,
+                            child: ClipRect(
+                              // clipBehavior: Clip.hardEdge,
+                              child: Container(
+                                child: Align(
+                                  alignment: Alignment(-0.5, -0.2),
+                                  widthFactor: 1,
+                                  heightFactor: 1,
+                                  child: CachedNetworkImage(
+                                    // placeholder: (context, thumbnailUrl) =>
+                                    //     CircularProgressIndicator(),
+                                    imageUrl: widget.video.thumbnailUrl == null
+                                        ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
+                                        :
+                                        // "",
+                                        widget.video?.thumbnailUrl,
+                                  ),
+
+                                  // Image.network(
+                                  //   widget.video.thumbnailUrl == null
+                                  //       ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
+                                  //       :
+                                  //       // "",
+                                  //       widget.video?.thumbnailUrl,
+                                  //   // fit: BoxFit.cover,
+                                  //   loadingBuilder: (BuildContext context,
+                                  //       Widget child,
+                                  //       ImageChunkEvent loadingProgress) {
+                                  //     return Center(child: child);
+                                  //   },
+                                  //   frameBuilder: (BuildContext context,
+                                  //       Widget child,
+                                  //       int frame,
+                                  //       bool wasSynchronouslyLoaded) {
+                                  //     return Padding(
+                                  //       padding: EdgeInsets.all(0.0),
+                                  //       child: child,
+                                  //     );
+                                  //   },
+                                  //   errorBuilder: (context, url, error) =>
+                                  //       new Icon(Icons.error),
+                                  // ),
+                                ),
+                              ),
+                            )),
+                      )),
                   Positioned(
                     bottom: 10,
                     right: 10,
@@ -115,6 +145,12 @@ class _VideoCardState extends State<VideoCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  CircleAvatar(
+                    foregroundImage: NetworkImage(
+                        widget.video?.profilePic == null
+                            ? altProfilePic
+                            : widget.video.profilePic),
+                  ),
                   const SizedBox(width: 8.0),
                   Expanded(
                     child: Column(
@@ -134,11 +170,12 @@ class _VideoCardState extends State<VideoCard> {
                         ),
                         Flexible(
                           child: Text(
-                            '${widget.video.channelName}',
+                            '${widget.video.channelName} • ${Numeral(widget.video?.views).value()} Views • ${FlutterTimeAgo.parse(widget.video?.date.toDate(), lang: 'en')}',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 10,
+                              fontFamily: "ubuntu",
                               fontWeight: FontWeight.w500,
                               color: Colors.black54,
                             ),

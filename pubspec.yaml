@@ -66,7 +66,9 @@ dependencies:
   flutter_local_notifications: ^8.0.0
   liquid_progress_indicator: ^0.4.0
 
-
+  numeral: ^1.2.4
+  flutter_time_ago: ^0.0.3
+  cached_network_image: ^3.1.0
 
 
 
@@ -99,6 +101,8 @@ flutter:
       - images/google.png
       - images/million logo no internet.png
       - images/algolia.png
+      - images/avathar.png
+      - images/search.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

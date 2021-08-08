@@ -49,7 +49,7 @@ class _UploadPostState extends State<UploadPost> {
     super.initState();
     getCurrentUserChannelDetails();
     uploadComplete = false;
-    _isLoading=false;
+    _isLoading = false;
     decsiptionController = TextEditingController();
   }
 
@@ -60,15 +60,14 @@ class _UploadPostState extends State<UploadPost> {
           .doc(altUserId)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
-             Map<String, dynamic> data =
-                      documentSnapshot.data() as Map<String, dynamic>;
-                  channelDetails = ChannelModel.fromDoc(data);
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+        channelDetails = ChannelModel.fromDoc(data);
       });
     } catch (e) {
       return "Channel Error";
     }
   }
-
 
   void _fromgallery() async {
     final _picker = ImagePicker();
@@ -110,34 +109,36 @@ class _UploadPostState extends State<UploadPost> {
   }
 
   void upload() async {
-    var newId= FirebaseFirestore.instance
-        .collection('posts').doc();//to get the id of the document we are going to create in the collection
+    var newId = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(); //to get the id of the document we are going to create in the collection
     setState(() {
       _isLoading = true;
     });
 
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
-    print("postfile name----------------------------------------------------------");
+    print(
+        "postfile name----------------------------------------------------------");
     print(fileName);
-    print("postfile format-----------------------------------------------------------");
+    print(
+        "postfile format-----------------------------------------------------------");
     print(fileName.split('.').last);
 
-    firebase_storage.Reference ref =
-        storage.ref('assets/${altUserId}/posts/${newId.id}.${fileName.split('.').last}');
+    firebase_storage.Reference ref = storage.ref(
+        'assets/${altUserId}/posts/${newId.id}.${fileName.split('.').last}');
     firebase_storage.UploadTask uploadTask = ref.putFile(_imageFile);
-    uploadTask.snapshotEvents.listen(
-            (firebase_storage.TaskSnapshot snapshot) {
-          print('Task state: ${snapshot.state}');
-          print(
-              'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
+    uploadTask.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
+      print('Task state: ${snapshot.state}');
+      print(
+          'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
 
-          setState(() {
-            _isLoading = true;
-            percentage_uploaded =
-                ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).round();
-          });
-        }, onError: (e) {
+      setState(() {
+        _isLoading = true;
+        percentage_uploaded =
+            ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).round();
+      });
+    }, onError: (e) {
       // The final snapshot is also available on the task via `.snapshot`,
       // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
       print(uploadTask.snapshot);
@@ -155,40 +156,36 @@ class _UploadPostState extends State<UploadPost> {
 
       posts.add(NewPost(description, _imageFile, commentStatus));
 
-
-      await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(newId.id)
-          .set({
-        'category':"post",
-        'channelId':channelDetails.id,
-        'channelName':channelDetails.channelName,
+      await FirebaseFirestore.instance.collection('posts').doc(newId.id).set({
+        'category': "post",
+        'channelId': channelDetails.id,
+        'channelName': channelDetails.channelName,
         'comments': 0,
         'country': channelDetails.country,
         'date': DateTime.now(),
-        'description':posts[0].description ,
+        'description': posts[0].description,
         'disLikes': 0,
         'generatedThumbnail': " ",
-        'id':newId.id,
-        'isComments':posts[0].comment_enabled ,
-        'isVerified':channelDetails.isVerified,
+        'id': newId.id,
+        'isComments': posts[0].comment_enabled,
+        'isVerified': channelDetails.isVerified,
         'isVisible': "Public",
-        'language':'English',
+        'language': 'English',
         'likes': 0,
         'photoSrc': url,
-        'profilePic':channelDetails.profilePic ,
-        'subscribers':channelDetails.subsribers ,
-        'thumbnail':" " ,
-        'title':"Post by ${channelDetails.channelName}",
+        'profilePic': channelDetails.profilePic,
+        'subscribers': channelDetails.subsribers,
+        'thumbnail': " ",
+        'title': "Post by ${channelDetails.channelName}",
         'videoScore': 0,
-        'views':0 ,
+        'views': 0,
       });
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
-      _isLoading=false;
+      _isLoading = false;
     }).catchError((onError) {
       print(onError);
     });
@@ -200,34 +197,34 @@ class _UploadPostState extends State<UploadPost> {
     return Scaffold(
       key: scaffoldKey,
       body: _isLoading
-           ?  Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-                child: LoadingBouncingGrid.circle(
-                  borderColor: primary,
-                  backgroundColor: Colors.white,
-                  borderSize: 10,
-                  size: 100,
-                  duration: Duration(milliseconds: 1800),
-                )),
-            SizedBox(
-              height: 20,
-            ),
-            FittedBox(
-              fit: BoxFit.contain,
-              child: Text(
-                "$percentage_uploaded%",
-                style:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ? Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                      child: LoadingBouncingGrid.circle(
+                    borderColor: primary,
+                    backgroundColor: Colors.white,
+                    borderSize: 10,
+                    size: 100,
+                    duration: Duration(milliseconds: 1800),
+                  )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      "$percentage_uploaded%",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      )
-      // Center(
+            )
+          // Center(
           //     child: LoadingBouncingGrid.circle(
           //     borderColor: primary,
           //     backgroundColor: Colors.white,
@@ -242,15 +239,14 @@ class _UploadPostState extends State<UploadPost> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 0, 20),
-                    child: Text(
-                      'Create Post',
-                      style: GoogleFonts.ubuntu(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 30,
-                      ),
-                    ),
-                  ),
+                      padding: EdgeInsets.fromLTRB(20, 60, 0, 30),
+                      child: Text(
+                        'Create Post',
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800),
+                      )),
                   //-----------
 
                   if (_imageFile != null)
@@ -270,29 +266,42 @@ class _UploadPostState extends State<UploadPost> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: const Text(
-                                  'Millions',
+                                  'Select a photo',
                                   style: TextStyle(color: primary),
-                                  textAlign: TextAlign.center,
+                                  textAlign: TextAlign.left,
                                 ),
                                 content: SingleChildScrollView(
                                   child: ListBody(
                                     children: const <Widget>[
-                                      Text('Upload Post from:'),
+                                      Text(
+                                          'Please select a photo from your gallery or capture one.'),
                                     ],
                                   ),
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: const Text('Gallery'),
+                                    child: Text(
+                                      'Take a picture',
+                                      style: GoogleFonts.ubuntu(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400),
+                                    ),
                                     onPressed: () {
-                                      _fromgallery();
+                                      _selectImage();
                                       Navigator.of(context).pop();
                                     },
                                   ),
                                   TextButton(
-                                    child: const Text('Take a picture'),
+                                    child: Text(
+                                      'Gallery',
+                                      style: GoogleFonts.ubuntu(
+                                          fontSize: 16,
+                                          color: primary,
+                                          fontWeight: FontWeight.w400),
+                                    ),
                                     onPressed: () {
-                                      _selectImage();
+                                      _fromgallery();
                                       Navigator.of(context).pop();
                                     },
                                   ),
@@ -315,16 +324,12 @@ class _UploadPostState extends State<UploadPost> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Padding(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                child: Image.network(
-                                  'https://image.flaticon.com/icons/png/512/262/262530.png',
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.2,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.2,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                  child: Icon(
+                                    Icons.cloud_upload,
+                                    color: primary,
+                                    size: 40,
+                                  )),
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                                 child: Row(
@@ -332,16 +337,28 @@ class _UploadPostState extends State<UploadPost> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Upload An Image',
+                                      'Upload an Image',
                                       textAlign: TextAlign.start,
                                       style: GoogleFonts.ubuntu(
                                         color: primary,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 30,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 20,
                                       ),
                                     ),
                                   ],
                                 ),
+                              ),
+                              Text(
+                                'Your photos will be public after you publish them',
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.ubuntu(
+                                  // color: primary,
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 25,
                               ),
                             ],
                           ),
@@ -380,6 +397,8 @@ class _UploadPostState extends State<UploadPost> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -390,6 +409,8 @@ class _UploadPostState extends State<UploadPost> {
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
                             topRight: Radius.circular(4.0),
+                            bottomLeft: Radius.circular(4.0),
+                            bottomRight: Radius.circular(4.0),
                           ),
                         ),
                       ),

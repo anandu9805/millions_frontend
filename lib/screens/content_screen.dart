@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/colors.dart';
@@ -7,8 +8,8 @@ import '../widgets/skeletol_loader.dart';
 
 class ContentScreen extends StatefulWidget {
   final String src;
-
-  const ContentScreen({Key key, this.src}) : super(key: key);
+  final String cover;
+  const ContentScreen({Key key, this.src, this.cover}) : super(key: key);
 
   @override
   _ContentScreenState createState() => _ContentScreenState();
@@ -16,6 +17,8 @@ class ContentScreen extends StatefulWidget {
 
 class _ContentScreenState extends State<ContentScreen> {
   VideoPlayerController _videoPlayerController;
+  String cover;
+
   ChewieController _chewieController;
   bool _liked = false;
 
@@ -28,6 +31,7 @@ class _ContentScreenState extends State<ContentScreen> {
 
   Future initializePlayer() async {
     _videoPlayerController = VideoPlayerController.network(widget.src);
+    cover = widget.cover;
     await Future.wait([_videoPlayerController.initialize()]);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
@@ -57,28 +61,36 @@ class _ContentScreenState extends State<ContentScreen> {
               controller: _chewieController,
             ),
           )
-        : Center(
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child:
-                  SkeletonContainer.square(
-                    width: double.infinity,
-                    height: double.infinity,
+        : Stack(alignment: Alignment.bottomCenter, children: <Widget>[
+            Container(
+              color: Colors.black,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(1),
+                  child: CachedNetworkImage(
+                    placeholder: (context, thumbnailUrl) =>
+                        SkeletonContainer.square(
+                      width: double.infinity,
+                      height: double.infinity,
+                    ),
+                    errorWidget: (context, url, error) => SizedBox(width: 16),
+                    imageUrl: cover,
                   ),
-
-
-
+                ),
+              ),
             ),
-            // child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       CircularProgressIndicator(
-            //         color: primary,
-            //       ),
-            //       SizedBox(height: 10),
-            //     ],
-            //   ),
-          );
-    //)
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: primary,
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
+            )
+          ]);
   }
 }

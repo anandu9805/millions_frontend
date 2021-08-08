@@ -11,6 +11,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:millions/screens/uploadvideo.dart';
 import 'package:millions/services/likeServices.dart';
 import 'package:millions/widgets/reportReels.dart';
+import 'package:numeral/numeral.dart';
 import '../model/reels_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants/colors.dart';
@@ -154,38 +155,60 @@ class _ShortsState extends State<Shorts> {
                 return Stack(children: [
                   ContentScreen(
                       src: _reels_items[index]
-                          ["videoSrc"] //reels_objects[index].videoSrc,
-                      ),
+                          ["videoSrc"], //reels_objects[index].videoSrc,
+                      cover: _reels_items[index]["thumbnail"]),
                   Positioned(
                     left: w / 30,
                     bottom: h / 10,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          child: ClipRRect(
-                            child: Image.network(
-                              _reels_items[index]["profilePic"],
-                              //reels_objects[index].profilePic,
-                              width: w * 1,
-                              height: h * 1,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(w * 1),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: Text(
+                            _reels_items[index]["description"],
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            // reels_objects[index].description,
+                            style: GoogleFonts.ubuntu(
+                                color: Colors.white,
+                                height: 1,
+                                fontWeight: FontWeight.w100),
                           ),
-                          radius: 20,
-                        ),
-                        SizedBox(
-                          height: 5,
                         ),
                         Row(
                           children: [
-                            Text(
-                              _reels_items[index]["channelName"],
-                              //  reels_objects[index].channelName,
-                              style: GoogleFonts.ubuntu(color: Colors.white),
+                            SizedBox(
+                              height: 5,
                             ),
-                            SizedBox(width: 10),
+                            CircleAvatar(
+                              child: ClipRRect(
+                                child: Image.network(
+                                  _reels_items[index]["profilePic"],
+                                  //reels_objects[index].profilePic,
+                                  width: w * 0.5,
+                                  height: h * 0.5,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(w * 1),
+                              ),
+                              radius: 14,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Container(
+                              constraints: BoxConstraints(maxWidth: h * 0.27),
+                              padding: EdgeInsets.only(right: 1.0),
+                              child: Text(
+                                _reels_items[index]["channelName"],
+                                //  reels_objects[index].channelName,
+                                style: GoogleFonts.ubuntu(color: Colors.white),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(width: 1),
                             if (_reels_items[index]["isVerified"]
                             //reels_objects[index].isVerified
                             )
@@ -194,16 +217,9 @@ class _ShortsState extends State<Shorts> {
                                 size: 15,
                                 color: Colors.blue,
                               ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          children: [
+                            SizedBox(width: 2),
                             _reels_items[index]["channelId"] != currentuserid
-                                ? FlatButton(
-                                    color: primary,
+                                ? TextButton(
                                     onPressed: () {
                                       if (!following_details.contains(
                                           _reels_items[index]["channelId"]
@@ -229,27 +245,33 @@ class _ShortsState extends State<Shorts> {
                                     child: Text(
                                       !following_details.contains(
                                               _reels_items[index]["channelId"])
-                                          ? 'Follow'
-                                          : 'Following',
+                                          ? '• Follow'
+                                          : '• Following',
                                       style: GoogleFonts.ubuntu(
                                           color: Colors.white,
                                           height: 1,
                                           fontWeight: FontWeight.w500),
                                     ),
                                   )
-                                : FlatButton(
-                                    child: Text('Following'),
-                                    color: Colors.black12,
+                                : TextButton(
+                                    child: Text(
+                                      '• Following',
+                                      style: GoogleFonts.ubuntu(
+                                          color: Colors.white,
+                                          height: 1,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   )
                           ],
                         ),
-                        Text(
-                          _reels_items[index]["description"],
-                          // reels_objects[index].description,
-                          style: GoogleFonts.ubuntu(
-                              color: Colors.white,
-                              height: 1,
-                              fontWeight: FontWeight.w500),
+                        Row(
+                          children: [],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [],
                         ),
                       ],
                     ),
@@ -295,121 +317,130 @@ class _ShortsState extends State<Shorts> {
                         //           },
                         //         ),
                         //       ),
-                        FutureBuilder(
-                          future: LikeServices()
-                              .reelsLikeChecker(_reels_items[index]["id"]),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    liked = !liked;
-                                  });
-                                  print(_reels_items[index]["id"] +
-                                      _reels_items[index]["channelId"] +
-                                      altUserId);
-                                  LikeServices().likeReels(
-                                      _reels_items[index]["id"],
-                                      _reels_items[index]["channelId"],
-                                      FirebaseAuth.instance.currentUser.uid);
-                                },
-                                icon: Icon(
-                                  Icons.favorite_border,
-                                  color: primary,
-                                ),
-                              );
-                            } else {
-                              // liked = ReelsLike.fromDoc(snapshot.data);
-                              print(snapshot.data);
-                              liked=snapshot.data;
-                              // ReelsLike likeDetails =
-                              //     ReelsLike.fromMap(snapshot.data);
-                              // print(likeDetails.liked);
-                              return liked == true
-                                  ? IconButton(
-                                      onPressed: () {
-                                        print("disliked");
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        print(liked);
-                                        LikeServices().unLikeReels(
-                                            _reels_items[index]["id"],
-                                            _reels_items[index]["channelId"],
-                                            FirebaseAuth
-                                                .instance.currentUser.uid);
-                                      },
-                                      icon: Icon(
-                                        Icons.favorite,
-                                        color: primary,
-                                      ),
-                                    )
-                                  :
-                                  // } else {
-                                  // return
-                                  IconButton(
-                                      onPressed: () {
-                                        print("like");
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        print(liked);
-                                        // print(_reels_items[index].id +
-                                        //     _reels_items[index].channelId +
-                                        //     altUserId);
-                                        LikeServices().likeReels(
-                                            _reels_items[index]["id"],
-                                            _reels_items[index]["channelId"],
-                                            FirebaseAuth
-                                                .instance.currentUser.uid);
-                                      },
-                                      icon: Icon(
-                                        Icons.favorite_border,
-                                        color: primary,
-                                      ),
-                                    );
-                            }
-                            // }
-                          },
-                        ),
-                        SizedBox(height: 20),
-                        IconButton(
-                          onPressed: () async {
-                            parameters = ['30s'];
-                            parameters.add(_reels_items[index]["id"]);
-                            print(parameters);
-                            await _dynamicLinkService
-                                .createDynamicLink(parameters)
-                                .then((value) {
-                              dynamic_link = value;
-                            });
-                            //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
-                            Share.share(dynamic_link);
-
-                            //-----------------------------
-                          }, //reels share function
-                          icon: Icon(
-                            Icons.share,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ReportReels(
-                                    reels: Reels.fromMap(
-                                        _reels_items[index].data()),
+                        Column(children: [
+                          FutureBuilder(
+                            future: LikeServices()
+                                .reelsLikeChecker(_reels_items[index]["id"]),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      liked = !liked;
+                                    });
+                                    print(_reels_items[index]["id"] +
+                                        _reels_items[index]["channelId"] +
+                                        altUserId);
+                                    LikeServices().likeReels(
+                                        _reels_items[index]["id"],
+                                        _reels_items[index]["channelId"],
+                                        FirebaseAuth.instance.currentUser.uid);
+                                  },
+                                  icon: Icon(
+                                    Icons.favorite_border,
+                                    color: primary,
                                   ),
-                                ));
-                          }, //reels report function
-                          icon: Icon(
-                            Icons.flag_outlined,
-                            color: Colors.white,
+                                );
+                              } else {
+                                // liked = ReelsLike.fromDoc(snapshot.data);
+                                print(snapshot.data);
+                                liked = snapshot.data;
+                                // ReelsLike likeDetails =
+                                //     ReelsLike.fromMap(snapshot.data);
+                                // print(likeDetails.liked);
+                                return liked == true
+                                    ? IconButton(
+                                        onPressed: () {
+                                          print("disliked");
+                                          setState(() {
+                                            liked = !liked;
+                                          });
+                                          print(liked);
+                                          LikeServices().unLikeReels(
+                                              _reels_items[index]["id"],
+                                              _reels_items[index]["channelId"],
+                                              FirebaseAuth
+                                                  .instance.currentUser.uid);
+                                        },
+                                        icon: Icon(
+                                          Icons.favorite,
+                                          color: primary,
+                                        ),
+                                      )
+                                    :
+                                    // } else {
+                                    // return
+                                    IconButton(
+                                        onPressed: () {
+                                          print("like");
+                                          setState(() {
+                                            liked = !liked;
+                                          });
+                                          print(liked);
+                                          // print(_reels_items[index].id +
+                                          //     _reels_items[index].channelId +
+                                          //     altUserId);
+                                          LikeServices().likeReels(
+                                              _reels_items[index]["id"],
+                                              _reels_items[index]["channelId"],
+                                              FirebaseAuth
+                                                  .instance.currentUser.uid);
+                                        },
+                                        icon: Icon(
+                                          Icons.favorite_border,
+                                          color: primary,
+                                        ),
+                                      );
+                              }
+                              // }
+                            },
                           ),
-                        ),
+                          Text(
+                            Numeral(_reels_items[index]["likes"]).value(),
+                            style: GoogleFonts.ubuntu(
+                                color: Colors.white,
+                                height: 1,
+                                fontWeight: FontWeight.w100),
+                          ),
+                          SizedBox(height: 20),
+                          IconButton(
+                            onPressed: () async {
+                              parameters = ['30s'];
+                              parameters.add(_reels_items[index]["id"]);
+                              print(parameters);
+                              await _dynamicLinkService
+                                  .createDynamicLink(parameters)
+                                  .then((value) {
+                                dynamic_link = value;
+                              });
+                              //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
+                              Share.share(dynamic_link);
+
+                              //-----------------------------
+                            }, //reels share function
+                            icon: Icon(
+                              Icons.share,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ReportReels(
+                                      reels: Reels.fromMap(
+                                          _reels_items[index].data()),
+                                    ),
+                                  ));
+                            }, //reels report function
+                            icon: Icon(
+                              Icons.flag_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ])
                       ],
                     ),
                   ),

@@ -7,9 +7,9 @@ import '../constants/colors.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
 
 class TrimmerView extends StatefulWidget {
-  final File file,thumbnail;
+  final File file, thumbnail;
 
-  TrimmerView(this.file,this.thumbnail);
+  TrimmerView(this.file, this.thumbnail);
   @override
   _TrimmerViewState createState() => _TrimmerViewState();
 }
@@ -19,7 +19,7 @@ class _TrimmerViewState extends State<TrimmerView> {
 
   double _startValue = 0.0;
   double _endValue = 0.0;
-var info;
+  var info;
   bool _isPlaying = false;
   bool _progressVisibility = false;
   final videoInfo = FlutterVideoInfo();
@@ -59,7 +59,6 @@ var info;
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
       onWillPop: () async {
         if (Navigator.of(context).userGestureInProgress)
@@ -76,7 +75,7 @@ var info;
         body: Builder(
           builder: (context) => Center(
             child: Container(
-              padding: EdgeInsets.only(bottom: 30.0),
+              padding: EdgeInsets.only(bottom: 30.0, top: 30.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
@@ -87,21 +86,25 @@ var info;
                       backgroundColor: Colors.red,
                     ),
                   ),
-                  FlatButton(color: primary,
+                  FlatButton(
+                    color: primary,
                     onPressed: _progressVisibility
                         ? null
                         : () async {
-                      _saveVideo().then((outputPath) {
-
-                        print('OUTPUT PATH: $outputPath');
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => Preview(outputPath,widget.thumbnail,info.duration),
-                          ),
-                        );
-                      });
-                    },
-                    child: Text("SAVE",style: TextStyle(color: Colors.white),),
+                            _saveVideo().then((outputPath) {
+                              print('OUTPUT PATH: $outputPath');
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => Preview(outputPath,
+                                      widget.thumbnail, info.duration),
+                                ),
+                              );
+                            });
+                          },
+                    child: Text(
+                      "SAVE",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                   Expanded(
                     child: VideoViewer(trimmer: _trimmer),
@@ -111,7 +114,7 @@ var info;
                       trimmer: _trimmer,
                       viewerHeight: 50.0,
                       viewerWidth: MediaQuery.of(context).size.width,
-                      maxVideoLength: Duration(seconds:30),
+                      maxVideoLength: Duration(seconds: 30),
                       onChangeStart: (value) {
                         _startValue = value;
                       },
@@ -128,15 +131,15 @@ var info;
                   TextButton(
                     child: _isPlaying
                         ? Icon(
-                      Icons.pause,
-                      size: 80.0,
-                      color: Colors.white,
-                    )
+                            Icons.pause,
+                            size: 80.0,
+                            color: Colors.white,
+                          )
                         : Icon(
-                      Icons.play_arrow,
-                      size: 80.0,
-                      color: Colors.white,
-                    ),
+                            Icons.play_arrow,
+                            size: 80.0,
+                            color: Colors.white,
+                          ),
                     onPressed: () async {
                       bool playbackState = await _trimmer.videPlaybackControl(
                         startValue: _startValue,

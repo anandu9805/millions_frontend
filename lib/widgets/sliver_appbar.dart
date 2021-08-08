@@ -68,7 +68,7 @@ class _CustomSliverAppBarState extends State<CustomSliverAppBar> {
               child: ClipRRect(
                 child: Image.network(
                   altProfilePic,
-                 // 'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
+                  // 'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
                   width: w * 0.3,
                   height: w * 0.3,
                   fit: BoxFit.cover,

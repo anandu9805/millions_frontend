@@ -30,13 +30,15 @@ class _TrendingChannelsState extends State<TrendingChannels> {
             //AppBarOthers(),
             Container(
               child: Padding(
-                padding: const EdgeInsets.only(top: 12, left: 5),
+                padding: const EdgeInsets.only(top: 25, left: 12, bottom: 20),
                 child: Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
                       'Trending Channels',
                       style: GoogleFonts.ubuntu(
-                          fontSize: 25, color: Colors.black54),
+                          fontSize: 25,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w800),
                     )),
               ),
             ),
@@ -66,17 +68,17 @@ class _TrendingChannelsState extends State<TrendingChannels> {
                           );
                         },
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
                           child: Container(
                             color: Colors.white,
-                            height: 100,
+                            height: 170,
                             width: MediaQuery.of(context).size.width * 0.90,
                             child: Card(
                               elevation: 0,
-                              color: Colors.white,
+                              color: Colors.grey,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(10.0),
                                   image: DecorationImage(
                                     image: NetworkImage(
                                       (trendingChannel.channelArt == null ||

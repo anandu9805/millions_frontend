@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/size.dart';
@@ -5,6 +6,7 @@ import 'package:millions/constants/tempResources.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:millions/services/likeServices.dart';
+import 'package:numeral/numeral.dart';
 import '../model/reels_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants/colors.dart';
@@ -12,13 +14,14 @@ import '../constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FollowersShorts extends StatefulWidget {
-  List<String> followers;
+  List followers;
   FollowersShorts(this.followers);
   @override
   _FollowersShortsState createState() => _FollowersShortsState();
 }
 
 class _FollowersShortsState extends State<FollowersShorts> {
+  var currentuserid = FirebaseAuth.instance.currentUser.uid;
   List following_details = [];
   bool liked;
   String likeId;
@@ -78,89 +81,123 @@ class _FollowersShortsState extends State<FollowersShorts> {
 
                 return Stack(children: [
                   ContentScreen(
-                    src: reels_objects[index].videoSrc,
-                  ),
+                      src: reels_objects[index].videoSrc,
+                      cover: reels_objects[index].thumbnailUrl),
                   Positioned(
                     left: w / 30,
                     bottom: h / 10,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          child: ClipRRect(
-                            child: Image.network(
-                              reels_objects[index].profilePic,
-                              width: w * 1,
-                              height: h * 1,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(w * 1),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: Text(
+                            reels_objects[index].description,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            // reels_objects[index].description,
+                            style: GoogleFonts.ubuntu(
+                                color: Colors.white,
+                                height: 1,
+                                fontWeight: FontWeight.w100),
                           ),
-                          radius: 20,
-                        ),
-                        SizedBox(
-                          height: 5,
                         ),
                         Row(
                           children: [
-                            Text(
-                              reels_objects[index].channelName,
-                              style: GoogleFonts.ubuntu(color: Colors.white),
+                            SizedBox(
+                              height: 5,
                             ),
-                            SizedBox(width: 10),
-                            if (reels_objects[index].isVerified)
+                            CircleAvatar(
+                              child: ClipRRect(
+                                child: Image.network(
+                                  reels_objects[index].profilePic,
+                                  //reels_objects[index].profilePic,
+                                  width: w * 0.5,
+                                  height: h * 0.5,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(w * 1),
+                              ),
+                              radius: 14,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Container(
+                              constraints: BoxConstraints(maxWidth: h * 0.27),
+                              padding: EdgeInsets.only(right: 1.0),
+                              child: Text(
+                                reels_objects[index].channelName,
+                                //  reels_objects[index].channelName,
+                                style: GoogleFonts.ubuntu(color: Colors.white),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(width: 1),
+                            if (reels_objects[index].isVerified
+                            //reels_objects[index].isVerified
+                            )
                               Icon(
                                 Icons.verified,
                                 size: 15,
                                 color: Colors.blue,
                               ),
+                            SizedBox(width: 2),
+                            reels_objects[index].channelId != currentuserid
+                                ? TextButton(
+                                    onPressed: () {
+                                      if (!following_details.contains(
+                                          reels_objects[index].channelId
+                                          // reels_objects[index].channelId
+                                          )) {
+                                        setState(() {
+                                          following_details.add(
+                                              reels_objects[index].channelId);
+                                        });
+                                        FirebaseFirestore.instance
+                                            .collection('followers')
+                                            .doc(currentuserid)
+                                            .set({
+                                          'channel':
+                                              reels_objects[index].channelId,
+                                          'date': DateTime.now(),
+                                          'follower': currentuserid
+                                        });
+                                      } else {
+                                        //                        print("already following");
+                                      }
+                                    },
+                                    child: Text(
+                                      !following_details.contains(
+                                              reels_objects[index].channelId)
+                                          ? '• Follow'
+                                          : '• Following',
+                                      style: GoogleFonts.ubuntu(
+                                          color: Colors.white,
+                                          height: 1,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  )
+                                : TextButton(
+                                    child: Text(
+                                      '• Following',
+                                      style: GoogleFonts.ubuntu(
+                                          color: Colors.white,
+                                          height: 1,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  )
                           ],
+                        ),
+                        Row(
+                          children: [],
                         ),
                         SizedBox(
                           height: 5,
                         ),
                         Row(
-                          children: [
-                            FlatButton(
-                              color: primary,
-                              onPressed: () {
-                                if (!following_details
-                                    .contains(reels_objects[index].channelId)) {
-                                  setState(() {
-                                    following_details
-                                        .add(reels_objects[index].channelId);
-                                  });
-                                  FirebaseFirestore.instance
-                                      .collection('followers')
-                                      .doc(altUserId)
-                                      .set({
-                                    'channel': reels_objects[index].channelId,
-                                    'date': DateTime.now(),
-                                    'follower': altUserId
-                                  });
-                                } else {
-                                  print("already following");
-                                }
-                              },
-                              child: Text(
-                                !following_details.contains(
-                                        reels_objects[index].channelId)
-                                    ? 'Follow'
-                                    : 'Following',
-                                style: GoogleFonts.ubuntu(
-                                    color: Colors.white,
-                                    height: 1,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          reels_objects[index].description,
-                          style: GoogleFonts.ubuntu(
-                              color: Colors.white,
-                              height: 1,
-                              fontWeight: FontWeight.w500),
+                          children: [],
                         ),
                       ],
                     ),
@@ -170,66 +207,108 @@ class _FollowersShortsState extends State<FollowersShorts> {
                     bottom: h / 7,
                     child: Column(
                       children: [
-                        FutureBuilder(
-                          future: LikeServices().reelsLikeChecker(likeId),
-                          builder: (BuildContext context, snapshot) {
-                            if (snapshot.hasData) {
-                              // print(snapshot.data);
-                              // print("snapshot.data");
-                              setState(() {
+                        Column(children: [
+                          FutureBuilder(
+                            future: LikeServices()
+                                .reelsLikeChecker(reels_objects[index].id),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      liked = !liked;
+                                    });
+                                    print(reels_objects[index].id +
+                                        reels_objects[index].channelId +
+                                        altUserId);
+                                    LikeServices().likeReels(
+                                        reels_objects[index].id,
+                                        reels_objects[index].channelId,
+                                        FirebaseAuth.instance.currentUser.uid);
+                                  },
+                                  icon: Icon(
+                                    Icons.favorite_border,
+                                    color: primary,
+                                  ),
+                                );
+                              } else {
+                                // liked = ReelsLike.fromDoc(snapshot.data);
+                                print(snapshot.data);
                                 liked = snapshot.data;
-                              });
-                              return liked == true
-                                  ? IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        LikeServices().unLikeReels(
-                                            reels_objects[index].id,
-                                            altUserId,
-                                            altUserId);
-                                      }, //---------------------------------------------------
-                                      icon: Icon(
-                                        Icons.favorite_rounded,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        LikeServices().likeReels(
-                                            reels_objects[index].id,
-                                            altUserId,
-                                            altUserId);
-                                      }, //----------------------
-                                      icon: Icon(
-                                        Icons.favorite_outline_rounded,
-                                        color: Colors.white,
-                                      ),
-                                    );
-                            } else {
-                              print(snapshot.hasError);
-                              return IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    liked = !liked;
-                                  });
-                                  LikeServices().likeReels(
-                                      reels_objects[index].id,
-                                      altUserId,
-                                      altUserId);
-                                }, //----------------------
-                                icon: Icon(
-                                  Icons.favorite_outline_rounded,
-                                  color: Colors.white,
-                                ),
-                              );
-                            }
-                          },
-                        ),
+                                // ReelsLike likeDetails =
+                                //     ReelsLike.fromMap(snapshot.data);
+                                // print(likeDetails.liked);
+                                return liked == true
+                                    ? IconButton(
+                                        onPressed: () {
+                                          print("disliked");
+                                          setState(() {
+                                            liked = !liked;
+                                          });
+                                          print(liked);
+                                          LikeServices().unLikeReels(
+                                              reels_objects[index].id,
+                                              reels_objects[index].channelId,
+                                              FirebaseAuth
+                                                  .instance.currentUser.uid);
+                                        },
+                                        icon: Icon(
+                                          Icons.favorite,
+                                          color: primary,
+                                        ),
+                                      )
+                                    :
+                                    // } else {
+                                    // return
+                                    IconButton(
+                                        onPressed: () {
+                                          print("like");
+                                          setState(() {
+                                            liked = !liked;
+                                          });
+                                          print(liked);
+                                          // print( reels_objects[index]..id +
+                                          //      reels_objects[index]..channelId +
+                                          //     altUserId);
+                                          LikeServices().likeReels(
+                                              reels_objects[index].id,
+                                              reels_objects[index].channelId,
+                                              FirebaseAuth
+                                                  .instance.currentUser.uid);
+                                        },
+                                        icon: Icon(
+                                          Icons.favorite_border,
+                                          color: primary,
+                                        ),
+                                      );
+                              }
+                              // }
+                            },
+                          ),
+                          Text(
+                            Numeral(reels_objects[index].likes).value(),
+                            style: GoogleFonts.ubuntu(
+                                color: Colors.white,
+                                height: 1,
+                                fontWeight: FontWeight.w100),
+                          ),
+                          SizedBox(height: 20),
+                          IconButton(
+                            onPressed: () {}, //reels share function
+                            icon: Icon(
+                              Icons.share,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          IconButton(
+                            onPressed: () {}, //reels report function
+                            icon: Icon(
+                              Icons.flag_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ]),
                         SizedBox(height: 20),
                         IconButton(
                           onPressed: () {}, //reels share function
