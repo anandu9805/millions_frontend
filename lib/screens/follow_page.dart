@@ -9,6 +9,7 @@ import 'package:millions/model/user.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/followersShorts.dart';
 import 'package:millions/screens/page8.dart';
+import 'package:millions/widgets/appbar_others.dart';
 import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/widgets/photos.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -33,6 +34,12 @@ class _Screen9State extends State<Screen9> {
       length: 3,
       child: Scaffold(
         backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(
+            (h) * (1 / 13),
+          ),
+          child: AppBarOthers(),
+        ),
         body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('followers')

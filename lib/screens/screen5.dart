@@ -6,6 +6,7 @@ import 'package:millions/model/admodel.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/services/video-services.dart';
 import 'package:millions/widgets/ads.dart';
+import 'package:millions/widgets/appbar_others.dart';
 
 import 'package:millions/widgets/videoCard.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,12 +14,11 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import '../services/userService.dart';
 
 class Screen5 extends StatefulWidget {
-   int flag=0;//0 means home page and 1 means explore page
+  int flag = 0; //0 means home page and 1 means explore page
   @override
   _Screen5State createState() => _Screen5State();
-  Screen5(int f)
-  {
-    this.flag=f;
+  Screen5(int f) {
+    this.flag = f;
   }
 }
 
@@ -29,6 +29,7 @@ class _Screen5State extends State<Screen5> {
       _moreVideosAvailable = true;
   int _perPage = 10;
   DocumentSnapshot _lastDocument;
+  int page = 0;
 
   ScrollController _scrollController = ScrollController();
   ScrollController _scrollController2 = ScrollController();
@@ -36,7 +37,7 @@ class _Screen5State extends State<Screen5> {
     Query q = FirebaseFirestore.instance
         .collection("videos")
         .where("isVisible", isEqualTo: "Public")
-        .orderBy(widget.flag==0?"date":"videoScore", descending: true)
+        .orderBy(widget.flag == 0 ? "date" : "videoScore", descending: true)
         .limit(_perPage);
 
     setState(() {
@@ -45,7 +46,7 @@ class _Screen5State extends State<Screen5> {
     QuerySnapshot querySnapshot = await q.get();
     _videos = querySnapshot.docs;
     _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
-    print( _videos);
+    print(_videos);
     setState(() {
       _loadingVideos = false;
     });
@@ -65,7 +66,7 @@ class _Screen5State extends State<Screen5> {
     Query q = FirebaseFirestore.instance
         .collection("videos")
         .where("isVisible", isEqualTo: "Public")
-         .orderBy(widget.flag==0?"date":"videoScore", descending:true)
+        .orderBy(widget.flag == 0 ? "date" : "videoScore", descending: true)
         .limit(_perPage)
         .startAfterDocument(_lastDocument);
     QuerySnapshot querySnapshot = await q.get();
@@ -74,7 +75,7 @@ class _Screen5State extends State<Screen5> {
     }
     _lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
     _videos.addAll(querySnapshot.docs);
-    print( _videos);
+    print(_videos);
 
     setState(() {
       _gettingMoreVideos = false;
@@ -118,12 +119,22 @@ class _Screen5State extends State<Screen5> {
       controller: _scrollController2,
       child: Column(
         children: [
-          if(widget.flag==0)
-          Container(
-            child: AdPost(),
-          ),
-          if(widget.flag==0)
-          SizedBox(height: 10,),
+          page != 1
+              ? PreferredSize(
+                  preferredSize: Size.fromHeight(
+                    (h) * (1 / 13),
+                  ),
+                  child: AppBarOthers(),
+                )
+              : SizedBox(),
+          if (widget.flag == 0)
+            Container(
+              child: AdPost(),
+            ),
+          if (widget.flag == 0)
+            SizedBox(
+              height: 10,
+            ),
 
           _loadingVideos
               ? Center(

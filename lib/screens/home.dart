@@ -17,6 +17,7 @@ import 'package:millions/screens/searchPage..dart';
 import 'package:millions/screens/shorts.dart';
 import 'package:millions/services/userService.dart';
 import 'package:millions/widgets/appDrawer.dart';
+import 'package:millions/widgets/appbar_others.dart';
 //import 'package:millions/screens/screen9.dart';
 import 'package:provider/provider.dart';
 import '../provider.dart';
@@ -37,63 +38,6 @@ class _HomePageState extends State<HomePage> {
     _drawerKey.currentState.openDrawer();
   }
 
-  void _showPopupMenu(Offset offset) async {
-    await showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(
-          offset.dx,
-          offset.dy,
-          MediaQuery.of(context).size.width - offset.dx,
-          MediaQuery.of(context).size.height - offset.dy),
-      items: [
-        PopupMenuItem(
-          child: Text("My Channel", style: GoogleFonts.ubuntu()),
-          value: 'mychannel',
-        ),
-        PopupMenuItem(
-          child: Text(
-            "My Account",
-            style: GoogleFonts.ubuntu(),
-          ),
-          value: 'editprofile',
-        ),
-        PopupMenuItem(
-          child: Text("My Wallet", style: GoogleFonts.ubuntu()),
-          value: 'mywallet',
-        ),
-        PopupMenuItem(
-          child: Text("Logout", style: GoogleFonts.ubuntu()),
-          value: 'logout',
-        ),
-      ],
-      elevation: 8.0,
-    ).then((value) {
-      if (value != null) {
-        if (value == 'logout') {
-          final millionsprovider =
-              Provider.of<MillionsProvider>(context, listen: false);
-          millionsprovider.logout(context);
-        } else if (value == 'mywallet') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MyWallet()),
-          );
-        } else if (value == 'mychannel') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Page8(altUserId)),
-          );
-        } else if (value == 'editprofile') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Screen14()),
-          );
-        }
-      }
-
-// NOTE: even you didnt select item this method will be called with null of value so you should call your call back with checking if value is not null
-    });
-  }
 
   final pages = [Screen5(0), Shorts(), CreatePage(), Screen9(), Screen11(null)];
   int page = 0;
@@ -125,111 +69,7 @@ class _HomePageState extends State<HomePage> {
       home: Scaffold(
         key: _drawerKey,
         drawer: DefaultDrawer(),
-        appBar: page!=1? PreferredSize(
-          preferredSize: Size.fromHeight(
-            (h) * (1 / 13),
-          ),
-          child:  AppBar(
-            leading: Container(
-              color: Colors.white,
-              width: w / 4,
-              child: InkWell(
-                child: Image.asset(
-                  'images/million final logo with out millions.png',
-                  fit: BoxFit.fitWidth,
-                  alignment: Alignment.centerRight,
-                ),
-                onTap: () {
-                  openDrawer();
-                },
-              ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 10,
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.search_outlined,
-                    color: primary,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SearchPage()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, right: 10),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.explore,
-                    color: primary,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Explore()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, right: 20),
-                child: FutureBuilder(
-                    future: UserServices().getUserDetails(altUserId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return GestureDetector(
-                          onTapDown: (TapDownDetails details) {
-                            _showPopupMenu(details.globalPosition);
-                          },
-                          child: CircleAvatar(
-                            child: ClipRRect(
-                              child: Image.network(
-                                snapshot.data.toString(),
-                                //reels_objects[index].profilePic,
-                                width: w * 1,
-                                height: w * 1,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.circular(w * 1),
-                            ),
-                            radius: 25,
-                          ),
-                          /*CircleAvatar(radius: 20,
-                            child: ClipRRect(
-                              child: Image.network(
-                                snapshot.data.toString(),
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.circular(w * 0.1),
-                            ),
-                            //backgroundColor: Colors.black,
-                          ),*/
-                        );
-                      } else {
-                        return GestureDetector(
-                          onTapDown: (TapDownDetails details) {
-                            _showPopupMenu(details.globalPosition);
-                          },
-                          child: InkWell(
-                            child: CircleAvatar(
-                              radius: w * 0.3,
-                              backgroundColor: Colors.black,
-                            ),
-                          ),
-                        );
-                      }
-                    }),
-              )
-            ],
-            backgroundColor: Colors.white,
-          ),
-        ):SizedBox(),
+        
         body: pages[page],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: page,

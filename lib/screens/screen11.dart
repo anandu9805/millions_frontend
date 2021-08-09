@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/model/newpost_model.dart';
 import 'package:millions/model/user.dart';
+import 'package:millions/widgets/appbar_others.dart';
 import 'package:millions/widgets/photos.dart';
 
 class Screen11 extends StatefulWidget {
@@ -124,7 +125,14 @@ class _Screen11State extends State<Screen11> {
 
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(
+          (h) * (1 / 13),
+        ),
+        child: AppBarOthers(),
+      ),
       body: _loadingPosts
           ? Center(
               child: Container(

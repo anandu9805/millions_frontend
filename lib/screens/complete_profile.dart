@@ -59,7 +59,7 @@ class _CreateProfileState extends State<CreateProfile> {
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
-    });
+    }).whenComplete(() => null);
   }
 
   @override

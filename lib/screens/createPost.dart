@@ -22,9 +22,15 @@ class _CreatePageState extends State<CreatePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
     return Scaffold(
       drawer: DefaultDrawer(),
-      // appBar: ,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(
+          (h) * (1 / 13),
+        ),
+        child: AppBarOthers(),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

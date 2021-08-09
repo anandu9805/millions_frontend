@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
+import 'package:millions/provider.dart';
+import 'package:millions/screens/explore.dart';
+import 'package:millions/screens/myWallet.dart';
+import 'package:millions/screens/page8.dart';
+import 'package:millions/screens/screen14.dart';
+import 'package:millions/screens/searchPage..dart';
+import 'package:millions/services/userService.dart';
+import 'package:provider/provider.dart';
 
 class AppBarOthers extends StatefulWidget {
   @override
@@ -18,13 +26,69 @@ class _AppBarOthersState extends State<AppBarOthers> {
 
   int _lastIntegerSelected;
 
+  void _showPopupMenu(Offset offset) async {
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+          offset.dx,
+          offset.dy,
+          MediaQuery.of(context).size.width - offset.dx,
+          MediaQuery.of(context).size.height - offset.dy),
+      items: [
+        PopupMenuItem(
+          child: Text("My Channel", style: GoogleFonts.ubuntu()),
+          value: 'mychannel',
+        ),
+        PopupMenuItem(
+          child: Text(
+            "My Account",
+            style: GoogleFonts.ubuntu(),
+          ),
+          value: 'editprofile',
+        ),
+        PopupMenuItem(
+          child: Text("My Wallet", style: GoogleFonts.ubuntu()),
+          value: 'mywallet',
+        ),
+        PopupMenuItem(
+          child: Text("Logout", style: GoogleFonts.ubuntu()),
+          value: 'logout',
+        ),
+      ],
+      elevation: 8.0,
+    ).then((value) {
+      if (value != null) {
+        if (value == 'logout') {
+          final millionsprovider =
+              Provider.of<MillionsProvider>(context, listen: false);
+          millionsprovider.logout(context);
+        } else if (value == 'mywallet') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MyWallet()),
+          );
+        } else if (value == 'mychannel') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Page8(altUserId)),
+          );
+        } else if (value == 'editprofile') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Screen14()),
+          );
+        }
+      }
+
+// NOTE: even you didnt select item this method will be called with null of value so you should call your call back with checking if value is not null
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
 
     return AppBar(
-      backgroundColor: Colors.white,
-      // leadingWidth: 80.0,
       leading: Container(
         color: Colors.white,
         width: w / 4,
@@ -35,51 +99,94 @@ class _AppBarOthersState extends State<AppBarOthers> {
             alignment: Alignment.centerRight,
           ),
           onTap: () {
-            // openDrawer();
+            openDrawer();
           },
         ),
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(top: 10, right: 10),
+          padding: const EdgeInsets.only(
+            top: 10,
+          ),
           child: IconButton(
             icon: Icon(
               Icons.search_outlined,
-              color: Colors.black,
+              color: primary,
             ),
-            onPressed: () async {
-              final int selected = await showSearch<int>(
-                context: context,
-                delegate: _delegate,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchPage()),
               );
-              if (selected != null && selected != _lastIntegerSelected) {
-                setState(() {
-                  _lastIntegerSelected = selected;
-                });
-              }
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 10, right: 10),
+          child: IconButton(
+            icon: Icon(
+              Icons.explore,
+              color: primary,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Explore()),
+              );
             },
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 10, right: 20),
-          child: InkWell(
-            child: CircleAvatar(
-              child: ClipRRect(
-                child: Image.network(
-                  altProfilePic,
-                  //'https://imagevars.gulfnews.com/2020/01/22/Hrithik-Roshan--3--1579703264814_16fcda6e62f_large.jpg',
-                  width: w * 0.3,
-                  height: w * 0.3,
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(w * 0.1),
-              ),
-              // backgroundColor: Colors.black,
-            ),
-            onTap: () {},
-          ),
+          child: FutureBuilder(
+              future: UserServices().getUserDetails(altUserId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      _showPopupMenu(details.globalPosition);
+                    },
+                    child: CircleAvatar(
+                      child: ClipRRect(
+                        child: Image.network(
+                          snapshot.data.toString(),
+                          //reels_objects[index].profilePic,
+                          width: w * 1,
+                          height: w * 1,
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(w * 1),
+                      ),
+                      radius: 25,
+                    ),
+                    /*CircleAvatar(radius: 20,
+                            child: ClipRRect(
+                              child: Image.network(
+                                snapshot.data.toString(),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(w * 0.1),
+                            ),
+                            //backgroundColor: Colors.black,
+                          ),*/
+                  );
+                } else {
+                  return GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      _showPopupMenu(details.globalPosition);
+                    },
+                    child: InkWell(
+                      child: CircleAvatar(
+                        radius: w * 0.3,
+                        backgroundColor: Colors.black,
+                      ),
+                    ),
+                  );
+                }
+              }),
         )
       ],
+      backgroundColor: Colors.white,
     );
   }
 }

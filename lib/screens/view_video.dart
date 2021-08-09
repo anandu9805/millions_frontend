@@ -145,401 +145,419 @@ class _ViewVideoState extends State<ViewVideo> {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: (_isLoading == false || widget.id == null)
-          ? SingleChildScrollView(
-              child: Flex(direction: Axis.horizontal, children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      PlayVideo(
-                        video: widget.id == null ? widget.video : video2,
-                        duration: widget.id == null
-                            ? widget.video.duration * 1.0
-                            : video2.duration * 1.0,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text(
-                                widget.id == null
-                                    ? widget.video.title
-                                    : video2.title,
-                                maxLines: flag ? 2 : 10,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
+    return SafeArea(
+      child: Scaffold(
+        body: (_isLoading == false || widget.id == null)
+            ? SingleChildScrollView(
+                child: Flex(direction: Axis.horizontal, children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        PlayVideo(
+                          video: widget.id == null ? widget.video : video2,
+                          duration: widget.id == null
+                              ? widget.video.duration * 1.0
+                              : video2.duration * 1.0,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: RichText(
+                                  text: TextSpan(
+                                      text: widget.id == null
+                                          ? widget.video.title
+                                          : video2.title,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 18),
+                                      children: [
+                                        TextSpan(
+                                          text: widget.id == null
+                                              ? widget.video.description
+                                              : video2.description,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                              fontSize: 16),
+                                        )
+                                      ]),
+                                  maxLines: flag ? 2 : 100,
+                                ),
+
+                                // ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: IconButton(
-                              splashRadius: 2,
-                              icon: Icon(flag
-                                  ? Icons.keyboard_arrow_down_sharp
-                                  : Icons.keyboard_arrow_up_sharp),
-                              onPressed: () {
-                                setState(() {
-                                  flag = !flag;
-                                });
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              "${widget.id == null ? widget.video.views : video2.views} views • ${widget.id == null ? timeAgo(DateTime.fromMicrosecondsSinceEpoch(widget.video.date.microsecondsSinceEpoch)) : timeAgo(DateTime.fromMicrosecondsSinceEpoch(video2.date.microsecondsSinceEpoch))}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal, fontSize: 12),
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            children: [
-                              liked == true
-                                  ? IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        LikeServices().unLikeVideo(
-                                            widget.id == null
-                                                ? widget.video.id
-                                                : video2.id,
-                                            userId,
-                                            altUserId);
-                                      }, //---------------------------------------------------
-                                      icon: Icon(
-                                        Icons.thumb_up,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    splashRadius: 2,
+                                    icon: Icon(flag
+                                        ? Icons.keyboard_arrow_down_sharp
+                                        : Icons.keyboard_arrow_up_sharp),
+                                    onPressed: () {
+                                      setState(() {
+                                        flag = !flag;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                "${widget.id == null ? widget.video.views : video2.views} views • ${widget.id == null ? timeAgo(DateTime.fromMicrosecondsSinceEpoch(widget.video.date.microsecondsSinceEpoch)) : timeAgo(DateTime.fromMicrosecondsSinceEpoch(video2.date.microsecondsSinceEpoch))}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 12),
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                liked == true
+                                    ? IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            liked = !liked;
+                                          });
+                                          LikeServices().unLikeVideo(
+                                              widget.id == null
+                                                  ? widget.video.id
+                                                  : video2.id,
+                                              userId,
+                                              altUserId);
+                                        }, //---------------------------------------------------
+                                        icon: Icon(
+                                          Icons.thumb_up,
+                                        ),
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            liked = !liked;
+                                          });
+                                          LikeServices().likeVideo(
+                                              widget.id == null
+                                                  ? widget.video.id
+                                                  : video2.id,
+                                              userId,
+                                              userId);
+                                        }, //----------------------
+                                        icon: Icon(
+                                          Icons.thumb_up_alt_outlined,
+                                        ),
                                       ),
-                                    )
-                                  : IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        LikeServices().likeVideo(
-                                            widget.id == null
-                                                ? widget.video.id
-                                                : video2.id,
-                                            userId,
-                                            userId);
-                                      }, //----------------------
-                                      icon: Icon(
-                                        Icons.thumb_up_alt_outlined,
-                                      ),
-                                    ),
-                              FutureBuilder(
-                                  future: LikeServices().videoLikeCount(
+                                FutureBuilder(
+                                    future: LikeServices().videoLikeCount(
+                                        widget.id == null
+                                            ? widget.video.id
+                                            : video2.id),
+                                    builder: (context, snapshot) {
+                                      return Text(
+                                        "${snapshot.data}",
+                                        style: TextStyle(
+                                            height: 0.3, fontSize: 10),
+                                      );
+                                    })
+                              ],
+                            ),
+                            // Column(
+                            //   children: [
+                            //     IconButton(
+                            //       onPressed: () {
+                            //         LikeServices()
+                            //             .unLikeVideo(widget.video.id, userId, userId);
+                            //       },
+                            //       icon: Icon(Icons.thumb_down),
+                            //     ),
+                            //     Text(
+                            //       "${widget.video.disLikes}",
+                            //       style: TextStyle(height: 0.3, fontSize: 10),
+                            //     )
+                            //   ],
+                            // ),
+                            Column(
+                              children: [
+                                IconButton(
+                                  onPressed: () async {
+                                    print("clicking share videos");
+                                    parameters = ['watch'];
+                                    parameters.add(
                                       widget.id == null
                                           ? widget.video.id
-                                          : video2.id),
-                                  builder: (context, snapshot) {
-                                    return Text(
-                                      "${snapshot.data}",
-                                      style:
-                                          TextStyle(height: 0.3, fontSize: 10),
+                                          : video2.id,
                                     );
-                                  })
-                            ],
-                          ),
-                          // Column(
-                          //   children: [
-                          //     IconButton(
-                          //       onPressed: () {
-                          //         LikeServices()
-                          //             .unLikeVideo(widget.video.id, userId, userId);
-                          //       },
-                          //       icon: Icon(Icons.thumb_down),
-                          //     ),
-                          //     Text(
-                          //       "${widget.video.disLikes}",
-                          //       style: TextStyle(height: 0.3, fontSize: 10),
-                          //     )
-                          //   ],
-                          // ),
-                          Column(
-                            children: [
-                              IconButton(
-                                onPressed: () async {
-                                  print("clicking share videos");
-                                  parameters = ['watch'];
-                                  parameters.add(
-                                    widget.id == null
-                                        ? widget.video.id
-                                        : video2.id,
-                                  );
-                                  print(parameters);
-                                  await _dynamicLinkService
-                                      .createDynamicLink(parameters)
-                                      .then((value) {
-                                    dynamic_link = value;
-                                  });
-                                  //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
-                                  Share.share(dynamic_link);
-                                },
-                                icon: Icon(
-                                  Icons.share,
+                                    print(parameters);
+                                    await _dynamicLinkService
+                                        .createDynamicLink(parameters)
+                                        .then((value) {
+                                      dynamic_link = value;
+                                    });
+                                    //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
+                                    Share.share(dynamic_link);
+                                  },
+                                  icon: Icon(
+                                    Icons.share,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Share",
-                                style: TextStyle(height: 0.3, fontSize: 10),
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ReportPage(
-                                          video: widget.video,
-                                        ),
-                                      ));
-                                  // reportPopUp(h, context);
-                                  // showDialog(
-                                  //     context: context,
-                                  //     builder: (BuildContext context) {
-                                  //       return Container(
-                                  //         child: Column(
-                                  //           children: [
-                                  //             SimpleDialog(
-                                  //               title: Row(
-                                  //                 mainAxisAlignment:
-                                  //                     MainAxisAlignment.spaceBetween,
-                                  //                 children: <Widget>[
-                                  //                   Column(
-                                  //                     children: nList
-                                  //                         .map((data) =>
-                                  //                             RadioListTile(
-                                  //                               title: Text(
-                                  //                                   "${data.reason}"),
-                                  //                               groupValue: id,
-                                  //                               value: data.index,
-                                  //                               onChanged: (val) {
-                                  //                                 setState(() {
-                                  //                                   radioItemHolder =
-                                  //                                       data.reason;
-                                  //                                   id = data.index;
-                                  //                                 });
-                                  //                               },
-                                  //                             ))
-                                  //                         .toList(),
-                                  //                   ),
-                                  //                   new ElevatedButton(
-                                  //                     onPressed: () {
-                                  //                       ReportServices().reportVideo(
-                                  //                           widget.video,
-                                  //                           radioItemHolder);
-                                  //                     },
-                                  //                     child: new Text(
-                                  //                       "Done",
-                                  //                       style: TextStyle(
-                                  //                           color: Colors.white),
-                                  //                     ),
-                                  //                   )
-                                  //                 ],
-                                  //               ),
-                                  //             ),
-                                  //           ],
-                                  //         ),
-                                  //       );
-                                  //     });
-                                },
-                                icon: Icon(Icons.flag_outlined),
-                              ),
-                              Text(
-                                "Report",
-                                style: TextStyle(height: 0.3, fontSize: 10),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Page8(
-                                                  widget.id == null
-                                                      ? widget.video.channelId
-                                                      : video2.channelId)),
-                                        );
-                                      },
-                                      child: FutureBuilder(
-                                          future: UserServices().getUserDetails(
-                                              widget.id == null
-                                                  ? widget.video.channelId
-                                                  : video2.channelId),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
-                                              return CircleAvatar(
-                                                child: ClipRRect(
-                                                  child: Image.network(
-                                                    snapshot.data.toString(),
-                                                    //reels_objects[index].profilePic,
-                                                    width: w * 1,
-                                                    height: h * 1,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          w * 0.5),
-                                                ),
-                                                radius: 17,
-                                              );
-                                            } else {
-                                              return CircleAvatar(
-                                                // radius: w * 0.05,
-                                                backgroundColor: Colors.black,
-                                              );
-                                            }
-                                          }),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              constraints: BoxConstraints(
-                                                  maxWidth:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.37),
-
-                                              // alignment: Alignment.bottomLeft,
-                                              padding:
-                                                  EdgeInsets.only(right: 1.0),
-                                              child: Text(
-                                                "${widget.id == null ? widget.video.channelName : video2.channelName}",
-
-                                                //content[this.widget.index].userName,
-                                                style: GoogleFonts.ubuntu(
-                                                    color: Colors.black,
-                                                    fontSize: 15,
-                                                    height: 1.2,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            if (widget.video.isVerified)
-                                              Icon(
-                                                Icons.verified_user,
-                                                size: 20,
-                                                color: Colors.grey,
-                                              ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Column(
-                              children: [
-                                TextButton(
-                                  onPressed: () {},
-                                  child: Text("Following"),
+                                Text(
+                                  "Share",
+                                  style: TextStyle(height: 0.3, fontSize: 10),
                                 )
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        height: 10,
-                      ),
-                      Container(
-                        //height: MediaQuery.of(context).size.height * 1 / 14,
-                        width: double.infinity,
-                        child: AdPost(),
-                        // child: Text(
-                        //   'Add banner comes here',
-                        //   style: TextStyle(color: Colors.white),
-                        // ),
-                        //color: Colors.black,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "${widget.id == null ? widget.video.comments : video2.comments} Comments",
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Comments(
-                                      videoId: widget.id == null
-                                          ? widget.video.id
-                                          : video2.id.toString(),
-                                      video: widget.id == null
-                                          ? widget.video
-                                          : video2,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "More",
-                                style: TextStyle(height: 1),
-                              ),
+                            Column(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ReportPage(
+                                            video: widget.video,
+                                          ),
+                                        ));
+                                    // reportPopUp(h, context);
+                                    // showDialog(
+                                    //     context: context,
+                                    //     builder: (BuildContext context) {
+                                    //       return Container(
+                                    //         child: Column(
+                                    //           children: [
+                                    //             SimpleDialog(
+                                    //               title: Row(
+                                    //                 mainAxisAlignment:
+                                    //                     MainAxisAlignment.spaceBetween,
+                                    //                 children: <Widget>[
+                                    //                   Column(
+                                    //                     children: nList
+                                    //                         .map((data) =>
+                                    //                             RadioListTile(
+                                    //                               title: Text(
+                                    //                                   "${data.reason}"),
+                                    //                               groupValue: id,
+                                    //                               value: data.index,
+                                    //                               onChanged: (val) {
+                                    //                                 setState(() {
+                                    //                                   radioItemHolder =
+                                    //                                       data.reason;
+                                    //                                   id = data.index;
+                                    //                                 });
+                                    //                               },
+                                    //                             ))
+                                    //                         .toList(),
+                                    //                   ),
+                                    //                   new ElevatedButton(
+                                    //                     onPressed: () {
+                                    //                       ReportServices().reportVideo(
+                                    //                           widget.video,
+                                    //                           radioItemHolder);
+                                    //                     },
+                                    //                     child: new Text(
+                                    //                       "Done",
+                                    //                       style: TextStyle(
+                                    //                           color: Colors.white),
+                                    //                     ),
+                                    //                   )
+                                    //                 ],
+                                    //               ),
+                                    //             ),
+                                    //           ],
+                                    //         ),
+                                    //       );
+                                    //     });
+                                  },
+                                  icon: Icon(Icons.flag_outlined),
+                                ),
+                                Text(
+                                  "Report",
+                                  style: TextStyle(height: 0.3, fontSize: 10),
+                                )
+                              ],
                             ),
                           ],
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Divider(
+                          color: Colors.grey,
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Page8(
+                                                    widget.id == null
+                                                        ? widget.video.channelId
+                                                        : video2.channelId)),
+                                          );
+                                        },
+                                        child: FutureBuilder(
+                                            future: UserServices()
+                                                .getUserDetails(
+                                                    widget.id == null
+                                                        ? widget.video.channelId
+                                                        : video2.channelId),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.hasData) {
+                                                return CircleAvatar(
+                                                  child: ClipRRect(
+                                                    child: Image.network(
+                                                      snapshot.data.toString(),
+                                                      //reels_objects[index].profilePic,
+                                                      width: w * 1,
+                                                      height: h * 1,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            w * 0.5),
+                                                  ),
+                                                  radius: 17,
+                                                );
+                                              } else {
+                                                return CircleAvatar(
+                                                  // radius: w * 0.05,
+                                                  backgroundColor: Colors.black,
+                                                );
+                                              }
+                                            }),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                constraints: BoxConstraints(
+                                                    maxWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.37),
+
+                                                // alignment: Alignment.bottomLeft,
+                                                padding:
+                                                    EdgeInsets.only(right: 1.0),
+                                                child: Text(
+                                                  "${widget.id == null ? widget.video.channelName : video2.channelName}",
+
+                                                  //content[this.widget.index].userName,
+                                                  style: GoogleFonts.ubuntu(
+                                                      color: Colors.black,
+                                                      fontSize: 15,
+                                                      height: 1.2,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              if (widget.video.isVerified)
+                                                Icon(
+                                                  Icons.verified_user,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(right: 8.0),
+                            //   child: Column(
+                            //     children: [
+                            //       TextButton(
+                            //         onPressed: () {},
+                            //         child: Text("Following"),
+                            //       )
+                            //     ],
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                        Divider(
+                          color: Colors.grey,
+                          height: 10,
+                        ),
+                        Container(
+                          //height: MediaQuery.of(context).size.height * 1 / 14,
+                          width: double.infinity,
+                          child: AdPost(),
+                          // child: Text(
+                          //   'Add banner comes here',
+                          //   style: TextStyle(color: Colors.white),
+                          // ),
+                          //color: Colors.black,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "${widget.id == null ? widget.video.comments : video2.comments} Comments",
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Comments(
+                                        videoId: widget.id == null
+                                            ? widget.video.id
+                                            : video2.id.toString(),
+                                        video: widget.id == null
+                                            ? widget.video
+                                            : video2,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "More",
+                                  style: TextStyle(height: 1),
+                                ),
+                              ),
+                            ],
+                          ),
 // <<<<<<< HEAD
 //                         Padding(
 //                           padding: const EdgeInsets.only(right: 8.0),
@@ -635,62 +653,63 @@ class _ViewVideoState extends State<ViewVideo> {
 //                     ),
 //                   ],
 // =======
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8.0),
-                        // height: h / 2,
-                        child: Container(
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
                           // height: h / 2,
-                          child: StreamBuilder(
-                            stream: CommentServices().getOneVideoComments(
-                              widget.id == null
-                                  ? widget.video.id
-                                  : video2.id.toString(),
+                          child: Container(
+                            // height: h / 2,
+                            child: StreamBuilder(
+                              stream: CommentServices().getOneVideoComments(
+                                widget.id == null
+                                    ? widget.video.id
+                                    : video2.id.toString(),
+                              ),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  return ListView(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    children: snapshot.data.docs.map((doc) {
+                                      CommentModel comment =
+                                          CommentModel.fromMap(doc.data());
+                                      List<QueryDocumentSnapshot<Object>>
+                                          replyComments = snapshot.data.docs
+                                              .where((o) =>
+                                                  o['commentId'] ==
+                                                  'reply-' + comment.commentId)
+                                              .toList();
+                                      return Comment(
+                                          comment: comment,
+                                          replies: replyComments);
+                                    }).toList(),
+                                  );
+                                } else {
+                                  return Container(
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+                              },
+                              // future: VideoServices.getAllVideos(),
                             ),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.hasData) {
-                                return ListView(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  children: snapshot.data.docs.map((doc) {
-                                    CommentModel comment =
-                                        CommentModel.fromMap(doc.data());
-                                    List<QueryDocumentSnapshot<Object>>
-                                        replyComments = snapshot.data.docs
-                                            .where((o) =>
-                                                o['commentId'] ==
-                                                'reply-' + comment.commentId)
-                                            .toList();
-                                    return Comment(
-                                        comment: comment,
-                                        replies: replyComments);
-                                  }).toList(),
-                                );
-                              } else {
-                                return Container(
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              }
-                            },
-                            // future: VideoServices.getAllVideos(),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  ),
+                ]),
+              )
+            : Container(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: primary,
                   ),
                 ),
-              ]),
-            )
-          : Container(
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: primary,
-                ),
               ),
-            ),
+      ),
     );
   }
 }

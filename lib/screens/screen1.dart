@@ -16,6 +16,12 @@ class Screen1 extends StatefulWidget {
 class _Screen1State extends State<Screen1> {
   @override
   void initState() {
+    if (FirebaseAuth.instance.currentUser.uid != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }
     super.initState();
   }
 
@@ -82,7 +88,7 @@ class _Screen1State extends State<Screen1> {
                         onPressed: () {
                           if (FirebaseAuth.instance.currentUser != null) {
                             print("user loggedin");
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => CreateProfile(
@@ -90,12 +96,13 @@ class _Screen1State extends State<Screen1> {
                                 ),
                               ),
                             );
-                          }else{
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
-                          );}
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                            );
+                          }
                         },
                         child: Icon(
                           Icons.arrow_forward,
