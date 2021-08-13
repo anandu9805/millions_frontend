@@ -136,7 +136,7 @@ class _PlayVideoState extends State<PlayVideo> {
   ChewieController _chewieController;
   bool isAdOpen = true;
   dynamic adSrc;
-  bool _isPlaying = false;
+  bool _isPlaying = true;
   bool _showSkip = false;
   Duration _duration;
   Duration _position;
