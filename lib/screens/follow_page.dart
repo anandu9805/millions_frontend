@@ -252,7 +252,7 @@ class _Screen9State extends State<Screen9> {
                                     Video videoItems =
                                         Video.fromMap(doc.data());
                                     return VideoCard(
-                                      video: videoItems,
+                                      video: videoItems,fromwhere: 1,
                                     );
                                   }).toList(),
                                 );

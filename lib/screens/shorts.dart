@@ -95,7 +95,7 @@ class _ShortsState extends State<Shorts> {
   _getReels() async {
     Query q = FirebaseFirestore.instance
         .collection('reels')
-        .orderBy("date", descending: true)
+        .orderBy("videoScore", descending: true)
         .limit(_perpage);
     QuerySnapshot querySnapshot = await q.get();
     _reels_items = querySnapshot.docs;
@@ -115,7 +115,7 @@ class _ShortsState extends State<Shorts> {
     print(_lastdocument.id);
     Query q = FirebaseFirestore.instance
         .collection('reels')
-        .orderBy("date")
+        .orderBy("videoScore",descending: true)
         .startAfterDocument(_lastdocument);
     QuerySnapshot querySnapshot = await q.get();
     setState(() {

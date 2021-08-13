@@ -224,7 +224,7 @@ class _ExploreState extends State<Explore> {
                                     itemBuilder: (BuildContext ctx, int index) {
                                       return VideoCard(
                                           video: Video.fromMap(
-                                              _videos[index].data()));
+                                              _videos[index].data()),fromwhere: 1,);
                                     },
                                   )
                                 ],

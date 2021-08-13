@@ -22,6 +22,7 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
 import './trimmer_view.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UploadReel extends StatefulWidget {
   final File file_to_upload, thumbnail_from_preview;
@@ -39,6 +40,7 @@ class _UploadReelState extends State<UploadReel> {
   // var currentuserid =
   //     "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
   //var currentuserid = "Pon1uG0eNnhf9TLsps0jtScndtN2";
+  var currentuserid = FirebaseAuth.instance.currentUser.uid;
   String fileName = null;
   String url;
   //List currentUserChannelDetails = [];
@@ -148,7 +150,7 @@ class _UploadReelState extends State<UploadReel> {
     try {
       FirebaseFirestore.instance
           .collection('channels')
-          .doc(altUserId)
+          .doc(currentuserid )
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         Map<String, dynamic> data =
@@ -185,14 +187,14 @@ class _UploadReelState extends State<UploadReel> {
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
     firebase_storage.Reference ref_thumbnail = storage
-        .ref('test-reels/${altUserId}/thumbnails/${thumnail_image_name}');
+        .ref('test-reels/${currentuserid }/thumbnails/${thumnail_image_name}');
     firebase_storage.UploadTask uploadTask_thumbnail =
         ref_thumbnail.putFile(thumbanil);
     uploadTask_thumbnail.whenComplete(() async {
       thumbnail_url = await ref_thumbnail.getDownloadURL();
 
       firebase_storage.Reference ref =
-          storage.ref('test-reels/${altUserId}/${fileName}');
+          storage.ref('test-reels/${currentuserid }/${fileName}');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
       uploadTask.snapshotEvents.listen(
           (firebase_storage.TaskSnapshot snapshot) {
