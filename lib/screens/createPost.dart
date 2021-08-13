@@ -40,7 +40,7 @@ class _CreatePageState extends State<CreatePage> {
             //  AppBarOthers(),
 
             Padding(
-                padding: EdgeInsets.fromLTRB(20, 60, 0, 30),
+                padding: EdgeInsets.fromLTRB(20, 20, 0, 30),
                 child: Text(
                   'Create',
                   style: GoogleFonts.ubuntu(
@@ -58,7 +58,7 @@ class _CreatePageState extends State<CreatePage> {
                   );
                 },
                 child: Container(
-                  height: MediaQuery.of(context).size.width * 0.5,
+                  //height: MediaQuery.of(context).size.width * 0.5,
                   //margin: const EdgeInsets.all(15.0),
                   //padding: const EdgeInsets.all(3.0),
                   decoration: BoxDecoration(border: Border.all(color: primary)),
@@ -135,7 +135,7 @@ class _CreatePageState extends State<CreatePage> {
                 child: Container(
                   //margin: const EdgeInsets.all(15.0),
                   //padding: const EdgeInsets.all(3.0),
-                  height: MediaQuery.of(context).size.width * 0.5,
+                  //height: MediaQuery.of(context).size.width * 0.5,
                   decoration: BoxDecoration(border: Border.all(color: primary)),
                   child: Card(
                     color: Color(0xffe8e8e8),
@@ -213,7 +213,7 @@ class _CreatePageState extends State<CreatePage> {
                   );
                 },
                 child: Container(
-                  height: MediaQuery.of(context).size.width * 0.5,
+                  //height: MediaQuery.of(context).size.width * 0.5,
                   //margin: const EdgeInsets.all(15.0),
                   //padding: const EdgeInsets.all(3.0),
                   decoration: BoxDecoration(border: Border.all(color: primary)),

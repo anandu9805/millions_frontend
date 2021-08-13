@@ -1,7 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/screens/googleSignIn.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/otpPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -120,12 +122,35 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Text(
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard printer.",
-                          style: GoogleFonts.ubuntu(
-                              fontSize: 10, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: RichText(textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text:
+                        'By creating an account you acknowledge that you agree to Million\'s ',
+                    style:
+                        GoogleFonts.ubuntu(fontSize: 12, color: Colors.white),
+                    children: [
+                      TextSpan(
+                        text: 'Terms of Service',
+                        style: GoogleFonts.ubuntu(color: Colors.white, decoration: TextDecoration.underline, fontSize: 12),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => launch(
+                              "https://docs.millionsofficial.in/docs/privacy/terms"),
+                      ),
+                      TextSpan(
+                        text: ' and ',
+                        style: GoogleFonts.ubuntu(
+                            color: Colors.white, fontSize: 12),
+                      ),
+                      TextSpan(
+                        text: 'Privacy Policy',
+                        style: GoogleFonts.ubuntu(color: Colors.white,  decoration: TextDecoration.underline, fontSize: 12),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => launch(
+                              "https://docs.millionsofficial.in/docs/privacy/privacy-policy"),
+                      ),
+                    ],
+                  ),
+                ),
                       )
                     ],
                   ),

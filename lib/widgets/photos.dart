@@ -240,19 +240,25 @@ class _PhotosState extends State<Photos> {
                               alignment: Alignment(-0.5, -0.2),
                               widthFactor: 1,
                               heightFactor: 1,
-                              child: CachedNetworkImage(
-                                placeholder: (context, thumbnailUrl) =>
-                                    SkeletonContainer.square(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 500,
+                              child: InteractiveViewer(
+                                //boundaryMargin: const EdgeInsets.all(20.0),
+                                //minScale: 0.1,
+                                maxScale: 10,
+                                child: CachedNetworkImage(
+                                  placeholder: (context, thumbnailUrl) =>
+                                      SkeletonContainer.square(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 500,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    height: 1,
+                                    child: Text("hi"),
+                                  ),
+                                  imageUrl: widget.photo?.photoSrc == null
+                                      ? altChannelArt
+                                      : widget.photo?.photoSrc,
                                 ),
-                                errorWidget: (context, url, error) => Container(
-                                  height: 1,
-                                  child: Text("hi"),
-                                ),
-                                imageUrl: widget.photo?.photoSrc == null
-                                    ? altChannelArt
-                                    : widget.photo?.photoSrc,
                               ),
                             ),
                           ),
@@ -292,9 +298,8 @@ class _PhotosState extends State<Photos> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.left,
-                  style: TextStyle(
+                  style: GoogleFonts.ubuntu(
                     fontSize: 10,
-                    fontFamily: "ubuntu",
                     fontWeight: FontWeight.w500,
                     color: Colors.black54,
                   ),

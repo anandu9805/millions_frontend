@@ -122,8 +122,10 @@ class _VideoCardState extends State<VideoCard> {
                                   // ),
                                 ),
                               ),
-                            )),
-                      )),
+                            )
+                            ),
+                      )
+                      ),
                   Positioned(
                     bottom: 10,
                     right: 10,
@@ -162,10 +164,11 @@ class _VideoCardState extends State<VideoCard> {
                             "${widget.video.title}",
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .copyWith(fontSize: 15.0),
+                            style: GoogleFonts.ubuntu(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                         Flexible(
@@ -173,9 +176,8 @@ class _VideoCardState extends State<VideoCard> {
                             '${widget.video.channelName} • ${Numeral(widget.video?.views).value()} Views • ${FlutterTimeAgo.parse(widget.video?.date.toDate(), lang: 'en')}',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: GoogleFonts.ubuntu(
                               fontSize: 10,
-                              fontFamily: "ubuntu",
                               fontWeight: FontWeight.w500,
                               color: Colors.black54,
                             ),

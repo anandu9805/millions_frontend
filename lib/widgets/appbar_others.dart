@@ -106,7 +106,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
       actions: [
         Padding(
           padding: const EdgeInsets.only(
-            top: 10,
+            right: 5,
           ),
           child: IconButton(
             icon: Icon(
@@ -122,7 +122,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 10, right: 10),
+          padding: const EdgeInsets.only( right: 10),
           child: IconButton(
             icon: Icon(
               Icons.explore,
@@ -137,7 +137,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 10, right: 20),
+          padding: const EdgeInsets.only(right: 20),
           child: FutureBuilder(
               future: UserServices().getUserDetails(altUserId),
               builder: (context, snapshot) {
@@ -147,18 +147,23 @@ class _AppBarOthersState extends State<AppBarOthers> {
                       _showPopupMenu(details.globalPosition);
                     },
                     child: CircleAvatar(
-                      child: ClipRRect(
-                        child: Image.network(
-                          snapshot.data.toString(),
-                          //reels_objects[index].profilePic,
-                          width: w * 1,
-                          height: w * 1,
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(w * 1),
-                      ),
-                      radius: 25,
-                    ),
+                    foregroundImage: NetworkImage(
+                       snapshot.data.toString()),
+                  ),
+                    // child: CircleAvatar(
+
+                    //   child: ClipRRect(
+                    //     child: Image.network(
+                    //       snapshot.data.toString(),
+                    //       //reels_objects[index].profilePic,
+                    //       width: w * 1,
+                    //       height: w * 1,
+                    //       fit: BoxFit.cover,
+                    //     ),
+                    //     borderRadius: BorderRadius.circular(w * 1),
+                    //   ),
+                    //   radius: 25,
+                    // ),
                     /*CircleAvatar(radius: 20,
                             child: ClipRRect(
                               child: Image.network(
@@ -177,7 +182,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
                     },
                     child: InkWell(
                       child: CircleAvatar(
-                        radius: w * 0.3,
+                        //radius: w * 0.3,
                         backgroundColor: Colors.black,
                       ),
                     ),
