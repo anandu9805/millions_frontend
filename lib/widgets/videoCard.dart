@@ -10,8 +10,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class VideoCard extends StatefulWidget {
   final Video video;
-
-  const VideoCard({Key key, this.video}) : super(key: key);
+  final int fromwhere;
+//1 from home page or explore page or followpage;
+  //2 form all other callers
+  const VideoCard({Key key, this.video,this.fromwhere}) : super(key: key);
 
   @override
   _VideoCardState createState() => _VideoCardState();
@@ -187,7 +189,7 @@ class _VideoCardState extends State<VideoCard> {
                     ),
                   ),
                   //PopUpMenuIcon(""),
-                  widget.video.channelId == altUserId
+                  widget.video.channelId == altUserId &&widget.fromwhere==0
                       ? PopUpMenuIcon("videos", widget.video.id)
                       : Row(),
                 ],

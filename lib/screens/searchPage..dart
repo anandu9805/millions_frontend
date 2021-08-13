@@ -166,7 +166,7 @@ class _SearchPageState extends State<SearchPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => ViewVideo(
-                                                video: searchVideo,
+                                                video: searchVideo,id:null
                                               )),
                                     );
                                   });

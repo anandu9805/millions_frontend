@@ -69,7 +69,7 @@ class _Page8State extends State<Page8> {
           .doc("followers/$docID")
           .delete()
           .whenComplete(() {
-        _showToast(context, "Following " + cname);
+        _showToast(context, "UnFollowed " + cname);
         FirebaseMessaging.instance.unsubscribeFromTopic(widget.channelId);
         setState(() {
           followStatus = "Follow";
@@ -455,6 +455,7 @@ class _Page8State extends State<Page8> {
                               Video videoItems = Video.fromMap(doc.data());
                               return VideoCard(
                                 video: videoItems,
+                                fromwhere: 0,
                               );
                             }).toList(),
                           );

@@ -16,6 +16,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UploadPost extends StatefulWidget {
   @override
@@ -27,6 +28,7 @@ class _UploadPostState extends State<UploadPost> {
   // var currentuserid =
   //     "4C4iLByizTPLBBlP4rssrwGTISb2"; //the id of the logged in user
   //var currentuserid ="Pon1uG0eNnhf9TLsps0jtScndtN2";
+  var currentuserid = FirebaseAuth.instance.currentUser.uid;
   PickedFile pickedImageFile;
   String fileName;
   List posts = [];
@@ -57,7 +59,8 @@ class _UploadPostState extends State<UploadPost> {
     try {
       FirebaseFirestore.instance
           .collection('channels')
-          .doc(altUserId)
+
+      .doc(currentuserid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         Map<String, dynamic> data =
@@ -126,7 +129,7 @@ class _UploadPostState extends State<UploadPost> {
     print(fileName.split('.').last);
 
     firebase_storage.Reference ref = storage.ref(
-        'assets/${altUserId}/posts/${newId.id}.${fileName.split('.').last}');
+        'assets/${currentuserid}/posts/${newId.id}.${fileName.split('.').last}');
     firebase_storage.UploadTask uploadTask = ref.putFile(_imageFile);
     uploadTask.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
       print('Task state: ${snapshot.state}');
