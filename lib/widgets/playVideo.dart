@@ -150,7 +150,6 @@ class _PlayVideoState extends State<PlayVideo> {
         .get()
         .then((value) {
           print(value.docs.single['videoSrc']);
-          // setState(() {
           adSrc = value.docs.single['videoSrc'];
           print(123);
           print(adSrc);

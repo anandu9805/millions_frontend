@@ -28,10 +28,11 @@ class _CommentsState extends State<Comments> {
 
   Future<String> profilePic;
   bool isOwner = true;
+  int count = 0;
   String commentId =
-      altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString();
+      FirebaseAuth.instance.currentUser.uid + '-' + DateTime.now().millisecondsSinceEpoch.toString();
   String uniqueId =
-      altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString();
+      FirebaseAuth.instance.currentUser.uid + '-' + DateTime.now().millisecondsSinceEpoch.toString();
 
   List<DocumentSnapshot> _comments = [];
   bool _loadingComments = true,
@@ -164,31 +165,43 @@ class _CommentsState extends State<Comments> {
                     onTap: () {
                       if (getcomment.text.length > 0) {
                         // print(getcomment.text);
-                        setState(() {
-                          
-                        });
+                        setState(() {});
                         CommentServices().addVideoComment(
                             widget.video.channelId,
                             widget.video.channelName,
                             getcomment.text,
-                            altUserId +
+                            FirebaseAuth.instance.currentUser.uid +
                                 '-' +
                                 DateTime.now()
                                     .millisecondsSinceEpoch
                                     .toString(),
-                            isOwner,
+                            FirebaseAuth.instance.currentUser.uid ==
+                                    widget.video.channelId
+                                ? true
+                                : false,
                             "watch/" + widget.video.id,
                             FirebaseAuth.instance.currentUser.displayName,
                             FirebaseAuth.instance.currentUser.photoURL,
                             "main-comment",
                             uniqueId,
                             "video",
-                            altUserId,
+                            FirebaseAuth.instance.currentUser.uid,
                             widget.video.id,
                             widget.video.title);
                       }
                       getcomment.clear();
-                      setState(() {});
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Comments(
+                              video: widget.video,
+                              videoId: widget.video.id,
+                            ),
+                          ));
+                      setState(() {
+                        count++;
+                      });
                     },
                   ),
                   // labelText: 'Add a comment',
@@ -233,7 +246,7 @@ class _CommentsState extends State<Comments> {
                   : _comments.length == 0
                       ? Center(
                           child: Container(
-                          child: Text('No posts to show!',
+                          child: Text('No comments!',
                               style: GoogleFonts.ubuntu(fontSize: 15)),
                         ))
                       : Column(

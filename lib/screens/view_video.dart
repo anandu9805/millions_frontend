@@ -55,6 +55,7 @@ class _ViewVideoState extends State<ViewVideo> {
   bool liked = false;
   String likeId;
   String userId = "XIi08ww5Fmgkv7FXOSTkOcmVh2C3";
+  
 
   var _isLoading = true;
 
@@ -173,16 +174,19 @@ class _ViewVideoState extends State<ViewVideo> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
-                                          fontSize: 18),
+                                          fontSize: 18,
+                                          height: 1.5),
                                       children: [
+                                        TextSpan(text: "     "),
                                         TextSpan(
                                           text: widget.id == null
                                               ? widget.video.description
                                               : video2.description,
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                              fontSize: 16),
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                          ),
                                         )
                                       ]),
                                   maxLines: flag ? 2 : 100,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/widgets/comments.dart';
 
@@ -212,7 +213,7 @@ class CommentServices {
     ).whenComplete(() {
       FirebaseFirestore.instance
           .collection('comment-likes')
-          .doc(altUserId + '_' + commentId)
+          .doc(follower + '_' + commentId)
           .set(
         {'liked': false},
         SetOptions(

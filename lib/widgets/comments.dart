@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/tempResources.dart';
@@ -20,6 +21,7 @@ class _CommentState extends State<Comment> {
   TextEditingController replyController = TextEditingController();
   bool liked = false;
   bool disliked = false;
+  int number;
   // @override
   // void initState() {
 
@@ -28,7 +30,8 @@ class _CommentState extends State<Comment> {
   String likeId;
   @override
   void initState() {
-    likeId = altUserId + '_' + widget.comment.commentId;
+    likeId =
+        FirebaseAuth.instance.currentUser.uid + '_' + widget.comment.commentId;
     Future<DocumentSnapshot> likedData =
         CommentServices().commentLikeChecker(likeId);
     likedData.then((value) {
@@ -194,16 +197,27 @@ class _CommentState extends State<Comment> {
                       color: primary,
                     ),
               onPressed: () {
-                print("pressed like");
+                if (liked == true) {
+                  setState(() {
+                    liked = !liked;
+                  });
+                  print("pressed like");
+
+                }
+                else{
+                  print("pressed like");
                 CommentServices().likeComment(
                     widget.comment.channel,
                     widget.comment.comment,
                     widget.comment.commentId,
                     widget.comment.userId,
-                    altUserId,
-                    isOwner,
-                    "user 1",
-                    altProfilePic,
+                    FirebaseAuth.instance.currentUser.uid,
+                    FirebaseAuth.instance.currentUser.uid ==
+                            widget.comment.userId
+                        ? true
+                        : false,
+                    FirebaseAuth.instance.currentUser.displayName,
+                    FirebaseAuth.instance.currentUser.photoURL,
                     widget.comment.type,
                     widget.comment.videoId,
                     widget.comment.videoTitle);
@@ -212,6 +226,7 @@ class _CommentState extends State<Comment> {
                   disliked = false;
                 });
                 print(widget.comment.commentId);
+                }
               },
             ),
             Text("${widget.comment.likes}"),
@@ -246,19 +261,27 @@ class _CommentState extends State<Comment> {
                       color: primary,
                     ),
               onPressed: () {
-                print("pressed dislike");
-                CommentServices().dislikeComment(
-                    widget.comment.channel,
-                    widget.comment.comment,
-                    widget.comment.commentId,
-                    widget.comment.userId,
-                    altUserId,
-                    widget.comment.videoId);
-                print(widget.comment.userId);
-                setState(() {
-                  liked = false;
-                  disliked = true;
-                });
+                if (disliked == true) {
+                  setState(() {
+                    disliked = !disliked;
+                  });
+                  print("deleted dislike");
+                } else {
+                  CommentServices().dislikeComment(
+                      widget.comment.channel,
+                      widget.comment.comment,
+                      widget.comment.commentId,
+                      widget.comment.userId,
+                      FirebaseAuth.instance.currentUser.uid,
+                      widget.comment.videoId);
+                  print(widget.comment.userId);
+                  setState(() {
+                    liked = false;
+                    disliked = true;
+                  });
+                  print("pressed dislike");
+                }
+                
               },
             ),
             Text(
