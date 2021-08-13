@@ -239,6 +239,7 @@ class _PlayVideoState extends State<PlayVideo> {
       showControls: false,
       showOptions: false,
       autoInitialize: true,
+      
       allowPlaybackSpeedChanging: false,
     );
   }
