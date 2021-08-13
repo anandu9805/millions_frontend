@@ -239,7 +239,6 @@ class _PlayVideoState extends State<PlayVideo> {
       showControls: false,
       showOptions: false,
       autoInitialize: true,
-      
       allowPlaybackSpeedChanging: false,
     );
   }
@@ -259,8 +258,16 @@ class _PlayVideoState extends State<PlayVideo> {
         children: <Widget>[
           AspectRatio(
             aspectRatio: _chewieController.aspectRatio,
-            child: Chewie(
-              controller: _chewieController,
+            child: WillPopScope(
+              onWillPop: () {
+                if (_chewieController.isPlaying) {
+                  _chewieController.pause();
+                }
+                return new Future.value(true);
+              },
+              child: Chewie(
+                controller: _chewieController,
+              ),
             ),
           ),
           Positioned(
