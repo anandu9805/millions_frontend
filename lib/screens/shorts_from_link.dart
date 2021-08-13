@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:millions/constants/size.dart';
 import 'package:millions/screens/content_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:millions/screens/reelsComments.dart';
 import 'package:millions/screens/uploadvideo.dart';
 import 'package:millions/services/likeServices.dart';
 import 'package:millions/widgets/reportReels.dart';
@@ -42,7 +43,8 @@ class _ShortsFromLinkState extends State<ShortsFromLink> {
 
   List<DocumentSnapshot> _reels_items = [];
   int index = 0;
-  var currentuserid = FirebaseAuth.instance.currentUser.uid; //the id of the logged in user
+  var currentuserid =
+      FirebaseAuth.instance.currentUser.uid; //the id of the logged in user
   // var currentuserid = "DEyDJLaskaSXV5kMBLXSGBBZC062";
   List following_details = [];
   bool liked = false;
@@ -328,6 +330,25 @@ class _ShortsFromLinkState extends State<ShortsFromLink> {
                       }, //reels report function
                       icon: Icon(
                         Icons.flag_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShortsComments(
+                              commentId: _reels_items[index]["id"],
+                              post: Reels.fromMap(
+                                _reels_items[index].data(),
+                              ),
+                            ),
+                          ),
+                        );
+                      }, //reels report function
+                      icon: Icon(
+                        Icons.comment_outlined,
                         color: Colors.white,
                       ),
                     ),

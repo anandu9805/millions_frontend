@@ -96,7 +96,11 @@ class _PostCommentsState extends State<PostComments> {
                             widget.post.channelId,
                             widget.post.channelName,
                             getcomment.text,
-                            altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString(),
+                            altUserId +
+                                '-' +
+                                DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
                             isOwner,
                             "posts/" + widget.post.id,
                             FirebaseAuth.instance.currentUser.displayName,
@@ -109,6 +113,15 @@ class _PostCommentsState extends State<PostComments> {
                             widget.post.title);
                       }
                       getcomment.clear();
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PostComments(
+                              post: widget.post,
+                              commentId: widget.commentId,
+                            ),
+                          ));
                     },
                   ),
                   // labelText: 'Add a comment',

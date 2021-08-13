@@ -111,6 +111,15 @@ class _ShortsCommentsState extends State<ShortsComments> {
                             widget.post.title);
                       }
                       getcomment.clear();
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShortsComments(
+                              post: widget.post,
+                              commentId: widget.commentId,
+                            ),
+                          ));
                     },
                   ),
                   // labelText: 'Add a comment',

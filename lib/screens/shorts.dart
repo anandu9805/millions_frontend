@@ -446,15 +446,16 @@ class _ShortsState extends State<Shorts> {
                           IconButton(
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ShortsComments(
-                                            commentId: _reels_items[index]
-                                                ["id"],
-                                            post: Reels.fromMap(
-                                              _reels_items[index].data(),
-                                            ),
-                                          )));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShortsComments(
+                                    commentId: _reels_items[index]["id"],
+                                    post: Reels.fromMap(
+                                      _reels_items[index].data(),
+                                    ),
+                                  ),
+                                ),
+                              );
                             }, //reels report function
                             icon: Icon(
                               Icons.comment_outlined,
