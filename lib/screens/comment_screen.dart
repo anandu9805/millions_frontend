@@ -29,10 +29,12 @@ class _CommentsState extends State<Comments> {
   Future<String> profilePic;
   bool isOwner = true;
   int count = 0;
-  String commentId =
-      FirebaseAuth.instance.currentUser.uid + '-' + DateTime.now().millisecondsSinceEpoch.toString();
-  String uniqueId =
-      FirebaseAuth.instance.currentUser.uid + '-' + DateTime.now().millisecondsSinceEpoch.toString();
+  String commentId = FirebaseAuth.instance.currentUser.uid +
+      '-' +
+      DateTime.now().millisecondsSinceEpoch.toString();
+  String uniqueId = FirebaseAuth.instance.currentUser.uid +
+      '-' +
+      DateTime.now().millisecondsSinceEpoch.toString();
 
   List<DocumentSnapshot> _comments = [];
   bool _loadingComments = true,
@@ -271,6 +273,7 @@ class _CommentsState extends State<Comments> {
                                     return Container();
                                   } else {
                                     return Comment(
+                                        video: widget.video,
                                         comment: comment,
                                         replies: replyComments);
                                   }

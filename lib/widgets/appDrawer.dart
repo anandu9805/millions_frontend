@@ -6,7 +6,7 @@ import 'package:millions/screens/trendingChannels.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DefaultDrawer extends StatefulWidget {
-  //const DefaultDrawer({ Key? key }) : super(key: key);
+  const DefaultDrawer({Key key}) : super(key: key);
 
   @override
   _DefaultDrawerState createState() => _DefaultDrawerState();
@@ -16,6 +16,7 @@ class _DefaultDrawerState extends State<DefaultDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      // key: ,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -66,15 +67,13 @@ class _DefaultDrawerState extends State<DefaultDrawer> {
             ListTile(
               title: Text('Terms Of Service'),
               onTap: () {
-                launch(
-                    'https://docs.millionsofficial.in/docs/privacy/terms');
+                launch('https://docs.millionsofficial.in/docs/privacy/terms');
               },
             ),
             ListTile(
               title: Text('Support'),
               onTap: () {
-                launch(
-                    'https://docs.millionsofficial.in/docs/bugs/support');
+                launch('https://docs.millionsofficial.in/docs/bugs/support');
               },
             ),
             // ListTile(

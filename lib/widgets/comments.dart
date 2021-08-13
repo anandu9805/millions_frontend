@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/comment_model.dart';
+import 'package:millions/model/video.dart';
+import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/services/commentServices.dart';
 import '../constants/colors.dart';
 
 class Comment extends StatefulWidget {
   final CommentModel comment;
+  final Video video;
   final List<QueryDocumentSnapshot<Object>> replies;
 
-  const Comment({Key key, this.comment, this.replies}) : super(key: key);
+  const Comment({Key key, this.comment, this.replies, this.video})
+      : super(key: key);
 
   @override
   _CommentState createState() => _CommentState();
@@ -28,6 +32,7 @@ class _CommentState extends State<Comment> {
   //   super.initState();
   // }
   String likeId;
+  String dislikeId;
   @override
   void initState() {
     likeId =
@@ -38,12 +43,26 @@ class _CommentState extends State<Comment> {
       if (value == null) {
         setState(() {
           liked = false;
-          disliked = false;
         });
       } else {
         setState(() {
           liked = value.get('liked');
-          disliked = !liked;
+        });
+      }
+    });
+
+    dislikeId =
+        FirebaseAuth.instance.currentUser.uid + '_' + widget.comment.commentId;
+    Future<DocumentSnapshot> dislikedData =
+        CommentServices().commentLikeChecker(likeId);
+    dislikedData.then((value) {
+      if (value == null) {
+        setState(() {
+          disliked = true;
+        });
+      } else {
+        setState(() {
+          disliked = value.get('liked');
         });
       }
     });
@@ -198,34 +217,35 @@ class _CommentState extends State<Comment> {
                     ),
               onPressed: () {
                 if (liked == true) {
+                  CommentServices().deleteLike(
+                      FirebaseAuth.instance.currentUser.uid,
+                      widget.comment.commentId);
                   setState(() {
                     liked = !liked;
                   });
+                  print("delete like");
+                } else {
                   print("pressed like");
-
-                }
-                else{
-                  print("pressed like");
-                CommentServices().likeComment(
-                    widget.comment.channel,
-                    widget.comment.comment,
-                    widget.comment.commentId,
-                    widget.comment.userId,
-                    FirebaseAuth.instance.currentUser.uid,
-                    FirebaseAuth.instance.currentUser.uid ==
-                            widget.comment.userId
-                        ? true
-                        : false,
-                    FirebaseAuth.instance.currentUser.displayName,
-                    FirebaseAuth.instance.currentUser.photoURL,
-                    widget.comment.type,
-                    widget.comment.videoId,
-                    widget.comment.videoTitle);
-                setState(() {
-                  liked = true;
-                  disliked = false;
-                });
-                print(widget.comment.commentId);
+                  CommentServices().likeComment(
+                      widget.comment.channel,
+                      widget.comment.comment,
+                      widget.comment.commentId,
+                      widget.comment.userId,
+                      FirebaseAuth.instance.currentUser.uid,
+                      FirebaseAuth.instance.currentUser.uid ==
+                              widget.comment.userId
+                          ? true
+                          : false,
+                      FirebaseAuth.instance.currentUser.displayName,
+                      FirebaseAuth.instance.currentUser.photoURL,
+                      widget.comment.type,
+                      widget.comment.videoId,
+                      widget.comment.videoTitle);
+                  setState(() {
+                    liked = true;
+                    disliked = true;
+                  });
+                  print(widget.comment.commentId);
                 }
               },
             ),
@@ -253,15 +273,18 @@ class _CommentState extends State<Comment> {
               splashColor: primary,
               icon: disliked
                   ? Icon(
-                      Icons.thumb_down,
+                      Icons.thumb_down_alt_outlined,
                       color: primary,
                     )
                   : Icon(
-                      Icons.thumb_down_alt_outlined,
+                      Icons.thumb_down,
                       color: primary,
                     ),
               onPressed: () {
-                if (disliked == true) {
+                if (disliked == false) {
+                  CommentServices().deleteDisLike(
+                      FirebaseAuth.instance.currentUser.uid,
+                      widget.comment.commentId);
                   setState(() {
                     disliked = !disliked;
                   });
@@ -277,11 +300,10 @@ class _CommentState extends State<Comment> {
                   print(widget.comment.userId);
                   setState(() {
                     liked = false;
-                    disliked = true;
+                    disliked = false;
                   });
                   print("pressed dislike");
                 }
-                
               },
             ),
             Text(
@@ -332,6 +354,15 @@ class _CommentState extends State<Comment> {
                               widget.comment.videoTitle);
                           replyController.clear();
                           Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Comments(
+                                  video: widget.video,
+                                  videoId: widget.comment.videoId,
+                                ),
+                              ));
                         },
                         textColor: Theme.of(context).primaryColor,
                         child: const Text('Comment'),
