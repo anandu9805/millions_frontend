@@ -48,8 +48,8 @@ class _HomePageState extends State<HomePage> {
     userProfilePic = UserServices().getUserDetails(altUserId);
     super.initState();
 
-    print(FirebaseAuth.instance.currentUser);
-    print(FirebaseAuth.instance.currentUser.displayName + "132");
+    //print(FirebaseAuth.instance.currentUser);
+    //print(FirebaseAuth.instance.currentUser.displayName + "132");
   }
 
   @override
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         
         body: pages[page],
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: page,
+          currentIndex: page,selectedLabelStyle: GoogleFonts.ubuntu(),
           showUnselectedLabels: false,
           backgroundColor: primary,
           type: BottomNavigationBarType.fixed,

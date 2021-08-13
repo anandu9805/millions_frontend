@@ -58,7 +58,7 @@ class _Screen11State extends State<Screen11> {
     Query q = FirebaseFirestore.instance
         .collection("posts")
         .where("isVisible", isEqualTo: "Public")
-        .orderBy("date", descending: true)
+        .orderBy("videoScore", descending: true)
         .limit(_perPage);
 
     setState(() {
@@ -86,7 +86,7 @@ class _Screen11State extends State<Screen11> {
     Query q = FirebaseFirestore.instance
         .collection("posts")
         .where("isVisible", isEqualTo: "Public")
-        .orderBy("date", descending: true)
+        .orderBy("videoScore", descending: true)
         .limit(_perPage)
         .startAfterDocument(_lastDocument);
     QuerySnapshot querySnapshot = await q.get();
@@ -115,9 +115,9 @@ class _Screen11State extends State<Screen11> {
     _scrollController.addListener(() {
       double maxScroll = _scrollController.position.maxScrollExtent;
       double currentScroll = _scrollController.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.75;
+      double delta = MediaQuery.of(context).size.height * 0.2;
 
-      if (maxScroll - currentScroll > delta) {
+      if (maxScroll - currentScroll < delta) {
         _getMorePosts();
       }
     });

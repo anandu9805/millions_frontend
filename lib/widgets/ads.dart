@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/admodel.dart';
+import 'package:millions/widgets/skeletol_loader.dart';
 import 'package:url_launcher/url_launcher.dart';
 import "dart:math";
 
@@ -49,129 +51,147 @@ class _AdPostState extends State<AdPost> {
   CollectionReference ads = FirebaseFirestore.instance.collection("post-ads");
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? Container(
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: Center(
-              child: Text(
-                "Loading Ad...",
-                style: GoogleFonts.ubuntu(fontSize: 20),
-              ),
-            ),
-          )
-        : Container(
-            margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
-            decoration: BoxDecoration(
-              border: Border.all(color: primary, width: 1),
-              borderRadius: BorderRadius.circular(5),
-              shape: BoxShape.rectangle,
-            ),
-            child: FutureBuilder<DocumentSnapshot>(
-              future: ads.doc(randomAdId).get(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Container(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      child: Center(
-                          child: Text("Something went wrong!",
-                              style: GoogleFonts.ubuntu(fontSize: 20))));
-                }
+    return Container(
+      margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: primary, width: 1),
+        borderRadius: BorderRadius.circular(5),
+        shape: BoxShape.rectangle,
+      ),
+      child: FutureBuilder<DocumentSnapshot>(
+        future: ads.doc(randomAdId).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Container(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: Center(
+                    child: Text("Something went wrong!",
+                        style: GoogleFonts.ubuntu(fontSize: 20))));
+          }
 
-                if (snapshot.hasData && !snapshot.data.exists) {
-                  return Container(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      child: Center(
-                          child: Text("Ad does not exist!",
-                              style: GoogleFonts.ubuntu(fontSize: 20))));
-                }
+          // if (snapshot.hasData && !snapshot.data.exists) {
+          //   return Container(
+          //       height: MediaQuery.of(context).size.height * 0.25,
+          //       child: Center(
+          //           child: Text("Ad does not exist!",
+          //               style: GoogleFonts.ubuntu(fontSize: 20))));
+          // }
 
-                if (snapshot.connectionState == ConnectionState.done) {
-                  Map<String, dynamic> data =
-                      snapshot.data.data() as Map<String, dynamic>;
-                  adpost = AdPostModel.fromDoc(data);
-                  return Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          launch(adpost.adLink);
-                        },
-                        child: Card(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: Image.network(
-                              adpost.photoSrc,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  //padding: const EdgeInsets.only(top: 20, bottom:20),
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.25,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: primary,
-                                      value: loadingProgress
-                                                  .expectedTotalBytes !=
-                                              null
-                                          ? loadingProgress
-                                                  .cumulativeBytesLoaded /
-                                              loadingProgress.expectedTotalBytes
-                                          : null,
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data =
+                snapshot.data.data() as Map<String, dynamic>;
+            adpost = AdPostModel.fromDoc(data);
+            return Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    launch(adpost.adLink);
+                  },
+                  child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Container(
+                        // height: 400,
+                        // color: Colors.grey,
+                        width: MediaQuery.of(context).size.width,
+                        child: FittedBox(
+                            fit: BoxFit.fill,
+                            child: ClipRect(
+                              // clipBehavior: Clip.hardEdge,
+                              child: Container(
+                                child: Align(
+                                  alignment: Alignment(-0.5, -0.2),
+                                  widthFactor: 1,
+                                  heightFactor: 1,
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, thumbnailUrl) =>
+                                        SkeletonContainer.square(
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.50,
                                     ),
-                                  ),
-                                );
-                              },
-                            )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: primary,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))),
-                              width: MediaQuery.of(context).size.width * 0.1,
-                              //color: primary,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: Text(
-                                    'AD',
-                                    style: GoogleFonts.ubuntu(
-                                        color: Colors.white, fontSize: 15),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      height: 1,
+                                      child: Text("hi"),
+                                    ),
+                                    imageUrl: adpost.photoSrc,
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.03,
-                            ),
-                            Text(
-                              adpost.description,
-                              style: GoogleFonts.ubuntu(
-                                  color: Colors.black, fontSize: 15),
-                            ),
-                          ],
-                        ),
+                            )),
                       )
+                      // child: Image.network(
+                      //   adpost.photoSrc,
+                      //   loadingBuilder: (BuildContext context,
+                      //       Widget child,
+                      //       ImageChunkEvent loadingProgress) {
+                      //     if (loadingProgress == null) return child;
+                      //     return Container(
+                      //       //padding: const EdgeInsets.only(top: 20, bottom:20),
+                      //       height:
+                      //           MediaQuery.of(context).size.height * 0.25,
+                      //       child: Center(
+                      //         child: CircularProgressIndicator(
+                      //           color: primary,
+                      //           value: loadingProgress
+                      //                       .expectedTotalBytes !=
+                      //                   null
+                      //               ? loadingProgress
+                      //                       .cumulativeBytesLoaded /
+                      //                   loadingProgress.expectedTotalBytes
+                      //               : null,
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // )
+                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: primary,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        width: MediaQuery.of(context).size.width * 0.1,
+                        //color: primary,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                              'AD',
+                              style: GoogleFonts.ubuntu(
+                                  color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.03,
+                      ),
+                      Text(
+                        adpost.description,
+                        style: GoogleFonts.ubuntu(
+                            color: Colors.black, fontSize: 15),
+                      ),
                     ],
-                  );
-                }
-
-                return Container(
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  child: Center(
-                    child: Text(
-                      "Loading Ad...",
-                      style: GoogleFonts.ubuntu(fontSize: 20),
-                    ),
                   ),
-                );
-              },
-            ),
+                )
+              ],
+            );
+          }
+
+          return SkeletonContainer.square(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.50,
           );
+        },
+      ),
+    );
   }
 }

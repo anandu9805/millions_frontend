@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:algolia/algolia.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/view_video.dart';
+import 'package:numeral/numeral.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SearchPage extends StatefulWidget {
@@ -77,7 +80,7 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Enter Query", style: GoogleFonts.ubuntu()),
+            Text("Enter Text", style: GoogleFonts.ubuntu()),
             TextFormField(
               controller: _searchText,
               style: GoogleFonts.ubuntu(),
@@ -179,35 +182,35 @@ class _SearchPageState extends State<SearchPage> {
                                   child: Row(
                                     children: [
                                       Container(
-                                          height: 100,
-                                          child: Image.network(
-                                            
-                                              snap.data['thumbnail'] == null
-                                                  ? altChannelArt
-                                                  : snap.data['thumbnail'],
-                                                 loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  //padding: const EdgeInsets.only(top: 20, bottom:20),
-                                  //height: MediaQuery.of(context).size.height * 0.25,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: primary,
-                                      value: loadingProgress.expectedTotalBytes !=
-                                              null
-                                          ? loadingProgress
-                                                  .cumulativeBytesLoaded /
-                                              loadingProgress.expectedTotalBytes
-                                          : null,
-                                    ),
-                                  ),
-                                );
-                              },
-                                                  
+                                        height: 100,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.40,
+                                        child: FittedBox(
+                                            fit: BoxFit.fill,
+                                            child: ClipRect(
+                                              // clipBehavior: Clip.hardEdge,
+                                              child: Container(
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment(-0.5, -0.2),
+                                                  widthFactor: 1,
+                                                  heightFactor: 1,
+                                                  child: CachedNetworkImage(
+                                                    // placeholder: (context, thumbnailUrl) =>
+                                                    //     CircularProgressIndicator(),
+                                                    imageUrl: snap.data[
+                                                                'thumbnail'] ==
+                                                            null
+                                                        ? 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg'
+                                                        :
+                                                        // "",
+                                                        snap.data['thumbnail'],
                                                   ),
-                                                  ),
+                                                ),
+                                              ),
+                                            )),
+                                      ),
                                       SizedBox(
                                         width: 20,
                                       ),
@@ -215,23 +218,35 @@ class _SearchPageState extends State<SearchPage> {
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Text(
-                                              snap.data['title'],
-                                              style: GoogleFonts.ubuntu(
-                                                  fontSize: 15),
+                                            Flexible(
+                                              child: Text(
+                                                "${snap.data['title']}",
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
                                             ),
                                             SizedBox(
                                               height: 10,
                                             ),
-                                            Text(snap.data['channelName'],
+                                            Flexible(
+                                              child: Text(
+                                                '${snap.data['channelName']}',
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: GoogleFonts.ubuntu(
-                                                    fontSize: 12)),
-                                            // Text(
-                                            //    // snap.data['date'].toString() " Views",
-                                            //     timeago.format(time.toDate()).toString(),
-                                            //     style: GoogleFonts.ubuntu(
-                                            //         fontSize: 12))
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
