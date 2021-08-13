@@ -489,7 +489,7 @@ class _ViewVideoState extends State<ViewVideo> {
                                                       TextOverflow.ellipsis,
                                                 ),
                                               ),
-                                              if (widget.video.isVerified)
+                                              if (widget.id == null ? widget.video.isVerified:video2.isVerified)
                                                 Icon(
                                                   Icons.verified_user,
                                                   size: 20,
