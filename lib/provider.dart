@@ -29,15 +29,7 @@ class MillionsProvider<context> extends ChangeNotifier {
 
   Future logout(BuildContext context) async {
     await googleSignIn.disconnect();
-   await FirebaseAuth.instance.signOut().whenComplete(() {
-
-     print("Logged out");
-     Navigator.pop(context);
-     Navigator.push(
-         context,
-         MaterialPageRoute(builder: (context) => Screen1()));
-   });
+    await FirebaseAuth.instance.signOut();
     notifyListeners();
-
   }
 }

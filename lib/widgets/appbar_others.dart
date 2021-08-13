@@ -4,6 +4,7 @@ import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/provider.dart';
 import 'package:millions/screens/explore.dart';
+import 'package:millions/screens/googleSignIn.dart';
 import 'package:millions/screens/myWallet.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/screen14.dart';
@@ -62,6 +63,10 @@ class _AppBarOthersState extends State<AppBarOthers> {
           final millionsprovider =
               Provider.of<MillionsProvider>(context, listen: false);
           millionsprovider.logout(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => GoogleSignIn()),
+          );
         } else if (value == 'mywallet') {
           Navigator.push(
             context,

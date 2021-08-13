@@ -7,6 +7,7 @@ import 'package:millions/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:millions/screens/noNetConnection.dart';
 import 'package:millions/screens/screen1.dart';
+import 'package:millions/screens/splashScreen.dart';
 import 'package:provider/provider.dart';
 import 'provider.dart';
 import 'screens/shorts.dart';
@@ -240,7 +241,7 @@ print("to get message data while app is in background and opened by clicking on 
       child: MaterialApp(
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => isConnected == true
-              ? Screen1() //Screen1()
+              ? SplashScreen() //Screen1()
               : NoInternet(),
           'Posts': (BuildContext context) => Screen11(null),
         },

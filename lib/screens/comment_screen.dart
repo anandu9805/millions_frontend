@@ -164,6 +164,9 @@ class _CommentsState extends State<Comments> {
                     onTap: () {
                       if (getcomment.text.length > 0) {
                         // print(getcomment.text);
+                        setState(() {
+                          
+                        });
                         CommentServices().addVideoComment(
                             widget.video.channelId,
                             widget.video.channelName,
@@ -185,6 +188,7 @@ class _CommentsState extends State<Comments> {
                             widget.video.title);
                       }
                       getcomment.clear();
+                      setState(() {});
                     },
                   ),
                   // labelText: 'Add a comment',

@@ -208,7 +208,6 @@ class _CommentState extends State<Comment> {
                     widget.comment.videoId,
                     widget.comment.videoTitle);
                 setState(() {
-                  widget.comment.likes++;
                   liked = true;
                   disliked = false;
                 });

@@ -86,23 +86,24 @@ class _Screen1State extends State<Screen1> {
                       ),
                       TextButton(
                         onPressed: () {
-                          if (FirebaseAuth.instance.currentUser != null) {
-                            print("user loggedin");
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateProfile(
-                                  uid: FirebaseAuth.instance.currentUser.uid,
-                                ),
-                              ),
-                            );
-                          } else {
+                          // if (FirebaseAuth.instance.currentUser != null) {
+                          //   print("user loggedin");
+                          //   Navigator.pushReplacement(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => CreateProfile(
+                          //         uid: FirebaseAuth.instance.currentUser.uid ??
+                          //             '',
+                          //       ),
+                          //     ),
+                          //   );
+                          // } else {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => LoginPage()),
                             );
-                          }
+                          // }
                         },
                         child: Icon(
                           Icons.arrow_forward,

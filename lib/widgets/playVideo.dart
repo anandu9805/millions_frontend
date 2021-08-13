@@ -220,11 +220,12 @@ class _PlayVideoState extends State<PlayVideo> {
           })
           ..initialize();
     _videoPlayerController1 = VideoPlayerController.network(
-      "https://firebasestorage.googleapis.com/v0/b/millions-video.appspot.com/o/ads%2Fupload-1622827623432.webm?alt=media&token=5a617958-4ab6-4f1b-b2ac-89ab2c99cf0a",
-    )..addListener(() {
+        "https://firebasestorage.googleapis.com/v0/b/millions-video.appspot.com/o/ads%2Fupload-1622827623432.webm?alt=media&token=5a617958-4ab6-4f1b-b2ac-89ab2c99cf0a")
+      ..addListener(() {
         setState(() {
           _position = _videoPlayerController1.value.position;
         });
+        print(_position.inSeconds);
         if (_position.inSeconds == 10) {
           setState(() {
             _showSkip = true;
@@ -239,7 +240,6 @@ class _PlayVideoState extends State<PlayVideo> {
       showControls: false,
       showOptions: false,
       autoInitialize: true,
-      
       allowPlaybackSpeedChanging: false,
     );
   }
@@ -267,7 +267,7 @@ class _PlayVideoState extends State<PlayVideo> {
             right: 0,
             bottom: 0,
             child: isAdOpen
-                ? FlatButton(
+                ? TextButton(
                     onPressed: () {
                       setState(() {
                         isAdOpen = false;

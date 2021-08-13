@@ -45,21 +45,6 @@ class _CreateProfileState extends State<CreateProfile> {
     stateSelected = false;
     _selectedGender = "Male";
     print(widget.uid);
-    Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore
-        .instance
-        .collection('users')
-        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser.uid)
-        .get();
-    result.then((value) {
-        print(value.docs.length);
-
-      if (value.docs.length > 0) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      }
-    }).whenComplete(() => null);
   }
 
   @override

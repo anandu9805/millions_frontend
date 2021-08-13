@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +8,8 @@ import 'package:millions/screens/complete_profile.dart';
 import 'package:millions/screens/createPost.dart';
 import 'package:millions/screens/home.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '';
 
 class GoogleSignIn extends StatefulWidget {
   @override
@@ -14,12 +17,43 @@ class GoogleSignIn extends StatefulWidget {
 }
 
 class _GoogleSignInState extends State<GoogleSignIn> {
+
+   Future isUserExist() async {
+    Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore
+        .instance
+        .collection('users')
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .get();
+    result.then((value) {
+      print(value.docs.length);
+      if (value.docs.length > 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreateProfile(
+              uid: FirebaseAuth.instance.currentUser.uid,
+            ),
+          ),
+        );
+      }
+    }).whenComplete(() => null);
+  }
+
+
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     // TODO: implement initState
-   
+
     super.initState();
   }
 
@@ -88,11 +122,13 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                             },
                             icon: Image.asset('images/google.png'),
                           ),
-                          Text('Sign In With Google',
-                              style: GoogleFonts.ubuntu(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              )),
+                          Text(
+                            'Sign In With Google',
+                            style: GoogleFonts.ubuntu(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
                         ],
                       ),
                       onPressed: () async {
@@ -100,15 +136,14 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                             context,
                             listen: false);
                         User user = await millionsprovider.googleLogin(context);
+
                         print(user);
                         if (user != null) {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => CreateProfile(
-                                uid: user.uid,
-                              ),
-                            ),
-                          );
+                          Future<SharedPreferences> prefs =
+                              SharedPreferences.getInstance();
+                          final SharedPreferences prefsData = await prefs;
+                          prefsData.setInt('isFirstTime', 1);
+                          isUserExist();
                         }
                       },
                     ),
