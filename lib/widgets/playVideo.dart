@@ -113,6 +113,7 @@ import 'package:chewie/src/chewie_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/admodel.dart';
 import 'package:millions/model/video.dart';
@@ -232,6 +233,14 @@ class _PlayVideoState extends State<PlayVideo> {
         }
       });
     _chewieController = ChewieController(
+      materialProgressColors:
+          ChewieProgressColors(playedColor: Color.fromRGBO(255, 255, 0, 0.7)),
+      placeholder: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Ad "),
+        ],
+      ),
       videoPlayerController: _videoPlayerController1,
       aspectRatio: _videoPlayerController1.value.aspectRatio,
       autoPlay: true,
@@ -271,6 +280,42 @@ class _PlayVideoState extends State<PlayVideo> {
             ),
           ),
           Positioned(
+            left: 0,
+            bottom: 0,
+            child: isAdOpen
+                ? TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isPlaying = _videoPlayerController1.value.isPlaying;
+                      });
+                      print(_isPlaying);
+                      if (_isPlaying) {
+                        setState(() {
+                          _isPlaying = !_isPlaying;
+                        });
+                        _videoPlayerController1.pause();
+                      } else {
+                        setState(() {
+                          _isPlaying = !_isPlaying;
+                        });
+                        _videoPlayerController1.play();
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: _isPlaying
+                          ? Icon(
+                              Icons.pause,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                            ),
+                    ))
+                : Container(),
+          ),
+          Positioned(
             right: 0,
             bottom: 0,
             child: isAdOpen
@@ -296,7 +341,7 @@ class _PlayVideoState extends State<PlayVideo> {
                     },
                     child: _showSkip
                         ? Padding(
-                            padding: EdgeInsets.symmetric(vertical: 100.0),
+                            padding: EdgeInsets.symmetric(vertical: 20.0),
                             child: Text(
                               "Skip",
                               style: TextStyle(color: Colors.white),

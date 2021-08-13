@@ -34,7 +34,7 @@ class _PostCommentsState extends State<PostComments> {
       altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString();
   @override
   void initState() {
-    profilePic = UserServices().getUserDetails(altUserId);
+    // profilePic = UserServices().getUserDetails(altUserId);
     super.initState();
   }
 
@@ -58,28 +58,38 @@ class _PostCommentsState extends State<PostComments> {
               height: 10,
             ),
             ListTile(
-              leading: FutureBuilder(
-                future: UserServices().getUserDetails(altUserId),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return CircleAvatar(
-                      child: ClipRRect(
-                        child: Image.network(
-                          snapshot.data.toString(),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(w * 0.1),
-                      ),
-                      //backgroundColor: Colors.black,
-                    );
-                  } else {
-                    return CircleAvatar(
-                      radius: w * 0.1,
-                      backgroundColor: Colors.black,
-                    );
-                  }
-                },
+              leading: CircleAvatar(
+                child: ClipRRect(
+                  child: Image.network(
+                    FirebaseAuth.instance.currentUser.photoURL,
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.circular(w * 0.1),
+                ),
+                //backgroundColor: Colors.black,
               ),
+              //  FutureBuilder(
+              //   future: UserServices().getUserDetails(altUserId),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasData) {
+              //       return CircleAvatar(
+              //         child: ClipRRect(
+              //           child: Image.network(
+              //             snapshot.data.toString(),
+              //             fit: BoxFit.cover,
+              //           ),
+              //           borderRadius: BorderRadius.circular(w * 0.1),
+              //         ),
+              //         //backgroundColor: Colors.black,
+              //       );
+              //     } else {
+              //       return CircleAvatar(
+              //         radius: w * 0.1,
+              //         backgroundColor: Colors.black,
+              //       );
+              //     }
+              //   },
+              // ),
               title: TextFormField(
                 controller: getcomment,
                 cursorColor: primary,

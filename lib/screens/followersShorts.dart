@@ -260,6 +260,7 @@ class _FollowersShortsState extends State<FollowersShorts> {
                                     ),
                                   )
                                 : TextButton(
+                                    onPressed: () {  },
                                     child: Text(
                                       '• Following',
                                       style: GoogleFonts.ubuntu(

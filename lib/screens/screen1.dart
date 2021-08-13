@@ -16,12 +16,12 @@ class Screen1 extends StatefulWidget {
 class _Screen1State extends State<Screen1> {
   @override
   void initState() {
-    if (FirebaseAuth.instance.currentUser.uid != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    }
+    // if (FirebaseAuth.instance.currentUser.uid != null) {
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => HomePage()),
+    //   );
+    // }
     super.initState();
   }
 

@@ -202,7 +202,7 @@ class _ShortsFromLinkState extends State<ShortsFromLink> {
                               )
                             : FlatButton(
                                 child: Text('Following'),
-                                color: Colors.black12,
+                                color: Colors.black12, onPressed: () {  },
                               )
                       ],
                     ),

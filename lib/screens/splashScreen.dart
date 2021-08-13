@@ -27,12 +27,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    _isFirstTime();
     super.initState();
     _mockCheckForSession().then((status) {
       if (status) {
         isUserExist();
       } else {
-        _isFirstTime();
+        
+        print(isFirstTime);
         isFirstTime == 0 ? _navigateToFirstScreen() : _navigateToLogin();
       }
     });
