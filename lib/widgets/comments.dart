@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/comment_model.dart';
+import 'package:millions/model/video.dart';
+import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/services/commentServices.dart';
 import '../constants/colors.dart';
 
 class Comment extends StatefulWidget {
   final CommentModel comment;
+  final Video video;
   final List<QueryDocumentSnapshot<Object>> replies;
 
-  const Comment({Key key, this.comment, this.replies}) : super(key: key);
+  const Comment({Key key, this.comment, this.replies, this.video})
+      : super(key: key);
 
   @override
   _CommentState createState() => _CommentState();
@@ -350,15 +354,15 @@ class _CommentState extends State<Comment> {
                               widget.comment.videoTitle);
                           replyController.clear();
                           Navigator.pop(context);
-                          // Navigator.pop(context);
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) => Comment(
-                          //         replies: widget.replies,
-                          //         comment: widget.comment,
-                          //       ),
-                          //     ));
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Comments(
+                                  video: widget.video,
+                                  videoId: widget.comment.videoId,
+                                ),
+                              ));
                         },
                         textColor: Theme.of(context).primaryColor,
                         child: const Text('Comment'),

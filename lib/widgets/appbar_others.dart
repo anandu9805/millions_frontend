@@ -104,7 +104,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
             alignment: Alignment.centerRight,
           ),
           onTap: () {
-            openDrawer();
+            Scaffold.of(context).openDrawer();
           },
         ),
       ),
