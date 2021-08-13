@@ -141,6 +141,21 @@ class CommentServices {
     );
   }
 
+  deleteLike(String follower, String commentId) async {
+    print(follower + '_' + commentId);
+   await FirebaseFirestore.instance
+        .collection('comment-likes')
+        .doc(follower + '_' + commentId)
+        .delete();
+  }
+
+  deleteDisLike(String follower, String commentId) async {
+   await FirebaseFirestore.instance
+        .collection('comment-dislikes')
+        .doc(follower + '_' + commentId)
+        .delete();
+  }
+
   likeComment(
       String channel,
       String comment,
@@ -180,12 +195,7 @@ class CommentServices {
       FirebaseFirestore.instance
           .collection('comment-dislikes')
           .doc(follower + '_' + commentId)
-          .set(
-        {'liked': false},
-        SetOptions(
-          merge: true,
-        ),
-      );
+          .delete();
       // DocumentReference dislike = FirebaseFirestore.instance
       //     .collection('comment-dislikes')
       //     .doc('altUserId' + '_' + commentId);
@@ -212,7 +222,7 @@ class CommentServices {
         'commentOwner': commentOwner,
         'date': DateTime.now(),
         'follower': follower,
-        'liked': true,
+        'liked': false,
         'video': video,
       },
       SetOptions(
@@ -222,12 +232,7 @@ class CommentServices {
       FirebaseFirestore.instance
           .collection('comment-likes')
           .doc(follower + '_' + commentId)
-          .set(
-        {'liked': false},
-        SetOptions(
-          merge: true,
-        ),
-      );
+          .delete();
     });
   }
 
