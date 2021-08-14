@@ -136,6 +136,7 @@ class _ViewVideoState extends State<ViewVideo> {
   @override
   void dispose() {
     // flickManager.dispose();
+  
     super.dispose();
   }
 

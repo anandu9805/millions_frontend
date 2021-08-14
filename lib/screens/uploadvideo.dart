@@ -164,6 +164,7 @@ int stop=0;
     try {
       FirebaseFirestore.instance
           .collection('channels')
+     // .doc("4C4iLByizTPLBBlP4rssrwGTISb2")
           .doc(currentuserid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
@@ -196,6 +197,20 @@ int stop=0;
     print(thumnail_image_name.split('.').last);
     print(file);
     return file;
+  }
+  //-----------------------------------------------------------
+  void _showToast(BuildContext context, String message) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: 'OK',
+          onPressed: scaffold.hideCurrentSnackBar,
+          textColor: primary,
+        ),
+      ),
+    );
   }
 
   void upload() async {
@@ -307,6 +322,7 @@ int stop=0;
           'views': 0,
         });
         print("hello3");
+        _showToast(context, "Upload complete");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),

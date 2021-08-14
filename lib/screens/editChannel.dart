@@ -117,7 +117,7 @@ class _EditChannelState extends State<EditChannel> {
       print(onError);
     });
   }
-
+//-----------------------------------------------------------
   void _showToast(BuildContext context, String message) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
@@ -158,6 +158,7 @@ class _EditChannelState extends State<EditChannel> {
             builder: (BuildContext context) => Page8(widget.myChannel.id)));
         _showToast(context, "Channel Updated Successfully");
       }).catchError((error) =>
+      //-------------------------------------------
               _showToast(context, "Failed to update channel: $error"));
     } catch (e) {
       print("Error");
