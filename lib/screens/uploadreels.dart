@@ -540,15 +540,6 @@ class _UploadReelState extends State<UploadReel> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
-                    child: Text(
-                      'Hint or Error Message',
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 10,
-                      ),
-                    ),
-                  ),
-                  Padding(
                     padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
                     child: Text(
                       'Description',

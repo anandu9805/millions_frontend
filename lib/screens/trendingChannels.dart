@@ -127,11 +127,11 @@ class _TrendingChannelsState extends State<TrendingChannels> {
                                                 Text(
                                                   trendingChannel.channelName
                                                               .length >
-                                                          15
+                                                          17
                                                       ? trendingChannel
                                                               .channelName
                                                               .substring(
-                                                                  0, 15) +
+                                                                  0, 17) +
                                                           "...."
                                                       : trendingChannel
                                                           .channelName,

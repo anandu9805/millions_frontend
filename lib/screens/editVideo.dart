@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -401,9 +402,9 @@ class _EditVideoState extends State<EditVideo> {
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                    title: const Text(
+                                                    title:  Text(
                                                       'Millions',
-                                                      style: TextStyle(
+                                                      style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold,
                                                           color: primary),
                                                       textAlign:
                                                           TextAlign.center,

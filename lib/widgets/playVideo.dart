@@ -113,6 +113,7 @@ import 'package:chewie/src/chewie_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/admodel.dart';
@@ -235,11 +236,14 @@ class _PlayVideoState extends State<PlayVideo> {
     _chewieController = ChewieController(
       materialProgressColors:
           ChewieProgressColors(playedColor: Color.fromRGBO(255, 255, 0, 0.7)),
-      placeholder: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Ad "),
-        ],
+      placeholder: Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Loading Ad..", style: GoogleFonts.ubuntu()),
+          ],
+        ),
       ),
       videoPlayerController: _videoPlayerController1,
       aspectRatio: _videoPlayerController1.value.aspectRatio,

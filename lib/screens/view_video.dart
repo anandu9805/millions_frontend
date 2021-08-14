@@ -61,7 +61,7 @@ class _ViewVideoState extends State<ViewVideo> {
 
   List<String> reasons = [
     "Spam Content",
-    "Explisit or Sexual Content",
+    "Explicit or Sexual Content",
     "Child Abuse",
     "Against law",
     "Harassment or bullying"
@@ -172,7 +172,7 @@ class _ViewVideoState extends State<ViewVideo> {
                                       text: widget.id == null
                                           ? widget.video.title + '\n'
                                           : video2.title + '\n',
-                                      style: TextStyle(
+                                      style: GoogleFonts.ubuntu(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                           fontSize: 18,
@@ -182,7 +182,7 @@ class _ViewVideoState extends State<ViewVideo> {
                                           text: widget.id == null
                                               ? widget.video.description
                                               : video2.description,
-                                          style: TextStyle(
+                                          style: GoogleFonts.ubuntu(
                                             fontWeight: FontWeight.normal,
                                             color: Colors.black,
                                             fontSize: 14,
@@ -222,7 +222,7 @@ class _ViewVideoState extends State<ViewVideo> {
                               padding: const EdgeInsets.only(left: 10),
                               child: Text(
                                 "${widget.id == null ? widget.video.views : video2.views} views • ${widget.id == null ? timeAgo(DateTime.fromMicrosecondsSinceEpoch(widget.video.date.microsecondsSinceEpoch)) : timeAgo(DateTime.fromMicrosecondsSinceEpoch(video2.date.microsecondsSinceEpoch))}",
-                                style: TextStyle(
+                                style: GoogleFonts.ubuntu(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 12),
                               ),
@@ -275,7 +275,7 @@ class _ViewVideoState extends State<ViewVideo> {
                                     builder: (context, snapshot) {
                                       return Text(
                                         "${snapshot.data}",
-                                        style: TextStyle(
+                                        style: GoogleFonts.ubuntu(
                                             height: 0.3, fontSize: 10),
                                       );
                                     })
@@ -322,7 +322,7 @@ class _ViewVideoState extends State<ViewVideo> {
                                 ),
                                 Text(
                                   "Share",
-                                  style: TextStyle(height: 0.3, fontSize: 10),
+                                  style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
                                 )
                               ],
                             ),
@@ -391,7 +391,7 @@ class _ViewVideoState extends State<ViewVideo> {
                                 ),
                                 Text(
                                   "Report",
-                                  style: TextStyle(height: 0.3, fontSize: 10),
+                                  style: GoogleFonts.ubuntu(height: 0.3, fontSize: 10),
                                 )
                               ],
                             ),
@@ -557,7 +557,7 @@ class _ViewVideoState extends State<ViewVideo> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "${widget.id == null ? widget.video.comments : video2.comments} Comments",
+                                      "${widget.id == null ? widget.video.comments : video2.comments} Comments", style: GoogleFonts.ubuntu(),
                                     ),
                                     TextButton(
                                       onPressed: () {
@@ -577,13 +577,13 @@ class _ViewVideoState extends State<ViewVideo> {
                                       },
                                       child: Text(
                                         "View Comments",
-                                        style: TextStyle(height: 1),
+                                        style: GoogleFonts.ubuntu(height: 1, color:primary),
                                       ),
                                     ),
                                   ],
                                 )
                               : Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                                 children: [
                                   Text("Comments are disabled"),

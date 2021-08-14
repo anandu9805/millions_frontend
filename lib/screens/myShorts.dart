@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:millions/constants/tempResources.dart';
@@ -171,7 +172,7 @@ class _ShortsState extends State<ChannelShorts> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.7,
                           child: Text(
-                            _reels_items[index]["description"] + "\n ",
+                            _reels_items[index]["description"],
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             // reels_objects[index].description,
@@ -181,10 +182,13 @@ class _ShortsState extends State<ChannelShorts> {
                                 fontWeight: FontWeight.w100),
                           ),
                         ),
+                        SizedBox(
+                              height: 5,
+                            ),
                         Row(
                           children: [
                             SizedBox(
-                              height: 12,
+                              height: 5,
                             ),
                             CircleAvatar(
                               child: ClipRRect(
@@ -220,7 +224,7 @@ class _ShortsState extends State<ChannelShorts> {
                               Icon(
                                 Icons.verified,
                                 size: 15,
-                                color: Colors.blue,
+                                color: primary,
                               ),
                             SizedBox(width: 2),
                           ],
@@ -242,127 +246,112 @@ class _ShortsState extends State<ChannelShorts> {
                     bottom: h / 7,
                     child: Column(
                       children: [
-//<<<<<<< HEAD
-                        liked == true
-                            ? IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    liked = !liked;
-                                  });
-                                  LikeServices().unLikeReels(
-                                      _reels_items[index]["id"],
-                                      // reels_objects[index].id,
-                                      altUserId,
-                                      altUserId);
-                                }, //---------------------------------------------------
-                                icon: Icon(
-                                  Icons.favorite_rounded,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    liked = !liked;
-                                  });
-                                  LikeServices().likeReels(
-                                      _reels_items[index]["id"],
-                                      altUserId,
-                                      altUserId);
-                                }, //----------------------
-                                icon: IconButton(
-                                  icon: Icon(Icons.favorite_outline_rounded),
-                                  color: Colors.white,
+                        
+                          FutureBuilder(
+                            future: LikeServices()
+                                .reelsLikeChecker(_reels_items[index]["id"]),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return IconButton(
                                   onPressed: () {
-                                    print("index");
-                                    print(index);
+                                    setState(() {
+                                      liked = !liked;
+                                    });
+                                    print(_reels_items[index]["id"] +
+                                        _reels_items[index]["channelId"] +
+                                        altUserId);
+                                    LikeServices().likeReels(
+                                        _reels_items[index]["id"],
+                                        _reels_items[index]["channelId"],
+                                        FirebaseAuth.instance.currentUser.uid);
                                   },
-                                ),
-                              ),
-                        Text(
-                          Numeral(_reels_items[index]["likes"]).value(),
-                          style: GoogleFonts.ubuntu(
-                              color: Colors.white,
-                              height: 1,
-                              fontWeight: FontWeight.w100),
-                        ),
-//======= Some problem here..............................................
-                        /*      FutureBuilder(
-                          future: LikeServices().reelsLikeChecker(likeId),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              print(1);
-                              return Icon(Icons.favorite);
-                            } else {
-                              if (snapshot == null) {
-                                print(10);
+                                  icon: Icon(
+                                    Icons.favorite_border,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              } else {
+                                // liked = ReelsLike.fromDoc(snapshot.data);
+                                print(snapshot.data);
+                                liked = snapshot.data;
+                                // ReelsLike likeDetails =
+                                //     ReelsLike.fromMap(snapshot.data);
+                                // print(likeDetails.liked);
+                                return liked == true
+                                    ? IconButton(
+                                        onPressed: () {
+                                          print("disliked");
+                                          setState(() {
+                                            liked = !liked;
+                                          });
+                                          print(liked);
+                                          LikeServices().unLikeReels(
+                                              _reels_items[index]["id"],
+                                              _reels_items[index]["channelId"],
+                                              FirebaseAuth
+                                                  .instance.currentUser.uid);
+                                        },
+                                        icon: Icon(
+                                          Icons.favorite,
+                                          color: primary,
+                                        ),
+                                      )
+                                    :
+                                    // } else {
+                                    // return
+                                    IconButton(
+                                        onPressed: () {
+                                          print("like");
+                                          setState(() {
+                                            liked = !liked;
+                                          });
+                                          print(liked);
+                                          // print(_reels_items[index].id +
+                                          //     _reels_items[index].channelId +
+                                          //     altUserId);
+                                          LikeServices().likeReels(
+                                              _reels_items[index]["id"],
+                                              _reels_items[index]["channelId"],
+                                              FirebaseAuth
+                                                  .instance.currentUser.uid);
+                                        },
+                                        icon: Icon(
+                                          Icons.favorite_border,
+                                          color: primary,
+                                        ),
+                                      );
                               }
-                              print(liked.toString()+DateTime.now().toString());
-                              // print(
-                              //     snapshot.data[FieldPath.fromString("liked")]);
-                              // print("snapshot.data");
-                              setState(() {
-                                liked = snapshot.data['liked']??false;
-                              });
-                              return liked == true
-                                  ? IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        LikeServices().unLikeReels(
-                                            reels_objects[index].id,
-                                            reels_objects[index].channelId,
-                                            altUserId);
-                                      },
-                                      icon: Icon(
-                                        Icons.favorite,
-                                        color: primary,
-                                      ),
-                                    )
-                                  : IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          liked = !liked;
-                                        });
-                                        print(reels_objects[index].id+
-                                            reels_objects[index].channelId+
-                                            altUserId);
-                                        LikeServices().likeReels(
-                                            reels_objects[index].id,
-                                            reels_objects[index].channelId,
-                                            altUserId);
-                                      },
-                                      icon: Icon(
-                                        Icons.favorite_border,
-                                        color: primary,
-                                      ),
-                                    );
-                            }
-                          },
-                        ),*/
-//>>>>>>> 9f2164bf502e9ec41dcc5db14c2606bd5ff2b1bc
-                        SizedBox(height: 20),
-                        IconButton(
-                          onPressed: () async {
-                            parameters = ['30s'];
-                            parameters.add(_reels_items[index]["id"]);
-                            print(parameters);
-                            await _dynamicLinkService
-                                .createDynamicLink(parameters)
-                                .then((value) {
-                              dynamic_link = value;
-                            });
-                            //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
-                            Share.share(dynamic_link);
-
-                            //-----------------------------
-                          }, //reels share function
-                          icon: Icon(
-                            Icons.share,
-                            color: Colors.white,
+                              // }
+                            },
                           ),
-                        ),
+                          Text(
+                            Numeral(_reels_items[index]["likes"]).value(),
+                            style: GoogleFonts.ubuntu(
+                                color: Colors.white,
+                                height: 1,
+                                fontWeight: FontWeight.w100),
+                          ),
+                          SizedBox(height: 10),
+                          IconButton(
+                            onPressed: () async {
+                              parameters = ['30s'];
+                              parameters.add(_reels_items[index]["id"]);
+                              print(parameters);
+                              await _dynamicLinkService
+                                  .createDynamicLink(parameters)
+                                  .then((value) {
+                                dynamic_link = value;
+                              });
+                              //here------------- ------------------    ---------------- -- --- --- --    ----   ---- --- -- -- - - - - - -----
+                              Share.share(dynamic_link);
+
+                              //-----------------------------
+                            }, //reels share function
+                            icon: Icon(
+                              Icons.share,
+                              color: Colors.white,
+                            ),
+                          ),
                         SizedBox(height: 20),
                         if (widget.channelId == altUserId)
                           IconButton(

@@ -249,9 +249,9 @@ class _EditChannelState extends State<EditChannel> {
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                    title: const Text(
+                                                    title: Text(
                                                       'Millions',
-                                                      style: TextStyle(
+                                                      style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold,
                                                           color: primary),
                                                       textAlign:
                                                           TextAlign.center,
@@ -259,17 +259,17 @@ class _EditChannelState extends State<EditChannel> {
                                                     content:
                                                         SingleChildScrollView(
                                                       child: ListBody(
-                                                        children: const <
+                                                        children:  <
                                                             Widget>[
                                                           Text(
-                                                              'Upload Profile Picture:'),
+                                                              'Upload Profile Picture:', style: GoogleFonts.ubuntu()),
                                                         ],
                                                       ),
                                                     ),
                                                     actions: <Widget>[
                                                       TextButton(
-                                                        child: const Text(
-                                                            'Select from Gallery'),
+                                                        child:  Text(
+                                                            'Select from Gallery', style: GoogleFonts.ubuntu(color: primary)),
                                                         onPressed: () {
                                                           _fromgallery(1);
                                                           Navigator.of(context)
@@ -277,8 +277,8 @@ class _EditChannelState extends State<EditChannel> {
                                                         },
                                                       ),
                                                       TextButton(
-                                                        child: const Text(
-                                                            'Take a Picture'),
+                                                        child:  Text(
+                                                            'Take a Picture',style: GoogleFonts.ubuntu(color: primary)),
                                                         onPressed: () {
                                                           _fromCamera(1);
                                                           Navigator.of(context)
@@ -364,9 +364,9 @@ class _EditChannelState extends State<EditChannel> {
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                    title: const Text(
+                                                    title: Text(
                                                       'Millions',
-                                                      style: TextStyle(
+                                                      style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold,
                                                           color: primary),
                                                       textAlign:
                                                           TextAlign.center,
@@ -374,17 +374,17 @@ class _EditChannelState extends State<EditChannel> {
                                                     content:
                                                         SingleChildScrollView(
                                                       child: ListBody(
-                                                        children: const <
+                                                        children:  <
                                                             Widget>[
                                                           Text(
-                                                              'Upload Channel Art:'),
+                                                              'Upload Channel Art:',style: GoogleFonts.ubuntu()),
                                                         ],
                                                       ),
                                                     ),
                                                     actions: <Widget>[
                                                       TextButton(
-                                                        child: const Text(
-                                                            'Select from Gallery'),
+                                                        child:  Text(
+                                                            'Select from Gallery',style: GoogleFonts.ubuntu(color: primary)),
                                                         onPressed: () {
                                                           _fromgallery(2);
                                                           Navigator.of(context)
@@ -392,8 +392,8 @@ class _EditChannelState extends State<EditChannel> {
                                                         },
                                                       ),
                                                       TextButton(
-                                                        child: const Text(
-                                                            'Take a Picture'),
+                                                        child:  Text(
+                                                            'Take a Picture', style: GoogleFonts.ubuntu(color: primary)),
                                                         onPressed: () {
                                                           _fromCamera(2);
                                                           Navigator.of(context)
