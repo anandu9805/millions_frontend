@@ -19,6 +19,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter_video_info/flutter_video_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -343,7 +344,34 @@ int stop=0;
     //print("_videoFile $_videoFile");
     return Scaffold(
       key: scaffoldKey,
-      body: stop==1?Center(child: Text("Min upload duration is 1min!!!")):_isLoading
+      body: stop==1?/*Center(child: Text("Min upload duration is 1min!!!", style: GoogleFonts.ubuntu(
+          fontSize: 25,
+          color: Colors.black,
+          fontWeight: FontWeight.w800),))*/
+      Container(color: Colors.white,
+        // height: MediaQuery.of(context).size.height *
+        //     0.25,
+          child: Center(
+            child: Column(children: [
+              CachedNetworkImage(
+                imageUrl:
+                "https://millionsofficial.github.io/static/search.jpg",
+                width:
+                MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height *
+                    0.4,
+              ),
+              Center(child: Text("Min upload duration is 1min!!!", style: GoogleFonts.ubuntu(
+                  fontSize: 25,
+                  color: Colors.black,
+                 ),))
+
+            ]),
+          ))
+
+
+
+          :_isLoading
           ?
 
           Center(
