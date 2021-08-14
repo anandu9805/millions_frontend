@@ -19,6 +19,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter_video_info/flutter_video_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -164,6 +165,7 @@ int stop=0;
     try {
       FirebaseFirestore.instance
           .collection('channels')
+     // .doc("4C4iLByizTPLBBlP4rssrwGTISb2")
           .doc(currentuserid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
@@ -196,6 +198,20 @@ int stop=0;
     print(thumnail_image_name.split('.').last);
     print(file);
     return file;
+  }
+  //-----------------------------------------------------------
+  void _showToast(BuildContext context, String message) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: 'OK',
+          onPressed: scaffold.hideCurrentSnackBar,
+          textColor: primary,
+        ),
+      ),
+    );
   }
 
   void upload() async {
@@ -307,6 +323,7 @@ int stop=0;
           'views': 0,
         });
         print("hello3");
+        _showToast(context, "Upload complete");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
@@ -327,7 +344,34 @@ int stop=0;
     //print("_videoFile $_videoFile");
     return Scaffold(
       key: scaffoldKey,
-      body: stop==1?Center(child: Text("Min upload duration is 1min!!!")):_isLoading
+      body: stop==1?/*Center(child: Text("Min upload duration is 1min!!!", style: GoogleFonts.ubuntu(
+          fontSize: 25,
+          color: Colors.black,
+          fontWeight: FontWeight.w800),))*/
+      Container(color: Colors.white,
+        // height: MediaQuery.of(context).size.height *
+        //     0.25,
+          child: Center(
+            child: Column(children: [
+              CachedNetworkImage(
+                imageUrl:
+                "https://millionsofficial.github.io/static/search.jpg",
+                width:
+                MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height *
+                    0.4,
+              ),
+              Center(child: Text("Min upload duration is 1min!!!", style: GoogleFonts.ubuntu(
+                  fontSize: 25,
+                  color: Colors.black,
+                 ),))
+
+            ]),
+          ))
+
+
+
+          :_isLoading
           ?
 
           Center(

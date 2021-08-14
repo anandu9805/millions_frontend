@@ -23,6 +23,8 @@ import 'package:share_plus/share_plus.dart';
 
 import '../services/dynamiclinkservice.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 class Shorts extends StatefulWidget {
   @override
   _ShortsState createState() => _ShortsState();
@@ -133,6 +135,7 @@ class _ShortsState extends State<Shorts> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final DynamicLinkService _dynamicLinkService = DynamicLinkService();
@@ -222,7 +225,7 @@ class _ShortsState extends State<Shorts> {
                             SizedBox(width: 2),
                             _reels_items[index]["channelId"] != currentuserid
                                 ? TextButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (!following_details.contains(
                                           _reels_items[index]["channelId"]
                                           // reels_objects[index].channelId
@@ -231,19 +234,48 @@ class _ShortsState extends State<Shorts> {
                                           following_details.add(
                                               _reels_items[index]["channelId"]);
                                         });
-                                        FirebaseFirestore.instance
+                                        var docId=currentuserid +
+                                            "_" +
+                                            _reels_items[index]["channelId"];
+                                       await FirebaseFirestore.instance
                                             .collection('followers')
-                                            .doc(currentuserid)
+                                            .doc(docId)
                                             .set({
                                           'channel': _reels_items[index]
                                               ["channelId"],
                                           'date': DateTime.now(),
                                           'follower': currentuserid
                                         });
-                                      } else {
-                                        //                        print("already following");
+                                      } else  {
+
+                                        var docId=currentuserid +
+                                            "_" +
+                                            _reels_items[index]["channelId"];
+                                     // print("already following");
+                                        try {
+                                          await FirebaseFirestore.instance
+                                              .doc("followers/$docId")
+                                              .delete()
+                                              .whenComplete(() {
+                                            setState(() {
+                                              following_details.remove(
+                                                  _reels_items[index]["channelId"]);
+                                            });
+
+
+                                            // checkExist(widget.channelId);
+                                          }).catchError(
+                                                  (error) => print("error"));
+                                        } catch (e) {
+                                          print("Error");
+                                        }
+
+
+
+
+
                                       }
-                                    },
+                                    },//-----------------------------
                                     child: Text(
                                       !following_details.contains(
                                               _reels_items[index]["channelId"])

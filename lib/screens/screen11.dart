@@ -6,6 +6,7 @@ import 'package:millions/model/newpost_model.dart';
 import 'package:millions/model/user.dart';
 import 'package:millions/widgets/appbar_others.dart';
 import 'package:millions/widgets/photos.dart';
+import 'package:millions/widgets/appDrawer.dart';
 
 class Screen11 extends StatefulWidget {
   //---------------------------------------------------------------------------------------------------------------------
@@ -21,6 +22,10 @@ class Screen11 extends StatefulWidget {
 }
 
 class _Screen11State extends State<Screen11> {
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  void openDrawer() {
+    _drawerKey.currentState.openDrawer();
+  }
   //---------------------------------------------------------------------------------------------------------------------
   PostDetail post2;
   var _isLoading = true;
@@ -127,6 +132,8 @@ class _Screen11State extends State<Screen11> {
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     return Scaffold(
+      key: _drawerKey,
+      drawer: DefaultDrawer(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
           (h) * (1 / 13),

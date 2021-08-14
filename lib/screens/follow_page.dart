@@ -13,6 +13,7 @@ import 'package:millions/widgets/appbar_others.dart';
 import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/widgets/photos.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:millions/widgets/appDrawer.dart';
 
 // import 'package:millions/screens/page8.dart';
 
@@ -22,6 +23,10 @@ class Screen9 extends StatefulWidget {
 }
 
 class _Screen9State extends State<Screen9> {
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  void openDrawer() {
+    _drawerKey.currentState.openDrawer();
+  }
   UserDetail user;
   List<String> followersId = [];
   @override
@@ -33,6 +38,8 @@ class _Screen9State extends State<Screen9> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        key: _drawerKey,
+        drawer: DefaultDrawer(),
         backgroundColor: Colors.white,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(

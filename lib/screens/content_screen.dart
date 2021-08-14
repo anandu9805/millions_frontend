@@ -37,8 +37,10 @@ class _ContentScreenState extends State<ContentScreen> {
       videoPlayerController: _videoPlayerController,
       autoPlay: false,
       showControls: true,
+
       looping: true,
       allowFullScreen: false,
+
     );
     setState(() {});
   }

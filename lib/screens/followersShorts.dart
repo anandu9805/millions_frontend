@@ -226,33 +226,62 @@ class _FollowersShortsState extends State<FollowersShorts> {
                             SizedBox(width: 2),
                             _reels_items[index]["channelId"] != currentuserid
                                 ? TextButton(
-                                    onPressed: () {
-                                      if (!following_details.contains(
-                                          _reels_items[index]["channelId"]
-                                          // reels_objects[index].channelId
-                                          )) {
-                                        setState(() {
-                                          following_details.add(
-                                              _reels_items[index]["channelId"]);
-                                        });
-                                        FirebaseFirestore.instance
-                                            .collection('followers')
-                                            .doc(currentuserid)
-                                            .set({
-                                          'channel': _reels_items[index]
-                                              ["channelId"],
-                                          'date': DateTime.now(),
-                                          'follower': currentuserid
-                                        });
-                                      } else {
-                                        //                        print("already following");
-                                      }
-                                    },
+                              onPressed: () async {
+                                if (!following_details.contains(
+                                    _reels_items[index]["channelId"]
+                                  // reels_objects[index].channelId
+                                )) {
+                                  setState(() {
+                                    following_details.add(
+                                        _reels_items[index]["channelId"]);
+                                  });
+                                  var docId=currentuserid +
+                                      "_" +
+                                      _reels_items[index]["channelId"];
+                                  await FirebaseFirestore.instance
+                                      .collection('followers')
+                                      .doc(docId)
+                                      .set({
+                                    'channel': _reels_items[index]
+                                    ["channelId"],
+                                    'date': DateTime.now(),
+                                    'follower': currentuserid
+                                  });
+                                } else  {
+
+                                  var docId=currentuserid +
+                                      "_" +
+                                      _reels_items[index]["channelId"];
+                                  // print("already following");
+                                  try {
+                                    await FirebaseFirestore.instance
+                                        .doc("followers/$docId")
+                                        .delete()
+                                        .whenComplete(() {
+                                      setState(() {
+                                        following_details.remove(
+                                            _reels_items[index]["channelId"]);
+                                      });
+
+
+                                      // checkExist(widget.channelId);
+                                    }).catchError(
+                                            (error) => print("error"));
+                                  } catch (e) {
+                                    print("Error");
+                                  }
+
+
+
+
+
+                                }
+                              },//-----------------------------
                                     child: Text(
-                                      !following_details.contains(
+                                      following_details.contains(
                                               _reels_items[index]["channelId"])
-                                          ? '• Follow'
-                                          : '• Following',
+                                          ? '• Following'
+                                          : '• Follow',
                                       style: GoogleFonts.ubuntu(
                                           color: Colors.white,
                                           height: 1,
