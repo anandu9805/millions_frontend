@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
@@ -127,7 +128,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only( right: 10),
+          padding: const EdgeInsets.only(right: 10),
           child: IconButton(
             icon: Icon(
               Icons.explore,
@@ -143,33 +144,29 @@ class _AppBarOthersState extends State<AppBarOthers> {
         ),
         Padding(
           padding: const EdgeInsets.only(right: 20),
-          child: FutureBuilder(
-              future: UserServices().getUserDetails(altUserId),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return GestureDetector(
-                    onTapDown: (TapDownDetails details) {
-                      _showPopupMenu(details.globalPosition);
-                    },
-                    child: CircleAvatar(
-                    foregroundImage: NetworkImage(
-                       snapshot.data.toString()),
-                  ),
-                    // child: CircleAvatar(
+          child: GestureDetector(
+            onTapDown: (TapDownDetails details) {
+              _showPopupMenu(details.globalPosition);
+            },
+            child: CircleAvatar(
+              foregroundImage:
+                  NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
+            ),
+            // child: CircleAvatar(
 
-                    //   child: ClipRRect(
-                    //     child: Image.network(
-                    //       snapshot.data.toString(),
-                    //       //reels_objects[index].profilePic,
-                    //       width: w * 1,
-                    //       height: w * 1,
-                    //       fit: BoxFit.cover,
-                    //     ),
-                    //     borderRadius: BorderRadius.circular(w * 1),
-                    //   ),
-                    //   radius: 25,
-                    // ),
-                    /*CircleAvatar(radius: 20,
+            //   child: ClipRRect(
+            //     child: Image.network(
+            //       snapshot.data.toString(),
+            //       //reels_objects[index].profilePic,
+            //       width: w * 1,
+            //       height: w * 1,
+            //       fit: BoxFit.cover,
+            //     ),
+            //     borderRadius: BorderRadius.circular(w * 1),
+            //   ),
+            //   radius: 25,
+            // ),
+            /*CircleAvatar(radius: 20,
                             child: ClipRRect(
                               child: Image.network(
                                 snapshot.data.toString(),
@@ -179,22 +176,23 @@ class _AppBarOthersState extends State<AppBarOthers> {
                             ),
                             //backgroundColor: Colors.black,
                           ),*/
-                  );
-                } else {
-                  return GestureDetector(
-                    onTapDown: (TapDownDetails details) {
-                      _showPopupMenu(details.globalPosition);
-                    },
-                    child: InkWell(
-                      child: CircleAvatar(
-                        //radius: w * 0.3,
-                        backgroundColor: Colors.black,
-                      ),
-                    ),
-                  );
-                }
-              }),
-        )
+          ),
+          // } else {
+          //   return GestureDetector(
+          //     onTapDown: (TapDownDetails details) {
+          //       _showPopupMenu(details.globalPosition);
+          //     },
+          //     child: InkWell(
+          //       child: CircleAvatar(
+          //         //radius: w * 0.3,
+          //         backgroundColor: Colors.black,
+          //       ),
+          //     ),
+          //   );
+          // }
+          // }),
+        ),
+        // )
       ],
       backgroundColor: Colors.white,
     );

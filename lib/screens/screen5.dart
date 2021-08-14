@@ -87,7 +87,7 @@ class _Screen5State extends State<Screen5> {
   void initState() {
     super.initState();
 
-    UserServices().getUserDetails('XIi08ww5Fmgkv7FXOSTkOcmVh2C3');
+    // UserServices().getUserDetails('XIi08ww5Fmgkv7FXOSTkOcmVh2C3');
     _getVideos();
     _scrollController2.addListener(() {
       double maxScroll = _scrollController2.position.maxScrollExtent;

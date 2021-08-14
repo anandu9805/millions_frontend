@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   Future<String> userProfilePic;
   @override
   initState() {
-    userProfilePic = UserServices().getUserDetails(altUserId);
+    // userProfilePic = UserServices().getUserDetails(altUserId);
     super.initState();
 
     //print(FirebaseAuth.instance.currentUser);

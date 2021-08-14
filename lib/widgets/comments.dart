@@ -24,7 +24,7 @@ class Comment extends StatefulWidget {
 class _CommentState extends State<Comment> {
   TextEditingController replyController = TextEditingController();
   bool liked = false;
-  bool disliked = false;
+  bool disliked = true;
   int number;
   // @override
   // void initState() {
@@ -113,7 +113,7 @@ class _CommentState extends State<Comment> {
             Flexible(
               child: RichText(
                 text: TextSpan(
-                  text: "${widget.comment.name}",
+                  text: "${widget.comment.name} \n",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w800,
@@ -156,7 +156,7 @@ class _CommentState extends State<Comment> {
                         width: 10,
                       ),
                       CircleAvatar(
-                        radius: 15,
+                        radius: 20,
                         child: ClipRRect(
                           child: Image.network(
                             widget.replies[index]['profilePic'] == null
@@ -170,7 +170,7 @@ class _CommentState extends State<Comment> {
                         ),
                         // backgroundColor: Colors.black,
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: 15),
                       Flexible(
                         child: RichText(
                           text: TextSpan(
@@ -341,19 +341,21 @@ class _CommentState extends State<Comment> {
                               widget.comment.channelName,
                               replyController.text,
                               widget.comment.commentId,
-                              isOwner,
+                              FirebaseAuth.instance.currentUser.uid ==
+                                      widget.comment.userId
+                                  ? true
+                                  : false,
                               widget.comment.source,
-                              widget.comment.name,
+                              FirebaseAuth.instance.currentUser.displayName,
                               widget.comment.commentId,
-                              widget.comment.profilePic,
-                              widget.comment.source,
-                              widget.comment.type,
+                              FirebaseAuth.instance.currentUser.photoURL,
+                              "posts",
+                              "reply-comment",
                               widget.comment.uniqueId,
                               widget.comment.userId,
                               widget.comment.videoId,
                               widget.comment.videoTitle);
                           replyController.clear();
-                          Navigator.pop(context);
                           Navigator.pop(context);
                           Navigator.push(
                               context,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,6 @@ class _ViewVideoState extends State<ViewVideo> {
   bool liked = false;
   String likeId;
   String userId = "XIi08ww5Fmgkv7FXOSTkOcmVh2C3";
-  
 
   var _isLoading = true;
 
@@ -136,7 +136,7 @@ class _ViewVideoState extends State<ViewVideo> {
   @override
   void dispose() {
     // flickManager.dispose();
-  
+
     super.dispose();
   }
 
@@ -170,15 +170,14 @@ class _ViewVideoState extends State<ViewVideo> {
                                 child: RichText(
                                   text: TextSpan(
                                       text: widget.id == null
-                                          ? widget.video.title
-                                          : video2.title,
+                                          ? widget.video.title + '\n'
+                                          : video2.title + '\n',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                           fontSize: 18,
                                           height: 1.5),
                                       children: [
-                                        TextSpan(text: "     "),
                                         TextSpan(
                                           text: widget.id == null
                                               ? widget.video.description
@@ -426,36 +425,52 @@ class _ViewVideoState extends State<ViewVideo> {
                                                         : video2.channelId)),
                                           );
                                         },
-                                        child: FutureBuilder(
-                                            future: UserServices()
-                                                .getUserDetails(
-                                                    widget.id == null
+                                        child:
+                                            // CircleAvatar(
+                                            //   child: ClipRRect(
+                                            //     child: Image.network(
+                                            //       FirebaseAuth.instance.currentUser
+                                            //           .photoURL,
+                                            //       fit: BoxFit.cover,
+                                            //     ),
+                                            //     borderRadius:
+                                            //         BorderRadius.circular(w * 0.1),
+                                            //   ),
+                                            //   //backgroundColor: Colors.black,
+                                            // ),
+                                            FutureBuilder(
+                                                future: UserServices()
+                                                    .getUserDetails(widget.id ==
+                                                            null
                                                         ? widget.video.channelId
                                                         : video2.channelId),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasData) {
-                                                return CircleAvatar(
-                                                  child: ClipRRect(
-                                                    child: Image.network(
-                                                      snapshot.data.toString(),
-                                                      //reels_objects[index].profilePic,
-                                                      width: w * 1,
-                                                      height: h * 1,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            w * 0.5),
-                                                  ),
-                                                  radius: 17,
-                                                );
-                                              } else {
-                                                return CircleAvatar(
-                                                  // radius: w * 0.05,
-                                                  backgroundColor: Colors.black,
-                                                );
-                                              }
-                                            }),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    return CircleAvatar(
+                                                      child: ClipRRect(
+                                                        child: Image.network(
+                                                          snapshot.data
+                                                              .toString(),
+                                                          //reels_objects[index].profilePic,
+                                                          width: w * 1,
+                                                          height: h * 1,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    w * 0.5),
+                                                      ),
+                                                      radius: 17,
+                                                    );
+                                                  } else {
+                                                    return CircleAvatar(
+                                                      // radius: w * 0.05,
+                                                      backgroundColor:
+                                                          Colors.black,
+                                                    );
+                                                  }
+                                                }),
                                       ),
                                       SizedBox(width: 10),
                                       Column(
@@ -490,7 +505,9 @@ class _ViewVideoState extends State<ViewVideo> {
                                                       TextOverflow.ellipsis,
                                                 ),
                                               ),
-                                              if (widget.id == null ? widget.video.isVerified:video2.isVerified)
+                                              if (widget.id == null
+                                                  ? widget.video.isVerified
+                                                  : video2.isVerified)
                                                 Icon(
                                                   Icons.verified_user,
                                                   size: 20,
@@ -534,35 +551,45 @@ class _ViewVideoState extends State<ViewVideo> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${widget.id == null ? widget.video.comments : video2.comments} Comments",
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Comments(
-                                        videoId: widget.id == null
-                                            ? widget.video.id
-                                            : video2.id.toString(),
-                                        video: widget.id == null
-                                            ? widget.video
-                                            : video2,
+                          child: widget.video.isComments == 'Allowed'
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${widget.id == null ? widget.video.comments : video2.comments} Comments",
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Comments(
+                                              videoId: widget.id == null
+                                                  ? widget.video.id
+                                                  : video2.id.toString(),
+                                              video: widget.id == null
+                                                  ? widget.video
+                                                  : video2,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        "View Comments",
+                                        style: TextStyle(height: 1),
                                       ),
                                     ),
-                                  );
-                                },
-                                child: Text(
-                                  "More",
-                                  style: TextStyle(height: 1),
-                                ),
+                                  ],
+                                )
+                              : Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+                                children: [
+                                  Text("Comments are disabled"),
+                                  Icon(Icons.comment_outlined),
+                                ],
                               ),
-                            ],
-                          ),
 // <<<<<<< HEAD
 //                         Padding(
 //                           padding: const EdgeInsets.only(right: 8.0),
@@ -659,49 +686,49 @@ class _ViewVideoState extends State<ViewVideo> {
 //                   ],
 // =======
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          // height: h / 2,
-                          child: Container(
-                            // height: h / 2,
-                            child: StreamBuilder(
-                              stream: CommentServices().getOneVideoComments(
-                                widget.id == null
-                                    ? widget.video.id
-                                    : video2.id.toString(),
-                              ),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (snapshot.hasData) {
-                                  return ListView(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    children: snapshot.data.docs.map((doc) {
-                                      CommentModel comment =
-                                          CommentModel.fromMap(doc.data());
-                                      List<QueryDocumentSnapshot<Object>>
-                                          replyComments = snapshot.data.docs
-                                              .where((o) =>
-                                                  o['commentId'] ==
-                                                  'reply-' + comment.commentId)
-                                              .toList();
-                                      return Comment(
-                                          comment: comment,
-                                          replies: replyComments);
-                                    }).toList(),
-                                  );
-                                } else {
-                                  return Container(
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-                                }
-                              },
-                              // future: VideoServices.getAllVideos(),
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   // height: h / 2,
+                        //   child: Container(
+                        //     // height: h / 2,
+                        //     child: StreamBuilder(
+                        //       stream: CommentServices().getOneVideoComments(
+                        //         widget.id == null
+                        //             ? widget.video.id
+                        //             : video2.id.toString(),
+                        //       ),
+                        //       builder: (BuildContext context,
+                        //           AsyncSnapshot<QuerySnapshot> snapshot) {
+                        //         if (snapshot.hasData) {
+                        //           return ListView(
+                        //             physics: NeverScrollableScrollPhysics(),
+                        //             shrinkWrap: true,
+                        //             children: snapshot.data.docs.map((doc) {
+                        //               CommentModel comment =
+                        //                   CommentModel.fromMap(doc.data());
+                        //               List<QueryDocumentSnapshot<Object>>
+                        //                   replyComments = snapshot.data.docs
+                        //                       .where((o) =>
+                        //                           o['commentId'] ==
+                        //                           'reply-' + comment.commentId)
+                        //                       .toList();
+                        //               return Comment(
+                        //                   comment: comment,
+                        //                   replies: replyComments);
+                        //             }).toList(),
+                        //           );
+                        //         } else {
+                        //           return Container(
+                        //             child: Center(
+                        //               child: CircularProgressIndicator(),
+                        //             ),
+                        //           );
+                        //         }
+                        //       },
+                        //       // future: VideoServices.getAllVideos(),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
