@@ -17,8 +17,7 @@ class GoogleSignIn extends StatefulWidget {
 }
 
 class _GoogleSignInState extends State<GoogleSignIn> {
-
-   Future isUserExist() async {
+  Future isUserExist() async {
     Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore
         .instance
         .collection('users')
@@ -46,8 +45,6 @@ class _GoogleSignInState extends State<GoogleSignIn> {
     }).whenComplete(() => null);
   }
 
-
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -72,7 +69,7 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                 "images/million logo with millions.png",
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.width * 0.2),
+            SizedBox(height: MediaQuery.of(context).size.width * 0.05),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
@@ -94,13 +91,13 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
                   child: Container(
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black12,
-                          offset: const Offset(6.0, 6.0),
+                          offset: const Offset(2.0, 2.0),
                           blurRadius: 5.0,
                           spreadRadius: 1.0,
                         ),
@@ -120,7 +117,10 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                                       listen: false);
                               millionsprovider.googleLogin(context);
                             },
-                            icon: Image.asset('images/google.png'),
+                            icon: Image.asset(
+                              'images/google.png',
+                              height: 22,
+                            ),
                           ),
                           Text(
                             'Sign In With Google',

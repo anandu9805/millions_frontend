@@ -35,12 +35,10 @@ class _ContentScreenState extends State<ContentScreen> {
     await Future.wait([_videoPlayerController.initialize()]);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      autoPlay: false,
+      autoPlay: true,
       showControls: true,
-
       looping: true,
       allowFullScreen: false,
-
     );
     setState(() {});
   }

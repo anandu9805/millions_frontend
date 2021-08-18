@@ -55,6 +55,7 @@ class _CreateProfileState extends State<CreateProfile> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
@@ -73,10 +74,22 @@ class _CreateProfileState extends State<CreateProfile> {
                       "Create Profile",
                       style: GoogleFonts.ubuntu(
                           fontSize: 25, fontWeight: FontWeight.bold),
-                    )
+                    ),
                   ],
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "It only takes one minute!",
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 35),
                 Form(
                   key: _formKey,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -115,12 +128,14 @@ class _CreateProfileState extends State<CreateProfile> {
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: primary,
+                              color: Colors.grey,
                               width: 1,
                             ),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
+                              bottomLeft: Radius.circular(4.0),
+                              bottomRight: Radius.circular(4.0),
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -131,6 +146,8 @@ class _CreateProfileState extends State<CreateProfile> {
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
+                              bottomLeft: Radius.circular(4.0),
+                              bottomRight: Radius.circular(4.0),
                             ),
                           ),
                         ),
@@ -143,9 +160,12 @@ class _CreateProfileState extends State<CreateProfile> {
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: primary,
+                            color: Colors.grey,
                             width: 1,
                           ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(4.0),
+                          ), //BorderRadi
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -183,9 +203,12 @@ class _CreateProfileState extends State<CreateProfile> {
                         decoration: BoxDecoration(
                           // color: Colors.transparent,
                           border: Border.all(
-                            color: primary,
+                            color: Colors.grey,
                             width: 1,
                           ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(4.0),
+                          ), //B
                         ),
                         child: InkWell(
                           onTap: () {
@@ -207,9 +230,8 @@ class _CreateProfileState extends State<CreateProfile> {
                                   print(c.displayName);
                                   _selectedCountry = c;
 
-                                  _selectedStateCode='KL';
+                                  _selectedStateCode = 'KL';
                                   print(_selectedCountry.countryCode);
-
                                 });
                               },
                             );
@@ -240,8 +262,11 @@ class _CreateProfileState extends State<CreateProfile> {
                             Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: primary,
+                                  color: Colors.grey,
                                   width: 1,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(4.0),
                                 ),
                               ),
                               child: Padding(
@@ -288,8 +313,11 @@ class _CreateProfileState extends State<CreateProfile> {
                             Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: primary,
+                                  color: Colors.grey,
                                   width: 1,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(4.0),
                                 ),
                               ),
                               child: Padding(
@@ -334,8 +362,11 @@ class _CreateProfileState extends State<CreateProfile> {
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: primary,
+                            color: Colors.grey,
                             width: 1,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(4.0),
                           ),
                         ),
                         child: MultiSelectDialogField(
@@ -375,11 +406,11 @@ class _CreateProfileState extends State<CreateProfile> {
                     text:
                         'By creating an account you acknowledge that you agree to Million\'s ',
                     style:
-                        GoogleFonts.ubuntu(fontSize: 12, color: Colors.black),
+                        GoogleFonts.ubuntu(fontSize: 10, color: Colors.black),
                     children: [
                       TextSpan(
                         text: 'Terms of Service',
-                        style: GoogleFonts.ubuntu(color: primary, fontSize: 12),
+                        style: GoogleFonts.ubuntu(color: primary, fontSize: 10),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => launch(
                               "https://docs.millionsofficial.in/docs/privacy/terms"),
@@ -391,7 +422,7 @@ class _CreateProfileState extends State<CreateProfile> {
                       ),
                       TextSpan(
                         text: 'Privacy Policy',
-                        style: GoogleFonts.ubuntu(color: primary, fontSize: 12),
+                        style: GoogleFonts.ubuntu(color: primary, fontSize: 10),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => launch(
                               "https://docs.millionsofficial.in/docs/privacy/privacy-policy"),
@@ -435,28 +466,24 @@ class _CreateProfileState extends State<CreateProfile> {
                           .collection('channels')
                           .doc(currentuser.uid)
                           .set({
-
                         'accountStatus': 'active',
-                        'channelArt':"",
-                        'channelName':displayname.text,
-                        'channelScore':0,
+                        'channelArt': "",
+                        'channelName': displayname.text,
+                        'channelScore': 0,
                         'country':
-                        countrySelected ? _selectedCountry.countryCode : '',
+                            countrySelected ? _selectedCountry.countryCode : '',
                         'created': Timestamp.now(),
-                        'dateChanged':Timestamp.now(),
-                        'description':"",
-
+                        'dateChanged': Timestamp.now(),
+                        'description': "",
                         'email': currentuser.email,
                         'id': currentuser.uid,
-
                         'isVerified': false,
-                        'linkone':"",
-                        'linktwo':"",
+                        'linkone': "",
+                        'linktwo': "",
                         'profilePic': currentuser.photoURL,
-                        'realName':displayname.text,
-                        'subscribers':1,
-                        'videos':0
-
+                        'realName': displayname.text,
+                        'subscribers': 1,
+                        'videos': 0
                       });
                       print("inside homepage");
 
@@ -473,13 +500,13 @@ class _CreateProfileState extends State<CreateProfile> {
                         var tokens = FirebaseFirestore.instance
                             .collection('users')
                             .doc(uid)
-                            .collection('tokens')
+                            .collection('notificationTokens')
                             .doc(fcmToken);
 
                         await tokens.set({
                           'token': fcmToken,
                           'createdAt': FieldValue.serverTimestamp(), // optional
-                          // 'platform': TargetPlatform.android // optional
+                          'platform': "Mobile" // optional
                         });
                       }
 
@@ -492,6 +519,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     ),
                   ),
                 ),
+                SizedBox(height: 52),
               ],
             ),
           ),

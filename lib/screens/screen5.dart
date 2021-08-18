@@ -37,8 +37,8 @@ class _Screen5State extends State<Screen5> {
     Query q = FirebaseFirestore.instance
         .collection("videos")
         .where("isVisible", isEqualTo: "Public")
-        .orderBy("videoScore",//widget.flag == 0 ? "date" : "videoScore"
-         descending: true)
+        .orderBy("videoScore", //widget.flag == 0 ? "date" : "videoScore"
+            descending: true)
         .limit(_perPage);
 
     setState(() {
@@ -158,7 +158,9 @@ class _Screen5State extends State<Screen5> {
                           controller: _scrollController,
                           itemBuilder: (BuildContext ctx, int index) {
                             return VideoCard(
-                                video: Video.fromMap(_videos[index].data()),fromwhere: 1,);
+                              video: Video.fromMap(_videos[index].data()),
+                              fromwhere: 1,
+                            );
                           },
                         )
                       ],

@@ -10,6 +10,7 @@ import 'package:millions/screens/myWallet.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/searchPage..dart';
+import 'package:millions/screens/userMenu.dart';
 import 'package:millions/services/userService.dart';
 import 'package:provider/provider.dart';
 
@@ -117,7 +118,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
           child: IconButton(
             icon: Icon(
               Icons.search_outlined,
-              color: primary,
+              color: Colors.black87,
             ),
             onPressed: () {
               Navigator.push(
@@ -132,7 +133,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
           child: IconButton(
             icon: Icon(
               Icons.explore,
-              color: primary,
+              color: Colors.black87,
             ),
             onPressed: () {
               Navigator.push(
@@ -146,11 +147,17 @@ class _AppBarOthersState extends State<AppBarOthers> {
           padding: const EdgeInsets.only(right: 20),
           child: GestureDetector(
             onTapDown: (TapDownDetails details) {
+              // Navigator.of(context).push(new MaterialPageRoute<Null>(
+              //     builder: (BuildContext context) {
+              //       return UserMenu();
+              //     },
+              //     fullscreenDialog: true));
               _showPopupMenu(details.globalPosition);
             },
             child: CircleAvatar(
               foregroundImage:
                   NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
+              radius: 15,
             ),
             // child: CircleAvatar(
 

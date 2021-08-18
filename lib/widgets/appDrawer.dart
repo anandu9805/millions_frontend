@@ -32,6 +32,7 @@ class _DefaultDrawerState extends State<DefaultDrawer> {
               ),
             ),
             ListTile(
+              leading: Icon(Icons.whatshot),
               title: Text('Trending Channels'),
               onTap: () {
                 Navigator.push(
@@ -41,39 +42,60 @@ class _DefaultDrawerState extends State<DefaultDrawer> {
               },
             ),
             Divider(
-              color: primary,
+              color: Colors.grey[350],
               thickness: 0.5,
             ),
             ListTile(
-              title: Text('Help'),
-              onTap: () {
-                launch('https://docs.millionsofficial.in/docs/intro');
-              },
-            ),
+                leading: Icon(Icons.help),
+                title: Text('Help'),
+                subtitle: Text('Get help with Millions'), //
+
+                onTap: () {
+                  launch('https://docs.millionsofficial.in/docs/intro');
+                }),
             ListTile(
-              title: Text('Report Bug'),
-              onTap: () {
-                launch(
-                    'https://docs.millionsofficial.in/docs/bugs/report-bugs');
-              },
-            ),
+                leading: Icon(Icons.bug_report),
+                title: Text('Report Bugs'),
+                subtitle: Text('Report bugs directly to us'), //
+
+                onTap: () {
+                  launch(
+                      'https://docs.millionsofficial.in/docs/privacy/privacy-policy');
+                }),
             ListTile(
+                leading: Icon(Icons.contact_support),
+                title: Text('Support'),
+                // subtitle: Text('Get help with Millions'), //
+
+                onTap: () {
+                  launch('https://docs.millionsofficial.in/docs/bugs/support');
+                }),
+            ListTile(
+              leading: Icon(Icons.article),
               title: Text('Privacy Policy'),
+              // subtitle: Text('Get help with Millions'), //
+
               onTap: () {
                 launch(
                     'https://docs.millionsofficial.in/docs/privacy/privacy-policy');
               },
             ),
             ListTile(
-              title: Text('Terms Of Service'),
+              leading: Icon(Icons.description),
+              title: Text('Terms of Service'),
+              // subtitle: Text('Get help with Millions'), //
+
               onTap: () {
                 launch('https://docs.millionsofficial.in/docs/privacy/terms');
               },
             ),
             ListTile(
-              title: Text('Support'),
+              leading: Icon(Icons.contact_page),
+              title: Text('Contact Us'),
+              // subtitle: Text('Get help with Millions'), //
+
               onTap: () {
-                launch('https://docs.millionsofficial.in/docs/bugs/support');
+                launch('https://millionsofficial.in/contact-us');
               },
             ),
             // ListTile(

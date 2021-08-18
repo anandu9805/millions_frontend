@@ -17,7 +17,7 @@ class _InputFieldState extends State<InputField> {
   Widget build(BuildContext context) {
     //String labeltext='Hai';
     return TextFormField(
-      controller :widget.myController,
+      controller: widget.myController,
       cursorColor: primary,
       maxLines: widget.customMaxLine,
       decoration: InputDecoration(
@@ -25,12 +25,14 @@ class _InputFieldState extends State<InputField> {
         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: primary,
+            color: Colors.grey,
             width: 1,
           ),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(4.0),
             topRight: Radius.circular(4.0),
+            bottomLeft: Radius.circular(4.0),
+            bottomRight: Radius.circular(4.0),
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -41,6 +43,8 @@ class _InputFieldState extends State<InputField> {
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(4.0),
             topRight: Radius.circular(4.0),
+            bottomLeft: Radius.circular(4.0),
+            bottomRight: Radius.circular(4.0),
           ),
         ),
       ),

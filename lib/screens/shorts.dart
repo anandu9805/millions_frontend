@@ -117,7 +117,7 @@ class _ShortsState extends State<Shorts> {
     print(_lastdocument.id);
     Query q = FirebaseFirestore.instance
         .collection('reels')
-        .orderBy("videoScore",descending: true)
+        .orderBy("videoScore", descending: true)
         .startAfterDocument(_lastdocument);
     QuerySnapshot querySnapshot = await q.get();
     setState(() {
@@ -134,7 +134,6 @@ class _ShortsState extends State<Shorts> {
       number_of_items = _reels_items.length - 1;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -234,10 +233,10 @@ class _ShortsState extends State<Shorts> {
                                           following_details.add(
                                               _reels_items[index]["channelId"]);
                                         });
-                                        var docId=currentuserid +
+                                        var docId = currentuserid +
                                             "_" +
                                             _reels_items[index]["channelId"];
-                                       await FirebaseFirestore.instance
+                                        await FirebaseFirestore.instance
                                             .collection('followers')
                                             .doc(docId)
                                             .set({
@@ -246,12 +245,11 @@ class _ShortsState extends State<Shorts> {
                                           'date': DateTime.now(),
                                           'follower': currentuserid
                                         });
-                                      } else  {
-
-                                        var docId=currentuserid +
+                                      } else {
+                                        var docId = currentuserid +
                                             "_" +
                                             _reels_items[index]["channelId"];
-                                     // print("already following");
+                                        // print("already following");
                                         try {
                                           await FirebaseFirestore.instance
                                               .doc("followers/$docId")
@@ -259,9 +257,9 @@ class _ShortsState extends State<Shorts> {
                                               .whenComplete(() {
                                             setState(() {
                                               following_details.remove(
-                                                  _reels_items[index]["channelId"]);
+                                                  _reels_items[index]
+                                                      ["channelId"]);
                                             });
-
 
                                             // checkExist(widget.channelId);
                                           }).catchError(
@@ -269,13 +267,8 @@ class _ShortsState extends State<Shorts> {
                                         } catch (e) {
                                           print("Error");
                                         }
-
-
-
-
-
                                       }
-                                    },//-----------------------------
+                                    }, //-----------------------------
                                     child: Text(
                                       !following_details.contains(
                                               _reels_items[index]["channelId"])
@@ -288,7 +281,7 @@ class _ShortsState extends State<Shorts> {
                                     ),
                                   )
                                 : TextButton(
-                                    onPressed: () {  },
+                                    onPressed: () {},
                                     child: Text(
                                       '• Following',
                                       style: GoogleFonts.ubuntu(
