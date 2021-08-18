@@ -39,7 +39,6 @@ class _Page8State extends State<Page8> {
     _drawerKey.currentState.openDrawer();
   }
 
-
   Future<String> checkExist(String docID) async {
     try {
       await FirebaseFirestore.instance
@@ -387,10 +386,10 @@ class _Page8State extends State<Page8> {
             ),
 
             // the tab bar with two items
-            Divider(
-              color: primary,
-              thickness: 1.5,
-            ),
+            // Divider(
+            //   color: Colors.grey[100],
+            //   thickness: 1.5,
+            // ),
             SizedBox(
               height: 50,
               child: AppBar(
@@ -546,11 +545,10 @@ class _Page8State extends State<Page8> {
                           return Container(
                               // height: MediaQuery.of(context).size.height * 0.25,
                               child: Column(children: [
-                            CachedNetworkImage(
-                              imageUrl:
-                                  "https://millionsofficial.github.io/static/search.jpg",
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              height: MediaQuery.of(context).size.height * 0.4,
+                            Image.asset(
+                              'images/search.png',
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              // height: MediaQuery.of(context).size.height * 0.4,
                             ),
                             Center(
                               child: ElevatedButton(
@@ -618,16 +616,15 @@ class _Page8State extends State<Page8> {
                                   SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.02),
+                                              0.03),
                                   Text(
-                                      "Channel Description : " +
-                                          (snapshot.data['description'] == ""
-                                              ? "No Description Provided"
-                                              : snapshot.data['description']),
+                                      (snapshot.data['description'] == ""
+                                          ? "No Description Provided"
+                                          : snapshot.data['description']),
                                       maxLines: 5,
                                       style: GoogleFonts.ubuntu(fontSize: 13)),
                                   Divider(
-                                    color: Colors.grey,
+                                    color: Colors.grey[300],
                                     thickness: 1,
                                   ),
                                   // SizedBox(height: MediaQuery.of(context).size.height*0.05),
@@ -640,8 +637,7 @@ class _Page8State extends State<Page8> {
                                   if (snapshot.data['linkone'] != '')
                                     InkWell(
                                         onTap: () {
-                                          launch(
-                                              snapshot.data['linkone']);
+                                          launch(snapshot.data['linkone']);
                                         },
                                         child: Text(snapshot.data['linkone'],
                                             style: GoogleFonts.ubuntu(
@@ -650,15 +646,14 @@ class _Page8State extends State<Page8> {
                                   if (snapshot.data['linktwo'] != '')
                                     InkWell(
                                         onTap: () {
-                                          launch(
-                                              snapshot.data['linktwo']);
+                                          launch(snapshot.data['linktwo']);
                                         },
                                         child: Text(snapshot.data['linktwo'],
                                             style: GoogleFonts.ubuntu(
                                                 color: Colors.blue,
                                                 fontSize: 13))),
                                   Divider(
-                                    color: Colors.grey,
+                                    color: Colors.grey[300],
                                     thickness: 1,
                                   ),
                                   Text('Details',
@@ -683,7 +678,9 @@ class _Page8State extends State<Page8> {
                                               0.025),
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        primary: primary),
+                                      primary: gray,
+                                      elevation: 0,
+                                    ),
                                     onPressed: () {
                                       Navigator.push(
                                         context,
@@ -696,7 +693,8 @@ class _Page8State extends State<Page8> {
                                     },
                                     child: Text(
                                       "Report Channel",
-                                      style: GoogleFonts.ubuntu(fontSize: 15),
+                                      style: GoogleFonts.ubuntu(
+                                          fontSize: 15, color: Colors.black87),
                                     ),
                                   ),
                                 ]),

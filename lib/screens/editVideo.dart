@@ -75,7 +75,7 @@ class _EditVideoState extends State<EditVideo> {
     setState(() {
       thumbnailImageName = pickedImageFile.path.split('.').last;
       thumbnailFile = File(pickedImageFile.path);
-      thumbnailChanged=true;
+      thumbnailChanged = true;
     });
   }
 
@@ -90,7 +90,7 @@ class _EditVideoState extends State<EditVideo> {
     setState(() {
       thumbnailImageName = pickedImageFile.path.split('.').last;
       thumbnailFile = File(pickedImageFile.path);
-      thumbnailChanged=true;
+      thumbnailChanged = true;
     });
   }
 
@@ -136,9 +136,9 @@ class _EditVideoState extends State<EditVideo> {
         'isComments': commentStatus,
         'description': descontroller.text,
         'title': titleController.text,
-        'language' : selectedLanguage,
-        'country' : selectedCountry,
-        'category' : selectedCategory,
+        'language': selectedLanguage,
+        'country': selectedCountry,
+        'category': selectedCategory,
         'thumbnail': thumbnailChanged ? thumbnailUrl : video.thumbnailUrl,
       }).then((value) {
         _showToast(context, "Video Post Edited Successfully");
@@ -343,8 +343,9 @@ class _EditVideoState extends State<EditVideo> {
                                     inputDecoration: InputDecoration(
                                         focusColor: primary,
                                         border: OutlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: primary)))),
+                                            borderSide: BorderSide(
+                                          color: Colors.grey,
+                                        )))),
                                 context: context,
                                 showPhoneCode: false,
                                 onSelect: (Country c) {
@@ -381,7 +382,7 @@ class _EditVideoState extends State<EditVideo> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Padding(
-                            padding:  EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Column(
                               children: [
                                 Row(
@@ -402,9 +403,11 @@ class _EditVideoState extends State<EditVideo> {
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                    title:  Text(
+                                                    title: Text(
                                                       'Millions',
-                                                      style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold,
+                                                      style: GoogleFonts.ubuntu(
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           color: primary),
                                                       textAlign:
                                                           TextAlign.center,
@@ -412,17 +415,23 @@ class _EditVideoState extends State<EditVideo> {
                                                     content:
                                                         SingleChildScrollView(
                                                       child: ListBody(
-                                                        children:  <
-                                                            Widget>[
+                                                        children: <Widget>[
                                                           Text(
-                                                              'Upload Thumbnail Image:', style: GoogleFonts.ubuntu()),
+                                                              'Upload Thumbnail Image:',
+                                                              style: GoogleFonts
+                                                                  .ubuntu()),
                                                         ],
                                                       ),
                                                     ),
                                                     actions: <Widget>[
                                                       TextButton(
-                                                        child:  Text(
-                                                            'Select from Gallery', style: GoogleFonts.ubuntu(color: primary),),
+                                                        child: Text(
+                                                          'Select from Gallery',
+                                                          style: GoogleFonts
+                                                              .ubuntu(
+                                                                  color:
+                                                                      primary),
+                                                        ),
                                                         onPressed: () {
                                                           _thumbnailFromGallery();
                                                           Navigator.of(context)
@@ -430,8 +439,13 @@ class _EditVideoState extends State<EditVideo> {
                                                         },
                                                       ),
                                                       TextButton(
-                                                        child:  Text(
-                                                            'Take a Picture', style: GoogleFonts.ubuntu(color: primary),),
+                                                        child: Text(
+                                                          'Take a Picture',
+                                                          style: GoogleFonts
+                                                              .ubuntu(
+                                                                  color:
+                                                                      primary),
+                                                        ),
                                                         onPressed: () {
                                                           _thumbnailFromCamera();
                                                           Navigator.of(context)

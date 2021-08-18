@@ -117,6 +117,7 @@ class _EditChannelState extends State<EditChannel> {
       print(onError);
     });
   }
+
 //-----------------------------------------------------------
   void _showToast(BuildContext context, String message) {
     final scaffold = ScaffoldMessenger.of(context);
@@ -158,7 +159,7 @@ class _EditChannelState extends State<EditChannel> {
             builder: (BuildContext context) => Page8(widget.myChannel.id)));
         _showToast(context, "Channel Updated Successfully");
       }).catchError((error) =>
-      //-------------------------------------------
+              //-------------------------------------------
               _showToast(context, "Failed to update channel: $error"));
     } catch (e) {
       print("Error");
@@ -180,6 +181,7 @@ class _EditChannelState extends State<EditChannel> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
@@ -216,7 +218,7 @@ class _EditChannelState extends State<EditChannel> {
                         Card(
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(color: primary, width: 1),
+                            side: BorderSide(color: Colors.grey, width: 1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Padding(
@@ -251,26 +253,32 @@ class _EditChannelState extends State<EditChannel> {
                                                     (BuildContext context) {
                                                   return AlertDialog(
                                                     title: Text(
-                                                      'Millions',
-                                                      style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold,
+                                                      'Upload',
+                                                      style: GoogleFonts.ubuntu(
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           color: primary),
-                                                      textAlign:
-                                                          TextAlign.center,
+                                                      textAlign: TextAlign.left,
                                                     ),
                                                     content:
                                                         SingleChildScrollView(
                                                       child: ListBody(
-                                                        children:  <
-                                                            Widget>[
+                                                        children: <Widget>[
                                                           Text(
-                                                              'Upload Profile Picture:', style: GoogleFonts.ubuntu()),
+                                                              'It’s recommended to use a picture that’s at least 98 x 98 pixels and 2MB or less.',
+                                                              style: GoogleFonts
+                                                                  .ubuntu()),
                                                         ],
                                                       ),
                                                     ),
                                                     actions: <Widget>[
                                                       TextButton(
-                                                        child:  Text(
-                                                            'Select from Gallery', style: GoogleFonts.ubuntu(color: primary)),
+                                                        child: Text(
+                                                            'Select from Gallery',
+                                                            style: GoogleFonts
+                                                                .ubuntu(
+                                                                    color:
+                                                                        primary)),
                                                         onPressed: () {
                                                           _fromgallery(1);
                                                           Navigator.of(context)
@@ -278,8 +286,12 @@ class _EditChannelState extends State<EditChannel> {
                                                         },
                                                       ),
                                                       TextButton(
-                                                        child:  Text(
-                                                            'Take a Picture',style: GoogleFonts.ubuntu(color: primary)),
+                                                        child: Text(
+                                                            'Take a Picture',
+                                                            style: GoogleFonts
+                                                                .ubuntu(
+                                                                    color:
+                                                                        primary)),
                                                         onPressed: () {
                                                           _fromCamera(1);
                                                           Navigator.of(context)
@@ -315,23 +327,27 @@ class _EditChannelState extends State<EditChannel> {
                             ),
                           ),
                         ),
+                        Text(
+                          "It’s recommended to use a picture that’s at least 98 x 98 pixels and 4MB or less. Use a PNG or GIF (no animations) file. Make sure your picture follows the Millions Community Guidelines.",
+                          style: GoogleFonts.ubuntu(fontSize: 7),
+                        ),
                         SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
+                            height: MediaQuery.of(context).size.height * 0.03),
                         InputField("Channel Name", namecontroller, 1),
                         SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
+                            height: MediaQuery.of(context).size.height * 0.03),
                         InputField("Channel Description", descontroller, 4),
                         SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
+                            height: MediaQuery.of(context).size.height * 0.03),
                         InputField("Featured Link 1", linkOneController, 1),
                         SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
+                            height: MediaQuery.of(context).size.height * 0.03),
                         InputField("Featured Link 2", linkTwoController, 1),
                         SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
+                            height: MediaQuery.of(context).size.height * 0.03),
                         Card(
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(color: primary, width: 1),
+                            side: BorderSide(color: Colors.grey, width: 1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Padding(
@@ -366,26 +382,32 @@ class _EditChannelState extends State<EditChannel> {
                                                     (BuildContext context) {
                                                   return AlertDialog(
                                                     title: Text(
-                                                      'Millions',
-                                                      style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold,
+                                                      'Upload',
+                                                      style: GoogleFonts.ubuntu(
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           color: primary),
-                                                      textAlign:
-                                                          TextAlign.center,
+                                                      textAlign: TextAlign.left,
                                                     ),
                                                     content:
                                                         SingleChildScrollView(
                                                       child: ListBody(
-                                                        children:  <
-                                                            Widget>[
+                                                        children: <Widget>[
                                                           Text(
-                                                              'Upload Channel Art:',style: GoogleFonts.ubuntu()),
+                                                              'For the best results on all devices, use an image that’s at least 2048 x 1152 pixels and 6MB or less.',
+                                                              style: GoogleFonts
+                                                                  .ubuntu()),
                                                         ],
                                                       ),
                                                     ),
                                                     actions: <Widget>[
                                                       TextButton(
-                                                        child:  Text(
-                                                            'Select from Gallery',style: GoogleFonts.ubuntu(color: primary)),
+                                                        child: Text(
+                                                            'Select from Gallery',
+                                                            style: GoogleFonts
+                                                                .ubuntu(
+                                                                    color:
+                                                                        primary)),
                                                         onPressed: () {
                                                           _fromgallery(2);
                                                           Navigator.of(context)
@@ -393,8 +415,12 @@ class _EditChannelState extends State<EditChannel> {
                                                         },
                                                       ),
                                                       TextButton(
-                                                        child:  Text(
-                                                            'Take a Picture', style: GoogleFonts.ubuntu(color: primary)),
+                                                        child: Text(
+                                                            'Take a Picture',
+                                                            style: GoogleFonts
+                                                                .ubuntu(
+                                                                    color:
+                                                                        primary)),
                                                         onPressed: () {
                                                           _fromCamera(2);
                                                           Navigator.of(context)
@@ -431,12 +457,16 @@ class _EditChannelState extends State<EditChannel> {
                               ],
                             ),
                           ),
-                        )
+                        ),
+                        Text(
+                          "For the best results on all devices, use an image that’s at least 2048 x 1152 pixels and 6MB or less.",
+                          style: GoogleFonts.ubuntu(fontSize: 7),
+                        ),
                       ],
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
+                      width: MediaQuery.of(context).size.width * 0.9,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: primary),
                         onPressed: () {
@@ -448,6 +478,7 @@ class _EditChannelState extends State<EditChannel> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 35),
                   ]),
                 ),
               ),

@@ -9,6 +9,8 @@ import 'package:millions/model/walletModel.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import 'home.dart';
+
 class MyWallet extends StatefulWidget {
   //const MyWallet({ Key? key }) : super(key: key);
   //final String userId;
@@ -24,7 +26,7 @@ class _MyWalletState extends State<MyWallet> {
   @override
   void initState() {
     super.initState();
-    noActiveRequests =true;
+    noActiveRequests = true;
   }
 
   Future<void> getDetails() async {
@@ -40,12 +42,15 @@ class _MyWalletState extends State<MyWallet> {
     }).catchError((error) => print("error in retreival"));
   }
 
+  var walletReqId =
+      FirebaseFirestore.instance.collection('wallet-requests').doc();
   Future<void> addRequest() async {
     try {
       await getDetails();
       return FirebaseFirestore.instance
           .collection('wallet-requests')
-          .add({
+          .doc(walletReqId.id)
+          .set({
             'user': altUserId,
             'date': Timestamp.now(),
             'email': email,
@@ -54,6 +59,7 @@ class _MyWalletState extends State<MyWallet> {
             'name': name,
             'paid': false,
             'phoneNumber': phone,
+            'trascationId': walletReqId.id,
             'profilePic': profilepic, // 42
           })
           .then((value) => _showToast(context, "Request Submitted"))
@@ -159,15 +165,17 @@ class _MyWalletState extends State<MyWallet> {
                       );
                     }
                     if (snapshot.hasData && !snapshot.data.exists) {
-                      return Column(//mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children:[ Center(
-                          child: Text(
-                            "Wallet does not exist",
-                            style: GoogleFonts.ubuntu(fontSize: 20),
-                          ),
-                        ),]
-                      );
+                      return Column(
+                          //mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Wallet does not exist",
+                                style: GoogleFonts.ubuntu(fontSize: 20),
+                              ),
+                            ),
+                          ]);
                     }
 
                     if (snapshot.connectionState == ConnectionState.done) {
@@ -178,7 +186,7 @@ class _MyWalletState extends State<MyWallet> {
                           ? withdrawable = true
                           : withdrawable = false;
                       return Container(
-                        child: myWallet.isActivated
+                        child: !myWallet.isBlocked
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -230,7 +238,7 @@ class _MyWalletState extends State<MyWallet> {
                                               //width:
                                               // MediaQuery.of(context).size.width * 0.65,
                                               animation: true,
-                                              lineHeight: 20.0,
+                                              lineHeight: 10.0,
                                               animationDuration: 2500,
                                               percent: myWallet.money > 2000
                                                   ? 1.0
@@ -566,74 +574,71 @@ class _MyWalletState extends State<MyWallet> {
                                     ),
                                   ])
                             : Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.25,
-                                child: Card(
-                                  //color: Colors.transparent,
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  //margin: EdgeInsetsGeometry.infinity,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          'Wallet Not Activated',
-                                          style: GoogleFonts.ubuntu(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.01,
-                                        ),
-                                        RichText(
-                                          text: TextSpan(
-                                            text:
-                                                'As a Millions partner, you will be eligible to earn money from your videos, posts etc and more ',
-                                            style: GoogleFonts.ubuntu(
-                                                fontSize: 12,
-                                                color: Colors.black),
-                                            children: [
-                                              TextSpan(
-                                                text: 'Learn More',
-                                                style: GoogleFonts.ubuntu(
-                                                    color: Colors.blue,
-                                                    fontSize: 12),
-                                                recognizer: TapGestureRecognizer()
-                                                  ..onTap = () => launch(
-                                                      "https://docs.millionsofficial.in/docs/intro"),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.01,
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {},
-                                          style: ElevatedButton.styleFrom(
-                                              primary: primary),
-                                          child: Text(
-                                            'Request Activation',
-                                            style: GoogleFonts.ubuntu(),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                // height: MediaQuery.of(context).size.height *
+                                //     0.25,
+                                width: MediaQuery.of(context).size.width,
+                                child: Column(children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
                                   ),
-                                ),
-                              ),
+                                  Image.asset(
+                                    'images/error.png',
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.6,
+                                    // height: MediaQuery.of(context).size.height * 0.4,
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.03,
+                                  ),
+                                  Center(
+                                      child: Text(
+                                    "Wallet Blocked ",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.ubuntu(
+                                      fontSize: 18,
+                                      color: Colors.black87,
+                                      // fontWeight: FontWeight.bold
+                                    ),
+                                  )),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.01,
+                                  ),
+                                  Center(
+                                      child: Text(
+                                    "Wallet is currently blocked " +
+                                        ". Please come back later.",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.ubuntu(
+                                      fontSize: 10,
+                                      color: Colors.grey,
+                                      // fontWeight: FontWeight.bold
+                                    ),
+                                  )),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                  ),
+                                  Center(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: primary, elevation: 0),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => HomePage()),
+                                        );
+                                      },
+                                      child: Text(
+                                        "Go Home",
+                                        style: GoogleFonts.ubuntu(fontSize: 15),
+                                      ),
+                                    ),
+                                  )
+                                ])),
                       );
                     }
                     return Center(

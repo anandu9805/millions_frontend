@@ -241,12 +241,12 @@ class _PlayVideoState extends State<PlayVideo> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Loading Ad..", style: GoogleFonts.ubuntu()),
+            Text("Loading..", style: GoogleFonts.ubuntu()),
           ],
         ),
       ),
       videoPlayerController: _videoPlayerController1,
-      aspectRatio: _videoPlayerController1.value.aspectRatio,
+      aspectRatio: 16 / 9,
       autoPlay: true,
       looping: false,
       showControls: false,
@@ -267,96 +267,94 @@ class _PlayVideoState extends State<PlayVideo> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Stack(
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: _chewieController.aspectRatio,
-            child: WillPopScope(
-              onWillPop: () {
-                if (_chewieController.isPlaying) {
-                  _chewieController.pause();
-                }
-                return new Future.value(true);
-              },
-              child: Chewie(
-                controller: _chewieController,
-              ),
+        child: Stack(
+      children: <Widget>[
+        AspectRatio(
+          aspectRatio: _chewieController.aspectRatio,
+          child: WillPopScope(
+            onWillPop: () {
+              if (_chewieController.isPlaying) {
+                _chewieController.pause();
+              }
+              return new Future.value(true);
+            },
+            child: Chewie(
+              controller: _chewieController,
             ),
           ),
-          Positioned(
-            left: 0,
-            bottom: 0,
-            child: isAdOpen
-                ? TextButton(
-                    onPressed: () {
+        ),
+        Positioned(
+          left: 0,
+          bottom: 0,
+          child: isAdOpen
+              ? TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _isPlaying = _videoPlayerController1.value.isPlaying;
+                    });
+                    print(_isPlaying);
+                    if (_isPlaying) {
                       setState(() {
-                        _isPlaying = _videoPlayerController1.value.isPlaying;
+                        _isPlaying = !_isPlaying;
                       });
-                      print(_isPlaying);
-                      if (_isPlaying) {
-                        setState(() {
-                          _isPlaying = !_isPlaying;
-                        });
-                        _videoPlayerController1.pause();
-                      } else {
-                        setState(() {
-                          _isPlaying = !_isPlaying;
-                        });
-                        _videoPlayerController1.play();
-                      }
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: _isPlaying
-                          ? Icon(
-                              Icons.pause,
-                              color: Colors.white,
-                            )
-                          : Icon(
-                              Icons.play_arrow,
-                              color: Colors.white,
-                            ),
-                    ))
-                : Container(),
-          ),
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: isAdOpen
-                ? TextButton(
-                    onPressed: () {
+                      _videoPlayerController1.pause();
+                    } else {
                       setState(() {
-                        isAdOpen = false;
-                        _chewieController.dispose();
-                        _videoPlayerController1.pause();
-                        _videoPlayerController1.seekTo(Duration(seconds: 0));
-                        _chewieController = ChewieController(
-                          videoPlayerController: _videoPlayerController2,
-                          aspectRatio:
-                              _videoPlayerController2.value.aspectRatio,
-                          autoPlay: true,
-                          showOptions: false,
-                          looping: false,
-                          allowPlaybackSpeedChanging: true,
-                          playbackSpeeds: [0.5, 0.75, 1, 1.5, 2],
-                          autoInitialize: true,
-                        );
+                        _isPlaying = !_isPlaying;
                       });
-                    },
-                    child: _showSkip
-                        ? Padding(
-                            padding: EdgeInsets.symmetric(vertical: 20.0),
-                            child: Text(
-                              "Skip",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                      _videoPlayerController1.play();
+                    }
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0),
+                    child: _isPlaying
+                        ? Icon(
+                            Icons.pause,
+                            color: Colors.white,
                           )
-                        : Container(),
-                  )
-                : Container(),
-          ),
-        ],
-      ),
-    );
+                        : Icon(
+                            Icons.play_arrow,
+                            color: Colors.white,
+                          ),
+                  ))
+              : Container(),
+        ),
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: isAdOpen
+              ? TextButton(
+                  onPressed: () {
+                    setState(() {
+                      isAdOpen = false;
+                      _chewieController.dispose();
+                      _videoPlayerController1.pause();
+                      _videoPlayerController1.seekTo(Duration(seconds: 0));
+                      _chewieController = ChewieController(
+                        videoPlayerController: _videoPlayerController2,
+                        aspectRatio: _videoPlayerController2.value.aspectRatio,
+                        autoPlay: true,
+                        showOptions: false,
+                        looping: false,
+                        allowPlaybackSpeedChanging: true,
+                        playbackSpeeds: [0.5, 0.75, 1, 1.5, 2],
+                        autoInitialize: true,
+                      );
+                    });
+                  },
+                  child: _showSkip
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.0),
+                          child: Text(
+                            "Skip",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : Container(),
+                )
+              : Container(),
+        ),
+      ],
+    ));
   }
 }

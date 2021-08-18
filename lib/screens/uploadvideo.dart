@@ -63,7 +63,7 @@ class _UploadPageState extends State<UploadPage> {
   String thumnailpath;
   String thumnail_image_name;
   String thumbnail_url;
-int stop=0;
+  int stop = 0;
   final videoInfo = FlutterVideoInfo();
   var info;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -114,22 +114,22 @@ int stop=0;
     info = await videoInfo.getVideoInfo(pickedImageFile.path);
     print("duration");
     print(info.duration);
-    if(info.duration<60000.0)
-    {
+    if (info.duration < 60000.0) {
       setState(() {
-        stop=1;
+        stop = 1;
+      });
+    } else {
+      setState(() {
+        _videoFile = File(pickedImageFile.path);
+        // controller = new VideoPlayerController.file(_videoFile);
+        // print("controller.value.duration");
+        // print(controller.value.duration.toString());
+
+        thumbanil = thumbanil_temp;
+
+        uploadComplete = true;
       });
     }
-    else{    setState(() {
-      _videoFile = File(pickedImageFile.path);
-      // controller = new VideoPlayerController.file(_videoFile);
-      // print("controller.value.duration");
-      // print(controller.value.duration.toString());
-
-      thumbanil = thumbanil_temp;
-
-      uploadComplete = true;
-    });}
   }
 
   void _selectVideo() async {
@@ -142,30 +142,29 @@ int stop=0;
     info = await videoInfo.getVideoInfo(pickedImageFile.path);
     print("duration");
     print(info.duration);
-    if(info.duration<60000.0)
-      {
-        setState(() {
-          stop=1;
-        });
-      }
-    else{    setState(() {
-      _videoFile = File(pickedImageFile.path);
-      // controller = new VideoPlayerController.file(_videoFile);
-      // print("controller.value.duration");
-      // print(controller.value.duration.toString());
+    if (info.duration < 60000.0) {
+      setState(() {
+        stop = 1;
+      });
+    } else {
+      setState(() {
+        _videoFile = File(pickedImageFile.path);
+        // controller = new VideoPlayerController.file(_videoFile);
+        // print("controller.value.duration");
+        // print(controller.value.duration.toString());
 
-      thumbanil = thumbanil_temp;
+        thumbanil = thumbanil_temp;
 
-      uploadComplete = true;
-    });}
-
+        uploadComplete = true;
+      });
+    }
   }
 
   Future<String> getCurrentUserChannelDetails() async {
     try {
       FirebaseFirestore.instance
           .collection('channels')
-     // .doc("4C4iLByizTPLBBlP4rssrwGTISb2")
+          // .doc("4C4iLByizTPLBBlP4rssrwGTISb2")
           .doc(currentuserid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
@@ -199,6 +198,7 @@ int stop=0;
     print(file);
     return file;
   }
+
   //-----------------------------------------------------------
   void _showToast(BuildContext context, String message) {
     final scaffold = ScaffoldMessenger.of(context);
@@ -344,552 +344,581 @@ int stop=0;
     //print("_videoFile $_videoFile");
     return Scaffold(
       key: scaffoldKey,
-      body: stop==1?/*Center(child: Text("Min upload duration is 1min!!!", style: GoogleFonts.ubuntu(
+      appBar: stop == 1
+          ? AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              iconTheme: IconThemeData(
+                color: Colors.black,
+              ),
+            )
+          : null,
+      body: stop == 1
+          ? /*Center(child: Text("Min upload duration is 1min!!!", style: GoogleFonts.ubuntu(
           fontSize: 25,
           color: Colors.black,
           fontWeight: FontWeight.w800),))*/
-      Container(color: Colors.white,
-        // height: MediaQuery.of(context).size.height *
-        //     0.25,
-          child: Center(
-            child: Column(children: [
-              CachedNetworkImage(
-                imageUrl:
-                "https://millionsofficial.github.io/static/search.jpg",
-                width:
-                MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.height *
-                    0.4,
-              ),
-              Center(child: Text("Min upload duration is 1min!!!", style: GoogleFonts.ubuntu(
-                  fontSize: 25,
-                  color: Colors.black,
-                 ),))
+          Container(
+              color: Colors.white,
+              // height: MediaQuery.of(context).size.height *
+              //     0.25,
 
-            ]),
-          ))
-
-
-
-          :_isLoading
-          ?
-
-          Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+              child: Center(
+                child: Column(children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                  ),
+                  Image.asset(
+                    'images/error.png',
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    // height: MediaQuery.of(context).size.height * 0.4,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                  ),
                   Center(
-                      child: LoadingBouncingGrid.circle(
-                    borderColor: primary,
-                    backgroundColor: Colors.white,
-                    borderSize: 10,
-                    size: 100,
-                    duration: Duration(milliseconds: 1800),
+                      child: Text(
+                    "Video too short!",
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 25,
+                      color: Colors.black,
+                    ),
                   )),
                   SizedBox(
-                    height: 20,
+                    height: MediaQuery.of(context).size.height * 0.03,
                   ),
-                  FittedBox(
-                    fit: BoxFit.contain,
-                    child: Text(
-                      "$percentage_uploaded%",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(20, 60, 0, 30),
+                  Center(
                       child: Text(
-                        'Upload Video',
-                        style: GoogleFonts.ubuntu(
-                            fontSize: 25,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800),
+                    "Please upload a video larger than 1 minute",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 10,
+                      color: Colors.grey,
+                      // fontWeight: FontWeight.bold
+                    ),
+                  )),
+                ]),
+              ))
+          : _isLoading
+              ? Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                          child: LoadingBouncingGrid.circle(
+                        borderColor: primary,
+                        backgroundColor: Colors.white,
+                        borderSize: 10,
+                        size: 100,
+                        duration: Duration(milliseconds: 1800),
                       )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          "$percentage_uploaded%",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.fromLTRB(20, 60, 0, 30),
+                          child: Text(
+                            'Upload Video',
+                            style: GoogleFonts.ubuntu(
+                                fontSize: 25,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800),
+                          )),
 
-                  //----------------------
-                  thumbanil != null
-                      ? Container(
-                          child: Image.file(
-                            thumbanil,
-                            fit: BoxFit.fill,
-                          ),
-                        )
-                      : InkWell(
-                          onTap: () {
-                            Future<void> _showMyDialog() async {
-                              return showDialog<void>(
-                                context: context,
-                                //barrierDismissible: false, // user must tap button!
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text(
-                                      'Select a video',
-                                      style: TextStyle(color: primary),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: const <Widget>[
-                                          Text(
-                                              'Please select a video from your gallery or capture one.'),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text(
-                                          'Record a video',
-                                          style: GoogleFonts.ubuntu(
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w400),
-                                        ),
-                                        onPressed: () {
-                                          _selectVideo();
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: Text(
-                                          'Gallery',
-                                          style: GoogleFonts.ubuntu(
-                                              fontSize: 16,
-                                              color: primary,
-                                              fontWeight: FontWeight.w400),
-                                        ),
-                                        onPressed: () {
-                                          _fromgallery();
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                            //------------
-
-                            _showMyDialog();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                            child: Card(
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              color: Color(0xFFF5F5F5),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                    child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Icon(
-                                            Icons.cloud_upload,
-                                            color: primary,
-                                            size: 40,
-                                          )
-                                        ]),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
+                      //----------------------
+                      thumbanil != null
+                          ? Container(
+                              child: Image.file(
+                                thumbanil,
+                                fit: BoxFit.fill,
+                              ),
+                            )
+                          : InkWell(
+                              onTap: () {
+                                Future<void> _showMyDialog() async {
+                                  return showDialog<void>(
+                                    context: context,
+                                    //barrierDismissible: false, // user must tap button!
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text(
                                           'Select a video',
-                                          textAlign: TextAlign.start,
-                                          style: GoogleFonts.ubuntu(
-                                            color: primary,
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: 20,
+                                          style: TextStyle(color: primary),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        content: SingleChildScrollView(
+                                          child: ListBody(
+                                            children: const <Widget>[
+                                              Text(
+                                                  'Please select a video from your gallery or capture one.'),
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text(
+                                              'Record a video',
+                                              style: GoogleFonts.ubuntu(
+                                                  fontSize: 16,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                            onPressed: () {
+                                              _selectVideo();
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text(
+                                              'Gallery',
+                                              style: GoogleFonts.ubuntu(
+                                                  fontSize: 16,
+                                                  color: primary,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                            onPressed: () {
+                                              _fromgallery();
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                                //------------
+
+                                _showMyDialog();
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                child: Card(
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  color: Color(0xFFF5F5F5),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                        child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Icon(
+                                                Icons.cloud_upload,
+                                                color: primary,
+                                                size: 40,
+                                              )
+                                            ]),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 5),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Select a video',
+                                              textAlign: TextAlign.start,
+                                              style: GoogleFonts.ubuntu(
+                                                color: primary,
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        'Your videos will be public after you publish them',
+                                        textAlign: TextAlign.start,
+                                        style: GoogleFonts.ubuntu(
+                                          // color: primary,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 25,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    'Your videos will be public after you publish them',
-                                    textAlign: TextAlign.start,
-                                    style: GoogleFonts.ubuntu(
-                                      // color: primary,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 25,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Text(
-                      'By submitting your videos to Millions, you acknowledge that you agree to Millions\'s Terms of Service and Community Guidelines',
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                  if (thumbanil != null)
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          //--------------------
-                          _thumbnailfromgallery();
-                        },
-                        style: ElevatedButton.styleFrom(primary: primary),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                         child: Text(
-                          'Upload custom thumbnail',
-                          style: GoogleFonts.ubuntu(),
-                        ),
-                      ),
-                    ),
-
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Video Title',
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: TextFormField(
-                      controller: titleController,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                            bottomLeft: Radius.circular(4.0),
-                            bottomRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                            bottomLeft: Radius.circular(4.0),
-                            bottomRight: Radius.circular(4.0),
+                          'By submitting your videos to Millions, you acknowledge that you agree to Millions\'s Terms of Service and Community Guidelines',
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 12,
                           ),
                         ),
                       ),
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Description',
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: TextFormField(
-                      maxLines: 5,
-                      minLines: 4,
-                      controller: decsiptionController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                            bottomLeft: Radius.circular(4.0),
-                            bottomRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                            bottomLeft: Radius.circular(4.0),
-                            bottomRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Video Country',
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: InkWell(
-                      onTap: () {
-                        showCountryPicker(
-                          context: context,
-                          showPhoneCode: false,
-                          // optional. Shows phone code before the country name.
-                          onSelect: (Country country) {
-                            //print('Select country: ${country.displayName}');
-                            setState(() {
-                              selectedCountry = country.countryCode;
-                            });
-                          },
-                        );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          border: Border.all(
-                            color: primary,
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          selectedCountry,
-                          style: GoogleFonts.ubuntu(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Language',
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      //width: 20,
-                      decoration: BoxDecoration(
-                        // color: Colors.transparent,
-                        border: Border.all(
-                          color: primary,
-                          width: 1,
-                        ),
-                      ),
-                      child: DropdownButton(
-                        dropdownColor: Colors.white,
-                        elevation: 0,
-                        style: GoogleFonts.ubuntu(),
-                        // hint: Text('Please choose a location'), // Not necessary for Option 1
-                        value: selectedLanguage,
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedLanguage = newValue.toString();
-                          });
-                        },
-                        items: languages.map((lang) {
-                          return DropdownMenuItem(
-                            child: new Text(
-                              lang,
-                              style: GoogleFonts.ubuntu(color: Colors.black),
-                            ),
-                            value: lang,
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Comments',
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      //width: 20,
-                      decoration: BoxDecoration(
-                        // color: Colors.transparent,
-                        border: Border.all(
-                          color: primary,
-                          width: 1,
-                        ),
-                      ),
-                      child: DropdownButton(
-                        dropdownColor: Colors.white,
-                        elevation: 0,
-                        style: GoogleFonts.ubuntu(),
-                        // hint: Text('Please choose a location'), // Not necessary for Option 1
-                        value: commentStatus,
-                        onChanged: (newValue) {
-                          setState(() {
-                            commentStatus = newValue.toString();
-                          });
-                        },
-                        items: comments.map((cmnts) {
-                          return DropdownMenuItem(
-                            child: new Text(
-                              cmnts,
-                              style: GoogleFonts.ubuntu(color: Colors.black),
-                            ),
-                            value: cmnts,
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                  //   child: Text(
-                  //     'Video Visibility',
-                  //     style: GoogleFonts.ubuntu(),
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                  //   child: Container(
-                  //     padding: EdgeInsets.only(left: 10),
-                  //     //width: 20,
-                  //     decoration: BoxDecoration(
-                  //       // color: Colors.transparent,
-                  //       border: Border.all(
-                  //         color: primary,
-                  //         width: 1,
-                  //       ),
-                  //     ),
-                  //     child: DropdownButton(
-                  //       dropdownColor: Colors.white,
-                  //       elevation: 0,
-                  //       style: GoogleFonts.ubuntu(),
-                  //       // hint: Text('Please choose a location'), // Not necessary for Option 1
-                  //       value: selectedVisibility,
-                  //       onChanged: (newValue) {
-                  //         setState(() {
-                  //           selectedVisibility = newValue.toString();
-                  //         });
-                  //       },
-                  //       items: visibility.map((visi) {
-                  //         return DropdownMenuItem(
-                  //           child: new Text(
-                  //             visi,
-                  //             style: GoogleFonts.ubuntu(color: Colors.black),
-                  //           ),
-                  //           value: visi,
-                  //         );
-                  //       }).toList(),
-                  //     ),
-                  //   ),
-                  // ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Video Category',
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      //width: 20,
-                      decoration: BoxDecoration(
-                        // color: Colors.transparent,
-                        border: Border.all(
-                          color: primary,
-                          width: 1,
-                        ),
-                      ),
-                      child: DropdownButton(
-                        dropdownColor: Colors.white,
-                        elevation: 0,
-                        style: GoogleFonts.ubuntu(),
-                        // hint: Text('Please choose a location'), // Not necessary for Option 1
-                        value: selectedCategory,
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedCategory = newValue.toString();
-                          });
-                        },
-                        items: categories.map((catg) {
-                          return DropdownMenuItem(
-                            child: new Text(
-                              catg,
-                              style: GoogleFonts.ubuntu(color: Colors.black),
-                            ),
-                            value: catg,
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-
-                  uploadComplete
-                      ? Padding(
+                      if (thumbanil != null)
+                        Padding(
                           padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
                           child: ElevatedButton(
                             onPressed: () {
-                              upload();
+                              //--------------------
+                              _thumbnailfromgallery();
                             },
                             style: ElevatedButton.styleFrom(primary: primary),
                             child: Text(
-                              'Done',
-                              style: GoogleFonts.ubuntu(),
-                            ),
-                          ),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(primary: primary),
-                            child: Text(
-                              'Upload',
+                              'Upload custom thumbnail',
                               style: GoogleFonts.ubuntu(),
                             ),
                           ),
                         ),
-                  SizedBox(
-                    height: 45,
+
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: TextFormField(
+                          controller: titleController,
+                          decoration: InputDecoration(
+                            labelText: 'Video Title',
+                            labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                                bottomLeft: Radius.circular(4.0),
+                                bottomRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: primary,
+                                width: 1,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                                bottomLeft: Radius.circular(4.0),
+                                bottomRight: Radius.circular(4.0),
+                              ),
+                            ),
+                          ),
+                          style: GoogleFonts.ubuntu(),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: TextFormField(
+                          maxLines: 5,
+                          minLines: 4,
+                          controller: decsiptionController,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            labelText: 'Description',
+                            labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                                bottomLeft: Radius.circular(4.0),
+                                bottomRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: primary,
+                                width: 1,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                                bottomLeft: Radius.circular(4.0),
+                                bottomRight: Radius.circular(4.0),
+                              ),
+                            ),
+                          ),
+                          style: GoogleFonts.ubuntu(),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                        child: Text(
+                          'Video Country',
+                          style: GoogleFonts.ubuntu(),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: InkWell(
+                          onTap: () {
+                            showCountryPicker(
+                              context: context,
+                              showPhoneCode: false,
+                              // optional. Shows phone code before the country name.
+                              onSelect: (Country country) {
+                                //print('Select country: ${country.displayName}');
+                                setState(() {
+                                  selectedCountry = country.countryCode;
+                                });
+                              },
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              selectedCountry,
+                              style: GoogleFonts.ubuntu(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                        child: Text(
+                          'Language',
+                          style: GoogleFonts.ubuntu(),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          //width: 20,
+                          decoration: BoxDecoration(
+                            // color: Colors.transparent,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
+                            ),
+                          ),
+                          child: DropdownButton(
+                            dropdownColor: Colors.white,
+                            elevation: 0,
+                            style: GoogleFonts.ubuntu(),
+                            // hint: Text('Please choose a location'), // Not necessary for Option 1
+                            value: selectedLanguage,
+                            onChanged: (newValue) {
+                              setState(() {
+                                selectedLanguage = newValue.toString();
+                              });
+                            },
+                            items: languages.map((lang) {
+                              return DropdownMenuItem(
+                                child: new Text(
+                                  lang,
+                                  style:
+                                      GoogleFonts.ubuntu(color: Colors.black),
+                                ),
+                                value: lang,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                        child: Text(
+                          'Comments',
+                          style: GoogleFonts.ubuntu(),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          //width: 20,
+                          decoration: BoxDecoration(
+                            // color: Colors.transparent,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
+                            ),
+                          ),
+                          child: DropdownButton(
+                            dropdownColor: Colors.white,
+                            elevation: 0,
+                            style: GoogleFonts.ubuntu(),
+                            // hint: Text('Please choose a location'), // Not necessary for Option 1
+                            value: commentStatus,
+                            onChanged: (newValue) {
+                              setState(() {
+                                commentStatus = newValue.toString();
+                              });
+                            },
+                            items: comments.map((cmnts) {
+                              return DropdownMenuItem(
+                                child: new Text(
+                                  cmnts,
+                                  style:
+                                      GoogleFonts.ubuntu(color: Colors.black),
+                                ),
+                                value: cmnts,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                      //   child: Text(
+                      //     'Video Visibility',
+                      //     style: GoogleFonts.ubuntu(),
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      //   child: Container(
+                      //     padding: EdgeInsets.only(left: 10),
+                      //     //width: 20,
+                      //     decoration: BoxDecoration(
+                      //       // color: Colors.transparent,
+                      //       border: Border.all(
+                      //         color: primary,
+                      //         width: 1,
+                      //       ),
+                      //     ),
+                      //     child: DropdownButton(
+                      //       dropdownColor: Colors.white,
+                      //       elevation: 0,
+                      //       style: GoogleFonts.ubuntu(),
+                      //       // hint: Text('Please choose a location'), // Not necessary for Option 1
+                      //       value: selectedVisibility,
+                      //       onChanged: (newValue) {
+                      //         setState(() {
+                      //           selectedVisibility = newValue.toString();
+                      //         });
+                      //       },
+                      //       items: visibility.map((visi) {
+                      //         return DropdownMenuItem(
+                      //           child: new Text(
+                      //             visi,
+                      //             style: GoogleFonts.ubuntu(color: Colors.black),
+                      //           ),
+                      //           value: visi,
+                      //         );
+                      //       }).toList(),
+                      //     ),
+                      //   ),
+                      // ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                        child: Text(
+                          'Video Category',
+                          style: GoogleFonts.ubuntu(),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          //width: 20,
+                          decoration: BoxDecoration(
+                            // color: Colors.transparent,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
+                            ),
+                          ),
+                          child: DropdownButton(
+                            dropdownColor: Colors.white,
+                            elevation: 0,
+                            style: GoogleFonts.ubuntu(),
+                            // hint: Text('Please choose a location'), // Not necessary for Option 1
+                            value: selectedCategory,
+                            onChanged: (newValue) {
+                              setState(() {
+                                selectedCategory = newValue.toString();
+                              });
+                            },
+                            items: categories.map((catg) {
+                              return DropdownMenuItem(
+                                child: new Text(
+                                  catg,
+                                  style:
+                                      GoogleFonts.ubuntu(color: Colors.black),
+                                ),
+                                value: catg,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+
+                      uploadComplete
+                          ? Padding(
+                              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  upload();
+                                },
+                                style:
+                                    ElevatedButton.styleFrom(primary: primary),
+                                child: Text(
+                                  'Done',
+                                  style: GoogleFonts.ubuntu(),
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style:
+                                    ElevatedButton.styleFrom(primary: primary),
+                                child: Text(
+                                  'Upload',
+                                  style: GoogleFonts.ubuntu(),
+                                ),
+                              ),
+                            ),
+                      SizedBox(
+                        height: 45,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
     );
   }
 }

@@ -102,7 +102,10 @@ flutter:
       - images/million logo no internet.png
       - images/algolia.png
       - images/avathar.png
-      - images/search.jpg
+      - images/search.png
+      - images/search_bg.png
+      - images/error_search.png
+      - images/error.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

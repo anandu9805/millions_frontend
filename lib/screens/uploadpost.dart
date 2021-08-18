@@ -59,8 +59,7 @@ class _UploadPostState extends State<UploadPost> {
     try {
       FirebaseFirestore.instance
           .collection('channels')
-
-      .doc(currentuserid)
+          .doc(currentuserid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         Map<String, dynamic> data =
@@ -379,10 +378,10 @@ class _UploadPostState extends State<UploadPost> {
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Description',
-                      style: GoogleFonts.ubuntu(),
-                    ),
+                    // child: Text(
+                    //   'Description',
+                    //   style: GoogleFonts.ubuntu(),
+                    // ),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -392,9 +391,11 @@ class _UploadPostState extends State<UploadPost> {
                       controller: decsiptionController,
                       obscureText: false,
                       decoration: InputDecoration(
+                        labelText: 'Description',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: primary,
+                            color: Colors.grey,
                             width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
@@ -437,7 +438,7 @@ class _UploadPostState extends State<UploadPost> {
                         decoration: BoxDecoration(
                           // color: Colors.transparent,
                           border: Border.all(
-                            color: primary,
+                            color: Colors.grey,
                             width: 1,
                           ),
                         ),

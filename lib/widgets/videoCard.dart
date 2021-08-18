@@ -13,7 +13,7 @@ class VideoCard extends StatefulWidget {
   final int fromwhere;
 //1 from home page or explore page or followpage;
   //2 form all other callers
-  const VideoCard({Key key, this.video,this.fromwhere}) : super(key: key);
+  const VideoCard({Key key, this.video, this.fromwhere}) : super(key: key);
 
   @override
   _VideoCardState createState() => _VideoCardState();
@@ -68,8 +68,8 @@ class _VideoCardState extends State<VideoCard> {
         child: Column(
           children: [
             Container(
-              height: h * 0.3,
-              width: double.infinity,
+              height: MediaQuery.of(context).size.width * 9 / 16,
+              width: MediaQuery.of(context).size.width,
               color: Colors.grey,
               child: Stack(
                 children: [
@@ -124,10 +124,8 @@ class _VideoCardState extends State<VideoCard> {
                                   // ),
                                 ),
                               ),
-                            )
-                            ),
-                      )
-                      ),
+                            )),
+                      )),
                   Positioned(
                     bottom: 10,
                     right: 10,
@@ -189,7 +187,7 @@ class _VideoCardState extends State<VideoCard> {
                     ),
                   ),
                   //PopUpMenuIcon(""),
-                  widget.video.channelId == altUserId &&widget.fromwhere==0
+                  widget.video.channelId == altUserId && widget.fromwhere == 0
                       ? PopUpMenuIcon("videos", widget.video.id)
                       : Row(),
                 ],

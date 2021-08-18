@@ -150,7 +150,7 @@ class _UploadReelState extends State<UploadReel> {
     try {
       FirebaseFirestore.instance
           .collection('channels')
-          .doc(currentuserid )
+          .doc(currentuserid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         Map<String, dynamic> data =
@@ -187,14 +187,14 @@ class _UploadReelState extends State<UploadReel> {
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
     firebase_storage.Reference ref_thumbnail = storage
-        .ref('test-reels/${currentuserid }/thumbnails/${thumnail_image_name}');
+        .ref('test-reels/${currentuserid}/thumbnails/${thumnail_image_name}');
     firebase_storage.UploadTask uploadTask_thumbnail =
         ref_thumbnail.putFile(thumbanil);
     uploadTask_thumbnail.whenComplete(() async {
       thumbnail_url = await ref_thumbnail.getDownloadURL();
 
       firebase_storage.Reference ref =
-          storage.ref('test-reels/${currentuserid }/${fileName}');
+          storage.ref('test-reels/${currentuserid}/${fileName}');
       firebase_storage.UploadTask uploadTask = ref.putFile(_videoFile);
       uploadTask.snapshotEvents.listen(
           (firebase_storage.TaskSnapshot snapshot) {
@@ -501,19 +501,21 @@ class _UploadReelState extends State<UploadReel> {
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Video Title',
-                      style: GoogleFonts.ubuntu(),
-                    ),
+                    // child: Text(
+                    //   'Video Title',
+                    //   style: GoogleFonts.ubuntu(),
+                    // ),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                     child: TextFormField(
                       controller: titleController,
                       decoration: InputDecoration(
+                        labelText: 'Title',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: primary,
+                            color: Colors.grey,
                             width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
@@ -541,10 +543,10 @@ class _UploadReelState extends State<UploadReel> {
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Description',
-                      style: GoogleFonts.ubuntu(),
-                    ),
+                    // child: Text(
+                    //   'Description',
+                    //   style: GoogleFonts.ubuntu(),
+                    // ),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -554,9 +556,11 @@ class _UploadReelState extends State<UploadReel> {
                       controller: decsiptionController,
                       obscureText: false,
                       decoration: InputDecoration(
+                        labelText: 'Description',
+                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: primary,
+                            color: Colors.grey,
                             width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
@@ -611,7 +615,7 @@ class _UploadReelState extends State<UploadReel> {
                         decoration: BoxDecoration(
                           color: Colors.transparent,
                           border: Border.all(
-                            color: primary,
+                            color: Colors.grey,
                             width: 1,
                           ),
                         ),
@@ -637,7 +641,7 @@ class _UploadReelState extends State<UploadReel> {
                       decoration: BoxDecoration(
                         // color: Colors.transparent,
                         border: Border.all(
-                          color: primary,
+                          color: Colors.grey,
                           width: 1,
                         ),
                       ),
@@ -679,7 +683,7 @@ class _UploadReelState extends State<UploadReel> {
                       decoration: BoxDecoration(
                         // color: Colors.transparent,
                         border: Border.all(
-                          color: primary,
+                          color: Colors.grey,
                           width: 1,
                         ),
                       ),
@@ -763,7 +767,7 @@ class _UploadReelState extends State<UploadReel> {
                       decoration: BoxDecoration(
                         // color: Colors.transparent,
                         border: Border.all(
-                          color: primary,
+                          color: Colors.grey,
                           width: 1,
                         ),
                       ),

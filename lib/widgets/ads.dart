@@ -188,7 +188,7 @@ class _AdPostState extends State<AdPost> {
 
           return SkeletonContainer.square(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.50,
+            height: MediaQuery.of(context).size.height * 0.25,
           );
         },
       ),

@@ -17,7 +17,8 @@ class Screen14 extends StatefulWidget {
 class _Screen14State extends State<Screen14> {
   final _formCreateKey = GlobalKey<FormState>();
   TextEditingController name, dname, phone, place;
-  var countr;String tempPhone;
+  var countr;
+  String tempPhone;
   List _selectedLanguages;
   bool countrySelected, stateSelected;
   Country _selectedCountry;
@@ -49,7 +50,9 @@ class _Screen14State extends State<Screen14> {
       await users.doc(altUserId).update({
         'name': dname.text,
         'gender': _selectedGender,
-        'phone': countrySelected ? '+' + _selectedCountry.phoneCode + phone.text:tempPhone,
+        'phone': countrySelected
+            ? '+' + _selectedCountry.phoneCode + phone.text
+            : tempPhone,
         'country': countrySelected ? _selectedCountry.countryCode : countr,
         'state': _selectedStateCode,
         'district': _selectedDistrict,
@@ -64,7 +67,7 @@ class _Screen14State extends State<Screen14> {
       }).catchError(
           (error) => _showToast(context, "Failed to update profile: $error"));
     } catch (e) {
-      print("Error"+e.toString());
+      print("Error" + e.toString());
     }
   }
 
@@ -111,6 +114,7 @@ class _Screen14State extends State<Screen14> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
@@ -150,22 +154,22 @@ class _Screen14State extends State<Screen14> {
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
-                              'Name',
-                              style: GoogleFonts.ubuntu(),
-                            ),
-                            InputField('', name, 1),
-                            SizedBox(height: 15),
-                            Text(
-                              'Display Name/Channel Name',
-                              style: GoogleFonts.ubuntu(),
-                            ),
-                            InputField('', dname, 1),
-                            SizedBox(height: 15),
-                            Text(
-                              'Phone Number (Without Country Code)',
-                              style: GoogleFonts.ubuntu(),
-                            ),
+                            // Text(
+                            //   'Name',
+                            //   style: GoogleFonts.ubuntu(),
+                            // ),
+                            InputField('Name', name, 1),
+                            SizedBox(height: 25),
+                            // Text(
+                            //   'Display Name/Channel Name',
+                            //   style: GoogleFonts.ubuntu(),
+                            // ),
+                            InputField('Display Name/Channel Name', dname, 1),
+                            SizedBox(height: 25),
+                            // Text(
+                            //   'Phone Number (Without Country Code)',
+                            //   style: GoogleFonts.ubuntu(),
+                            // ),
                             TextFormField(
                               cursorColor: primary,
                               validator: (value) {
@@ -179,14 +183,20 @@ class _Screen14State extends State<Screen14> {
                               controller: phone,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
+                                labelText:
+                                    "Phone Number (Without Country Code)",
+                                labelStyle:
+                                    GoogleFonts.ubuntu(color: Colors.black),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: primary,
+                                    color: Colors.grey,
                                     width: 1,
                                   ),
                                   borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(4.0),
                                     topRight: Radius.circular(4.0),
+                                    bottomLeft: Radius.circular(4.0),
+                                    bottomRight: Radius.circular(4.0),
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -197,11 +207,13 @@ class _Screen14State extends State<Screen14> {
                                   borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(4.0),
                                     topRight: Radius.circular(4.0),
+                                    bottomLeft: Radius.circular(4.0),
+                                    bottomRight: Radius.circular(4.0),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 15),
+                            SizedBox(height: 25),
                             Text(
                               'Gender',
                               style: GoogleFonts.ubuntu(),
@@ -209,7 +221,7 @@ class _Screen14State extends State<Screen14> {
                             Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: primary,
+                                  color: Colors.grey,
                                   width: 1,
                                 ),
                               ),
@@ -238,7 +250,7 @@ class _Screen14State extends State<Screen14> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 15),
+                            SizedBox(height: 25),
                             Text(
                               'Country',
                               style: GoogleFonts.ubuntu(),
@@ -249,7 +261,7 @@ class _Screen14State extends State<Screen14> {
                               decoration: BoxDecoration(
                                 // color: Colors.transparent,
                                 border: Border.all(
-                                  color: primary,
+                                  color: Colors.grey,
                                   width: 1,
                                 ),
                               ),
@@ -262,7 +274,8 @@ class _Screen14State extends State<Screen14> {
                                             focusColor: primary,
                                             border: OutlineInputBorder(
                                                 borderSide: BorderSide(
-                                                    color: primary)))),
+                                              color: Colors.grey,
+                                            )))),
                                     context: context,
                                     showPhoneCode: false,
                                     // optional. Shows phone code before the country name.
@@ -272,7 +285,7 @@ class _Screen14State extends State<Screen14> {
                                         countrySelected = true;
                                         //print(c.displayName);
                                         _selectedCountry = c;
-                                       // print(_selectedCountry.countryCode);
+                                        // print(_selectedCountry.countryCode);
                                       });
                                     },
                                   );
@@ -306,7 +319,7 @@ class _Screen14State extends State<Screen14> {
                                   Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: primary,
+                                        color: Colors.grey,
                                         width: 1,
                                       ),
                                     ),
@@ -354,7 +367,7 @@ class _Screen14State extends State<Screen14> {
                                   Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: primary,
+                                        color: Colors.grey,
                                         width: 1,
                                       ),
                                     ),
@@ -387,11 +400,11 @@ class _Screen14State extends State<Screen14> {
                                     ),
                                   ),
                                   SizedBox(height: 15),
-                                  Text(
-                                    'Place',
-                                    style: GoogleFonts.ubuntu(),
-                                  ),
-                                  InputField('', place, 1),
+                                  // Text(
+                                  //   'Place',
+                                  //   style: GoogleFonts.ubuntu(),
+                                  // ),
+                                  InputField('Place', place, 1),
                                 ],
                               ),
                             SizedBox(height: 20),
@@ -402,7 +415,7 @@ class _Screen14State extends State<Screen14> {
                             Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: primary,
+                                  color: Colors.grey,
                                   width: 1,
                                 ),
                               ),
@@ -453,6 +466,7 @@ class _Screen14State extends State<Screen14> {
                                 ),
                               ),
                             ),
+                            SizedBox(height: 35),
                           ],
                         )
                       ],

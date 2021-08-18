@@ -9,6 +9,7 @@ import 'package:millions/model/user.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/screens/followersShorts.dart';
 import 'package:millions/screens/page8.dart';
+import 'package:millions/screens/trendingChannels.dart';
 import 'package:millions/widgets/appbar_others.dart';
 import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/widgets/photos.dart';
@@ -27,6 +28,7 @@ class _Screen9State extends State<Screen9> {
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
   }
+
   UserDetail user;
   List<String> followersId = [];
   @override
@@ -66,11 +68,63 @@ class _Screen9State extends State<Screen9> {
               }
               //print(followersId);
               if (followersId.isEmpty)
-                return Center(
-                    child: Text(
-                  "You are not following any channels!",
-                  style: GoogleFonts.ubuntu(fontSize: 20),
-                ));
+                return Container(
+                    // height: MediaQuery.of(context).size.height *
+                    //     0.25,
+
+                    child: Column(children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.08,
+                  ),
+                  Image.asset(
+                    'images/search.png',
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    // height: MediaQuery.of(context).size.height * 0.4,
+                  ),
+                  Center(
+                      child: Text(
+                    "You are not following any channels",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 18,
+                      color: Colors.black54,
+                      // fontWeight: FontWeight.bold
+                    ),
+                  )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  Center(
+                      child: Text(
+                    "Start following channels to find latest videos, 30s and posts",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 10,
+                      color: Colors.grey,
+                      // fontWeight: FontWeight.bold
+                    ),
+                  )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: primary, elevation: 0),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TrendingChannels()),
+                        );
+                      },
+                      child: Text(
+                        "Find Trending Channels",
+                        style: GoogleFonts.ubuntu(fontSize: 15),
+                      ),
+                    ),
+                  )
+                ]));
               CollectionReference channels =
                   FirebaseFirestore.instance.collection('channels');
               return Column(
@@ -124,8 +178,8 @@ class _Screen9State extends State<Screen9> {
                                                       ? altProfilePic
                                                       : channeldata[
                                                           'profilePic'],
-                                                  width: w * 0.16,
-                                                  height: w * 0.16,
+                                                  width: w * 0.14,
+                                                  height: w * 0.14,
                                                   fit: BoxFit.cover,
                                                 ),
                                                 borderRadius:
@@ -160,8 +214,8 @@ class _Screen9State extends State<Screen9> {
                                     child: ClipRRect(
                                       child: Image.network(
                                         altProfilePic,
-                                        width: w * 0.16,
-                                        height: w * 0.16,
+                                        width: w * 0.14,
+                                        height: w * 0.14,
                                         fit: BoxFit.cover,
                                       ),
                                       borderRadius:
@@ -179,8 +233,7 @@ class _Screen9State extends State<Screen9> {
                     ],
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(top: 20, left: 8, bottom: 12),
+                    padding: const EdgeInsets.only(top: 1, left: 8, bottom: 12),
                     child: Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
@@ -191,10 +244,10 @@ class _Screen9State extends State<Screen9> {
                               fontWeight: FontWeight.w800),
                         )),
                   ),
-                  Divider(
-                    color: primary,
-                    thickness: 1.5,
-                  ),
+                  // Divider(
+                  //   color: primary,
+                  //   thickness: 1.5,
+                  // ),
                   SizedBox(
                     height: 50,
                     child: AppBar(
@@ -259,7 +312,8 @@ class _Screen9State extends State<Screen9> {
                                     Video videoItems =
                                         Video.fromMap(doc.data());
                                     return VideoCard(
-                                      video: videoItems,fromwhere: 1,
+                                      video: videoItems,
+                                      fromwhere: 1,
                                     );
                                   }).toList(),
                                 );
@@ -362,13 +416,11 @@ class _Screen9State extends State<Screen9> {
                                     // height: MediaQuery.of(context).size.height *
                                     //     0.25,
                                     child: Column(children: [
-                                  CachedNetworkImage(
-                                    imageUrl:
-                                        "https://millionsofficial.github.io/static/search.jpg",
+                                  Image.asset(
+                                    'images/search.png',
                                     width:
-                                        MediaQuery.of(context).size.width * 0.5,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.4,
+                                        MediaQuery.of(context).size.width * 0.7,
+                                    // height: MediaQuery.of(context).size.height * 0.4,
                                   ),
                                   Center(
                                     child: ElevatedButton(

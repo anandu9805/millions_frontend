@@ -197,12 +197,16 @@ class _Edit30sState extends State<Edit30s> {
                             onTap: () {
                               showCountryPicker(
                                 countryListTheme: CountryListThemeData(
-                                    textStyle: GoogleFonts.ubuntu(),
-                                    inputDecoration: InputDecoration(
-                                        focusColor: primary,
-                                        border: OutlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: primary)))),
+                                  textStyle: GoogleFonts.ubuntu(),
+                                  inputDecoration: InputDecoration(
+                                    focusColor: primary,
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 context: context,
                                 showPhoneCode: false,
                                 onSelect: (Country c) {

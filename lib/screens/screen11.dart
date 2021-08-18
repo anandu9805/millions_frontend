@@ -26,6 +26,7 @@ class _Screen11State extends State<Screen11> {
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
   }
+
   //---------------------------------------------------------------------------------------------------------------------
   PostDetail post2;
   var _isLoading = true;
@@ -55,7 +56,7 @@ class _Screen11State extends State<Screen11> {
   bool _loadingPosts = true,
       _gettingMorePosts = false,
       _morePostsAvailable = true;
-  int _perPage = 10;
+  int _perPage = 5;
   DocumentSnapshot _lastDocument;
   ScrollController _scrollController = ScrollController();
 
