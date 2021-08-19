@@ -23,6 +23,8 @@ class CommentServices {
   Stream<QuerySnapshot> getVideoComments(String videoId) {
     return commentReference
         .where('videoId', isEqualTo: videoId)
+        .orderBy("date", descending: true)
+        .limit(50)
         .get()
         .asStream();
   }
@@ -30,6 +32,8 @@ class CommentServices {
   Stream<QuerySnapshot> getPostComments(String postId) {
     return commentReference
         .where('videoId', isEqualTo: postId)
+        .orderBy("date", descending: true)
+        .limit(50)
         .get()
         .asStream();
   }
@@ -59,6 +63,7 @@ class CommentServices {
       String channelName,
       String comment,
       String commentId,
+      bool isVerified,
       bool isOwner,
       String link,
       String name,
@@ -91,6 +96,7 @@ class CommentServices {
         "userId": userId,
         "videoId": videoId,
         "videoTitle": videoTitle,
+        "isVerified": isVerified
       },
     );
   }
@@ -100,6 +106,7 @@ class CommentServices {
       String channelName,
       String comment,
       String commentId,
+      bool isVerified,
       bool isOwner,
       String link,
       String name,
@@ -137,20 +144,21 @@ class CommentServices {
         "userId": userId,
         "videoId": videoId,
         "videoTitle": videoTitle,
+        "isVerified": isVerified
       },
     );
   }
 
   deleteLike(String follower, String commentId) async {
     print(follower + '_' + commentId);
-   await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('comment-likes')
         .doc(follower + '_' + commentId)
         .delete();
   }
 
   deleteDisLike(String follower, String commentId) async {
-   await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('comment-dislikes')
         .doc(follower + '_' + commentId)
         .delete();
@@ -240,8 +248,7 @@ class CommentServices {
       await FirebaseFirestore.instance
           .collection("comment-likes")
           .where("liked", isEqualTo: true)
-          .where("commentId",
-              isEqualTo: "Pon1uG0eNnhf9TLsps0jtScndtN2-1626719503018")
+          .where("commentId", isEqualTo: commentId)
           .get()
           .then((value) {
         // print(commentId);

@@ -187,16 +187,16 @@ class _CommentsState extends State<Comments> {
                                 DateTime.now()
                                     .millisecondsSinceEpoch
                                     .toString(),
-                            FirebaseAuth.instance.currentUser.uid ==
-                                    widget.video.channelId
-                                ? true
-                                : false,
+                            //TODO is Verified user
+                            false,
+                            widget.video.channelId ==
+                                FirebaseAuth.instance.currentUser.uid,
                             "watch/" + widget.video.id,
                             FirebaseAuth.instance.currentUser.displayName,
                             FirebaseAuth.instance.currentUser.photoURL,
                             "main-comment",
                             uniqueId,
-                            "video",
+                            "videos",
                             FirebaseAuth.instance.currentUser.uid,
                             widget.video.id,
                             widget.video.title);

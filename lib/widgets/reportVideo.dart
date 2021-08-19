@@ -161,23 +161,25 @@ class _ReportPageState extends State<ReportPage> {
                   height: 30,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    SizedBox(width: 20),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.black),
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.black, elevation: 0),
                       onPressed: () {
                         // print(reasons[value].toString());
                         Navigator.pop(context);
                       },
                       child: Text(
-                        "Back to Videos",
+                        "CANCEL",
                         style: GoogleFonts.ubuntu(color: Colors.white),
                       ),
                     ),
+                    SizedBox(width: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: primary,
-                      ),
+                          primary: primary, elevation: 0),
                       onPressed: () {
                         // print(reasons[value].toString());
                         print(selectedreason);

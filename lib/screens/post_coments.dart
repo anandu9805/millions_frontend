@@ -27,7 +27,7 @@ class _PostCommentsState extends State<PostComments> {
   //   });
   // }
   Future<String> profilePic;
-  bool isOwner = true;
+  bool isOwner;
   String commentId =
       altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString();
   String uniqueId =
@@ -111,7 +111,10 @@ class _PostCommentsState extends State<PostComments> {
                                 DateTime.now()
                                     .millisecondsSinceEpoch
                                     .toString(),
-                            isOwner,
+                            //TODO - is verified
+                            false,
+                            widget.post.channelId ==
+                                FirebaseAuth.instance.currentUser.uid,
                             "posts/" + widget.post.id,
                             FirebaseAuth.instance.currentUser.displayName,
                             FirebaseAuth.instance.currentUser.photoURL,

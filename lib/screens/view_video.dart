@@ -540,9 +540,9 @@ class _ViewVideoState extends State<ViewVideo> {
                                                             .video.isVerified
                                                         : video2.isVerified)
                                                       Icon(
-                                                        Icons.verified_user,
+                                                        Icons.verified_sharp,
                                                         size: 20,
-                                                        color: Colors.grey,
+                                                        color: Colors.blue,
                                                       ),
                                                   ],
                                                 ),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_time_ago/flutter_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/comment_model.dart';
@@ -8,6 +9,7 @@ import 'package:millions/model/video.dart';
 import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/services/commentServices.dart';
 import '../constants/colors.dart';
+import 'package:expandable_text/expandable_text.dart';
 
 class Comment extends StatefulWidget {
   final CommentModel comment;
@@ -25,6 +27,7 @@ class _CommentState extends State<Comment> {
   TextEditingController replyController = TextEditingController();
   bool liked = false;
   bool disliked = true;
+  bool isExpanded = false;
   int number;
   // @override
   // void initState() {
@@ -80,7 +83,8 @@ class _CommentState extends State<Comment> {
     super.initState();
   }
 
-  bool isOwner = true;
+  bool isOwner = false;
+
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -110,27 +114,92 @@ class _CommentState extends State<Comment> {
               // backgroundColor: Colors.black,
             ),
             SizedBox(width: 10),
+
             Flexible(
-              child: RichText(
-                text: TextSpan(
-                  text: "${widget.comment.name} \n",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w800,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: widget.comment.comment,
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+                child: SizedBox(
+                    width: w * 0.8,
+                    // height: 300.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  constraints: BoxConstraints(
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width *
+                                              0.57),
+
+                                  // alignment: Alignment.bottomLeft,
+                                  padding: EdgeInsets.only(right: 1.0),
+                                  child: Text(
+                                    widget.comment.name,
+
+                                    //content[this.widget.index].userName,
+                                    style: GoogleFonts.ubuntu(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        height: 1.2,
+                                        fontWeight: FontWeight.bold),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                if (widget.comment.isVerified)
+                                  Icon(
+                                    Icons.verified_sharp,
+                                    size: 20,
+                                    color: Colors.blue,
+                                  ),
+                                Text(
+                                  ' ${FlutterTimeAgo.parse(widget.comment?.date?.toDate(), lang: 'en')}',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: GoogleFonts.ubuntu(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        ExpandableText(
+                          widget.comment.comment,
+                          expandText: 'show more',
+                          collapseText: 'show less',
+                          maxLines: 5,
+                          linkColor: Colors.blue,
+                        ),
+                      ],
+                    ))
+                // RichText(
+                //   text: TextSpan(
+                //     text: "${widget.comment.name} \n",
+                //     style: TextStyle(
+                //       color: Colors.black,
+                //       fontWeight: FontWeight.w800,
+                //     ),
+                //     children: [
+
+                //       // TextSpan(
+                //       //   text: widget.comment.comment,
+                //       //   style: GoogleFonts.ubuntu(
+                //       //     fontSize: 12,
+                //       //     fontWeight: FontWeight.normal,
+                //       //     color: Colors.black,
+                //       //   ),
+                //       // ),
+                //     ],
+                //   ),
+                // ),
+
                 ),
-              ),
-            ),
 
             // Icon(Icons.favorite_border)
           ],
@@ -140,65 +209,168 @@ class _CommentState extends State<Comment> {
           height: 10,
         ),
         ListView.builder(
-          itemCount: widget.replies.length,
+          itemCount: isExpanded == true ? widget.replies.length : 0,
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return Container(
-              padding: EdgeInsets.only(left: w * 0.2, bottom: 10),
+              padding: EdgeInsets.only(left: w * 0.13, top: 10, bottom: 10),
               width: w * 0.7,
               child: Column(
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      CircleAvatar(
-                        radius: 20,
-                        child: ClipRRect(
-                          child: Image.network(
-                            widget.replies[index]['profilePic'] == null
-                                ? 'https://img-premium.flaticon.com/png/512/552/premium/552909.png?token=exp=1625761770~hmac=50547f60af312c1b16263272abb7c4ba'
-                                : widget.replies[index]['profilePic'],
-                            width: w * 0.3,
-                            height: w * 0.3,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(w * 0.1),
-                        ),
-                        // backgroundColor: Colors.black,
-                      ),
-                      SizedBox(width: 15),
-                      Flexible(
-                        child: RichText(
-                          text: TextSpan(
-                            text: "${widget.replies[index]['name']}   ",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w800,
+                  isExpanded
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 10,
                             ),
-                            children: [
-                              TextSpan(
-                                text: widget.replies[index]['comment'],
-                                style: GoogleFonts.ubuntu(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
+                            CircleAvatar(
+                              radius: 20,
+                              child: ClipRRect(
+                                child: Image.network(
+                                  widget.replies[index]['profilePic'] == null
+                                      ? 'https://img-premium.flaticon.com/png/512/552/premium/552909.png?token=exp=1625761770~hmac=50547f60af312c1b16263272abb7c4ba'
+                                      : widget.replies[index]['profilePic'],
+                                  width: w * 0.3,
+                                  height: w * 0.3,
+                                  fit: BoxFit.cover,
                                 ),
+                                borderRadius: BorderRadius.circular(w * 0.1),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Icon(Icons.favorite_border)
-                    ],
-                  ),
+                              // backgroundColor: Colors.black,
+                            ),
+                            SizedBox(width: 15),
+                            Flexible(
+                                child: SizedBox(
+                                    width: w * 0.8,
+                                    // height: 300.0,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  constraints: BoxConstraints(
+                                                      maxWidth:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.57),
+
+                                                  // alignment: Alignment.bottomLeft,
+                                                  padding: EdgeInsets.only(
+                                                      right: 1.0),
+                                                  child: Text(
+                                                    widget.replies[index]
+                                                        ['name'],
+
+                                                    //content[this.widget.index].userName,
+                                                    style: GoogleFonts.ubuntu(
+                                                        color: Colors.black,
+                                                        fontSize: 15,
+                                                        height: 1.2,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                if (widget.replies[index]
+                                                    ['isVerified'])
+                                                  Icon(
+                                                    Icons.verified_sharp,
+                                                    size: 20,
+                                                    color: Colors.blue,
+                                                  ),
+                                                Text(
+                                                  ' ${FlutterTimeAgo.parse(widget?.replies[index]['date'].toDate(), lang: 'en')}',
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: GoogleFonts.ubuntu(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black54,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        ExpandableText(
+                                          widget.replies[index]['comment'],
+                                          expandText: 'show more',
+                                          collapseText: 'show less',
+                                          maxLines: 5,
+                                          linkColor: Colors.blue,
+                                        ),
+                                      ],
+                                    ))
+
+                                // RichText(
+                                //   text: TextSpan(
+                                //     text: "${widget.replies[index]['name']}   ",
+                                //     style: TextStyle(
+                                //       color: Colors.black,
+                                //       fontWeight: FontWeight.w800,
+                                //     ),
+                                //     children: [
+                                //       TextSpan(
+                                //         text: widget.replies[index]['comment'],
+                                //         style: GoogleFonts.ubuntu(
+                                //           fontSize: 12,
+                                //           fontWeight: FontWeight.normal,
+                                //           color: Colors.black,
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                                ),
+                            // Icon(Icons.favorite_border)
+                          ],
+                        )
+                      : SizedBox(
+                          width: 0,
+                        )
                 ],
               ),
             );
           },
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            widget.comment.replies != 0
+                ? Container(
+                    padding:
+                        EdgeInsets.only(left: w * 0.13, top: 10, bottom: 10),
+                    child: TextButton(
+                      // style: ElevatedButton.styleFrom(
+                      //     primary: Colors.grey, elevation: 0),
+                      onPressed: () {
+                        setState(() {
+                          isExpanded = !isExpanded;
+                        });
+                      },
+                      child: Text(
+                        (isExpanded ? "Hide " : "View ") +
+                            widget.comment.replies.toString() +
+                            " replies",
+                        style: GoogleFonts.ubuntu(fontSize: 15),
+                      ),
+                    ),
+                  )
+                : SizedBox()
+          ],
         ),
         Row(
           children: [
@@ -322,6 +494,7 @@ class _CommentState extends State<Comment> {
                       children: <Widget>[
                         TextField(
                           controller: replyController,
+                          autofocus: true,
                         )
                       ],
                     ),
@@ -341,10 +514,13 @@ class _CommentState extends State<Comment> {
                               widget.comment.channelName,
                               replyController.text,
                               widget.comment.commentId,
-                              FirebaseAuth.instance.currentUser.uid ==
-                                      widget.comment.userId
-                                  ? true
-                                  : false,
+                              // TODO is verified user
+                              false,
+                              // FirebaseAuth.instance.currentUser.uid ==
+                              //         widget.comment.userId
+                              //     ? true
+                              //     : false,
+                              false,
                               widget.comment.source,
                               FirebaseAuth.instance.currentUser.displayName,
                               widget.comment.commentId,

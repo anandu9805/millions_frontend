@@ -29,7 +29,7 @@ class _ShortsCommentsState extends State<ShortsComments> {
   //   });
   // }
   Future<String> profilePic;
-  bool isOwner = true;
+  bool isOwner;
   String commentId =
       altUserId + '-' + DateTime.now().millisecondsSinceEpoch.toString();
   String uniqueId =
@@ -113,7 +113,10 @@ class _ShortsCommentsState extends State<ShortsComments> {
                                 DateTime.now()
                                     .millisecondsSinceEpoch
                                     .toString(),
-                            isOwner,
+                            widget.post.channelId ==
+                                FirebaseAuth.instance.currentUser.uid,
+                            //TODO is verified
+                            false,
                             "reels/" + widget.post.id,
                             FirebaseAuth.instance.currentUser.displayName,
                             FirebaseAuth.instance.currentUser.photoURL,

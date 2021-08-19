@@ -1,27 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CommentModel {
-  CommentModel({
-    this.channel,
-    this.channelName,
-    this.comment,
-    this.commentId,
-    this.date,
-    this.dislikes,
-    this.editedTime,
-    this.isOwner,
-    this.likes,
-    this.name,
-    this.profilePic,
-    this.replies,
-    this.score,
-    this.source,
-    this.type,
-    this.uniqueId,
-    this.userId,
-    this.videoId,
-    this.videoTitle,
-  });
+  CommentModel(
+      {this.channel,
+      this.channelName,
+      this.comment,
+      this.commentId,
+      this.date,
+      this.dislikes,
+      this.editedTime,
+      this.isOwner,
+      this.likes,
+      this.name,
+      this.profilePic,
+      this.replies,
+      this.score,
+      this.source,
+      this.type,
+      this.uniqueId,
+      this.userId,
+      this.videoId,
+      this.videoTitle,
+      this.isVerified});
 
   String channel;
   String channelName;
@@ -30,7 +30,7 @@ class CommentModel {
   Timestamp date;
   int dislikes;
   Timestamp editedTime;
-  bool isOwner;
+  bool isOwner, isVerified;
   int likes;
   String name;
   String profilePic;
@@ -46,26 +46,26 @@ class CommentModel {
   factory CommentModel.fromMap(Map snapshot) {
     // print(snapshot["id"]);
     return CommentModel(
-      channel: snapshot["channel"],
-      channelName: snapshot["channelName"],
-      comment: snapshot["comment"],
-      commentId: snapshot["commentId"],
-      date: snapshot["date"],
-      dislikes: snapshot["dislikes"],
-      editedTime: snapshot["editedTime"],
-      isOwner: snapshot["isOwner"],
-      likes: snapshot["likes"],
-      name: snapshot["name"],
-      profilePic: snapshot["profilePic"],
-      replies: snapshot["replies"],
-      score: snapshot["score"],
-      source: snapshot["source"],
-      type: snapshot["type"],
-      uniqueId: snapshot["uniqueId"],
-      userId: snapshot["userId"],
-      videoId: snapshot["videoId"],
-      videoTitle: snapshot["videoTitle"],
-    );
+        channel: snapshot["channel"],
+        channelName: snapshot["channelName"],
+        comment: snapshot["comment"],
+        commentId: snapshot["commentId"],
+        date: snapshot["date"],
+        dislikes: snapshot["dislikes"],
+        editedTime: snapshot["editedTime"],
+        isOwner: snapshot["isOwner"],
+        likes: snapshot["likes"],
+        name: snapshot["name"],
+        profilePic: snapshot["profilePic"],
+        replies: snapshot["replies"],
+        score: snapshot["score"],
+        source: snapshot["source"],
+        type: snapshot["type"],
+        uniqueId: snapshot["uniqueId"],
+        userId: snapshot["userId"],
+        videoId: snapshot["videoId"],
+        videoTitle: snapshot["videoTitle"],
+        isVerified: snapshot["isVerified"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -89,6 +89,7 @@ class CommentModel {
       "userId": userId,
       "videoId": videoId,
       "videoTitle": videoTitle,
+      "isVerified": isVerified
     };
   }
 }

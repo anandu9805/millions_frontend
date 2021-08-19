@@ -54,7 +54,7 @@ class _ReportReelsState extends State<ReportReels> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            'Report Reel',
+            'Report 30s',
             style: GoogleFonts.ubuntu(),
           ),
           backgroundColor: primary,
@@ -159,23 +159,25 @@ class _ReportReelsState extends State<ReportReels> {
                   height: 30,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    SizedBox(width: 20),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.black),
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.black, elevation: 0),
                       onPressed: () {
                         // print(reasons[value].toString());
                         Navigator.pop(context);
                       },
                       child: Text(
-                        "Back to Reels",
+                        "CANCEL",
                         style: GoogleFonts.ubuntu(color: Colors.white),
                       ),
                     ),
+                    SizedBox(width: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: primary,
-                      ),
+                          primary: primary, elevation: 0),
                       onPressed: () {
                         // print(reasons[value].toString());
                         print(selectedreason);
@@ -188,7 +190,7 @@ class _ReportReelsState extends State<ReportReels> {
                         });
                       },
                       child: Text(
-                        "Report Reel",
+                        "REPORT 30s",
                         style: GoogleFonts.ubuntu(color: Colors.white),
                       ),
                     ),

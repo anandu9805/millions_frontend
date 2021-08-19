@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_time_ago/flutter_time_ago.dart';
@@ -172,9 +173,9 @@ class _PhotosState extends State<Photos> {
                             ),
                             if (widget.photo.isVerified)
                               Icon(
-                                Icons.verified_user,
+                                Icons.verified_sharp,
                                 size: 20,
-                                color: Colors.grey,
+                                color: Colors.blue,
                               ),
                           ],
                         ),
@@ -191,13 +192,21 @@ class _PhotosState extends State<Photos> {
                     width: MediaQuery.of(context).size.width * 0.92,
                     // height: 200.0,
 
-                    child: Text(
+                    child: ExpandableText(
                       widget.photo.description,
-                      textAlign: TextAlign.left,
-
-                      //content[this.widget.index].tagLine,
-                      style: GoogleFonts.ubuntu(),
+                      expandText: 'show more',
+                      collapseText: 'show less',
+                      maxLines: 5,
+                      linkColor: Colors.blue,
                     ),
+
+                    // Text(
+                    //   widget.photo.description,
+                    //   textAlign: TextAlign.left,
+
+                    //   //content[this.widget.index].tagLine,
+                    //   style: GoogleFonts.ubuntu(),
+                    // ),
                   )
                 ],
               ),
