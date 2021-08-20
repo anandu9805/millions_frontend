@@ -145,7 +145,7 @@ class _TrendingChannelsState extends State<TrendingChannels> {
                                                 ),
                                                 if (trendingChannel.isVerified)
                                                   Icon(
-                                                    Icons.verified_sharp,
+                                                    Icons.verified,
                                                     size: 20,
                                                     color: Colors.blue,
                                                   ),
@@ -156,7 +156,7 @@ class _TrendingChannelsState extends State<TrendingChannels> {
                                                       .format(trendingChannel
                                                           .subsribers)
                                                       .toString() +
-                                                  ' Subscribers',
+                                                  ' Followers',
                                               style: GoogleFonts.ubuntu(
                                                 color: Colors.white,
                                                 fontSize: 15,

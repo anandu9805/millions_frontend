@@ -281,7 +281,7 @@ class _Page8State extends State<Page8> {
                                           ),
                                           if (channel.isVerified)
                                             Icon(
-                                              Icons.verified_sharp,
+                                              Icons.verified,
                                               size: 20,
                                               color: Colors.blue,
                                             ),
@@ -294,7 +294,7 @@ class _Page8State extends State<Page8> {
                                         NumberFormat.compact()
                                                 .format(channel.subsribers)
                                                 .toString() +
-                                            ' Subscribers',
+                                            ' Followers',
                                         style: GoogleFonts.ubuntu(
                                           color: Colors.white,
                                           fontSize: 15,

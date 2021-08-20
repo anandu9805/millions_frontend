@@ -150,7 +150,7 @@ class _CommentState extends State<Comment> {
                                 ),
                                 if (widget.comment.isVerified)
                                   Icon(
-                                    Icons.verified_sharp,
+                                    Icons.verified,
                                     size: 20,
                                     color: Colors.blue,
                                   ),
@@ -285,7 +285,7 @@ class _CommentState extends State<Comment> {
                                                 if (widget.replies[index]
                                                     ['isVerified'])
                                                   Icon(
-                                                    Icons.verified_sharp,
+                                                    Icons.verified,
                                                     size: 20,
                                                     color: Colors.blue,
                                                   ),

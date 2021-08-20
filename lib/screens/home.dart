@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-  final pages = [Screen5(0), Shorts(), CreatePage(), Screen9(), Screen11(null)];
+  final pages = [Screen5(0), Shorts(), CreatePage(), Screen11(null), Screen9()];
   int page = 0;
   var userDetalis;
   Future<String> userProfilePic;
@@ -85,9 +85,10 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.music_video), label: "30s"),
             BottomNavigationBarItem(icon: Icon(Icons.add), label: "Create"),
+            BottomNavigationBarItem(icon: Icon(Icons.photo), label: "Posts"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.video_library), label: "Follow"),
-            BottomNavigationBarItem(icon: Icon(Icons.photo), label: "Photos"),
+            
           ],
           onTap: (index) {
             setState(() {

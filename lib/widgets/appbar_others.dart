@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +8,7 @@ import 'package:millions/provider.dart';
 import 'package:millions/screens/explore.dart';
 import 'package:millions/screens/googleSignIn.dart';
 import 'package:millions/screens/myWallet.dart';
+import 'package:millions/screens/notifications.dart';
 import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/searchPage..dart';
@@ -25,9 +27,60 @@ class _AppBarOthersState extends State<AppBarOthers> {
     _drawerKey.currentState.openDrawer();
   }
 
-  final _SearchDemoSearchDelegate _delegate = _SearchDemoSearchDelegate();
+  String notificationCount = "0";
+
+  Future<void> countUnreadNotifications() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('notifications')
+          .where('receiver', isEqualTo: altUserId)
+          .where('read', isEqualTo: false)
+          .get()
+          .then((doc) {
+        if (doc.size > 10) {
+          setState(() {
+            notificationCount = "10+";
+          });
+        } else {
+          setState(() {
+            notificationCount = doc.size.toString();
+          });
+        }
+      });
+      print(notificationCount);
+    } catch (e) {
+      print("Error");
+    }
+  }
+
+  Future<void> updateNotification() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('notifications')
+          .where('receiver', isEqualTo: altUserId)
+          .where('read', isEqualTo: false)
+          .get()
+          .then((querySnapshot) {
+        var batch = FirebaseFirestore.instance.batch();
+        querySnapshot.docs.forEach((document) {
+          batch.update(document.reference, {'read': true});
+        });
+
+        return batch.commit();
+      });
+    } catch (e) {
+      print("Error");
+    }
+  }
 
   int _lastIntegerSelected;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    countUnreadNotifications();
+  }
 
   void _showPopupMenu(Offset offset) async {
     await showMenu(
@@ -129,7 +182,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 10),
+          padding: const EdgeInsets.only(right: 5),
           child: IconButton(
             icon: Icon(
               Icons.explore,
@@ -143,6 +196,71 @@ class _AppBarOthersState extends State<AppBarOthers> {
             },
           ),
         ),
+        notificationCount != "0"
+            ? Padding(
+                padding: const EdgeInsets.only(
+                  right: 15,
+                  top: 15,
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    InkWell(
+                      child: new Icon(
+                        Icons.notifications,
+                        color: Colors.black87,
+                      ),
+                      onTap: () {
+                        updateNotification();
+                        
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotificationPage()),
+                        );
+                        countUnreadNotifications();
+                      },
+                    ),
+                    new Positioned(
+                      right: 0,
+                      child: new Container(
+                        padding: EdgeInsets.all(1),
+                        decoration: new BoxDecoration(
+                          color: primary,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 12,
+                          minHeight: 12,
+                        ),
+                        child: new Text(
+                          notificationCount,
+                          style: GoogleFonts.ubuntu(
+                            color: Colors.white,
+                            fontSize: 8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                    color: Colors.black87,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotificationPage()),
+                    );
+                  },
+                ),
+              ),
         Padding(
           padding: const EdgeInsets.only(right: 20),
           child: GestureDetector(
@@ -155,8 +273,8 @@ class _AppBarOthersState extends State<AppBarOthers> {
               _showPopupMenu(details.globalPosition);
             },
             child: CircleAvatar(
-              foregroundImage:
-                  NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
+              foregroundImage: 
+              NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
               radius: 15,
             ),
             // child: CircleAvatar(
@@ -202,180 +320,6 @@ class _AppBarOthersState extends State<AppBarOthers> {
         // )
       ],
       backgroundColor: Colors.white,
-    );
-  }
-}
-
-class _SearchDemoSearchDelegate extends SearchDelegate<int> {
-  final List<String> _data = [
-    "Item 1",
-    "Item 2",
-    "Item 3",
-    "Value 1",
-    "Value 2",
-    "Value 3"
-  ];
-  // List<int>.generate(100001, (int i) => i).reversed.toList();
-  final List<String> _history = <String>["Item 1", "Value 2"];
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      tooltip: 'Back',
-      icon: AnimatedIcon(
-        icon: AnimatedIcons.menu_arrow,
-        progress: transitionAnimation,
-        color: primary,
-      ),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final Iterable<String> suggestions = query.isEmpty
-        ? _history
-        : _data.where((String i) => '$i'.startsWith(query));
-
-    return _SuggestionList(
-      query: query,
-      suggestions: suggestions.map<String>((String i) => '$i').toList(),
-      onSelected: (String suggestion) {
-        query = suggestion;
-        showResults(context);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    final int searched = _data.indexOf(query);
-    if (searched == null || !_data.contains(query)) {
-      return Center(
-        child: Text(
-          'No results found for "$query"\n',
-          style: GoogleFonts.ubuntu(),
-          textAlign: TextAlign.center,
-        ),
-      );
-    }
-
-    return ListView(
-      children: <Widget>[
-        _ResultCard(
-          title: _data[searched],
-          index: searched,
-          searchDelegate: this,
-        ),
-      ],
-    );
-  }
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return <Widget>[
-      query.isEmpty
-          ? IconButton(
-              tooltip: 'Voice Search',
-              icon: const Icon(
-                Icons.mic,
-                color: primary,
-              ),
-              onPressed: () {
-                query = 'TODO: implement voice input';
-              },
-            )
-          : IconButton(
-              tooltip: 'Clear',
-              icon: const Icon(
-                Icons.clear,
-                color: primary,
-              ),
-              onPressed: () {
-                query = '';
-                showSuggestions(context);
-              },
-            ),
-    ];
-  }
-}
-
-class _ResultCard extends StatelessWidget {
-  const _ResultCard({this.index, this.title, this.searchDelegate});
-
-  final int index;
-  final String title;
-  final SearchDelegate<int> searchDelegate;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return GestureDetector(
-      onTap: () {
-        searchDelegate.close(context, index);
-      },
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Text(
-                title,
-                style: GoogleFonts.ubuntu(),
-              ),
-              Text(
-                '$index',
-                style: GoogleFonts.ubuntu(
-                    textStyle:
-                        theme.textTheme.headline5.copyWith(fontSize: 72.0)),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SuggestionList extends StatelessWidget {
-  const _SuggestionList({this.suggestions, this.query, this.onSelected});
-
-  final List<String> suggestions;
-  final String query;
-  final ValueChanged<String> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (BuildContext context, int i) {
-        final String suggestion = suggestions[i];
-        return ListTile(
-          leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
-          title: RichText(
-            text: TextSpan(
-              text: suggestion.substring(0, query.length),
-              style: GoogleFonts.ubuntu(
-                textStyle: theme.textTheme.subtitle1
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
-              children: <TextSpan>[
-                TextSpan(
-                  text: suggestion.substring(query.length),
-                  style:
-                      GoogleFonts.ubuntu(textStyle: theme.textTheme.subtitle1),
-                ),
-              ],
-            ),
-          ),
-          onTap: () {
-            onSelected(suggestion);
-          },
-        );
-      },
     );
   }
 }

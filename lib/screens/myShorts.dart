@@ -224,7 +224,7 @@ class _ShortsState extends State<ChannelShorts> {
                               Icon(
                                 Icons.verified,
                                 size: 15,
-                                color: primary,
+                                color: Colors.blue,
                               ),
                             SizedBox(width: 2),
                           ],

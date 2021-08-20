@@ -173,7 +173,7 @@ class _PhotosState extends State<Photos> {
                             ),
                             if (widget.photo.isVerified)
                               Icon(
-                                Icons.verified_sharp,
+                                Icons.verified,
                                 size: 20,
                                 color: Colors.blue,
                               ),
