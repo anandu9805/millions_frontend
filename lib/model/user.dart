@@ -24,7 +24,7 @@ class UserDetail {
       state,
       uid;
   bool isVerififed;
-  List<String> language;
+  List<dynamic> language;
 
 
 

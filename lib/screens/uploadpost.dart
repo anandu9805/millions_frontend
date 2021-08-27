@@ -63,7 +63,7 @@ class _UploadPostState extends State<UploadPost> {
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         Map<String, dynamic> data =
-            documentSnapshot.data() as Map<String, dynamic>;
+        documentSnapshot.data() as Map<String, dynamic>;
         channelDetails = ChannelModel.fromDoc(data);
       });
     } catch (e) {
@@ -154,7 +154,7 @@ class _UploadPostState extends State<UploadPost> {
       url = await ref.getDownloadURL();
 
       description =
-          decsiptionController.text.isEmpty ? " " : decsiptionController.text;
+      decsiptionController.text.isEmpty ? " " : decsiptionController.text;
 
       posts.add(NewPost(description, _imageFile, commentStatus));
 
@@ -200,301 +200,301 @@ class _UploadPostState extends State<UploadPost> {
       key: scaffoldKey,
       body: _isLoading
           ? Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                      child: LoadingBouncingGrid.circle(
-                    borderColor: primary,
-                    backgroundColor: Colors.white,
-                    borderSize: 10,
-                    size: 100,
-                    duration: Duration(milliseconds: 1800),
-                  )),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  FittedBox(
-                    fit: BoxFit.contain,
-                    child: Text(
-                      "$percentage_uploaded%",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                  ),
-                ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+                child: LoadingBouncingGrid.circle(
+                  borderColor: primary,
+                  backgroundColor: Colors.white,
+                  borderSize: 10,
+                  size: 100,
+                  duration: Duration(milliseconds: 1800),
+                )),
+            SizedBox(
+              height: 20,
+            ),
+            FittedBox(
+              fit: BoxFit.contain,
+              child: Text(
+                "$percentage_uploaded%",
+                style:
+                TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-            )
-          // Center(
-          //     child: LoadingBouncingGrid.circle(
-          //     borderColor: primary,
-          //     backgroundColor: Colors.white,
-          //     borderSize: 10,
-          //     size: 100,
-          //     duration: Duration(milliseconds: 1800),
-          //   ))
+            ),
+          ],
+        ),
+      )
+      // Center(
+      //     child: LoadingBouncingGrid.circle(
+      //     borderColor: primary,
+      //     backgroundColor: Colors.white,
+      //     borderSize: 10,
+      //     size: 100,
+      //     duration: Duration(milliseconds: 1800),
+      //   ))
           : SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(20, 60, 0, 30),
-                      child: Text(
-                        'Create Post',
-                        style: GoogleFonts.ubuntu(
-                            fontSize: 25,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800),
-                      )),
-                  //-----------
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+                padding: EdgeInsets.fromLTRB(20, 60, 0, 30),
+                child: Text(
+                  'Create Post',
+                  style: GoogleFonts.ubuntu(
+                      fontSize: 25,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w800),
+                )),
+            //-----------
 
-                  if (_imageFile != null)
-                    Container(
-                      child: Image.file(
-                        _imageFile,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  if (_imageFile == null)
-                    InkWell(
-                      onTap: () {
-                        Future<void> _showMyDialog() async {
-                          return showDialog<void>(
-                            context: context,
-                            //barrierDismissible: false, // user must tap button!
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  'Select a photo',
-                                  style: TextStyle(color: primary),
-                                  textAlign: TextAlign.left,
-                                ),
-                                content: SingleChildScrollView(
-                                  child: ListBody(
-                                    children: const <Widget>[
-                                      Text(
-                                          'Please select a photo from your gallery or capture one.'),
-                                    ],
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text(
-                                      'Take a picture',
-                                      style: GoogleFonts.ubuntu(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                    onPressed: () {
-                                      _selectImage();
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Text(
-                                      'Gallery',
-                                      style: GoogleFonts.ubuntu(
-                                          fontSize: 16,
-                                          color: primary,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                    onPressed: () {
-                                      _fromgallery();
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                        //------------
-
-                        _showMyDialog();
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        child: Card(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          color: Color(0xFFF5F5F5),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                  child: Icon(
-                                    Icons.cloud_upload,
-                                    color: primary,
-                                    size: 40,
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Upload an Image',
-                                      textAlign: TextAlign.start,
-                                      style: GoogleFonts.ubuntu(
-                                        color: primary,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+            if (_imageFile != null)
+              Container(
+                child: Image.file(
+                  _imageFile,
+                  fit: BoxFit.fill,
+                ),
+              ),
+            if (_imageFile == null)
+              InkWell(
+                onTap: () {
+                  Future<void> _showMyDialog() async {
+                    return showDialog<void>(
+                      context: context,
+                      //barrierDismissible: false, // user must tap button!
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text(
+                            'Select a photo',
+                            style: TextStyle(color: primary),
+                            textAlign: TextAlign.left,
+                          ),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: const <Widget>[
+                                Text(
+                                    'Please select a photo from your gallery or capture one.'),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text(
+                                'Take a picture',
+                                style: GoogleFonts.ubuntu(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400),
                               ),
+                              onPressed: () {
+                                _selectImage();
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text(
+                                'Gallery',
+                                style: GoogleFonts.ubuntu(
+                                    fontSize: 16,
+                                    color: primary,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              onPressed: () {
+                                _fromgallery();
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  //------------
+
+                  _showMyDialog();
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: Color(0xFFF5F5F5),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                            child: Icon(
+                              Icons.cloud_upload,
+                              color: primary,
+                              size: 40,
+                            )),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
                               Text(
-                                'Your photos will be public after you publish them',
+                                'Upload an Image',
                                 textAlign: TextAlign.start,
                                 style: GoogleFonts.ubuntu(
-                                  // color: primary,
+                                  color: primary,
                                   fontWeight: FontWeight.w300,
-                                  fontSize: 12,
+                                  fontSize: 20,
                                 ),
-                              ),
-                              SizedBox(
-                                height: 25,
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Text(
-                      'By submitting your photo to Millions, you acknowledge that you agree to Millions\'s Terms of Service and Community Guidelines',
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    // child: Text(
-                    //   'Description',
-                    //   style: GoogleFonts.ubuntu(),
-                    // ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: TextFormField(
-                      maxLines: 5,
-                      minLines: 4,
-                      controller: decsiptionController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        labelText: 'Description',
-                        labelStyle: GoogleFonts.ubuntu(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                            bottomLeft: Radius.circular(4.0),
-                            bottomRight: Radius.circular(4.0),
+                        Text(
+                          'Your photos will be public after you publish them',
+                          textAlign: TextAlign.start,
+                          style: GoogleFonts.ubuntu(
+                            // color: primary,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 12,
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: primary,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                            bottomLeft: Radius.circular(4.0),
-                            bottomRight: Radius.circular(4.0),
-                          ),
+                        SizedBox(
+                          height: 25,
                         ),
-                      ),
-                      style: GoogleFonts.ubuntu(),
+                      ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Text(
-                      'Comments',
-                      style: GoogleFonts.ubuntu(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10),
-                        //width: 20,
-                        decoration: BoxDecoration(
-                          // color: Colors.transparent,
-                          border: Border.all(
-                            color: Colors.grey,
-                            width: 1,
-                          ),
-                        ),
-                        child: DropdownButton(
-                          dropdownColor: Colors.white,
-                          elevation: 0,
-                          style: GoogleFonts.ubuntu(),
-                          // hint: Text('Please choose a location'), // Not necessary for Option 1
-                          value: commentStatus,
-                          onChanged: (newValue) {
-                            setState(() {
-                              commentStatus = newValue.toString();
-                            });
-                          },
-                          items: comments.map((cmnt) {
-                            return DropdownMenuItem(
-                              child: new Text(
-                                cmnt,
-                                style: GoogleFonts.ubuntu(color: Colors.black),
-                              ),
-                              value: cmnt,
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  uploadComplete
-                      ? Padding(
-                          padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              print("starting");
-                              upload();
-                            },
-                            style: ElevatedButton.styleFrom(primary: primary),
-                            child: Text(
-                              'Done',
-                              style: GoogleFonts.ubuntu(),
-                            ),
-                          ),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(primary: primary),
-                            child: Text(
-                              'Upload',
-                              style: GoogleFonts.ubuntu(),
-                            ),
-                          ),
-                        ),
-                ],
+                ),
+              ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: Text(
+                'By submitting your photo to Millions, you acknowledge that you agree to Millions\'s Terms of Service and Community Guidelines',
+                style: GoogleFonts.ubuntu(
+                  fontSize: 12,
+                ),
               ),
             ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+              // child: Text(
+              //   'Description',
+              //   style: GoogleFonts.ubuntu(),
+              // ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: TextFormField(
+                maxLines: 5,
+                minLines: 4,
+                controller: decsiptionController,
+                obscureText: false,
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  labelStyle: GoogleFonts.ubuntu(color: Colors.black),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 1,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(4.0),
+                      topRight: Radius.circular(4.0),
+                      bottomLeft: Radius.circular(4.0),
+                      bottomRight: Radius.circular(4.0),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: primary,
+                      width: 1,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(4.0),
+                      topRight: Radius.circular(4.0),
+                      bottomLeft: Radius.circular(4.0),
+                      bottomRight: Radius.circular(4.0),
+                    ),
+                  ),
+                ),
+                style: GoogleFonts.ubuntu(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+              child: Text(
+                'Comments',
+                style: GoogleFonts.ubuntu(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: InkWell(
+                onTap: () {},
+                child: Container(
+                  padding: EdgeInsets.only(left: 10),
+                  //width: 20,
+                  decoration: BoxDecoration(
+                    // color: Colors.transparent,
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1,
+                    ),
+                  ),
+                  child: DropdownButton(
+                    dropdownColor: Colors.white,
+                    elevation: 0,
+                    style: GoogleFonts.ubuntu(),
+                    // hint: Text('Please choose a location'), // Not necessary for Option 1
+                    value: commentStatus,
+                    onChanged: (newValue) {
+                      setState(() {
+                        commentStatus = newValue.toString();
+                      });
+                    },
+                    items: comments.map((cmnt) {
+                      return DropdownMenuItem(
+                        child: new Text(
+                          cmnt,
+                          style: GoogleFonts.ubuntu(color: Colors.black),
+                        ),
+                        value: cmnt,
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+            uploadComplete
+                ? Padding(
+              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+              child: ElevatedButton(
+                onPressed: () {
+                  print("starting");
+                  upload();
+                },
+                style: ElevatedButton.styleFrom(primary: primary),
+                child: Text(
+                  'Done',
+                  style: GoogleFonts.ubuntu(),
+                ),
+              ),
+            )
+                : Padding(
+              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(primary: primary),
+                child: Text(
+                  'Upload',
+                  style: GoogleFonts.ubuntu(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

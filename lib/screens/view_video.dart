@@ -310,6 +310,46 @@ class _ViewVideoState extends State<ViewVideo> {
                                   //     )
                                   //   ],
                                   // ),
+
+
+                                 // SizedBox(height: 10),
+                                  widget.video.isComments == 'Allowed'?
+                                  Column(
+                                    children:[IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                Comments(
+                                                  videoId: widget.id == null
+                                                      ? widget.video.id
+                                                      : video2.id.toString(),
+                                                  video: widget.id == null
+                                                      ? widget.video
+                                                      : video2,
+                                                ),
+                                          ),
+                                        );
+                                      }, //reels report function
+                                      icon: Icon(
+                                        Icons.comment_outlined,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                      Text(
+                                        "${widget.id == null ? widget.video.comments : video2.comments}",
+                                          style: GoogleFonts.ubuntu(
+                                          height: 0.3, fontSize: 10),
+                                      ),
+
+                                    ]
+                                  ):Icon(
+                                    Icons.comment_outlined,
+                                    color: Colors.grey,
+                                  ),
+                                  //---------------------------
+                                 // SizedBox(height: 10),
                                   Column(
                                     children: [
                                       IconButton(
@@ -580,146 +620,150 @@ class _ViewVideoState extends State<ViewVideo> {
                                 // ),
                                 //color: Colors.black,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: widget.video.isComments == 'Allowed'
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "${widget.id == null ? widget.video.comments : video2.comments} Comments",
-                                            style: GoogleFonts.ubuntu(),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Comments(
-                                                    videoId: widget.id == null
-                                                        ? widget.video.id
-                                                        : video2.id.toString(),
-                                                    video: widget.id == null
-                                                        ? widget.video
-                                                        : video2,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            child: Text(
-                                              "View Comments",
-                                              style: GoogleFonts.ubuntu(
-                                                  height: 1, color: primary),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Comments are disabled"),
-                                          Icon(Icons.comment_outlined),
-                                        ],
-                                      ),
-// <<<<<<< HEAD
-//                         Padding(
-//                           padding: const EdgeInsets.only(right: 8.0),
-//                           child: Column(
-//                             children: [
-//                               TextButton(
-//                                 onPressed: () {},
-//                                 child: Text("Following"),
-//                               )
-//                             ],
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                     Divider(
-//                       color: Colors.grey,
-//                       height: 10,
-//                     ),
-//                     Container(
-//                       //height: MediaQuery.of(context).size.height * 1 / 14,
-//                       width: double.infinity,
-//                       child: AdPost(),
-//                       // child: Text(
-//                       //   'Add banner comes here',
-//                       //   style: TextStyle(color: Colors.white),
-//                       // ),
-//                       //color: Colors.black,
-//                     ),
-//                     Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           Text(
-//                             "${widget.id==null?widget.video.comments:video2.comments} Comments",
-//                           ),
-//                           TextButton(
-//                             onPressed: () {
-//                               Navigator.push(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                     builder: (context) => Comments(
-//                                           videoId: widget.id==null?widget.video.id:video2.id.toString(),
-//                                         )),
-//                               );
-//                             },
-//                             child: Text(
-//                               "More",
-//                               style: TextStyle(height: 1),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                     Container(
-//                       padding: const EdgeInsets.all(8.0),
-//                       // height: h / 2,
-//                       child: Container(
-//                         // height: h / 2,
-//                         child: StreamBuilder(
-//                           stream: CommentServices()
-//                               .getOneVideoComments(widget.id==null?widget.video.id:video2.id.toString()),
-//                           builder: (BuildContext context,
-//                               AsyncSnapshot<QuerySnapshot> snapshot) {
-//                             if (snapshot.hasData) {
-//                               return ListView(
-//                                 physics: NeverScrollableScrollPhysics(),
-//                                 shrinkWrap: true,
-//                                 children: snapshot.data.docs.map((doc) {
-//                                   CommentModel comment =
-//                                       CommentModel.fromMap(doc.data());
-//                                   List<QueryDocumentSnapshot<Object>>
-//                                       replyComments = snapshot.data.docs
-//                                           .where((o) =>
-//                                               o['commentId'] ==
-//                                               'reply-' + comment.commentId)
-//                                           .toList();
-//                                   return Comment(
-//                                       comment: comment, replies: replyComments);
-//                                 }).toList(),
-//                               );
-//                             } else {
-//                               return Container(
-//                                 child: Center(
-//                                   child: CircularProgressIndicator(),
-//                                 ),
-//                               );
-//                             }
-//                           },
-//                           // future: VideoServices.getAllVideos(),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-// =======
-                              ),
+//                               Padding(
+//                                 padding: const EdgeInsets.all(8.0),
+//                                 child: widget.video.isComments == 'Allowed'
+//                                     ? Row(
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.spaceBetween,
+//                                         children: [
+//                                           Text(
+//                                             "${widget.id == null ? widget.video.comments : video2.comments} Comments",
+//                                             style: GoogleFonts.ubuntu(),
+//                                           ),
+//
+//                                           // //-----------------------------------------------------------
+//                                           // TextButton(
+//                                           //   onPressed: () {
+//                                           //     Navigator.push(
+//                                           //       context,
+//                                           //       MaterialPageRoute(
+//                                           //         builder: (context) =>
+//                                           //             Comments(
+//                                           //               videoId: widget.id == null
+//                                           //                   ? widget.video.id
+//                                           //                   : video2.id.toString(),
+//                                           //               video: widget.id == null
+//                                           //                   ? widget.video
+//                                           //                   : video2,
+//                                           //             ),
+//                                           //       ),
+//                                           //     );
+//                                           //
+//                                           //   },
+//                                           //   child: Text(
+//                                           //     "View Comments",
+//                                           //     style: GoogleFonts.ubuntu(
+//                                           //         height: 1, color: primary),
+//                                           //   ),
+//                                           // ),
+//                                           // //--------------------------------------------------------------
+//                                         ],
+//                                       )
+//                                     : Row(
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.spaceBetween,
+//                                         children: [
+//                                           Text("Comments are disabled"),
+//                                           Icon(Icons.comment_outlined),
+//                                         ],
+//                                       ),
+// // <<<<<<< HEAD
+// //                         Padding(
+// //                           padding: const EdgeInsets.only(right: 8.0),
+// //                           child: Column(
+// //                             children: [
+// //                               TextButton(
+// //                                 onPressed: () {},
+// //                                 child: Text("Following"),
+// //                               )
+// //                             ],
+// //                           ),
+// //                         ),
+// //                       ],
+// //                     ),
+// //                     Divider(
+// //                       color: Colors.grey,
+// //                       height: 10,
+// //                     ),
+// //                     Container(
+// //                       //height: MediaQuery.of(context).size.height * 1 / 14,
+// //                       width: double.infinity,
+// //                       child: AdPost(),
+// //                       // child: Text(
+// //                       //   'Add banner comes here',
+// //                       //   style: TextStyle(color: Colors.white),
+// //                       // ),
+// //                       //color: Colors.black,
+// //                     ),
+// //                     Padding(
+// //                       padding: const EdgeInsets.all(8.0),
+// //                       child: Row(
+// //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// //                         children: [
+// //                           Text(
+// //                             "${widget.id==null?widget.video.comments:video2.comments} Comments",
+// //                           ),
+// //                           TextButton(
+// //                             onPressed: () {
+// //                               Navigator.push(
+// //                                 context,
+// //                                 MaterialPageRoute(
+// //                                     builder: (context) => Comments(
+// //                                           videoId: widget.id==null?widget.video.id:video2.id.toString(),
+// //                                         )),
+// //                               );
+// //                             },
+// //                             child: Text(
+// //                               "More",
+// //                               style: TextStyle(height: 1),
+// //                             ),
+// //                           ),
+// //                         ],
+// //                       ),
+// //                     ),
+// //                     Container(
+// //                       padding: const EdgeInsets.all(8.0),
+// //                       // height: h / 2,
+// //                       child: Container(
+// //                         // height: h / 2,
+// //                         child: StreamBuilder(
+// //                           stream: CommentServices()
+// //                               .getOneVideoComments(widget.id==null?widget.video.id:video2.id.toString()),
+// //                           builder: (BuildContext context,
+// //                               AsyncSnapshot<QuerySnapshot> snapshot) {
+// //                             if (snapshot.hasData) {
+// //                               return ListView(
+// //                                 physics: NeverScrollableScrollPhysics(),
+// //                                 shrinkWrap: true,
+// //                                 children: snapshot.data.docs.map((doc) {
+// //                                   CommentModel comment =
+// //                                       CommentModel.fromMap(doc.data());
+// //                                   List<QueryDocumentSnapshot<Object>>
+// //                                       replyComments = snapshot.data.docs
+// //                                           .where((o) =>
+// //                                               o['commentId'] ==
+// //                                               'reply-' + comment.commentId)
+// //                                           .toList();
+// //                                   return Comment(
+// //                                       comment: comment, replies: replyComments);
+// //                                 }).toList(),
+// //                               );
+// //                             } else {
+// //                               return Container(
+// //                                 child: Center(
+// //                                   child: CircularProgressIndicator(),
+// //                                 ),
+// //                               );
+// //                             }
+// //                           },
+// //                           // future: VideoServices.getAllVideos(),
+// //                         ),
+// //                       ),
+// //                     ),
+// //                   ],
+// // =======
+//                               ),
                               // Container(
                               //   padding: const EdgeInsets.all(8.0),
                               //   // height: h / 2,

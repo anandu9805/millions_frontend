@@ -432,6 +432,27 @@ class _ShortsState extends State<Shorts> {
                           ),
                           SizedBox(height: 10),
                           IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShortsComments(
+                                    commentId: _reels_items[index]["id"],
+                                    post: Reels.fromMap(
+                                      _reels_items[index].data(),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }, //reels report function
+                            icon: Icon(
+                              Icons.comment_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                          //---------------------------
+                          SizedBox(height: 10),
+                          IconButton(
                             onPressed: () async {
                               parameters = ['30s'];
                               parameters.add(_reels_items[index]["id"]);
@@ -469,25 +490,7 @@ class _ShortsState extends State<Shorts> {
                             ),
                           ),
                           SizedBox(height: 10),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ShortsComments(
-                                    commentId: _reels_items[index]["id"],
-                                    post: Reels.fromMap(
-                                      _reels_items[index].data(),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }, //reels report function
-                            icon: Icon(
-                              Icons.comment_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
+
                         ])
                       ],
                     ),
@@ -498,7 +501,7 @@ class _ShortsState extends State<Shorts> {
               //  itemWidth:DeviceSize(context).width*0.5,
               itemCount: swiper_number_of_items = _reels_items.length,
               scrollDirection: Axis.vertical,
-              //loop: false,
+              loop: false,
             )
           : Container(
               child: Center(
