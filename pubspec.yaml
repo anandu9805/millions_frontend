@@ -71,6 +71,7 @@ dependencies:
   cached_network_image: ^3.1.0
   shared_preferences: ^2.0.6
   expandable_text: ^2.2.0
+  flutter_scroll_to_top: ^1.1.0
 
  
 

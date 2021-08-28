@@ -6,7 +6,7 @@ import 'package:millions/model/newpost_model.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/widgets/photos.dart';
 import 'package:millions/widgets/videoCard.dart';
-
+import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 class Explore extends StatefulWidget {
   const Explore({Key key}) : super(key: key);
 
@@ -198,69 +198,74 @@ class _ExploreState extends State<Explore> {
             Expanded(
                 child: TabBarView(
               children: [
-                SingleChildScrollView(
-                    controller: _videoScrollController,
-                    child: _loadingVideos
-                        ? Container(
-                            height: MediaQuery.of(context).size.height * 0.25,
-                            child: Center(
-                                child: CircularProgressIndicator(
-                              color: primary,
-                            )))
-                        : _videos.length == 0
-                            ? Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.25,
-                                child: Center(
-                                    child: Text("No videos to show!",
-                                        style:
-                                            GoogleFonts.ubuntu(fontSize: 15))))
-                            : Column(
-                                children: [
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: _videos.length,
-                                    controller: _scrollController1,
-                                    itemBuilder: (BuildContext ctx, int index) {
-                                      return VideoCard(
-                                          video: Video.fromMap(
-                                              _videos[index].data()),fromwhere: 1,);
-                                    },
-                                  )
-                                ],
-                              )),
+                ScrollWrapper(scrollController: _videoScrollController,promptAlignment:Alignment.bottomRight ,promptTheme: PromptButtonTheme(color: primary),
+                  child: SingleChildScrollView(
+                      controller: _videoScrollController,
+                      child: _loadingVideos
+                          ? Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: primary,
+                              )))
+                          : _videos.length == 0
+                              ? Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.25,
+                                  child: Center(
+                                      child: Text("No videos to show!",
+                                          style:
+                                              GoogleFonts.ubuntu(fontSize: 15))))
+                              : Column(
+                                  children: [
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: _videos.length,
+                                      controller: _scrollController1,
+                                      itemBuilder: (BuildContext ctx, int index) {
+                                        return VideoCard(
+                                            video: Video.fromMap(
+                                                _videos[index].data()),fromwhere: 1,);
+                                      },
+                                    )
+                                  ],
+                                )),
+                ),
 
                 // second tab bar viiew widget
-                SingleChildScrollView(
-                    controller: _photoScrollController,
-                    child: _loadingPhotos
-                        ? Container(
-                            height: MediaQuery.of(context).size.height * 0.25,
-                            child: Center(
-                                child: CircularProgressIndicator(
-                              color: primary,
-                            )))
-                        : _photos.length == 0
-                            ? Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.25,
-                                child: Center(
-                                    child: Text("No posts to show!",
-                                        style:
-                                            GoogleFonts.ubuntu(fontSize: 15))))
-                            : Column(
-                                children: [
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: _photos.length,
-                                    controller: _scrollController2,
-                                    itemBuilder: (BuildContext ctx, int index) {
-                                      return Photos(PostDetail.fromMap(
-                                          _photos[index].data()));
-                                    },
-                                  )
-                                ],
-                              )),
+                ScrollWrapper(
+                  scrollController: _photoScrollController,promptAlignment:Alignment.bottomRight ,promptTheme: PromptButtonTheme(color: primary),
+                  child: SingleChildScrollView(
+                      controller: _photoScrollController,
+                      child: _loadingPhotos
+                          ? Container(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: primary,
+                              )))
+                          : _photos.length == 0
+                              ? Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.25,
+                                  child: Center(
+                                      child: Text("No posts to show!",
+                                          style:
+                                              GoogleFonts.ubuntu(fontSize: 15))))
+                              : Column(
+                                  children: [
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: _photos.length,
+                                      controller: _scrollController2,
+                                      itemBuilder: (BuildContext ctx, int index) {
+                                        return Photos(PostDetail.fromMap(
+                                            _photos[index].data()));
+                                      },
+                                    )
+                                  ],
+                                )),
+                ),
               ],
             )),
           ]),

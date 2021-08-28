@@ -7,7 +7,7 @@ import 'package:millions/model/user.dart';
 import 'package:millions/widgets/appbar_others.dart';
 import 'package:millions/widgets/photos.dart';
 import 'package:millions/widgets/appDrawer.dart';
-
+import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 class Screen11 extends StatefulWidget {
   //---------------------------------------------------------------------------------------------------------------------
   String postId;
@@ -179,13 +179,15 @@ class _Screen11State extends State<Screen11> {
                               )),
                         ),
                         Expanded(
-                          child: ListView.builder(
-                              itemCount: _posts.length,
-                              controller: _scrollController,
-                              itemBuilder: (BuildContext ctx, int index) {
-                                return Photos(
-                                    PostDetail.fromMap(_posts[index].data()));
-                              }),
+                          child: ScrollWrapper(scrollController: _scrollController,promptAlignment:Alignment.bottomRight ,promptTheme: PromptButtonTheme(color: primary),
+                            child: ListView.builder(
+                                itemCount: _posts.length,
+                                controller: _scrollController,
+                                itemBuilder: (BuildContext ctx, int index) {
+                                  return Photos(
+                                      PostDetail.fromMap(_posts[index].data()));
+                                }),
+                          ),
                         )
                       ],
                     ),

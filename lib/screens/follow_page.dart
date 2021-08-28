@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
@@ -31,6 +32,9 @@ class _Screen9State extends State<Screen9> {
 
   UserDetail user;
   List<String> followersId = [];
+  ScrollController _scrollController1 = ScrollController();
+  ScrollController _scrollController2 = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -134,7 +138,7 @@ class _Screen9State extends State<Screen9> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        height: h * 0.16,
+                        height: h * 0.14,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
@@ -249,7 +253,7 @@ class _Screen9State extends State<Screen9> {
                   //   thickness: 1.5,
                   // ),
                   SizedBox(
-                    height: 50,
+                    height:50,
                     child: AppBar(
                       backgroundColor: Colors.white,
                       bottom: TabBar(
@@ -275,113 +279,119 @@ class _Screen9State extends State<Screen9> {
                     child: TabBarView(
                       children: [
                         // first tab bar view widget
-                        SingleChildScrollView(
-                          child: StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection('videos')
-                                .where("isVisible", isEqualTo: "Public")
-                                .where('channelId', whereIn: followersId)
-                                .orderBy("date", descending: true)
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.25,
-                                    child: Center(
-                                        child: CircularProgressIndicator(
-                                      color: primary,
-                                    )));
-                              }
-                              if (snapshot.data.docs.isEmpty) {
-                                return Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.25,
-                                    child: Center(
-                                        child: Text("No videos to show!",
-                                            style: GoogleFonts.ubuntu(
-                                                fontSize: 15))));
-                              }
-                              if (snapshot.hasData) {
-                                return new ListView(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  children: snapshot.data.docs.map((doc) {
-                                    Video videoItems =
-                                        Video.fromMap(doc.data());
-                                    return VideoCard(
-                                      video: videoItems,
-                                      fromwhere: 1,
-                                    );
-                                  }).toList(),
-                                );
-                              } else {
-                                return Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.25,
-                                    child: Center(
-                                        child: Text("Unknown Error Occured!",
-                                            style: GoogleFonts.ubuntu(
-                                                fontSize: 15))));
-                              }
-                            },
+                        ScrollWrapper(scrollController: _scrollController1,promptAlignment:Alignment.bottomRight ,promptTheme: PromptButtonTheme(color: primary),
+                          child: SingleChildScrollView(
+                            controller: _scrollController1,
+                            child: StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('videos')
+                                  .where("isVisible", isEqualTo: "Public")
+                                  .where('channelId', whereIn: followersId)
+                                  .orderBy("date", descending: true)
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Container(
+                                      height: MediaQuery.of(context).size.height *
+                                          0.25,
+                                      child: Center(
+                                          child: CircularProgressIndicator(
+                                        color: primary,
+                                      )));
+                                }
+                                if (snapshot.data.docs.isEmpty) {
+                                  return Container(
+                                      height: MediaQuery.of(context).size.height *
+                                          0.25,
+                                      child: Center(
+                                          child: Text("No videos to show!",
+                                              style: GoogleFonts.ubuntu(
+                                                  fontSize: 15))));
+                                }
+                                if (snapshot.hasData) {
+                                  return new ListView(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    children: snapshot.data.docs.map((doc) {
+                                      Video videoItems =
+                                          Video.fromMap(doc.data());
+                                      return VideoCard(
+                                        video: videoItems,
+                                        fromwhere: 1,
+                                      );
+                                    }).toList(),
+                                  );
+                                } else {
+                                  return Container(
+                                      height: MediaQuery.of(context).size.height *
+                                          0.25,
+                                      child: Center(
+                                          child: Text("Unknown Error Occured!",
+                                              style: GoogleFonts.ubuntu(
+                                                  fontSize: 15))));
+                                }
+                              },
+                            ),
                           ),
                         ),
 
                         // second tab bar viiew widget
-                        SingleChildScrollView(
-                          child: StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection("posts")
-                                .where("isVisible", isEqualTo: "Public")
-                                .where('channelId', whereIn: followersId)
-                                .orderBy("date", descending: true)
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.25,
-                                    child: Center(
-                                        child: CircularProgressIndicator(
-                                      color: primary,
-                                    )));
-                              }
-                              if (snapshot.data.docs.isEmpty) {
-                                return Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.25,
-                                    child: Center(
-                                        child: Text("No posts to show!",
-                                            style: GoogleFonts.ubuntu(
-                                                fontSize: 15))));
-                              }
-                              if (snapshot.hasData) {
-                                return new ListView(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  children: snapshot.data.docs.map((doc) {
-                                    PostDetail photoItems =
-                                        PostDetail.fromMap(doc.data());
-                                    return Container(
-                                      child: Photos(photoItems),
-                                    );
-                                  }).toList(),
-                                );
-                              } else {
-                                return Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.25,
-                                    child: Center(
-                                        child: Text("Unknown Error Occured!",
-                                            style: GoogleFonts.ubuntu(
-                                                fontSize: 15))));
-                              }
-                            },
+                        ScrollWrapper(scrollController: _scrollController2,promptAlignment:Alignment.bottomRight ,promptTheme: PromptButtonTheme(color: primary),
+                          child: SingleChildScrollView(
+                            controller: _scrollController2,
+                            child: StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("posts")
+                                  .where("isVisible", isEqualTo: "Public")
+                                  .where('channelId', whereIn: followersId)
+                                  .orderBy("date", descending: true)
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Container(
+                                      height: MediaQuery.of(context).size.height *
+                                          0.25,
+                                      child: Center(
+                                          child: CircularProgressIndicator(
+                                        color: primary,
+                                      )));
+                                }
+                                if (snapshot.data.docs.isEmpty) {
+                                  return Container(
+                                      height: MediaQuery.of(context).size.height *
+                                          0.25,
+                                      child: Center(
+                                          child: Text("No posts to show!",
+                                              style: GoogleFonts.ubuntu(
+                                                  fontSize: 15))));
+                                }
+                                if (snapshot.hasData) {
+                                  return new ListView(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    children: snapshot.data.docs.map((doc) {
+                                      PostDetail photoItems =
+                                          PostDetail.fromMap(doc.data());
+                                      return Container(
+                                        child: Photos(photoItems),
+                                      );
+                                    }).toList(),
+                                  );
+                                } else {
+                                  return Container(
+                                      height: MediaQuery.of(context).size.height *
+                                          0.25,
+                                      child: Center(
+                                          child: Text("Unknown Error Occured!",
+                                              style: GoogleFonts.ubuntu(
+                                                  fontSize: 15))));
+                                }
+                              },
+                            ),
                           ),
                         ),
                         SingleChildScrollView(

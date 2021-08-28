@@ -24,6 +24,8 @@ import 'package:share_plus/share_plus.dart';
 import '../services/dynamiclinkservice.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
+
 
 class Shorts extends StatefulWidget {
   @override
@@ -160,7 +162,7 @@ class _ShortsState extends State<Shorts> {
                   ContentScreen(
                       src: _reels_items[index]
                           ["videoSrc"], //reels_objects[index].videoSrc,
-                      cover: _reels_items[index]["thumbnail"]),
+                      cover: _reels_items[index]["thumbnail"],fromwhwere: 0,),
                   Positioned(
                     left: w / 30,
                     bottom: h / 10,
