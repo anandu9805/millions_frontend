@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/video.dart';
+import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/view_video.dart';
 import 'package:millions/widgets/popUpMenu.dart';
 import 'package:numeral/numeral.dart';
@@ -147,11 +148,21 @@ class _VideoCardState extends State<VideoCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    foregroundImage: NetworkImage(
-                        widget.video?.profilePic == null
-                            ? altProfilePic
-                            : widget.video.profilePic),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(//-------------------------------------------------------------------------------------
+                          builder: (context) => Page8( widget.video.channelId),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      foregroundImage: NetworkImage(
+                          widget.video?.profilePic == null
+                              ? altProfilePic
+                              : widget.video.profilePic),
+                    ),
                   ),
                   const SizedBox(width: 8.0),
                   Expanded(

@@ -9,7 +9,10 @@ import '../widgets/skeletol_loader.dart';
 class ContentScreen extends StatefulWidget {
   final String src;
   final String cover;
-  const ContentScreen({Key key, this.src, this.cover}) : super(key: key);
+  final int fromwhwere;
+  //0 reels
+  //1 my reels
+  const ContentScreen({Key key, this.src, this.cover,this.fromwhwere}) : super(key: key);
 
   @override
   _ContentScreenState createState() => _ContentScreenState();
@@ -35,10 +38,11 @@ class _ContentScreenState extends State<ContentScreen> {
     await Future.wait([_videoPlayerController.initialize()]);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      autoPlay: true,
+      autoPlay: widget.fromwhwere==1?false:true,
       showControls: true,
       looping: true,
       allowFullScreen: false,
+      //allowMuting: true
     );
     setState(() {});
   }

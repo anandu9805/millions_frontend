@@ -19,6 +19,7 @@ import 'package:millions/widgets/skeletol_loader.dart';
 import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/widgets/photos.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
 class Page8 extends StatefulWidget {
   final String channelId;
@@ -32,6 +33,8 @@ class _Page8State extends State<Page8> {
   Stream<QuerySnapshot<Map<String, dynamic>>> postStream;
   String followStatus = "Follow";
   String resultMessage, cname;
+  ScrollController _scrollController1 = ScrollController();
+  ScrollController _scrollController2 = ScrollController();
   Future<DocumentSnapshot<Map<String, dynamic>>> channelDetails, followDetails;
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -430,96 +433,102 @@ class _Page8State extends State<Page8> {
               child: TabBarView(
                 children: [
                   // first tab bar view widget
-                  SingleChildScrollView(
-                    child: StreamBuilder(
-                      stream: videoStream,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                  child: CircularProgressIndicator(
-                                color: primary,
-                              )));
-                        }
-                        if (snapshot.data.docs.isEmpty) {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                  child: Text("No videos to show!",
-                                      style:
-                                          GoogleFonts.ubuntu(fontSize: 15))));
-                        }
-                        if (snapshot.hasData) {
-                          return new ListView(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            children: snapshot.data.docs.map((doc) {
-                              Video videoItems = Video.fromMap(doc.data());
-                              return VideoCard(
-                                video: videoItems,
-                                fromwhere: 0,
-                              );
-                            }).toList(),
-                          );
-                        } else {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                  child: Text("Unknown Error Occured!",
-                                      style:
-                                          GoogleFonts.ubuntu(fontSize: 15))));
-                        }
-                      },
+                  //
+                  ScrollWrapper(scrollController: _scrollController1,promptAlignment:Alignment.bottomRight ,promptTheme: PromptButtonTheme(color: primary),
+                    child: SingleChildScrollView(controller: _scrollController1,child: StreamBuilder(
+                        stream: videoStream,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container(
+                                height: MediaQuery.of(context).size.height * 0.25,
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  color: primary,
+                                )));
+                          }
+                          if (snapshot.data.docs.isEmpty) {
+                            return Container(
+                                height: MediaQuery.of(context).size.height * 0.25,
+                                child: Center(
+                                    child: Text("No videos to show!",
+                                        style:
+                                            GoogleFonts.ubuntu(fontSize: 15))));
+                          }
+                          if (snapshot.hasData) {
+                            return new ListView(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: snapshot.data.docs.map((doc) {
+                                Video videoItems = Video.fromMap(doc.data());
+                                return VideoCard(
+                                  video: videoItems,
+                                  fromwhere: 0,
+                                );
+                              }).toList(),
+                            );
+                          } else {
+                            return Container(
+                                height: MediaQuery.of(context).size.height * 0.25,
+                                child: Center(
+                                    child: Text("Unknown Error Occured!",
+                                        style:
+                                            GoogleFonts.ubuntu(fontSize: 15))));
+                          }
+                        },
+                      ),
                     ),
                   ),
 
                   // second tab bar viiew widget
-                  SingleChildScrollView(
-                    child: StreamBuilder(
-                      stream: postStream,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                  child: CircularProgressIndicator(
-                                color: primary,
-                              )));
-                        }
-                        if (snapshot.data.docs.isEmpty) {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                  child: Text("No posts to show!",
-                                      style:
-                                          GoogleFonts.ubuntu(fontSize: 15))));
-                        }
-                        if (snapshot.hasData) {
-                          return new ListView(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            children: snapshot.data.docs.map((doc) {
-                              PostDetail photoItems =
-                                  PostDetail.fromMap(doc.data());
-                              return Container(
-                                child: Photos(photoItems),
-                              );
-                            }).toList(),
-                          );
-                        } else {
-                          return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: Center(
-                                  child: Text("Unknown Error Occured!",
-                                      style:
-                                          GoogleFonts.ubuntu(fontSize: 15))));
-                        }
-                      },
+                  ScrollWrapper(
+                    scrollController: _scrollController2,promptAlignment:Alignment.bottomRight ,promptTheme: PromptButtonTheme(color: primary),
+                    child: SingleChildScrollView(
+                      controller: _scrollController2,
+                      child: StreamBuilder(
+                        stream: postStream,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container(
+                                height: MediaQuery.of(context).size.height * 0.25,
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  color: primary,
+                                )));
+                          }
+                          if (snapshot.data.docs.isEmpty) {
+                            return Container(
+                                height: MediaQuery.of(context).size.height * 0.25,
+                                child: Center(
+                                    child: Text("No posts to show!",
+                                        style:
+                                            GoogleFonts.ubuntu(fontSize: 15))));
+                          }
+                          if (snapshot.hasData) {
+                            return new ListView(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: snapshot.data.docs.map((doc) {
+                                PostDetail photoItems =
+                                    PostDetail.fromMap(doc.data());
+                                return Container(
+                                  child: Photos(photoItems),
+                                );
+                              }).toList(),
+                            );
+                          } else {
+                            return Container(
+                                height: MediaQuery.of(context).size.height * 0.25,
+                                child: Center(
+                                    child: Text("Unknown Error Occured!",
+                                        style:
+                                            GoogleFonts.ubuntu(fontSize: 15))));
+                          }
+                        },
+                      ),
                     ),
                   ),
                   SingleChildScrollView(

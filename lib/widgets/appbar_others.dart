@@ -299,10 +299,10 @@ class _AppBarOthersState extends State<AppBarOthers> {
               //     fullscreenDialog: true));
               _showPopupMenu(details.globalPosition);
             },
-            child: CircleAvatar(
-              foregroundImage: 
-              //NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
+            child: CircleAvatar(backgroundColor:Colors.black,
+              foregroundImage:
               NetworkImage(altChannelArt),
+              //NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
               radius: 15,
             ),
             // child: CircleAvatar(

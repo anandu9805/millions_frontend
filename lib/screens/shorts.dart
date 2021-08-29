@@ -24,6 +24,8 @@ import 'package:share_plus/share_plus.dart';
 import '../services/dynamiclinkservice.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
+
 
 class Shorts extends StatefulWidget {
   @override
@@ -160,7 +162,7 @@ class _ShortsState extends State<Shorts> {
                   ContentScreen(
                       src: _reels_items[index]
                           ["videoSrc"], //reels_objects[index].videoSrc,
-                      cover: _reels_items[index]["thumbnail"]),
+                      cover: _reels_items[index]["thumbnail"],fromwhwere: 0,),
                   Positioned(
                     left: w / 30,
                     bottom: h / 10,
@@ -432,6 +434,27 @@ class _ShortsState extends State<Shorts> {
                           ),
                           SizedBox(height: 10),
                           IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShortsComments(
+                                    commentId: _reels_items[index]["id"],
+                                    post: Reels.fromMap(
+                                      _reels_items[index].data(),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }, //reels report function
+                            icon: Icon(
+                              Icons.comment_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                          //---------------------------
+                          SizedBox(height: 10),
+                          IconButton(
                             onPressed: () async {
                               parameters = ['30s'];
                               parameters.add(_reels_items[index]["id"]);
@@ -469,25 +492,7 @@ class _ShortsState extends State<Shorts> {
                             ),
                           ),
                           SizedBox(height: 10),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ShortsComments(
-                                    commentId: _reels_items[index]["id"],
-                                    post: Reels.fromMap(
-                                      _reels_items[index].data(),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }, //reels report function
-                            icon: Icon(
-                              Icons.comment_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
+
                         ])
                       ],
                     ),
@@ -498,7 +503,7 @@ class _ShortsState extends State<Shorts> {
               //  itemWidth:DeviceSize(context).width*0.5,
               itemCount: swiper_number_of_items = _reels_items.length,
               scrollDirection: Axis.vertical,
-              //loop: false,
+              loop: false,
             )
           : Container(
               child: Center(

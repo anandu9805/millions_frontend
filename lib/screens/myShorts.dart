@@ -18,6 +18,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ChannelShorts extends StatefulWidget {
   final String channelId;
+
+
   ChannelShorts(this.channelId);
 
   @override
@@ -144,6 +146,7 @@ class _ShortsState extends State<ChannelShorts> {
     return Scaffold(
       body: _isLoading == false
           ? Swiper(
+        loop: false,
               onIndexChanged: (int index) {
                 print(
                     "--------------------------------------------------------------------------------------------");
@@ -161,7 +164,8 @@ class _ShortsState extends State<ChannelShorts> {
                   ContentScreen(
                       src: _reels_items[index]["videoSrc"],
                       cover: _reels_items[index]
-                          ["thumbnail"] //reels_objects[index].videoSrc,
+                          ["thumbnail"]//reels_objects[index].videoSrc,
+                          ,fromwhwere: 1,
                       ),
                   Positioned(
                     left: w / 30,
@@ -443,7 +447,7 @@ class _ShortsState extends State<ChannelShorts> {
               //  itemWidth:DeviceSize(context).width*0.5,
               itemCount: swiper_number_of_items = _reels_items.length,
               scrollDirection: Axis.vertical,
-              //loop: false,
+            //  loop: false,
             )
           : Container(
               child: Center(

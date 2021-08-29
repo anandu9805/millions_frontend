@@ -391,6 +391,21 @@ class _PhotosState extends State<Photos> {
                   ),
                   SizedBox(width: 16),
                   IconButton(
+                    icon: Icon(Icons.comment_outlined),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PostComments(
+                                commentId: widget.photo.id,
+                                post: widget.photo)),
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  IconButton(
                     onPressed: () async {
                       parameters = ['posts'];
                       parameters.add(widget.photo.id);
@@ -408,21 +423,7 @@ class _PhotosState extends State<Photos> {
                     ),
                   ),
                   SizedBox(width: 16),
-                  IconButton(
-                    icon: Icon(Icons.comment_outlined),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PostComments(
-                                commentId: widget.photo.id,
-                                post: widget.photo)),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
+
                   IconButton(
                     icon: Icon(Icons.flag_outlined),
                     onPressed: () {
