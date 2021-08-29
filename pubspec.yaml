@@ -72,6 +72,8 @@ dependencies:
   shared_preferences: ^2.0.6
   expandable_text: ^2.2.0
 
+  badges: ^2.0.1
+
  
 
   # The following adds the Cupertino Icons font to your application.

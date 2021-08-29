@@ -155,14 +155,13 @@ class _Screen11State extends State<Screen11> {
                       style: GoogleFonts.ubuntu(fontSize: 15)),
                 ))
               : widget.postId != null
-                  ? Column(children: [
-                      SizedBox(
-                        height: 40,
-                      ),
-                      Container(
-                        child: Photos(post2),
-                      ),
-                    ])
+                  ? SingleChildScrollView(
+                    child: Column(children: [
+                        Container(
+                          child: Photos(post2),
+                        ),
+                      ]),
+                  )
                   : Column(
                       children: [
                         Padding(

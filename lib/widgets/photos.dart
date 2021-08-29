@@ -197,6 +197,7 @@ class _PhotosState extends State<Photos> {
                       expandText: 'show more',
                       collapseText: 'show less',
                       maxLines: 5,
+                      style: GoogleFonts.ubuntu(),
                       linkColor: Colors.blue,
                     ),
 

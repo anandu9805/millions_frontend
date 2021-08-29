@@ -15,6 +15,7 @@ import 'package:millions/screens/editChannel.dart';
 import 'package:millions/screens/myShorts.dart';
 import 'package:millions/widgets/appDrawer.dart';
 import 'package:millions/widgets/channelReport.dart';
+import 'package:millions/widgets/skeletol_loader.dart';
 import 'package:millions/widgets/videoCard.dart';
 import 'package:millions/widgets/photos.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -359,28 +360,33 @@ class _Page8State extends State<Page8> {
                 }
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: Container(
-                    color: Colors.white,
-                    height: 160,
-                    width: MediaQuery.of(context).size.width * 0.90,
-                    child: Card(
-                      elevation: 0,
-                      color: Colors.white,
-                      child: Container(
-                        height: 170.0,
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.grey,
-                        child: Center(
-                            child: Text(
-                          "Loading Channel Details...",
-                          style: GoogleFonts.ubuntu(
-                            fontSize: 10,
-                            color: Colors.black,
-                          ),
-                        )),
-                      ),
-                    ),
-                  ),
+                  child: SkeletonContainer.square(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 170,
+                                  ),
+                  
+                  //  Container(
+                  //   color: Colors.white,
+                  //   height: 160,
+                  //   width: MediaQuery.of(context).size.width * 0.90,
+                  //   child: Card(
+                  //     elevation: 0,
+                  //     color: Colors.white,
+                  //     child: Container(
+                  //       height: 170.0,
+                  //       width: MediaQuery.of(context).size.width,
+                  //       color: Colors.grey,
+                  //       child: Center(
+                  //           child: Text(
+                  //         "Loading Channel Details...",
+                  //         style: GoogleFonts.ubuntu(
+                  //           fontSize: 10,
+                  //           color: Colors.black,
+                  //         ),
+                  //       )),
+                  //     ),
+                  //   ),
+                  // ),
                 );
               },
             ),
@@ -649,6 +655,33 @@ class _Page8State extends State<Page8> {
                                           launch(snapshot.data['linktwo']);
                                         },
                                         child: Text(snapshot.data['linktwo'],
+                                            style: GoogleFonts.ubuntu(
+                                                color: Colors.blue,
+                                                fontSize: 13))),
+                                   if (snapshot.data['linkthree'] != '')
+                                    InkWell(
+                                        onTap: () {
+                                          launch(snapshot.data['linkthree']);
+                                        },
+                                        child: Text(snapshot.data['linkthree'],
+                                            style: GoogleFonts.ubuntu(
+                                                color: Colors.blue,
+                                                fontSize: 13))),
+                                  if (snapshot.data['linkfour'] != '')
+                                    InkWell(
+                                        onTap: () {
+                                          launch(snapshot.data['linkfour']);
+                                        },
+                                        child: Text(snapshot.data['linkfour'],
+                                            style: GoogleFonts.ubuntu(
+                                                color: Colors.blue,
+                                                fontSize: 13))),
+                                if (snapshot.data['linkfive'] != '')
+                                    InkWell(
+                                        onTap: () {
+                                          launch(snapshot.data['linkfive']);
+                                        },
+                                        child: Text(snapshot.data['linkfive'],
                                             style: GoogleFonts.ubuntu(
                                                 color: Colors.blue,
                                                 fontSize: 13))),

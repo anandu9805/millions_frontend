@@ -4,6 +4,8 @@ import 'package:flutter_time_ago/flutter_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
+import 'package:millions/screens/screen11.dart';
+import 'package:millions/screens/view_video.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -15,7 +17,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   List<DocumentSnapshot> _notifications = [];
-    Stream<QuerySnapshot<Map<String, dynamic>>> notificationStream;
+  Stream<QuerySnapshot<Map<String, dynamic>>> notificationStream;
   bool _loadingNotifications = true,
       _gettingMoreNotifications = false,
       _moreNotificationsAvailable = true;
@@ -95,11 +97,10 @@ class _NotificationPageState extends State<NotificationPage> {
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
-        
         title: Text(
-              "Notifications",
-              style: GoogleFonts.ubuntu(color: Colors.black),
-            ),
+          "Notifications",
+          style: GoogleFonts.ubuntu(color: Colors.black),
+        ),
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -128,22 +129,44 @@ class _NotificationPageState extends State<NotificationPage> {
                           itemCount: _notifications.length,
                           controller: _scrollController,
                           itemBuilder: (BuildContext ctx, int index) {
+                            String type = _notifications[index]['type'];
+                            
                             return InkWell(
-                              onTap: (){
-                                launch(_notifications[index]['link']);
-                              } ,
+                              onTap: () {
+                                if (type == "video"|| _notifications[index]['link'].toString().substring(0,6)=="/watch"  || _notifications[index]['link'].toString().substring(0,5)=="watch")
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ViewVideo(video: null,
+                                            id: _notifications[index]['link']
+                                                .toString()
+                                                .split('/')
+                                                .last),
+                                      ));
+
+                                      else if(type=="comments")
+                                      {
+                                         Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Screen11(
+                                             _notifications[index]['link']
+                                                .toString()
+                                                .split('/')
+                                                .last),
+                                      ));
+                                      }
+                              },
                               child: Container(
-                                 decoration: BoxDecoration(
+                                  decoration: BoxDecoration(
                                     border: Border.all(
                                       color: Colors.grey,
                                       width: 0.1,
                                     ),
                                   ),
                                   padding: EdgeInsets.all(10),
-                                  child: Row(
-                                    children: [
-                                    Column(
-                                      children: [
+                                  child: Row(children: [
+                                    Column(children: [
                                       CircleAvatar(
                                         radius:
                                             MediaQuery.of(context).size.width *
@@ -152,7 +175,8 @@ class _NotificationPageState extends State<NotificationPage> {
                                           child: Image.network(
                                             _notifications[index]['photo'] == ""
                                                 ? altProfilePic
-                                                : _notifications[index]['photo'],
+                                                : _notifications[index]
+                                                    ['photo'],
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -164,31 +188,46 @@ class _NotificationPageState extends State<NotificationPage> {
                                             fit: BoxFit.cover,
                                           ),
                                           borderRadius: BorderRadius.circular(
-                                              MediaQuery.of(context).size.width *
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width *
                                                   0.1),
                                         ),
                                         backgroundColor: Colors.white,
                                       ),
                                     ]),
-                                    SizedBox(width: 10,),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     Expanded(
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Flexible(
                                             child: Text(
-                                                _notifications[index]['notification'], 
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: GoogleFonts.ubuntu(),),
-                                          ), Text(FlutterTimeAgo.parse(_notifications[index]['timeStamp'], lang: 'en'),style: GoogleFonts.ubuntu(fontSize: 10),),
+                                              _notifications[index]
+                                                  ['notification'],
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.ubuntu(),
+                                            ),
+                                          ),
+                                          Text(
+                                            FlutterTimeAgo.parse(
+                                                _notifications[index]
+                                                    ['timeStamp'],
+                                                lang: 'en'),
+                                            style: GoogleFonts.ubuntu(
+                                                fontSize: 10),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    Icon(Icons.keyboard_arrow_right)
+                                  if(type!="follower")  Icon(Icons.keyboard_arrow_right)
                                   ])),
                             );
                           },

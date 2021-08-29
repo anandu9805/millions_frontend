@@ -6,6 +6,7 @@ import 'package:millions/model/admodel.dart';
 import 'package:millions/model/video.dart';
 import 'package:millions/services/video-services.dart';
 import 'package:millions/widgets/ads.dart';
+import 'package:millions/widgets/appDrawer.dart';
 import 'package:millions/widgets/appbar_others.dart';
 
 import 'package:millions/widgets/videoCard.dart';
@@ -23,6 +24,10 @@ class Screen5 extends StatefulWidget {
 }
 
 class _Screen5State extends State<Screen5> {
+    final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  void openDrawer() {
+    _drawerKey.currentState.openDrawer();
+  } 
   List<DocumentSnapshot> _videos = [];
   bool _loadingVideos = true,
       _gettingMoreVideos = false,
@@ -116,82 +121,85 @@ class _Screen5State extends State<Screen5> {
 
     // var ifphotos = true;
     var h = MediaQuery.of(context).size.height;
-    return SingleChildScrollView(
-      controller: _scrollController2,
-      child: Column(
-        children: [
-          page != 1
-              ? PreferredSize(
-                  preferredSize: Size.fromHeight(
-                    (h) * (1 / 13),
-                  ),
-                  child: AppBarOthers(),
-                )
-              : SizedBox(),
-          if (widget.flag == 0)
-            Container(
-              child: AdPost(),
-            ),
-          if (widget.flag == 0)
-            SizedBox(
-              height: 10,
-            ),
-
-          _loadingVideos
-              ? Center(
-                  child: Container(
-                  child: CircularProgressIndicator(
-                    color: primary,
-                  ),
-                ))
-              : _videos.length == 0
-                  ? Center(
-                      child: Container(
-                      child: Text('No videos to show!',
-                          style: GoogleFonts.ubuntu(fontSize: 15)),
-                    ))
-                  : Column(
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _videos.length,
-                          controller: _scrollController,
-                          itemBuilder: (BuildContext ctx, int index) {
-                            return VideoCard(
-                              video: Video.fromMap(_videos[index].data()),
-                              fromwhere: 1,
-                            );
-                          },
-                        )
-                      ],
+    return Scaffold(
+       key: _drawerKey,
+        drawer: DefaultDrawer(),
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(
+            (h) * (1 / 13),
+          ),
+          child: AppBarOthers(),
+        ),
+      body: SingleChildScrollView(
+        controller: _scrollController2,
+        child: Column(
+          children: [
+            if (widget.flag == 0)
+              Container(
+                child: AdPost(),
+              ),
+            if (widget.flag == 0)
+              SizedBox(
+                height: 10,
+              ),
+    
+            _loadingVideos
+                ? Center(
+                    child: Container(
+                    child: CircularProgressIndicator(
+                      color: primary,
                     ),
-          // FutureBuilder(
-          //   future: FirebaseFirestore.instance.collection('videos').get(),
-          //   builder:
-          //       (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          //     if (snapshot.hasData) {
-          //       return ListView(
-          //         physics: NeverScrollableScrollPhysics(),
-          //         shrinkWrap: true,
-          //         controller: _scrollController,
-          //         children: snapshot.data.docs.map((doc) {
-          //           Video videoItems = Video.fromMap(doc.data());
-          //           return VideoCard(
-          //             video: videoItems,
-          //           );
-          //         }).toList(),
-          //       );
-          //     } else {
-          //       return Container(
-          //         child: Center(
-          //           child: CircularProgressIndicator(),
-          //         ),
-          //       );
-          //     }
-          //   },
-          //   // future: VideoServices.getAllVideos(),
-          // ),
-        ],
+                  ))
+                : _videos.length == 0
+                    ? Center(
+                        child: Container(
+                        child: Text('No videos to show!',
+                            style: GoogleFonts.ubuntu(fontSize: 15)),
+                      ))
+                    : Column(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _videos.length,
+                            controller: _scrollController,
+                            itemBuilder: (BuildContext ctx, int index) {
+                              return VideoCard(
+                                video: Video.fromMap(_videos[index].data()),
+                                fromwhere: 1,
+                              );
+                            },
+                          )
+                        ],
+                      ),
+            // FutureBuilder(
+            //   future: FirebaseFirestore.instance.collection('videos').get(),
+            //   builder:
+            //       (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            //     if (snapshot.hasData) {
+            //       return ListView(
+            //         physics: NeverScrollableScrollPhysics(),
+            //         shrinkWrap: true,
+            //         controller: _scrollController,
+            //         children: snapshot.data.docs.map((doc) {
+            //           Video videoItems = Video.fromMap(doc.data());
+            //           return VideoCard(
+            //             video: videoItems,
+            //           );
+            //         }).toList(),
+            //       );
+            //     } else {
+            //       return Container(
+            //         child: Center(
+            //           child: CircularProgressIndicator(),
+            //         ),
+            //       );
+            //     }
+            //   },
+            //   // future: VideoServices.getAllVideos(),
+            // ),
+          ],
+        ),
       ),
     );
   }
