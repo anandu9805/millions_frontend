@@ -138,7 +138,7 @@ class _Screen9State extends State<Screen9> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        height: h * 0.14,
+                        //height: h * 0.14,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
@@ -174,7 +174,7 @@ class _Screen9State extends State<Screen9> {
                                               );
                                             },
                                             child: CircleAvatar(
-                                              radius: w * 0.1,
+                                              radius: w * 0.075,
                                               child: ClipRRect(
                                                 child: Image.network(
                                                   channeldata['profilePic'] ==
@@ -195,7 +195,7 @@ class _Screen9State extends State<Screen9> {
                                           ),
                                         ),
                                         Container(
-                                            width: w * 0.2,
+                                            //width: w * 0.25,
                                             alignment: Alignment.center,
                                             padding:
                                                 EdgeInsets.only(right: 1.0),
@@ -207,7 +207,7 @@ class _Screen9State extends State<Screen9> {
                                       ],
                                     ),
                                     SizedBox(
-                                      width: 5,
+                                      width: 15,
                                     )
                                   ]);
                                 }
