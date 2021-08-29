@@ -15,7 +15,6 @@ import 'package:millions/screens/searchPage..dart';
 import 'package:millions/screens/userMenu.dart';
 import 'package:millions/services/userService.dart';
 import 'package:provider/provider.dart';
-import 'package:badges/badges.dart';
 
 class AppBarOthers extends StatefulWidget {
   @override
@@ -199,79 +198,53 @@ class _AppBarOthersState extends State<AppBarOthers> {
         ),
         notificationCount != "0"
             ? Padding(
-              padding: const EdgeInsets.only(right :5.0),
-              child: Badge(position: BadgePosition.topEnd(top: 5, end: 5),
-                badgeColor: primary,
-                toAnimate: false,
-                badgeContent: Text(
-                        notificationCount,
-                        style: GoogleFonts.ubuntu(
-                          color: Colors.white,
-                        )),
-                child: IconButton(
-                    icon: new Icon(
-                      Icons.notifications,
-                      color: Colors.black87,
-                    ),
-                    onPressed: () {
-                      updateNotification();
-                      
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotificationPage()),
-                      );
-                      countUnreadNotifications();
-                    },
-                  ),
-              ),
-            )
-
-
-
-              //   child: Stack(
-              //     children: <Widget>[
-              //       InkWell(
-              //         child: new Icon(
-              //           Icons.notifications,
-              //           color: Colors.black87,
-              //         ),
-              //         onTap: () {
-              //           updateNotification();
+                padding: const EdgeInsets.only(
+                  right: 15,
+                  top: 15,
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    InkWell(
+                      child: new Icon(
+                        Icons.notifications,
+                        color: Colors.black87,
+                      ),
+                      onTap: () {
+                        updateNotification();
                         
-              //           Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //                 builder: (context) => NotificationPage()),
-              //           );
-              //           countUnreadNotifications();
-              //         },
-              //       ),
-              //       new Positioned(
-              //         right: 0,
-              //         child: new Container(
-              //           padding: EdgeInsets.all(1),
-              //           decoration: new BoxDecoration(
-              //             color: primary,
-              //             borderRadius: BorderRadius.circular(6),
-              //           ),
-              //           constraints: BoxConstraints(
-              //             minWidth: 12,
-              //             minHeight: 12,
-              //           ),
-              //           child: new Text(
-              //             notificationCount,
-              //             style: GoogleFonts.ubuntu(
-              //               color: Colors.white,
-              //               fontSize: 8,
-              //             ),
-              //             textAlign: TextAlign.center,
-              //           ),
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // )
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotificationPage()),
+                        );
+                        countUnreadNotifications();
+                      },
+                    ),
+                    new Positioned(
+                      right: 0,
+                      child: new Container(
+                        padding: EdgeInsets.all(1),
+                        decoration: new BoxDecoration(
+                          color: primary,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 12,
+                          minHeight: 12,
+                        ),
+                        child: new Text(
+                          notificationCount,
+                          style: GoogleFonts.ubuntu(
+                            color: Colors.white,
+                            fontSize: 8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
             : Padding(
                 padding: const EdgeInsets.only(right: 5),
                 child: IconButton(
@@ -301,8 +274,7 @@ class _AppBarOthersState extends State<AppBarOthers> {
             },
             child: CircleAvatar(backgroundColor:Colors.black,
               foregroundImage:
-              NetworkImage(altChannelArt),
-              //NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
+              NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
               radius: 15,
             ),
             // child: CircleAvatar(

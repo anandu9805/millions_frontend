@@ -31,10 +31,7 @@ class _EditChannelState extends State<EditChannel> {
   TextEditingController namecontroller,
       descontroller,
       linkOneController,
-      linkTwoController,
-      linkThreeController,
-      linkFourController,
-      linkFiveController;
+      linkTwoController;
   String profileFileName, artFileName, channelArtUrl, profileUrl;
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -150,9 +147,6 @@ class _EditChannelState extends State<EditChannel> {
         'channelName': namecontroller.text,
         'linkone': linkOneController.text,
         'linktwo': linkTwoController.text,
-        'linkthree': linkThreeController.text,
-        'linkfour': linkFourController.text,
-        'linkfive': linkFiveController.text,
         'description': descontroller.text.isEmpty ? " " : descontroller.text,
         'channelArt': artchanged
             ? channelArtUrl
@@ -180,9 +174,6 @@ class _EditChannelState extends State<EditChannel> {
     descontroller = TextEditingController(text: widget.myChannel.description);
     linkOneController = TextEditingController(text: widget.myChannel.linkone);
     linkTwoController = TextEditingController(text: widget.myChannel.linktwo);
-    linkThreeController = TextEditingController(text: widget.myChannel.linkthree);
-    linkFourController = TextEditingController(text: widget.myChannel.linkfour);
-    linkFiveController = TextEditingController(text: widget.myChannel.linkfive);
   }
 
   @override
@@ -352,15 +343,6 @@ class _EditChannelState extends State<EditChannel> {
                         SizedBox(
                             height: MediaQuery.of(context).size.height * 0.03),
                         InputField("Featured Link 2", linkTwoController, 1),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03),
-                        InputField("Featured Link 3", linkThreeController, 1),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03),
-                        InputField("Featured Link 4", linkFourController, 1),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03),
-                        InputField("Featured Link 5", linkFiveController, 1),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * 0.03),
                         Card(

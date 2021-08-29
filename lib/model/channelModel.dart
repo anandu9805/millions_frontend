@@ -11,9 +11,6 @@ class ChannelModel {
       realName,
       linkone,
       linktwo,
-      linkthree,
-      linkfour,
-      linkfive,
       profilePic;
   int subsribers, videos, channelScore;
   bool isVerified;
@@ -30,9 +27,6 @@ class ChannelModel {
       this.id,
       this.linkone,
       this.linktwo,
-      this.linkthree,
-      this.linkfour,
-      this.linkfive,
       this.profilePic,
       this.subsribers,
       this.isVerified,
@@ -53,9 +47,6 @@ class ChannelModel {
         id: map["id"],
         linkone: map["linkone"],
         linktwo: map["linktwo"],
-        linkthree: map["linkthree"],
-        linkfour: map["linkfour"],
-        linkfive: map["linkfive"],
         profilePic: map["profilePic"],
         subsribers: map["subscribers"],
         videos: map["videos"]);

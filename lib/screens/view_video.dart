@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_time_ago/flutter_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:millions/constants/colors.dart';
@@ -23,7 +21,6 @@ import 'package:millions/widgets/ads.dart';
 import 'package:millions/widgets/comments.dart';
 import 'package:millions/widgets/playVideo.dart';
 import 'package:millions/widgets/reportVideo.dart';
-import 'package:millions/widgets/videoCard.dart';
 
 import 'package:share_plus/share_plus.dart';
 import '../constants/colors.dart';
@@ -53,87 +50,6 @@ class ViewVideo extends StatefulWidget {
 }
 
 class _ViewVideoState extends State<ViewVideo> {
-//---------------------
-
-  String followStatus = "Follow";
-  Future<String> checkExist(String docID) async {
-    try {
-      await FirebaseFirestore.instance
-          .doc("followers/$docID")
-          .get()
-          .then((doc) {
-        if (doc.exists) {
-          setState(() {
-            followStatus = "Unfollow";
-          });
-        } else {
-          setState(() {
-            followStatus = "Follow";
-          });
-        }
-      });
-      return followStatus;
-    } catch (e) {
-      print("Error");
-      return '';
-    }
-  }
-
-  void unfollow(String docID) async {
-    try {
-      await FirebaseFirestore.instance
-          .doc("followers/$docID")
-          .delete()
-          .whenComplete(() {
-        _showToast(context, "UnFollowed " +  widget.id!=null?video2.channelName: widget.video.channelName);
-        FirebaseMessaging.instance
-            .unsubscribeFromTopic(widget.id!=null?video2.channelId: widget.video.channelId);
-        setState(() {
-          followStatus = "Follow";
-        });
-        // checkExist(widget.channelId);
-      }).catchError(
-              (error) => _showToast(context, "Failed to unfollow: $error"));
-    } catch (e) {
-      print("Error");
-    }
-  }
-
-  void follow(String docID, Map details) async {
-    try {
-      await FirebaseFirestore.instance.doc("followers/$docID").set({
-        'channel': details['channel'],
-        'date': details['date'],
-        'follower': details['follower']
-      }).whenComplete(() {
-        _showToast(context, "Following " + widget.id!=null?video2.channelName: widget.video.channelName);
-        FirebaseMessaging.instance.subscribeToTopic(widget.id!=null?video2.channelId: widget.video.channelId);
-        setState(() {
-          followStatus = "Unfollow";
-        });
-      }).catchError((error) => _showToast(context, "Failed to follow: $error"));
-    } catch (e) {
-      print("Error" + e.toString());
-    }
-  }
-
-  void _showToast(BuildContext context, String message) {
-    final scaffold = ScaffoldMessenger.of(context);
-    scaffold.showSnackBar(
-      SnackBar(
-        content: Text(message),
-        action: SnackBarAction(
-          label: 'OK',
-          onPressed: scaffold.hideCurrentSnackBar,
-          textColor: primary,
-        ),
-      ),
-    );
-  }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> recommendedStream;
-//---------------------
-
   Video video2 = null;
 
   FlickManager flickManager;
@@ -159,22 +75,22 @@ class _ViewVideoState extends State<ViewVideo> {
   int value;
   bool flag = true;
 
-  // String timeAgo(DateTime d) {
-  //   Duration diff = DateTime.now().difference(d);
-  //   if (diff.inDays > 365)
-  //     return "${(diff.inDays / 365).floor()} ${(diff.inDays / 365).floor() == 1 ? "year" : "years"} ago";
-  //   if (diff.inDays > 30)
-  //     return "${(diff.inDays / 30).floor()} ${(diff.inDays / 30).floor() == 1 ? "month" : "months"} ago";
-  //   if (diff.inDays > 7)
-  //     return "${(diff.inDays / 7).floor()} ${(diff.inDays / 7).floor() == 1 ? "week" : "weeks"} ago";
-  //   if (diff.inDays > 0)
-  //     return "${diff.inDays} ${diff.inDays == 1 ? "day" : "days"} ago";
-  //   if (diff.inHours > 0)
-  //     return "${diff.inHours} ${diff.inHours == 1 ? "hour" : "hours"} ago";
-  //   if (diff.inMinutes > 0)
-  //     return "${diff.inMinutes} ${diff.inMinutes == 1 ? "minute" : "minutes"} ago";
-  //   return "just now";
-  // }
+  String timeAgo(DateTime d) {
+    Duration diff = DateTime.now().difference(d);
+    if (diff.inDays > 365)
+      return "${(diff.inDays / 365).floor()} ${(diff.inDays / 365).floor() == 1 ? "year" : "years"} ago";
+    if (diff.inDays > 30)
+      return "${(diff.inDays / 30).floor()} ${(diff.inDays / 30).floor() == 1 ? "month" : "months"} ago";
+    if (diff.inDays > 7)
+      return "${(diff.inDays / 7).floor()} ${(diff.inDays / 7).floor() == 1 ? "week" : "weeks"} ago";
+    if (diff.inDays > 0)
+      return "${diff.inDays} ${diff.inDays == 1 ? "day" : "days"} ago";
+    if (diff.inHours > 0)
+      return "${diff.inHours} ${diff.inHours == 1 ? "hour" : "hours"} ago";
+    if (diff.inMinutes > 0)
+      return "${diff.inMinutes} ${diff.inMinutes == 1 ? "minute" : "minutes"} ago";
+    return "just now";
+  }
 
   _getVideoFromId() //to get the video from the id passed through the dynamic link
   async {
@@ -184,14 +100,6 @@ class _ViewVideoState extends State<ViewVideo> {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       video2 = Video.fromMap(documentSnapshot.data());
-          recommendedStream = FirebaseFirestore.instance
-        .collection("videos")
-        .where("isVisible", isEqualTo: "Public")
-        .where("category", whereIn: [video2.category,"Vlog"])
-        .limit(5)
-        .snapshots();
-         checkExist(altUserId + "_" +video2.channelId)
-        .then((value) => followStatus = value);
     });
     setState(() {
       _isLoading = false;
@@ -203,21 +111,11 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   void initState() {
-    super.initState();
-    
     if (widget.id != null && widget.video == null) {
       //_isLoading=true;
       _getVideoFromId(); //to get the video from the id passesd through the dynamic link
 
     } else {
-      recommendedStream = FirebaseFirestore.instance
-        .collection("videos")
-        .where("isVisible", isEqualTo: "Public")
-        .where("category", whereIn: [widget.video.category,"Vlog"])
-        .limit(5)
-        .snapshots();
-         checkExist(altUserId + "_" +widget.video.channelId)
-        .then((value) => followStatus = value);
       likeId = widget.id == null
           ? userId + '_' + widget.video.id
           : userId + '_' + video2.id;
@@ -230,10 +128,8 @@ class _ViewVideoState extends State<ViewVideo> {
         });
       });
 
-      
+      super.initState();
     }
-    
-   
   }
 
   int selected = -1;
@@ -254,11 +150,19 @@ class _ViewVideoState extends State<ViewVideo> {
 
     return SafeArea(
       child: Scaffold(
-       
+        appBar: widget.video.isVisible != "Public"
+            ? AppBar(
+                backgroundColor: Colors.white,
+                elevation: 0,
+                iconTheme: IconThemeData(
+                  color: Colors.black,
+                ),
+              )
+            : null,
         body: (_isLoading == false || widget.id == null)
             ? SingleChildScrollView(
                 child: Flex(direction: Axis.horizontal, children: [
-                  (widget.video!=null&& widget.video.isVisible == "Public") ||(widget.id!=null && video2.isVisible == "Public")
+                  widget.video.isVisible == "Public"
                       ? Expanded(
                           child: Column(
                             children: [
@@ -269,7 +173,6 @@ class _ViewVideoState extends State<ViewVideo> {
                                     ? widget.video.duration * 1.0
                                     : video2.duration * 1.0,
                               ),
-                              Column(children: [
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -331,7 +234,7 @@ class _ViewVideoState extends State<ViewVideo> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Text(
-                                      "${widget.id == null ? widget.video.views : video2.views} views • ${widget.id == null ? FlutterTimeAgo.parse(widget.video?.date.toDate(), lang: 'en') : FlutterTimeAgo.parse(video2?.date.toDate(), lang: 'en')}",
+                                      "${widget.id == null ? widget.video.views : video2.views} views • ${widget.id == null ? timeAgo(DateTime.fromMicrosecondsSinceEpoch(widget.video.date.microsecondsSinceEpoch)) : timeAgo(DateTime.fromMicrosecondsSinceEpoch(video2.date.microsecondsSinceEpoch))}",
                                       style: GoogleFonts.ubuntu(
                                           fontWeight: FontWeight.normal,
                                           fontSize: 12),
@@ -408,16 +311,17 @@ class _ViewVideoState extends State<ViewVideo> {
                                   //   ],
                                   // ),
 
+
+                                 // SizedBox(height: 10),
+                                  widget.video.isComments == 'Allowed'?
                                   Column(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          if ((widget.video!=null && widget.video.isComments ==
-                                              'Allowed') || (widget.id!=null && video2.isComments=="Allowed")){
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => Comments(
+                                    children:[IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                Comments(
                                                   videoId: widget.id == null
                                                       ? widget.video.id
                                                       : video2.id.toString(),
@@ -425,24 +329,27 @@ class _ViewVideoState extends State<ViewVideo> {
                                                       ? widget.video
                                                       : video2,
                                                 ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.comment_outlined,
-                                        ),
+                                          ),
+                                        );
+                                      }, //reels report function
+                                      icon: Icon(
+                                        Icons.comment_outlined,
+                                        color: Colors.black,
                                       ),
+                                    ),
                                       Text(
-                                      (widget.video!=null &&  widget.video.isComments == 'Allowed') ||(widget.id!=null && video2.isComments=="Allowed")
-                                            ? "${widget.id == null ? widget.video.comments : video2.comments}"
-                                            : "Disabled",
-                                        style: GoogleFonts.ubuntu(
-                                            height: 0.3, fontSize: 10),
-                                      )
-                                    ],
-                                  ),
+                                        "${widget.id == null ? widget.video.comments : video2.comments}",
+                                          style: GoogleFonts.ubuntu(
+                                          height: 0.3, fontSize: 10),
+                                      ),
 
+                                    ]
+                                  ):Icon(
+                                    Icons.comment_outlined,
+                                    color: Colors.grey,
+                                  ),
+                                  //---------------------------
+                                 // SizedBox(height: 10),
                                   Column(
                                     children: [
                                       IconButton(
@@ -554,236 +461,352 @@ class _ViewVideoState extends State<ViewVideo> {
                                 color: Colors.grey,
                                 height: 10,
                               ),
-
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Page8(
-                                                      widget.id == null
-                                                          ? widget
-                                                              .video.channelId
-                                                          : video2.channelId)),
-                                            );
-                                          },
-                                          child: FutureBuilder(
-                                              future: UserServices()
-                                                  .getUserDetails(widget.id ==
-                                                          null
-                                                      ? widget.video.channelId
-                                                      : video2.channelId),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.hasData) {
-                                                  return CircleAvatar(
-                                                    child: ClipRRect(
-                                                      child: Image.network(
-                                                        snapshot.data
-                                                            .toString(),
-                                                        //reels_objects[index].profilePic,
-                                                        width: w * 1,
-                                                        height: h * 1,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              w * 0.5),
-                                                    ),
-                                                    //sradius: 18,
-                                                  );
-                                                } else {
-                                                  return CircleAvatar(
-                                                    // radius: w * 0.05,
-                                                    backgroundColor:
-                                                        Colors.black,
-                                                  );
-                                                }
-                                              }),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          "${widget.id == null ? widget.video.channelName : video2.channelName}",
-
-                                          //content[this.widget.index].userName,
-                                          style: GoogleFonts.ubuntu(
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              height: 1.2,
-                                              fontWeight: FontWeight.bold),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        if (widget.id == null
-                                            ? widget.video.isVerified
-                                            : video2.isVerified)
-                                          Icon(
-                                            Icons.verified,
-                                            size: 20,
-                                            color: Colors.blue,
-                                          ),
-                                      ],
-                                    ),
-                                  (widget.id==null? widget.video.channelId : video2.channelId) != altUserId
-                                        ? InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                if (followStatus == "Unfollow")
-                                                  unfollow(altUserId +
-                                                      "_" +
-                                                     widget.id!=null?video2.channelId: widget.video.channelId);
-                                                else {
-                                                  Map details = {
-                                                    'channel':
-                                                       widget.id!=null?video2.channelId: widget.video.channelId,
-                                                    'date': FieldValue
-                                                        .serverTimestamp(),
-                                                    'follower': altUserId
-                                                  };
-                                                  follow(
-                                                      altUserId +
-                                                          "_" +
-                                                          widget.id!=null?video2.channelId: widget.video.channelId,
-                                                      details);
-                                                }
-                                              });
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: primary,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(15))),
-                                              // width: MediaQuery.of(context).size.width * 0.1,
-                                              //color: primary,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: Text(
-                                                    "$followStatus",
-                                                    style: GoogleFonts.ubuntu(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Row(
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Page8(widget.id ==
+                                                                  null
+                                                              ? widget.video
+                                                                  .channelId
+                                                              : video2
+                                                                  .channelId)),
+                                                );
+                                              },
+                                              child:
+                                                  // CircleAvatar(
+                                                  //   child: ClipRRect(
+                                                  //     child: Image.network(
+                                                  //       FirebaseAuth.instance.currentUser
+                                                  //           .photoURL,
+                                                  //       fit: BoxFit.cover,
+                                                  //     ),
+                                                  //     borderRadius:
+                                                  //         BorderRadius.circular(w * 0.1),
+                                                  //   ),
+                                                  //   //backgroundColor: Colors.black,
+                                                  // ),
+                                                  FutureBuilder(
+                                                      future: UserServices()
+                                                          .getUserDetails(widget
+                                                                      .id ==
+                                                                  null
+                                                              ? widget.video
+                                                                  .channelId
+                                                              : video2
+                                                                  .channelId),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        if (snapshot.hasData) {
+                                                          return CircleAvatar(
+                                                            child: ClipRRect(
+                                                              child:
+                                                                  Image.network(
+                                                                snapshot.data
+                                                                    .toString(),
+                                                                //reels_objects[index].profilePic,
+                                                                width: w * 1,
+                                                                height: h * 1,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          w * 0.5),
+                                                            ),
+                                                            radius: 17,
+                                                          );
+                                                        } else {
+                                                          return CircleAvatar(
+                                                            // radius: w * 0.05,
+                                                            backgroundColor:
+                                                                Colors.black,
+                                                          );
+                                                        }
+                                                      }),
                                             ),
-                                          )
-                                        : Text(''),
-                                  ],
-                                ),
+                                            SizedBox(width: 10),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      constraints: BoxConstraints(
+                                                          maxWidth: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.37),
+
+                                                      // alignment: Alignment.bottomLeft,
+                                                      padding: EdgeInsets.only(
+                                                          right: 1.0),
+                                                      child: Text(
+                                                        "${widget.id == null ? widget.video.channelName : video2.channelName}",
+
+                                                        //content[this.widget.index].userName,
+                                                        style:
+                                                            GoogleFonts.ubuntu(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 15,
+                                                                height: 1.2,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                    if (widget.id == null
+                                                        ? widget
+                                                            .video.isVerified
+                                                        : video2.isVerified)
+                                                      Icon(
+                                                        Icons.verified,
+                                                        size: 20,
+                                                        color: Colors.blue,
+                                                      ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(right: 8.0),
+                                  //   child: Column(
+                                  //     children: [
+                                  //       TextButton(
+                                  //         onPressed: () {},
+                                  //         child: Text("Following"),
+                                  //       )
+                                  //     ],
+                                  //   ),
+                                  // ),
+                                ],
                               ),
                               Divider(
                                 color: Colors.grey,
                                 height: 10,
                               ),
-                              // Padding(
-                              //   padding: EdgeInsets.only(left: 10, right: 10),
-                              //   child: widget.video.isComments == 'Allowed'
-                              //       ? Row(
-                              //           mainAxisAlignment:
-                              //               MainAxisAlignment.spaceBetween,
-                              //           children: [
-                              //             Text(
-                              //               "${widget.id == null ? widget.video.comments : video2.comments} Comments",
-                              //               style: GoogleFonts.ubuntu(),
-                              //             ),
-                              //             TextButton(
-                              //               onPressed: () {
-                              //                 Navigator.push(
-                              //                   context,
-                              //                   MaterialPageRoute(
-                              //                     builder: (context) =>
-                              //                         Comments(
-                              //                       videoId: widget.id == null
-                              //                           ? widget.video.id
-                              //                           : video2.id.toString(),
-                              //                       video: widget.id == null
-                              //                           ? widget.video
-                              //                           : video2,
-                              //                     ),
-                              //                   ),
-                              //                 );
-                              //               },
-                              //               child: Text(
-                              //                 "View Comments",
-                              //                 style: GoogleFonts.ubuntu(
-                              //                     height: 1, color: primary),
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         )
-                              //       : Row(
-                              //           mainAxisAlignment:
-                              //               MainAxisAlignment.spaceBetween,
-                              //           children: [
-                              //             Text("Comments are disabled"),
-                              //             Icon(Icons.comment_outlined),
-                              //           ],
-                              //         ),
-                              // ),
                               Container(
+                                //height: MediaQuery.of(context).size.height * 1 / 14,
                                 width: double.infinity,
                                 child: AdPost(),
+                                // child: Text(
+                                //   'Add banner comes here',
+                                //   style: TextStyle(color: Colors.white),
+                                // ),
+                                //color: Colors.black,
                               ),
-                               SizedBox(
-                                height: 10,
-                              ),
-                              StreamBuilder(
-                                stream: recommendedStream,
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Container(
-                                        height: MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                            0.25,
-                                        child: Center(
-                                            child:
-                                                CircularProgressIndicator(
-                                          color: primary,
-                                        )));
-                                  }
-                                  
-                                 else if (snapshot.hasData) {
-                                    return new ListView(
-                                      physics:
-                                          NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      children:
-                                          snapshot.data.docs.map((doc) {
-                                        Video videoItems =
-                                            Video.fromMap(doc.data());
-                                        return VideoCard(
-                                          video: videoItems,
-                                          fromwhere: 1,
-                                        );
-                                      }).toList(),
-                                    );
-                                  } else {
-                                    return Container(
-                                        height: MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                            0.25,
-                                        child: Center(
-                                            child: Text(
-                                                "Unknown Error Occured!",
-                                                style: GoogleFonts.ubuntu(
-                                                    fontSize: 15))));
-                                  }
-                                },
-                              )
-                              ],)
+//                               Padding(
+//                                 padding: const EdgeInsets.all(8.0),
+//                                 child: widget.video.isComments == 'Allowed'
+//                                     ? Row(
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.spaceBetween,
+//                                         children: [
+//                                           Text(
+//                                             "${widget.id == null ? widget.video.comments : video2.comments} Comments",
+//                                             style: GoogleFonts.ubuntu(),
+//                                           ),
+//
+//                                           // //-----------------------------------------------------------
+//                                           // TextButton(
+//                                           //   onPressed: () {
+//                                           //     Navigator.push(
+//                                           //       context,
+//                                           //       MaterialPageRoute(
+//                                           //         builder: (context) =>
+//                                           //             Comments(
+//                                           //               videoId: widget.id == null
+//                                           //                   ? widget.video.id
+//                                           //                   : video2.id.toString(),
+//                                           //               video: widget.id == null
+//                                           //                   ? widget.video
+//                                           //                   : video2,
+//                                           //             ),
+//                                           //       ),
+//                                           //     );
+//                                           //
+//                                           //   },
+//                                           //   child: Text(
+//                                           //     "View Comments",
+//                                           //     style: GoogleFonts.ubuntu(
+//                                           //         height: 1, color: primary),
+//                                           //   ),
+//                                           // ),
+//                                           // //--------------------------------------------------------------
+//                                         ],
+//                                       )
+//                                     : Row(
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.spaceBetween,
+//                                         children: [
+//                                           Text("Comments are disabled"),
+//                                           Icon(Icons.comment_outlined),
+//                                         ],
+//                                       ),
+// // <<<<<<< HEAD
+// //                         Padding(
+// //                           padding: const EdgeInsets.only(right: 8.0),
+// //                           child: Column(
+// //                             children: [
+// //                               TextButton(
+// //                                 onPressed: () {},
+// //                                 child: Text("Following"),
+// //                               )
+// //                             ],
+// //                           ),
+// //                         ),
+// //                       ],
+// //                     ),
+// //                     Divider(
+// //                       color: Colors.grey,
+// //                       height: 10,
+// //                     ),
+// //                     Container(
+// //                       //height: MediaQuery.of(context).size.height * 1 / 14,
+// //                       width: double.infinity,
+// //                       child: AdPost(),
+// //                       // child: Text(
+// //                       //   'Add banner comes here',
+// //                       //   style: TextStyle(color: Colors.white),
+// //                       // ),
+// //                       //color: Colors.black,
+// //                     ),
+// //                     Padding(
+// //                       padding: const EdgeInsets.all(8.0),
+// //                       child: Row(
+// //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// //                         children: [
+// //                           Text(
+// //                             "${widget.id==null?widget.video.comments:video2.comments} Comments",
+// //                           ),
+// //                           TextButton(
+// //                             onPressed: () {
+// //                               Navigator.push(
+// //                                 context,
+// //                                 MaterialPageRoute(
+// //                                     builder: (context) => Comments(
+// //                                           videoId: widget.id==null?widget.video.id:video2.id.toString(),
+// //                                         )),
+// //                               );
+// //                             },
+// //                             child: Text(
+// //                               "More",
+// //                               style: TextStyle(height: 1),
+// //                             ),
+// //                           ),
+// //                         ],
+// //                       ),
+// //                     ),
+// //                     Container(
+// //                       padding: const EdgeInsets.all(8.0),
+// //                       // height: h / 2,
+// //                       child: Container(
+// //                         // height: h / 2,
+// //                         child: StreamBuilder(
+// //                           stream: CommentServices()
+// //                               .getOneVideoComments(widget.id==null?widget.video.id:video2.id.toString()),
+// //                           builder: (BuildContext context,
+// //                               AsyncSnapshot<QuerySnapshot> snapshot) {
+// //                             if (snapshot.hasData) {
+// //                               return ListView(
+// //                                 physics: NeverScrollableScrollPhysics(),
+// //                                 shrinkWrap: true,
+// //                                 children: snapshot.data.docs.map((doc) {
+// //                                   CommentModel comment =
+// //                                       CommentModel.fromMap(doc.data());
+// //                                   List<QueryDocumentSnapshot<Object>>
+// //                                       replyComments = snapshot.data.docs
+// //                                           .where((o) =>
+// //                                               o['commentId'] ==
+// //                                               'reply-' + comment.commentId)
+// //                                           .toList();
+// //                                   return Comment(
+// //                                       comment: comment, replies: replyComments);
+// //                                 }).toList(),
+// //                               );
+// //                             } else {
+// //                               return Container(
+// //                                 child: Center(
+// //                                   child: CircularProgressIndicator(),
+// //                                 ),
+// //                               );
+// //                             }
+// //                           },
+// //                           // future: VideoServices.getAllVideos(),
+// //                         ),
+// //                       ),
+// //                     ),
+// //                   ],
+// // =======
+//                               ),
+                              // Container(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   // height: h / 2,
+                              //   child: Container(
+                              //     // height: h / 2,
+                              //     child: StreamBuilder(
+                              //       stream: CommentServices().getOneVideoComments(
+                              //         widget.id == null
+                              //             ? widget.video.id
+                              //             : video2.id.toString(),
+                              //       ),
+                              //       builder: (BuildContext context,
+                              //           AsyncSnapshot<QuerySnapshot> snapshot) {
+                              //         if (snapshot.hasData) {
+                              //           return ListView(
+                              //             physics: NeverScrollableScrollPhysics(),
+                              //             shrinkWrap: true,
+                              //             children: snapshot.data.docs.map((doc) {
+                              //               CommentModel comment =
+                              //                   CommentModel.fromMap(doc.data());
+                              //               List<QueryDocumentSnapshot<Object>>
+                              //                   replyComments = snapshot.data.docs
+                              //                       .where((o) =>
+                              //                           o['commentId'] ==
+                              //                           'reply-' + comment.commentId)
+                              //                       .toList();
+                              //               return Comment(
+                              //                   comment: comment,
+                              //                   replies: replyComments);
+                              //             }).toList(),
+                              //           );
+                              //         } else {
+                              //           return Container(
+                              //             child: Center(
+                              //               child: CircularProgressIndicator(),
+                              //             ),
+                              //           );
+                              //         }
+                              //       },
+                              //       // future: VideoServices.getAllVideos(),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         )
