@@ -1,111 +1,3 @@
-// import 'package:flick_video_player/flick_video_player.dart';
-// import 'package:flutter/material.dart';
-// import 'package:video_player/video_player.dart';
-
-// class PlayVideo extends StatefulWidget {
-//   final String videoSrc;
-
-//   const PlayVideo({Key key, this.videoSrc}) : super(key: key);
-
-//   @override
-//   _PlayVideoState createState() => _PlayVideoState();
-// }
-
-// class _PlayVideoState extends State<PlayVideo> {
-//   FlickManager flickManager;
-//   VideoPlayerController _controller;
-//   AspectRatio ratio;
-//   @override
-//   void initState() {
-//     super.initState();
-//     // flickManager = FlickManager(
-//     //   videoPlayerController:
-//     //       VideoPlayerController.network(this.widget.video.videoSrc),
-//     // );
-//     _controller = VideoPlayerController.network(this.widget.video.videoSrc)
-//       ..initialize().then((_) {
-//         setState(() {});
-//       });
-//   }
-
-//   @override
-//   void dispose() {
-//     flickManager.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Stack(
-//       children: [
-//         _controller.value.isInitialized
-//             ? AspectRatio(
-//                 aspectRatio: _controller.value.aspectRatio,
-//                 child: VideoPlayer(_controller),
-//               )
-//             : Container(
-//                 child: AspectRatio(
-//                   aspectRatio: _controller.value.aspectRatio,
-//                   child: Center(
-//                     child: CircularProgressIndicator(),
-//                   ),
-//                 ),
-//               ),
-//         Positioned(
-//           bottom: 0,
-//           // width: MediaQuery.of(context).size.width*0.1,
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               IconButton(
-//                 icon: Icon(
-//                   Icons.skip_previous_outlined,
-//                   color: Colors.white.withOpacity(0.8),
-//                 ),
-//                 onPressed: () {
-//                   _controller.play();
-//                 },
-//               ),
-//               IconButton(
-//                 icon: Icon(
-//                   Icons.play_arrow_outlined,
-//                   color: Colors.white.withOpacity(0.8),
-//                 ),
-//                 onPressed: () {
-//                   _controller.play();
-//                 },
-//               ),
-//               IconButton(
-//                 icon: Icon(
-//                   Icons.pause_outlined,
-//                   color: Colors.white.withOpacity(0.8),
-//                 ),
-//                 onPressed: () {
-//                   _controller.play();
-//                 },
-//               ),
-//               IconButton(
-//                 icon: Icon(
-//                   Icons.skip_next_outlined,
-//                   color: Colors.white.withOpacity(0.8),
-//                 ),
-//                 onPressed: () {
-//                   _controller.seekTo(_controller.position+);
-//                 },
-//               ),
-//               Container(
-//                   margin: EdgeInsets.only(right: 3),
-//                   width: MediaQuery.of(context).size.width,
-//                   child:
-//                       VideoProgressIndicator(_controller, allowScrubbing: true))
-//             ],
-//           ),
-//         )
-//       ],
-//     );
-//   }
-// }
-
 import 'dart:async';
 
 import 'package:chewie/chewie.dart';
@@ -171,6 +63,21 @@ class _PlayVideoState extends State<PlayVideo> {
     print(widget.video.duration);
     Future<String> adSrc = getAdVideo();
 
+    BetterPlayerConfiguration betterPlayerConfiguration =
+        BetterPlayerConfiguration(
+      aspectRatio: 16 / 9,
+      fit: BoxFit.contain,
+      autoPlay: true,
+      looping: true,
+    );
+    _betterPlayerDataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      this.widget.video.videoSrc,
+    );
+    _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
+    _betterPlayerController.setupDataSource(_betterPlayerDataSource);
+    _betterPlayerController.addEventsListener(_handleEvent);
+
     print(adSrc);
     // print(adSrc);
     _videoPlayerController2 =
@@ -204,7 +111,7 @@ class _PlayVideoState extends State<PlayVideo> {
               _position = _videoPlayerController2.value.position;
             });
 
-            if ((_position.inSeconds / widget.video.duration) > 0.7) {
+            if ((_position.inSeconds / widget.video.duration) == 0.7) {
               FirebaseFirestore.instance
                   .collection('views')
                   .doc(altUserId + '_' + widget.video.id)
@@ -226,19 +133,19 @@ class _PlayVideoState extends State<PlayVideo> {
             }
           })
           ..initialize();
-    _videoPlayerController1 = VideoPlayerController.network(
-        "https://firebasestorage.googleapis.com/v0/b/millions-video.appspot.com/o/ads%2Fupload-1622827623432.webm?alt=media&token=5a617958-4ab6-4f1b-b2ac-89ab2c99cf0a")
-      ..addListener(() {
-        setState(() {
-          _position = _videoPlayerController1.value.position;
-        });
-        print(_position.inSeconds);
-        if (_position.inSeconds == 10) {
-          setState(() {
-            _showSkip = true;
-          });
-        }
-      });
+    // _videoPlayerController1 = VideoPlayerController.network(
+    //     "https://firebasestorage.googleapis.com/v0/b/millions-video.appspot.com/o/ads%2Fupload-1622827623432.webm?alt=media&token=5a617958-4ab6-4f1b-b2ac-89ab2c99cf0a")
+    //   ..addListener(() {
+    //     setState(() {
+    //       _position = _videoPlayerController1.value.position;
+    //     });
+    //     print(_position.inSeconds);
+    //     if (_position.inSeconds == 10) {
+    //       setState(() {
+    //         _showSkip = true;
+    //       });
+    //     }
+    //   });
     _chewieController = ChewieController(
       materialProgressColors:
           ChewieProgressColors(playedColor: Color.fromRGBO(255, 255, 0, 0.7)),
@@ -264,11 +171,14 @@ class _PlayVideoState extends State<PlayVideo> {
 
   @override
   void dispose() {
-    _videoPlayerController1.dispose();
-    _videoPlayerController2.dispose();
-    _chewieController.dispose();
+    // _videoPlayerController1.dispose();
+    // _videoPlayerController2.dispose();
+    // _chewieController.dispose();
+    _betterPlayerController.removeEventsListener(_handleEvent);
     super.dispose();
   }
+
+  void _handleEvent(BetterPlayerEvent event) {}
 
   @override
   Widget build(BuildContext context) {
@@ -276,18 +186,20 @@ class _PlayVideoState extends State<PlayVideo> {
         child: Stack(
       children: <Widget>[
         AspectRatio(
-          aspectRatio: _chewieController.aspectRatio,
-          child: WillPopScope(
-            onWillPop: () {
-              if (_chewieController.isPlaying) {
-                _chewieController.pause();
-              }
-              return new Future.value(true);
-            },
-            child: Chewie(
-              controller: _chewieController,
-            ),
-          ),
+          // aspectRatio: _chewieController.aspectRatio,
+          // child: WillPopScope(
+          //   onWillPop: () {
+          //     if (_chewieController.isPlaying) {
+          //       _chewieController.pause();
+          //     }
+          //     return new Future.value(true);
+          //   },
+          //   child: Chewie(
+          //     controller: _chewieController,
+          //   ),
+          // ),
+          aspectRatio: 16 / 9,
+          child: BetterPlayer(controller: _betterPlayerController),
         ),
         Positioned(
           left: 0,
@@ -295,21 +207,21 @@ class _PlayVideoState extends State<PlayVideo> {
           child: isAdOpen
               ? TextButton(
                   onPressed: () {
-                    setState(() {
-                      _isPlaying = _videoPlayerController1.value.isPlaying;
-                    });
-                    print(_isPlaying);
-                    if (_isPlaying) {
-                      setState(() {
-                        _isPlaying = !_isPlaying;
-                      });
-                      _videoPlayerController1.pause();
-                    } else {
-                      setState(() {
-                        _isPlaying = !_isPlaying;
-                      });
-                      _videoPlayerController1.play();
-                    }
+                    // setState(() {
+                    //   _isPlaying = _videoPlayerController1.value.isPlaying;
+                    // });
+                    // print(_isPlaying);
+                    // if (_isPlaying) {
+                    //   setState(() {
+                    //     _isPlaying = !_isPlaying;
+                    //   });
+                    //   _videoPlayerController1.pause();
+                    // } else {
+                    //   setState(() {
+                    //     _isPlaying = !_isPlaying;
+                    //   });
+                    //   _videoPlayerController1.play();
+                    // }
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -332,20 +244,20 @@ class _PlayVideoState extends State<PlayVideo> {
               ? TextButton(
                   onPressed: () {
                     setState(() {
-                      isAdOpen = false;
-                      _chewieController.dispose();
-                      _videoPlayerController1.pause();
-                      _videoPlayerController1.seekTo(Duration(seconds: 0));
-                      _chewieController = ChewieController(
-                        videoPlayerController: _videoPlayerController2,
-                        aspectRatio: _videoPlayerController2.value.aspectRatio,
-                        autoPlay: true,
-                        showOptions: false,
-                        looping: false,
-                        allowPlaybackSpeedChanging: true,
-                        playbackSpeeds: [0.5, 0.75, 1, 1.5, 2],
-                        autoInitialize: true,
-                      );
+                      // isAdOpen = false;
+                      // _chewieController.dispose();
+                      // _videoPlayerController1.pause();
+                      // _videoPlayerController1.seekTo(Duration(seconds: 0));
+                      // _chewieController = ChewieController(
+                      //   videoPlayerController: _videoPlayerController2,
+                      //   aspectRatio: _videoPlayerController2.value.aspectRatio,
+                      //   autoPlay: true,
+                      //   showOptions: false,
+                      //   looping: false,
+                      //   allowPlaybackSpeedChanging: true,
+                      //   playbackSpeeds: [0.5, 0.75, 1, 1.5, 2],
+                      //   autoInitialize: true,
+                      // );
                     });
                   },
                   child: _showSkip
@@ -360,6 +272,9 @@ class _PlayVideoState extends State<PlayVideo> {
                 )
               : Container(),
         ),
+        // Chewie(
+        //   controller: _chewieController,
+        // ),
       ],
     ));
   }

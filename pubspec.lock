@@ -15,7 +15,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.1"
-<<<<<<< HEAD
   badges:
     dependency: "direct main"
     description:
@@ -30,8 +29,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.73"
-=======
->>>>>>> 88cb05e62216842a1d07e7b2a320a054da5821ca
   bloc:
     dependency: transitive
     description:

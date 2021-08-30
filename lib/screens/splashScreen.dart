@@ -31,6 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _mockCheckForSession().then((status) {
       if (status) {
+        print("checking user exist");
         isUserExist();
       } else {
         print(isFirstTime);

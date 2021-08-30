@@ -160,7 +160,28 @@ class _Screen5State extends State<Screen5> {
                             color: primary,
                           ),
                         ))
-                      : Container()
+                      : _videos.length == 0
+                          ? Center(
+                              child: Container(
+                              child: Text('No videos to show!',
+                                  style: GoogleFonts.ubuntu(fontSize: 15)),
+                            ))
+                          : Column(
+                              children: [
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: _videos.length,
+                                  controller: _scrollController,
+                                  itemBuilder: (BuildContext ctx, int index) {
+                                    return VideoCard(
+                                      video:
+                                          Video.fromMap(_videos[index].data()),
+                                      fromwhere: 1,
+                                    );
+                                  },
+                                )
+                              ],
+                            ),
                   // FutureBuilder(
                   //   future: FirebaseFirestore.instance.collection('videos').get(),
                   //   builder:

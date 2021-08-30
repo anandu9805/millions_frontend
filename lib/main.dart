@@ -239,7 +239,6 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
               ? SplashScreen() //Screen1()
               : NoInternet(),
           'Posts': (BuildContext context) => Screen11(null),
-          '/comments': (context) => const Comments(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

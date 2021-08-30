@@ -72,13 +72,9 @@ dependencies:
   shared_preferences: ^2.0.6
   expandable_text: ^2.2.0
   flutter_scroll_to_top: ^1.1.0
-
-<<<<<<< HEAD
-  badges: ^2.0.1
   better_player: ^0.0.73
+  badges: ^2.0.1
 
-=======
->>>>>>> 88cb05e62216842a1d07e7b2a320a054da5821ca
  
 
   # The following adds the Cupertino Icons font to your application.
