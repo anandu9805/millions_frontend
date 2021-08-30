@@ -13,9 +13,11 @@ import 'package:millions/screens/page8.dart';
 import 'package:millions/screens/screen14.dart';
 import 'package:millions/screens/searchPage..dart';
 import 'package:millions/screens/userMenu.dart';
+import 'package:millions/services/darkModeService.dart';
 import 'package:millions/services/userService.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppBarOthers extends StatefulWidget {
   @override
@@ -75,15 +77,19 @@ class _AppBarOthersState extends State<AppBarOthers> {
   }
 
   int _lastIntegerSelected;
+  int isDarkMode;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    isDark().then((value) => isDarkMode = value);
     countUnreadNotifications();
   }
 
   void _showPopupMenu(Offset offset) async {
+    Future<SharedPreferences> prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefsData = await prefs;
     await showMenu(
       context: context,
       position: RelativeRect.fromLTRB(
@@ -102,6 +108,11 @@ class _AppBarOthersState extends State<AppBarOthers> {
             style: GoogleFonts.ubuntu(),
           ),
           value: 'editprofile',
+        ),
+        PopupMenuItem(
+          child: Text(isDarkMode == 1 ? 'Light Mode' : 'Dark Mode',
+              style: GoogleFonts.ubuntu()),
+          value: 'darkMode',
         ),
         PopupMenuItem(
           child: Text("My Wallet", style: GoogleFonts.ubuntu()),
@@ -138,6 +149,16 @@ class _AppBarOthersState extends State<AppBarOthers> {
             context,
             MaterialPageRoute(builder: (context) => Screen14()),
           );
+        } else if (value == 'darkMode') {
+          isDark().then((value) {
+            setState(() {
+              value == 1
+                  ? prefsData.setInt('isDarkMode', 0)
+                  : prefsData.setInt('isDarkMode', 1);
+              value == 1 ? isDarkMode = 0 : isDarkMode = 1;
+            });
+            print(value);
+          });
         }
       }
 
@@ -199,23 +220,23 @@ class _AppBarOthersState extends State<AppBarOthers> {
         ),
         notificationCount != "0"
             ? Padding(
-              padding: const EdgeInsets.only(right :5.0),
-              child: Badge(position: BadgePosition.topEnd(top: 5, end: 5),
-                badgeColor: primary,
-                toAnimate: false,
-                badgeContent: Text(
-                        notificationCount,
-                        style: GoogleFonts.ubuntu(
-                          color: Colors.white,
-                        )),
-                child: IconButton(
+                padding: const EdgeInsets.only(right: 5.0),
+                child: Badge(
+                  position: BadgePosition.topEnd(top: 5, end: 5),
+                  badgeColor: primary,
+                  toAnimate: false,
+                  badgeContent: Text(notificationCount,
+                      style: GoogleFonts.ubuntu(
+                        color: Colors.white,
+                      )),
+                  child: IconButton(
                     icon: new Icon(
                       Icons.notifications,
                       color: Colors.black87,
                     ),
                     onPressed: () {
                       updateNotification();
-                      
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -224,54 +245,52 @@ class _AppBarOthersState extends State<AppBarOthers> {
                       countUnreadNotifications();
                     },
                   ),
-              ),
-            )
+                ),
+              )
 
+            //   child: Stack(
+            //     children: <Widget>[
+            //       InkWell(
+            //         child: new Icon(
+            //           Icons.notifications,
+            //           color: Colors.black87,
+            //         ),
+            //         onTap: () {
+            //           updateNotification();
 
-
-              //   child: Stack(
-              //     children: <Widget>[
-              //       InkWell(
-              //         child: new Icon(
-              //           Icons.notifications,
-              //           color: Colors.black87,
-              //         ),
-              //         onTap: () {
-              //           updateNotification();
-                        
-              //           Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //                 builder: (context) => NotificationPage()),
-              //           );
-              //           countUnreadNotifications();
-              //         },
-              //       ),
-              //       new Positioned(
-              //         right: 0,
-              //         child: new Container(
-              //           padding: EdgeInsets.all(1),
-              //           decoration: new BoxDecoration(
-              //             color: primary,
-              //             borderRadius: BorderRadius.circular(6),
-              //           ),
-              //           constraints: BoxConstraints(
-              //             minWidth: 12,
-              //             minHeight: 12,
-              //           ),
-              //           child: new Text(
-              //             notificationCount,
-              //             style: GoogleFonts.ubuntu(
-              //               color: Colors.white,
-              //               fontSize: 8,
-              //             ),
-              //             textAlign: TextAlign.center,
-              //           ),
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // )
+            //           Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //                 builder: (context) => NotificationPage()),
+            //           );
+            //           countUnreadNotifications();
+            //         },
+            //       ),
+            //       new Positioned(
+            //         right: 0,
+            //         child: new Container(
+            //           padding: EdgeInsets.all(1),
+            //           decoration: new BoxDecoration(
+            //             color: primary,
+            //             borderRadius: BorderRadius.circular(6),
+            //           ),
+            //           constraints: BoxConstraints(
+            //             minWidth: 12,
+            //             minHeight: 12,
+            //           ),
+            //           child: new Text(
+            //             notificationCount,
+            //             style: GoogleFonts.ubuntu(
+            //               color: Colors.white,
+            //               fontSize: 8,
+            //             ),
+            //             textAlign: TextAlign.center,
+            //           ),
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // )
             : Padding(
                 padding: const EdgeInsets.only(right: 5),
                 child: IconButton(
@@ -299,9 +318,9 @@ class _AppBarOthersState extends State<AppBarOthers> {
               //     fullscreenDialog: true));
               _showPopupMenu(details.globalPosition);
             },
-            child: CircleAvatar(backgroundColor:Colors.black,
-              foregroundImage:
-              NetworkImage(altChannelArt),
+            child: CircleAvatar(
+              backgroundColor: Colors.black,
+              foregroundImage: NetworkImage(altChannelArt),
               //NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
               radius: 15,
             ),

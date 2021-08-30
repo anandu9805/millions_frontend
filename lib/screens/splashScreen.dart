@@ -33,7 +33,6 @@ class _SplashScreenState extends State<SplashScreen> {
       if (status) {
         isUserExist();
       } else {
-        
         print(isFirstTime);
         isFirstTime == 0 ? _navigateToFirstScreen() : _navigateToLogin();
       }
@@ -69,11 +68,13 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<bool> _mockCheckForSession() async =>
-      await Future.delayed(Duration(milliseconds: 5000), () {
+      await Future.delayed(Duration(milliseconds: 2000), () {
         return FirebaseAuth.instance.currentUser != null ? true : false;
       });
 
-  void _navigateToFirstScreen() {
+  void _navigateToFirstScreen() async {
+    final SharedPreferences prefsData = await prefs;
+    prefsData.setInt('isDarkMode', 0);
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (BuildContext context) => Screen1()));
   }

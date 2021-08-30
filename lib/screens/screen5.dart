@@ -4,6 +4,7 @@ import 'package:millions/constants/colors.dart';
 import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/admodel.dart';
 import 'package:millions/model/video.dart';
+import 'package:millions/services/darkModeService.dart';
 import 'package:millions/services/video-services.dart';
 import 'package:millions/widgets/ads.dart';
 import 'package:millions/widgets/appDrawer.dart';
@@ -25,10 +26,11 @@ class Screen5 extends StatefulWidget {
 }
 
 class _Screen5State extends State<Screen5> {
-    final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
-  } 
+  }
+
   List<DocumentSnapshot> _videos = [];
   bool _loadingVideos = true,
       _gettingMoreVideos = false,
@@ -89,10 +91,12 @@ class _Screen5State extends State<Screen5> {
     });
   }
 
+  int isDarkMode;
+
   @override
   void initState() {
     super.initState();
-
+    isDark().then((value) => isDarkMode = value);
     // UserServices().getUserDetails('XIi08ww5Fmgkv7FXOSTkOcmVh2C3');
     _getVideos();
     _scrollController2.addListener(() {
@@ -123,17 +127,19 @@ class _Screen5State extends State<Screen5> {
     // var ifphotos = true;
     var h = MediaQuery.of(context).size.height;
     return Scaffold(
-       key: _drawerKey,
-        drawer: DefaultDrawer(),
-        backgroundColor: Colors.white,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(
-            (h) * (1 / 13),
-          ),
-          child: AppBarOthers(),
+      key: _drawerKey,
+      drawer: DefaultDrawer(),
+      backgroundColor: isDarkMode == 1 ? Colors.black : Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(
+          (h) * (1 / 13),
         ),
+        child: AppBarOthers(),
+      ),
       body: ScrollWrapper(
-        scrollController:_scrollController2 ,promptAlignment:Alignment.bottomRight ,promptTheme: PromptButtonTheme(color: primary),
+        scrollController: _scrollController2,
+        promptAlignment: Alignment.bottomRight,
+        promptTheme: PromptButtonTheme(color: primary),
         child: SingleChildScrollView(
           controller: _scrollController2,
           child: Column(
@@ -146,7 +152,7 @@ class _Screen5State extends State<Screen5> {
                 SizedBox(
                   height: 10,
                 ),
-          
+
               _loadingVideos
                   ? Center(
                       child: Container(

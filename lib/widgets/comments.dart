@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -57,13 +59,14 @@ class _CommentState extends State<Comment> {
     dislikeId =
         FirebaseAuth.instance.currentUser.uid + '_' + widget.comment.commentId;
     Future<DocumentSnapshot> dislikedData =
-        CommentServices().commentLikeChecker(likeId);
+        CommentServices().disLikeChecker(likeId);
     dislikedData.then((value) {
       if (value == null) {
         setState(() {
           disliked = true;
         });
       } else {
+        print(value.get('liked'));
         setState(() {
           disliked = value.get('liked');
         });
@@ -532,7 +535,8 @@ class _CommentState extends State<Comment> {
                               widget.comment.videoId,
                               widget.comment.videoTitle);
                           replyController.clear();
-                          Navigator.pop(context);
+                          Navigator.of(context).pop();
+                          sleep(Duration(seconds: 1));
                           Navigator.push(
                               context,
                               MaterialPageRoute(

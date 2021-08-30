@@ -74,6 +74,7 @@ dependencies:
   flutter_scroll_to_top: ^1.1.0
 
   badges: ^2.0.1
+  better_player: ^0.0.73
 
  
 

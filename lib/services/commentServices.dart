@@ -273,10 +273,11 @@ class CommentServices {
         .get();
   }
 
-  Future<DocumentReference> disLikeChecker(String commentLikeId) async {
-    // print(likeId);
-    return FirebaseFirestore.instance
+  Future<DocumentSnapshot> disLikeChecker(String commentLikeId) async {
+   print(commentLikeId);
+    return await FirebaseFirestore.instance
         .collection('comment-dislikes')
-        .doc(commentLikeId);
+        .doc(commentLikeId)
+        .get();
   }
 }

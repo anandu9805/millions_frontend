@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:millions/screens/complete_profile.dart';
 import 'package:millions/screens/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 import '../auth.dart';
 import 'home.dart';
@@ -14,14 +15,16 @@ class Screen1 extends StatefulWidget {
 }
 
 class _Screen1State extends State<Screen1> {
+  int isDarkMode;
   @override
-  void initState() {
+  void initState()  {
     // if (FirebaseAuth.instance.currentUser.uid != null) {
     //   Navigator.pushReplacement(
     //     context,
     //     MaterialPageRoute(builder: (context) => HomePage()),
     //   );
     // }
+ 
     super.initState();
   }
 
@@ -33,7 +36,8 @@ class _Screen1State extends State<Screen1> {
     //var w = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: primary, //Color(0xffa31545),
+        backgroundColor:
+            isDarkMode == 1 ? primary : Colors.white, //Color(0xffa31545),
         body: Container(
           padding: EdgeInsets.symmetric(vertical: h * 0.1),
           child: Row(
@@ -98,11 +102,11 @@ class _Screen1State extends State<Screen1> {
                           //     ),
                           //   );
                           // } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()),
-                            );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
+                          );
                           // }
                         },
                         child: Icon(

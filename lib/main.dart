@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:millions/screens/comment_screen.dart';
 import 'package:millions/screens/complete_profile.dart';
 import 'package:millions/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +22,6 @@ import './screens/screen11.dart';
 import './services/local_notification_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import './screens/view_video.dart';
-
 
 // Future<void> main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -113,76 +113,71 @@ class _mainPageState extends State<mainPage> with WidgetsBindingObserver {
     init();
     LocalNotificationService.initialize(context);
     //to get message data while app is in terminated state and opened by clicking on the notification
-    FirebaseMessaging.instance.getInitialMessage().then((message){
-      print("//to get message data while app is in terminated state and opened by clicking on the notification");
-      if(message!=null){
-
-        if(message.data["screen"]=="videos")
-        {
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      print(
+          "//to get message data while app is in terminated state and opened by clicking on the notification");
+      if (message != null) {
+        if (message.data["screen"] == "videos") {
           //-------------------------------------------------------------------------------------------------
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) =>ViewVideo(id:message.data["itemId"],video:null)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    ViewVideo(id: message.data["itemId"], video: null)),
           );
         }
-        if(message.data["screen"]=="posts")
-        {
+        if (message.data["screen"] == "posts") {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Screen11(message.data["itemId"])),
+            MaterialPageRoute(
+                builder: (context) => Screen11(message.data["itemId"])),
           );
         }
-        if(message.data["screen"]=="channel")
-        {
+        if (message.data["screen"] == "channel") {
           // Navigator.push(
           //   context,
           //   MaterialPageRoute(builder: (context) => Screen11(null)),
           // );
 
         }
-
       }
     });
     //to get message data while app in foreground
     FirebaseMessaging.onMessage.listen((message) {
       print("to get message data while app in foreground");
-      if (message.notification != null) {
-
-
-      }
+      if (message.notification != null) {}
       LocalNotificationService.display(message);
     });
     //to get message data while app is in background and opened by clicking on the notification
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-print("to get message data while app is in background and opened by clicking on the notification");
-      if(message.data["screen"]=="videos")
-        {
-          //-------------------------------------------------------------------------------------------------
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) =>ViewVideo(id:message.data["itemId"],video:null)),
-          );
-        }
-      if(message.data["screen"]=="posts")
-      {
+      print(
+          "to get message data while app is in background and opened by clicking on the notification");
+      if (message.data["screen"] == "videos") {
+        //-------------------------------------------------------------------------------------------------
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Screen11(message.data["itemId"])),
+          MaterialPageRoute(
+              builder: (context) =>
+                  ViewVideo(id: message.data["itemId"], video: null)),
         );
       }
-      if(message.data["screen"]=="channel")
-      {
+      if (message.data["screen"] == "posts") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Screen11(message.data["itemId"])),
+        );
+      }
+      if (message.data["screen"] == "channel") {
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(builder: (context) => Screen11(null)),
         // );
 
       }
-
     });
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-   
   }
 
   void init() async {
@@ -244,6 +239,7 @@ print("to get message data while app is in background and opened by clicking on 
               ? SplashScreen() //Screen1()
               : NoInternet(),
           'Posts': (BuildContext context) => Screen11(null),
+          '/comments': (context) => const Comments(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

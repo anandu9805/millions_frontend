@@ -119,6 +119,7 @@ import 'package:millions/constants/tempResources.dart';
 import 'package:millions/model/admodel.dart';
 import 'package:millions/model/video.dart';
 import 'package:video_player/video_player.dart';
+import 'package:better_player/better_player.dart';
 
 class PlayVideo extends StatefulWidget {
   final Video video;
@@ -132,6 +133,10 @@ class PlayVideo extends StatefulWidget {
 
 class _PlayVideoState extends State<PlayVideo> {
   // TargetPlatform _platform;
+
+  BetterPlayerController _betterPlayerController;
+  BetterPlayerDataSource _betterPlayerDataSource;
+
   VideoPlayerController _videoPlayerController1;
   VideoPlayerController _videoPlayerController2;
   ChewieController _chewieController;
@@ -165,6 +170,7 @@ class _PlayVideoState extends State<PlayVideo> {
     super.initState();
     print(widget.video.duration);
     Future<String> adSrc = getAdVideo();
+
     print(adSrc);
     // print(adSrc);
     _videoPlayerController2 =

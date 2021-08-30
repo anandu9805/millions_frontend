@@ -9,6 +9,14 @@ import 'package:millions/services/commentServices.dart';
 import 'package:millions/services/userService.dart';
 import 'package:millions/widgets/comments.dart';
 import 'package:millions/model/comment_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class CommentArguments {
+  final String videoId;
+  final Video video;
+
+  CommentArguments(this.videoId, this.video);
+}
 
 class Comments extends StatefulWidget {
   final String videoId;
@@ -91,10 +99,21 @@ class _CommentsState extends State<Comments> {
     });
   }
 
+  int isDarkMode;
+
+  Future<void> isDark() async {
+    Future<SharedPreferences> prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefsData = await prefs;
+    setState(() {
+      isDarkMode = prefsData.getInt('isDarkMode') == null ? 0 : prefsData.getInt('isDarkMode');
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-
+    isDark();
+    print(isDarkMode);
     // profilePic = UserServices().getUserDetails(altUserId);
     _getComments();
     _scrollController.addListener(() {
@@ -126,6 +145,7 @@ class _CommentsState extends State<Comments> {
         backgroundColor: primary,
         title: Text('Comments'),
       ),
+      backgroundColor: isDarkMode == 1 ? Colors.black : Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[

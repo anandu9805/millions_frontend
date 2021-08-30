@@ -20,6 +20,12 @@ class _InputFieldState extends State<InputField> {
       controller: widget.myController,
       cursorColor: primary,
       maxLines: widget.customMaxLine,
+      validator: (text) {
+        if (text == null || text.isEmpty) {
+          return "This field can't be empty";
+        }
+        return null;
+      },
       decoration: InputDecoration(
         labelText: widget.labeltext,
         labelStyle: GoogleFonts.ubuntu(color: Colors.black),
