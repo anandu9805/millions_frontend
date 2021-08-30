@@ -127,90 +127,69 @@ class _Screen5State extends State<Screen5> {
     // var ifphotos = true;
     var h = MediaQuery.of(context).size.height;
     return Scaffold(
-      key: _drawerKey,
-      drawer: DefaultDrawer(),
-      backgroundColor: isDarkMode == 1 ? Colors.black : Colors.white,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          (h) * (1 / 13),
+        key: _drawerKey,
+        drawer: DefaultDrawer(),
+        backgroundColor: isDarkMode == 1 ? Colors.black : Colors.white,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(
+            (h) * (1 / 13),
+          ),
+          child: AppBarOthers(),
         ),
-        child: AppBarOthers(),
-      ),
-      body: ScrollWrapper(
-        scrollController: _scrollController2,
-        promptAlignment: Alignment.bottomRight,
-        promptTheme: PromptButtonTheme(color: primary),
-        child: SingleChildScrollView(
-          controller: _scrollController2,
-          child: Column(
-            children: [
-              if (widget.flag == 0)
-                Container(
-                  child: AdPost(),
-                ),
-              if (widget.flag == 0)
-                SizedBox(
-                  height: 10,
-                ),
+        body: ScrollWrapper(
+            scrollController: _scrollController2,
+            promptAlignment: Alignment.bottomRight,
+            promptTheme: PromptButtonTheme(color: primary),
+            child: SingleChildScrollView(
+              controller: _scrollController2,
+              child: Column(
+                children: [
+                  if (widget.flag == 0)
+                    Container(
+                      child: AdPost(),
+                    ),
+                  if (widget.flag == 0)
+                    SizedBox(
+                      height: 10,
+                    ),
 
-              _loadingVideos
-                  ? Center(
-                      child: Container(
-                      child: CircularProgressIndicator(
-                        color: primary,
-                      ),
-                    ))
-                  : _videos.length == 0
+                  _loadingVideos
                       ? Center(
                           child: Container(
-                          child: Text('No videos to show!',
-                              style: GoogleFonts.ubuntu(fontSize: 15)),
+                          child: CircularProgressIndicator(
+                            color: primary,
+                          ),
                         ))
-                      : Column(
-                          children: [
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _videos.length,
-                              controller: _scrollController,
-                              itemBuilder: (BuildContext ctx, int index) {
-                                return VideoCard(
-                                  video: Video.fromMap(_videos[index].data()),
-                                  fromwhere: 1,
-                                );
-                              },
-                            )
-                          ],
-                        ),
-              // FutureBuilder(
-              //   future: FirebaseFirestore.instance.collection('videos').get(),
-              //   builder:
-              //       (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              //     if (snapshot.hasData) {
-              //       return ListView(
-              //         physics: NeverScrollableScrollPhysics(),
-              //         shrinkWrap: true,
-              //         controller: _scrollController,
-              //         children: snapshot.data.docs.map((doc) {
-              //           Video videoItems = Video.fromMap(doc.data());
-              //           return VideoCard(
-              //             video: videoItems,
-              //           );
-              //         }).toList(),
-              //       );
-              //     } else {
-              //       return Container(
-              //         child: Center(
-              //           child: CircularProgressIndicator(),
-              //         ),
-              //       );
-              //     }
-              //   },
-              //   // future: VideoServices.getAllVideos(),
+                      : Container()
+                  // FutureBuilder(
+                  //   future: FirebaseFirestore.instance.collection('videos').get(),
+                  //   builder:
+                  //       (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  //     if (snapshot.hasData) {
+                  //       return ListView(
+                  //         physics: NeverScrollableScrollPhysics(),
+                  //         shrinkWrap: true,
+                  //         controller: _scrollController,
+                  //         children: snapshot.data.docs.map((doc) {
+                  //           Video videoItems = Video.fromMap(doc.data());
+                  //           return VideoCard(
+                  //             video: videoItems,
+                  //           );
+                  //         }).toList(),
+                  //       );
+                  //     } else {
+                  //       return Container(
+                  //         child: Center(
+                  //           child: CircularProgressIndicator(),
+                  //         ),
+                  //       );
+                  //     }
+                  //   },
+                  //   // future: VideoServices.getAllVideos(),
+                  // ),
+                ],
+              ),
               // ),
-            ],
-          ),
-        ),
-      ),
-    );
+            )));
   }
 }
